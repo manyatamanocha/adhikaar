@@ -71,6 +71,16 @@ export function Analytics() {
         good_news: outcome.goodNews,
       });
       if (sp.bank) track("bank_selected", { bank: sp.bank, outcome: outcome.id });
+      if (sp.have) {
+        // How many of the required documents they say they hold, and how many
+        // the claim needs — never which ones. The ratio is what says whether
+        // the checklist is being worked through rather than just read.
+        track("readiness_checked", {
+          held: sp.have.split(",").filter(Boolean).length,
+          required: outcome.documents?.length ?? 0,
+          outcome: outcome.id,
+        });
+      }
       return;
     }
 

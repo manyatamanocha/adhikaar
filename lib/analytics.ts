@@ -78,6 +78,7 @@ export type EventName =
   | "question_answered"
   | "outcome_reached"
   | "demand_checked"
+  | "readiness_checked"
   | "bank_selected"
   | "sheet_printed"
   | "survey_answered";

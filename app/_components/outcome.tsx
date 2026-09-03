@@ -27,6 +27,7 @@ import { PrintButton } from "./print-button";
 import { CLAUSES, NOTIFICATION, TACTICS, ESCALATION } from "@/lib/rbi";
 import { DOCUMENTS, type DocId } from "@/lib/documents";
 import { OUTCOMES, type OutcomeId } from "@/lib/outcomes";
+import { parseHave, readiness, toggleHave } from "@/lib/readiness";
 import { parseAnswers, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
 import { DeadlineTracker } from "./deadline-tracker";
@@ -39,12 +40,29 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   const answers = parseAnswers(sp);
   const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
 
+  // Which documents the reader already has. Constrained to this claim's own
+  // list, so a hand-edited URL cannot claim one that does not apply.
+  const have = parseHave(sp.have, outcome.documents ?? []);
+
   // Same page, one parameter changed — so picking a bank is a normal
-  // navigation and Back undoes it.
+  // navigation and Back undoes it. Ticks are carried across so choosing a bank
+  // does not silently discard them.
   const hrefFor = (nextBank: string) => {
     const q = new URLSearchParams(toQuery(answers).replace(/^\?/, ""));
+    if (have.length) q.set("have", have.join(","));
     q.set("bank", nextBank);
     return `${outcome.path}?${q.toString()}`;
+  };
+
+  // Ticking a document is the same navigation trick as picking a bank: one
+  // parameter changed on the same page. No client state, and Back unticks.
+  const haveHrefFor = (id: DocId) => {
+    const q = new URLSearchParams(toQuery(answers).replace(/^\?/, ""));
+    if (bankId) q.set("bank", bankId);
+    const next = toggleHave(have, id);
+    if (next.length) q.set("have", next.join(","));
+    const s = q.toString();
+    return `${outcome.path}${s ? `?${s}` : ""}`;
   };
 
   return (
@@ -59,7 +77,13 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               the one they walked in with. */}
           {outcome.goodNews && <BeliefSurvey outcome={id} />}
           <Steps steps={outcome.steps} />
-          {outcome.documents && <Documents ids={outcome.documents} />}
+          {outcome.documents && (
+            <Documents
+              ids={outcome.documents}
+              have={have}
+              hrefFor={haveHrefFor}
+            />
+          )}
           {id !== "out-of-scope" && <AskedChecker answers={answers} />}
           <Evidence clauses={outcome.clauses} />
           {id !== "out-of-scope" && (
@@ -177,63 +201,180 @@ function Steps({ steps }: { steps: string[] }) {
 
 /* ------------------------------------------------------------------ 3 */
 
-function Documents({ ids }: { ids: DocId[] }) {
-  const longest = ids.filter((id) => DOCUMENTS[id].startFirst);
-
+function Documents({
+  ids,
+  have,
+  hrefFor,
+}: {
+  ids: DocId[];
+  have: DocId[];
+  hrefFor: (id: DocId) => string;
+}) {
   return (
     <Section
       title={`The ${numberWord(ids.length)} documents the RBI names`}
-      lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document."
+      lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document. Tick the ones you already have."
     >
-      {longest.length > 0 && (
-        <p className="hardbox mt-5 body-fluid">
-          <strong className="font-bold">Start today: </strong>
-          {longest.map((id) => DOCUMENTS[id].name).join(", ")}
-          {" — "}
-          it takes the longest of anything on this list, and everything else can
-          be done while you wait for it.
-        </p>
-      )}
+      <ReadinessBox ids={ids} have={have} />
 
       <ul className="mt-5 divide-y divide-rule-faint border-y border-rule-faint">
         {ids.map((id) => {
           const doc = DOCUMENTS[id];
+          const on = have.includes(id);
           return (
             <li key={id} className="py-5">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h3 className="display-md font-serif font-bold text-indigo-ink">
-                  {doc.name}
-                </h3>
-                {doc.official && (
-                  <span className="rounded-md bg-indigo/8 px-2 py-0.5 text-[0.8125rem] font-semibold text-indigo">
-                    {doc.official}
-                  </span>
+              {/* The name row is the toggle, not the whole card: the cost, the
+                  time and the note stay ordinary selectable text rather than
+                  becoming link text. */}
+              <Link
+                href={hrefFor(id)}
+                className="group flex items-start gap-3"
+                aria-label={
+                  on
+                    ? `${doc.name} — you have this. Select to untick.`
+                    : `${doc.name} — select to tick as something you already have.`
+                }
+              >
+                {/* A drawn box, not a colour. The ticked state has to survive
+                    the black-and-white sheet this page becomes. */}
+                <span
+                  aria-hidden="true"
+                  className={`mt-1.5 flex h-6 w-6 shrink-0 items-center justify-center rounded border-2 text-[0.875rem] font-bold ${
+                    on
+                      ? "border-indigo bg-indigo text-white"
+                      : "border-rule text-transparent group-hover:border-indigo/60"
+                  }`}
+                >
+                  ✓
+                </span>
+                <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <h3
+                    className={`display-md font-serif font-bold ${
+                      on ? "text-ink-soft" : "text-indigo-ink"
+                    }`}
+                  >
+                    {doc.name}
+                  </h3>
+                  {doc.official && (
+                    <span className="rounded-md bg-indigo/8 px-2 py-0.5 text-[0.8125rem] font-semibold text-indigo">
+                      {doc.official}
+                    </span>
+                  )}
+                </span>
+              </Link>
+
+              {/* Indented to hang under the name, clear of the tick box. */}
+              <div className="pl-9">
+                <p className="body-fluid mt-2 leading-relaxed text-ink-soft">
+                  {doc.what}
+                </p>
+
+                <dl className="mt-3 grid gap-x-6 gap-y-2 text-[0.9375rem] sm:grid-cols-3">
+                  <Field label="Where from" value={doc.from} />
+                  <Field label="Cost" value={doc.cost} />
+                  <Field label="How long" value={doc.time} />
+                </dl>
+
+                {doc.note && (
+                  /* Labelled, not colour-barred. A maroon rule alone carries no
+                     meaning on the black-and-white sheet this page becomes. */
+                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink">
+                    <strong className="font-bold text-maroon">Note. </strong>
+                    {doc.note}
+                  </p>
                 )}
               </div>
-
-              <p className="body-fluid mt-2 leading-relaxed text-ink-soft">
-                {doc.what}
-              </p>
-
-              <dl className="mt-3 grid gap-x-6 gap-y-2 text-[0.9375rem] sm:grid-cols-3">
-                <Field label="Where from" value={doc.from} />
-                <Field label="Cost" value={doc.cost} />
-                <Field label="How long" value={doc.time} />
-              </dl>
-
-              {doc.note && (
-                /* Labelled, not colour-barred. A maroon rule alone carries no
-                   meaning on the black-and-white sheet this page becomes. */
-                <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink">
-                  <strong className="font-bold text-maroon">Note. </strong>
-                  {doc.note}
-                </p>
-              )}
             </li>
           );
         })}
       </ul>
     </Section>
+  );
+}
+
+/**
+ * What to do next, given what they say they already have.
+ *
+ * Three states, and the difference between them is the whole point of the
+ * feature. Before anyone ticks anything the only honest thing to say is which
+ * document is the long pole. Once they start ticking, the useful sentence
+ * changes: it is no longer "this takes longest" but "of what you still need,
+ * this takes longest" — and the two stop agreeing the moment the long pole is
+ * the thing they already have.
+ *
+ * The "everything else can be done while you wait" promise is only made when
+ * the next document actually has a wait. Saying it about a same-day form would
+ * be inventing urgency, and this product does not do that.
+ */
+function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
+  const r = readiness(ids, have);
+
+  if (r.untouched) {
+    const longest = ids.filter((id) => DOCUMENTS[id].startFirst);
+    if (longest.length === 0) return null;
+    return (
+      <p className="hardbox mt-5 body-fluid">
+        <strong className="font-bold">Start today: </strong>
+        {longest.map((id) => DOCUMENTS[id].name).join(", ")}
+        {" — "}
+        it takes the longest of anything on this list, and everything else can
+        be done while you wait for it.
+      </p>
+    );
+  }
+
+  if (r.complete) {
+    return (
+      <p className="hardbox mt-5 body-fluid">
+        <strong className="font-bold">
+          You have all {numberWord(r.total)}.{" "}
+        </strong>
+        Take them to the branch together and ask for written acknowledgement of
+        the claim on the day you hand them over. The bank has fifteen days from
+        a complete claim.
+      </p>
+    );
+  }
+
+  const next = DOCUMENTS[r.startToday!];
+  const others = r.missing.length - 1;
+
+  return (
+    <div className="hardbox mt-5 body-fluid">
+      <p>
+        <strong className="font-bold">
+          You have {r.haveCount} of {r.total}.
+        </strong>{" "}
+        {sentenceCase(numberWord(r.missing.length))} still to get.
+      </p>
+
+      {next.leadDays > 0 ? (
+        <p className="mt-2">
+          <strong className="font-bold">Start today: {next.name}</strong> — it
+          has the longest wait of anything you still need
+          {others === 0
+            ? ", and it is the last one."
+            : others === 1
+              ? ", and the other one can be done while you wait for it."
+              : `, and the other ${numberWord(others)} can be done while you wait for it.`}
+        </p>
+      ) : (
+        <p className="mt-2">
+          {others === 0 ? (
+            <>
+              <strong className="font-bold">{next.name}</strong> is the last
+              one, and it has no queue in front of it.
+            </>
+          ) : (
+            <>
+              Nothing still on your list has a queue in front of it —{" "}
+              <strong className="font-bold">{next.name}</strong> and the rest
+              are same-day or already in your hands.
+            </>
+          )}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -456,6 +597,11 @@ function Section({
       {children}
     </section>
   );
+}
+
+/** numberWord() at the head of a sentence. */
+function sentenceCase(s: string) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }
 
 function numberWord(n: number) {
