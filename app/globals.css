@@ -1,26 +1,195 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ---------------------------------------------------------------------------
+   Adhikaar — tokens
+
+   Register: an Indian official financial-services portal, in the family of
+   unclaimedassetsportal.in (DFS / PSB Alliance). Palette and type sampled from
+   that portal's own stylesheet on 3 Sep 2026.
+
+   HARD LINE: the register is borrowed, the identity is NOT. No state emblem,
+   no ministry marks, no tricolour device, nothing that lets a reader conclude
+   this is a government site. Adhikaar cites the government; it never wears it.
+
+   Colour is never the sole carrier of meaning — every state that matters also
+   has a word, a mark or a rule, because the deliverable is a black-and-white
+   page handed across a bank counter.
+--------------------------------------------------------------------------- */
+
+@theme {
+  /* Brand — sampled from the reference portal */
+  --color-indigo: #2d3079;
+  --color-indigo-lift: #3b3fa0;
+  --color-indigo-deep: #182a63;
+  --color-indigo-ink: #0f1f45;
+  --color-maroon: #7b1e3a;
+  --color-maroon-lift: #9b3a56;
+  --color-saffron: #fe7f01;
+
+  /* Grounds */
+  --color-paper: #ffffff;
+  --color-mist: #f4f6fa;
+  --color-mist-deep: #eef2f8;
+  --color-blush: #f9eef1;
+
+  /* Ink */
+  --color-ink: #1f2933;
+  --color-ink-soft: #5d6683;
+  --color-ink-faint: #8a96ad;
+
+  /* Structure */
+  --color-rule: #c5d0e5;
+  --color-rule-faint: #e2e8f0;
+
+  --color-link: #2d3079;
+
+  --font-sans:
+    var(--font-source-sans), "Noto Sans", system-ui, -apple-system, "Segoe UI",
+    Roboto, Arial, sans-serif;
+  /* Headlines are set in a serif, as the reference portal sets them. */
+  --font-serif: var(--font-merriweather), Georgia, "Times New Roman", serif;
+  --font-deva: var(--font-noto-deva), "Nirmala UI", sans-serif;
+
+  /* Category accents — the reference gives each card its own border colour. */
+  --color-accent-green: #1b7a4b;
+  --color-accent-violet: #5b4b9b;
+
+  --text-step: 0.8125rem;
+  --text-body: 1.0625rem;
+  --text-lede: 1.1875rem;
+
+  --radius-pill: 999px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.55;
+}
+
+/* Focus: thick and unmissable. Read-under-stress design. */
+:focus-visible {
+  outline: 3px solid var(--color-saffron);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   Shell + fluid type.
+   The reference portal runs a 1440px container with ~40px gutters, and sets
+   display type with clamp() against the viewport rather than at fixed steps —
+   which is why it fills a wide screen instead of sitting in a narrow column.
+--------------------------------------------------------------------------- */
+
+.shell {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 640px) {
+  .shell {
+    padding-inline: 2rem;
+  }
+}
+@media (min-width: 1024px) {
+  .shell {
+    padding-inline: 2.5rem;
+  }
+}
+
+/* clamp(32px, 4.2vw, 54px) — the reference's own display ramp. */
+.display-xl {
+  font-size: clamp(2rem, 4.2vw, 3.375rem);
+  line-height: 1.14;
+}
+/* clamp(30px, 3vw, 42px) */
+.display-lg {
+  font-size: clamp(1.75rem, 3vw, 2.625rem);
+  line-height: 1.18;
+}
+.display-md {
+  font-size: clamp(1.125rem, 1.5vw, 1.4375rem);
+  line-height: 1.3;
+}
+.lede-fluid {
+  font-size: clamp(1.0625rem, 1.25vw, 1.3125rem);
+  line-height: 1.55;
+}
+.body-fluid {
+  font-size: clamp(0.9375rem, 1vw, 1.0625rem);
+}
+
+/* A hard caveat is boxed. It cannot be collapsed and cannot be mistaken for
+   decoration. Border stays dark so it prints. */
+.hardbox {
+  border: 3px solid var(--color-maroon);
+  padding: 1rem 1.125rem;
+  background: var(--color-blush);
+}
+
+/* ---------------------------------------------------------------------------
+   PRINT — the counter sheet.
+   The page IS the artifact. Everything here exists so that Ctrl+P produces
+   something a bank officer will accept as a document.
+--------------------------------------------------------------------------- */
+
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11.5pt;
+    line-height: 1.4;
+  }
+
+  /* Chrome that must never reach paper. */
+  [data-print="hide"],
+  nav,
+  button {
+    display: none !important;
+  }
+
+  [data-print="only"] {
+    display: block !important;
+  }
+
+  /* Flatten every brand ground to white; keep structure as black rules. */
+  * {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  .hardbox {
+    border: 2px solid #000 !important;
+  }
+
+  /* Expand links to their full URL — the officer must be able to check it
+     without a browser. */
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 8.5pt;
+    word-break: break-all;
+  }
+
+  blockquote,
+  .hardbox,
+  li {
+    break-inside: avoid;
+  }
+
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
 }

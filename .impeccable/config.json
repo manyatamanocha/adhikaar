@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "app/_components/bank-panel.tsx"
+        ],
+        "createdAt": "2026-09-03T12:55:51.548Z",
+        "reason": "Claude: the only side-tab in this file is the <blockquote> holding the bank's own published sentence — a rule beside quoted text is typographic convention, not a card accent, and on the printed counter sheet it is what makes a quoted sentence unmistakable to a bank officer."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "app/_components/outcome.tsx"
+        ],
+        "createdAt": "2026-09-03T12:55:51.700Z",
+        "reason": "Claude: remaining side-tab here is the <blockquote> for verbatim statutory text. The bar is the visual difference between a real quote (verbatim:true) and our summary (rendered as plain 'In summary:' prose) — the product's core safety mechanism. Decorative note-bar in the same file was removed, not suppressed."
+      }
+    ]
+  }
+}
