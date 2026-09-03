@@ -58,22 +58,22 @@ export default function Page() {
                   <h3 className="display-md font-serif font-bold text-indigo-ink">
                     {rail.asset}
                   </h3>
-                  <dl className="mt-2.5 grid gap-x-6 gap-y-2 text-[0.9375rem] sm:grid-cols-2">
+                  <dl className="mt-2.5 grid gap-x-6 gap-y-2 text-[1rem] sm:grid-cols-2">
                     <div>
-                      <dt className="text-[0.75rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+                      <dt className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
                         Who holds it
                       </dt>
                       <dd className="mt-0.5 text-ink">{rail.authority}</dd>
                     </div>
                     <div>
-                      <dt className="text-[0.75rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+                      <dt className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
                         What the route is called
                       </dt>
                       <dd className="mt-0.5 text-ink">{rail.route}</dd>
                     </div>
                   </dl>
                   {rail.note && (
-                    <p className="mt-2.5 text-[0.9375rem] leading-relaxed text-ink-soft">
+                    <p className="mt-2.5 text-[1rem] leading-relaxed text-ink-soft">
                       {rail.note}
                     </p>
                   )}
@@ -81,7 +81,7 @@ export default function Page() {
                     href={rail.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-2.5 inline-block text-[0.9375rem] font-bold text-link underline underline-offset-2"
+                    className="mt-2.5 inline-block text-[1rem] font-bold text-link underline underline-offset-2"
                   >
                     {rail.url}
                   </a>
@@ -109,7 +109,7 @@ export default function Page() {
                   <h3 className="display-md font-serif font-bold text-indigo-ink">
                     {d.name}
                   </h3>
-                  <p className="mt-1 text-[0.875rem] font-semibold uppercase tracking-[0.06em] text-ink-faint">
+                  <p className="mt-1 text-[0.9375rem] font-semibold uppercase tracking-[0.06em] text-ink-faint">
                     {d.who}
                   </p>
                   <p className="body-fluid mt-2 leading-relaxed text-ink-soft">
@@ -119,7 +119,7 @@ export default function Page() {
                     href={d.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="mt-3 inline-block text-[0.9375rem] font-bold text-link underline underline-offset-2"
+                    className="mt-3 inline-block text-[1rem] font-bold text-link underline underline-offset-2"
                   >
                     {d.url}
                   </a>
@@ -128,7 +128,7 @@ export default function Page() {
             </div>
           </section>
 
-          <div className="mt-10 border-t border-rule pt-5 text-[0.875rem] leading-relaxed text-ink-soft">
+          <div className="mt-10 border-t border-rule pt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
             <p>
               Links checked {LINKS_CHECKED}. Naming an authority is not a
               recommendation, and none of these bodies is connected with

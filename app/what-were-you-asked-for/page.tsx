@@ -95,7 +95,7 @@ export default async function Page({
                           backgrounds, and on a printed page. */}
                       <span
                         aria-hidden="true"
-                        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 text-[0.75rem] font-bold ${
+                        className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded border-2 text-[0.8125rem] font-bold ${
                           on
                             ? "border-indigo bg-indigo text-white"
                             : "border-rule text-transparent"
@@ -104,11 +104,11 @@ export default async function Page({
                         ✓
                       </span>
                       <span className="flex-1">
-                        <span className="block text-[1rem] font-bold text-indigo-ink">
+                        <span className="block text-[1.0625rem] font-bold text-indigo-ink">
                           {DOCUMENTS[id].name}
                         </span>
                         {DOCUMENTS[id].official && (
-                          <span className="mt-0.5 block text-[0.8125rem] text-ink-faint">
+                          <span className="mt-0.5 block text-[0.875rem] text-ink-faint">
                             {DOCUMENTS[id].official}
                           </span>
                         )}
@@ -127,7 +127,7 @@ export default async function Page({
             <Results results={results} situation={situation} />
           )}
 
-          <p className="mt-10 border-t border-rule pt-5 text-[0.875rem] leading-relaxed text-ink-soft">
+          <p className="mt-10 border-t border-rule pt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
             Compared against{" "}
             <a
               href={NOTIFICATION.url}
@@ -169,7 +169,7 @@ function Situation({
           : "hardbox"
       }
     >
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+      <p className="text-[0.875rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
         Comparing against the list for
       </p>
       <p className="display-md mt-1.5 font-serif font-bold text-indigo-ink">
@@ -182,7 +182,7 @@ function Situation({
           questions first and this comparison becomes exact.
         </p>
       )}
-      <p className="mt-3 text-[0.9375rem]" data-print="hide">
+      <p className="mt-3 text-[1rem]" data-print="hide">
         <Link
           href={`/start${toQuery(answers)}`}
           // Standalone control, not an inline link in a sentence — it gets a
@@ -260,7 +260,7 @@ function Results({
         className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-rule pt-6"
       >
         <PrintButton />
-        <p className="text-[0.875rem] text-ink-soft">
+        <p className="text-[0.9375rem] text-ink-soft">
           Takes the paragraph numbers with it, so the officer can check each one.
         </p>
       </div>
@@ -303,7 +303,7 @@ function Group({
                 {DOCUMENTS[r.id].name}
               </h4>
               <span
-                className={`rounded-md px-2 py-0.5 text-[0.75rem] font-bold uppercase tracking-[0.06em] ${
+                className={`rounded-md px-2 py-0.5 text-[0.8125rem] font-bold uppercase tracking-[0.06em] ${
                   tone === "hard"
                     ? "bg-maroon text-white"
                     : "bg-accent-green text-white"
@@ -316,7 +316,7 @@ function Group({
               {r.reason}
             </p>
             {tone === "hard" && (
-              <p className="mt-2 text-[0.9375rem] text-ink-soft">
+              <p className="mt-2 text-[1rem] text-ink-soft">
                 {DOCUMENTS[r.id].what} Cost {DOCUMENTS[r.id].cost.toLowerCase()},{" "}
                 {DOCUMENTS[r.id].time.toLowerCase()}.
               </p>

@@ -126,7 +126,7 @@ function AskedChecker({ answers }: { answers: Answers }) {
       </p>
       <Link
         href={`/what-were-you-asked-for${toQuery(answers)}`}
-        className="mt-4 inline-flex items-center gap-2 rounded-pill bg-indigo px-6 py-3 text-[1rem] font-bold text-white transition-colors hover:bg-indigo-lift"
+        className="mt-4 inline-flex items-center gap-2 rounded-pill bg-indigo px-6 py-3 text-[1.0625rem] font-bold text-white transition-colors hover:bg-indigo-lift"
       >
         Check what you were asked for
         <span aria-hidden="true">&rarr;</span>
@@ -170,7 +170,7 @@ function Verdict({ id }: { id: OutcomeId }) {
           className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
         >
           <PrintButton />
-          <p className={`text-[0.875rem] ${good ? "text-white/70" : "text-ink-soft"}`}>
+          <p className={`text-[0.9375rem] ${good ? "text-white/70" : "text-ink-soft"}`}>
             Take the printed page to the branch. It carries the rule and its
             paragraph number.
           </p>
@@ -188,7 +188,7 @@ function Steps({ steps }: { steps: string[] }) {
       <ol className="mt-5 space-y-4">
         {steps.map((step, i) => (
           <li key={i} className="flex gap-4">
-            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-indigo text-[0.9375rem] font-bold text-indigo">
+            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-indigo text-[1rem] font-bold text-indigo">
               {i + 1}
             </span>
             <p className="body-fluid flex-1 leading-relaxed text-ink">{step}</p>
@@ -246,7 +246,7 @@ function Documents({
                     the black-and-white sheet this page becomes. */}
                 <span
                   aria-hidden="true"
-                  className={`mt-1.5 flex h-6 w-6 shrink-0 items-center justify-center rounded border-2 text-[0.875rem] font-bold ${
+                  className={`mt-1.5 flex h-6 w-6 shrink-0 items-center justify-center rounded border-2 text-[0.9375rem] font-bold ${
                     on
                       ? "border-indigo bg-indigo text-white"
                       : "border-rule text-transparent group-hover:border-indigo/60"
@@ -263,7 +263,7 @@ function Documents({
                     {doc.name}
                   </h3>
                   {doc.official && (
-                    <span className="rounded-md bg-indigo/8 px-2 py-0.5 text-[0.8125rem] font-semibold text-indigo">
+                    <span className="rounded-md bg-indigo/8 px-2 py-0.5 text-[0.875rem] font-semibold text-indigo">
                       {doc.official}
                     </span>
                   )}
@@ -276,7 +276,7 @@ function Documents({
                   {doc.what}
                 </p>
 
-                <dl className="mt-3 grid gap-x-6 gap-y-2 text-[0.9375rem] sm:grid-cols-3">
+                <dl className="mt-3 grid gap-x-6 gap-y-2 text-[1rem] sm:grid-cols-3">
                   <Field label="Where from" value={doc.from} />
                   <Field label="Cost" value={doc.cost} />
                   <Field label="How long" value={doc.time} />
@@ -285,7 +285,7 @@ function Documents({
                 {doc.note && (
                   /* Labelled, not colour-barred. A maroon rule alone carries no
                      meaning on the black-and-white sheet this page becomes. */
-                  <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink">
+                  <p className="mt-3 text-[1rem] leading-relaxed text-ink">
                     <strong className="font-bold text-maroon">Note. </strong>
                     {doc.note}
                   </p>
@@ -393,7 +393,7 @@ function Field({ label, value }: { label: string; value: string }) {
     <div className="flex gap-3 sm:block">
       {/* Fixed label column on a phone so the three values share a left edge;
           "WHERE FROM" is wider than "COST" and a ragged column reads as sloppy. */}
-      <dt className="w-[5.25rem] shrink-0 text-[0.75rem] font-bold uppercase leading-[1.6] tracking-[0.1em] text-ink-faint sm:w-auto sm:leading-normal">
+      <dt className="w-[5.25rem] shrink-0 text-[0.8125rem] font-bold uppercase leading-[1.6] tracking-[0.1em] text-ink-faint sm:w-auto sm:leading-normal">
         {label}
       </dt>
       <dd className="text-ink sm:mt-0.5">{value}</dd>
@@ -421,10 +421,10 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
               className="rounded-xl border-2 border-indigo/25 bg-white p-5"
             >
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span className="rounded-md bg-indigo px-2.5 py-1 text-[0.8125rem] font-bold uppercase tracking-[0.06em] text-white">
+                <span className="rounded-md bg-indigo px-2.5 py-1 text-[0.875rem] font-bold uppercase tracking-[0.06em] text-white">
                   Paragraph {clause.para}
                 </span>
-                <span className="text-[0.9375rem] font-bold text-indigo-ink">
+                <span className="text-[1rem] font-bold text-indigo-ink">
                   {clause.label}
                 </span>
               </div>
@@ -445,7 +445,7 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
         })}
       </ul>
 
-      <p className="mt-4 text-[0.9375rem] text-ink-soft">
+      <p className="mt-4 text-[1rem] text-ink-soft">
         From{" "}
         <a
           href={NOTIFICATION.url}
@@ -477,7 +477,7 @@ function Tactics() {
             key={tactic.title}
             className="rounded-xl border border-rule bg-mist p-5"
           >
-            <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-saffron-ink">
+            <p className="text-[0.875rem] font-bold uppercase tracking-[0.1em] text-saffron-ink">
               {i + 1}
             </p>
             <h3 className="display-md mt-1.5 font-serif font-bold text-indigo-ink">
@@ -541,12 +541,12 @@ function Escalation() {
         quoting the paragraph above, and give them {ESCALATION.waitDays} days.
         After that the {ESCALATION.scheme} is free to use.
       </p>
-      <p className="mt-3 max-w-[68ch] text-[0.9375rem] leading-relaxed text-ink-soft">
+      <p className="mt-3 max-w-[68ch] text-[1rem] leading-relaxed text-ink-soft">
         It is free and it is real, and it is not a guarantee: in 2024-25, 40.78%
         of the complaints the Ombudsman accepted were dismissed on the view that
         there had been no deficiency in service.
       </p>
-      <p className="mt-3 text-[0.9375rem] text-ink-soft">
+      <p className="mt-3 text-[1rem] text-ink-soft">
         <a
           href={ESCALATION.portal}
           target="_blank"
@@ -563,7 +563,7 @@ function Escalation() {
 
 function SourceLine() {
   return (
-    <div className="mt-10 border-t border-rule pt-5 text-[0.875rem] leading-relaxed text-ink-soft">
+    <div className="mt-10 border-t border-rule pt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
       <p>
         <strong className="font-bold text-ink">
           Adhikaar — an independent public-information tool.
@@ -643,7 +643,7 @@ function Section({
               {title}
             </span>
             {note && (
-              <span className="mt-1 block text-[0.9375rem] text-ink-soft">
+              <span className="mt-1 block text-[1rem] text-ink-soft">
                 {note}
               </span>
             )}
@@ -652,7 +652,7 @@ function Section({
               without relying on an icon font or an emoji. */}
           <span
             aria-hidden="true"
-            className="mt-2 shrink-0 text-[0.8125rem] font-bold uppercase tracking-[0.08em] text-saffron-ink"
+            className="mt-2 shrink-0 text-[0.875rem] font-bold uppercase tracking-[0.08em] text-saffron-ink"
           >
             <span className="group-open:hidden">Show</span>
             <span className="hidden group-open:inline">Hide</span>

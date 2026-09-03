@@ -92,7 +92,7 @@ export default function Page() {
               side chopped off. Say so, once, on the screens where it is true. */}
           <p
             data-print="hide"
-            className="mt-8 text-[0.875rem] text-ink-soft lg:hidden"
+            className="mt-8 text-[0.9375rem] text-ink-soft lg:hidden"
           >
             Swipe the table sideways for the rest of the columns. The bank names
             stay put.
@@ -100,7 +100,7 @@ export default function Page() {
 
           {/* Wide content scrolls inside its own box; the page never does. */}
           <div className="mt-2.5 overflow-x-auto rounded-xl border border-rule lg:mt-8">
-            <table className="w-full min-w-[820px] border-collapse text-left text-[0.9375rem]">
+            <table className="w-full min-w-[820px] border-collapse text-left text-[1rem]">
               <caption className="sr-only">
                 Deceased-claim practice at {BANKS.length} banks
               </caption>
@@ -124,7 +124,7 @@ export default function Page() {
                       <span className="font-bold text-indigo-ink">
                         {bank.short}
                       </span>
-                      <span className="block text-[0.8125rem] text-ink-faint">
+                      <span className="block text-[0.875rem] text-ink-faint">
                         {bank.name}
                       </span>
                     </Td>
@@ -224,7 +224,7 @@ export default function Page() {
                     ))}
                   </ul>
 
-                  <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-rule-faint pt-4 text-[0.9375rem]">
+                  <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-rule-faint pt-4 text-[1rem]">
                     {[
                       ["Its deceased-claim page", bank.pageUrl],
                       ["Its claim form", bank.claimFormUrl],
@@ -250,7 +250,7 @@ export default function Page() {
             </ul>
           </section>
 
-          <div className="mt-10 border-t border-rule pt-5 text-[0.875rem] leading-relaxed text-ink-soft">
+          <div className="mt-10 border-t border-rule pt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
             <p>
               Read from each bank&apos;s own published pages on the dates shown.
               The rule they are all working from is{" "}
@@ -304,7 +304,7 @@ function Th({
   return (
     <th
       scope="col"
-      className={`border-b border-indigo-deep px-4 py-3 text-[0.8125rem] font-bold uppercase tracking-[0.06em] ${
+      className={`border-b border-indigo-deep px-4 py-3 text-[0.875rem] font-bold uppercase tracking-[0.06em] ${
         stick
           ? "sticky left-0 z-10 bg-indigo shadow-[1px_0_0_var(--color-indigo-deep)]"
           : ""

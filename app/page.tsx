@@ -109,7 +109,7 @@ function Hero() {
             Start — four questions
             <span aria-hidden="true">&rarr;</span>
           </Link>
-          <p className="text-[0.875rem] text-white/75">
+          <p className="text-[0.9375rem] text-white/75">
             About two minutes. No sign-in, no cookie, nothing that identifies
             you.
           </p>
@@ -129,7 +129,7 @@ function Hero() {
             Will, etc., or seek any bond of indemnity/ surety … irrespective of
             the amount standing to the credit.&rdquo;
           </blockquote>
-          <p className="mt-4 border-t border-rule-faint pt-3.5 text-[0.875rem] text-ink-soft">
+          <p className="mt-4 border-t border-rule-faint pt-3.5 text-[0.9375rem] text-ink-soft">
             Paragraph {CLAUSES.nomineeNoDocuments.para}, applying where a
             nominee or surviving joint holder is on record.{" "}
             <span className="text-ink-faint">
@@ -187,8 +187,8 @@ function Numbers() {
     <section className="border-b border-rule-faint bg-white">
       <div className="shell py-11 sm:py-14">
         <Head
-          title="What a court document actually costs"
-          sub="The four figures this whole site turns on. Every one is from the RBI's own Directions or a published court-fee schedule."
+          title="Four numbers worth knowing first"
+          sub="What the court document costs, how long it takes, the floor the rule sets, and the day it changed."
         />
 
         <ul className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-rule bg-rule lg:grid-cols-4">
@@ -203,15 +203,15 @@ function Numbers() {
               <p className="mt-3 font-serif text-[clamp(1.75rem,5vw,2.5rem)] font-bold leading-[1.05] text-indigo-ink">
                 {n.figure}
                 {"unit" in n && n.unit && (
-                  <span className="block font-sans text-[0.9375rem] font-bold tracking-normal text-ink-soft">
+                  <span className="block font-sans text-[1rem] font-bold tracking-normal text-ink-soft">
                     {n.unit}
                   </span>
                 )}
               </p>
-              <p className="mt-2 text-[0.75rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+              <p className="mt-2 text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
                 {n.label}
               </p>
-              <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-soft">
+              <p className="mt-2 text-[0.9375rem] leading-relaxed text-ink-soft">
                 {n.note}
               </p>
             </li>
@@ -231,7 +231,7 @@ function Numbers() {
 const PATHS = [
   {
     icon: <PersonNamedIcon />,
-    chip: "para 9",
+    chip: "No certificate",
     tone: "green",
     title: "A nominee was registered",
     body: "Nothing further, whatever the amount.",
@@ -239,7 +239,7 @@ const PATHS = [
   },
   {
     icon: <TwoPeopleIcon />,
-    chip: "para 9",
+    chip: "No certificate",
     tone: "saffron",
     title: "It was a joint account",
     body: "A survivorship clause works the same way.",
@@ -247,7 +247,7 @@ const PATHS = [
   },
   {
     icon: <ChecklistIcon />,
-    chip: "para 10",
+    chip: "Six documents",
     tone: "indigo",
     title: "There was no nominee",
     body: "A fixed list of six documents, below the floor.",
@@ -255,7 +255,7 @@ const PATHS = [
   },
   {
     icon: <QuestionIcon />,
-    chip: "start here",
+    chip: "Start here",
     tone: "violet",
     title: "I don't know",
     body: "Most families do not. We will tell you how to find out.",
@@ -293,8 +293,8 @@ function WhereDoYouStand() {
       <div className="shell py-12 sm:py-16">
         <Head
           center
-          title="Was a nominee on the account?"
-          sub="The law splits here first, so the questions do too. Pick the one that describes your situation."
+          title="Already know? Go straight there."
+          sub="The four questions start with this one. If you know the answer, skip them and read the result now."
         />
 
         <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
@@ -313,19 +313,19 @@ function WhereDoYouStand() {
                   {p.icon}
                 </span>
                 <span
-                  className={`mt-3 inline-flex w-fit rounded-md px-2 py-0.5 text-[0.6875rem] font-bold uppercase tracking-[0.08em] sm:text-[0.75rem] ${t.chipBg} ${t.chipText}`}
+                  className={`mt-3 inline-flex w-fit rounded-md px-2 py-0.5 text-[0.8125rem] font-bold tracking-[0.01em] sm:text-[0.875rem] ${t.chipBg} ${t.chipText}`}
                 >
                   {p.chip}
                 </span>
                 <h3 className="display-md mt-2.5 font-serif font-bold text-indigo-ink">
                   {p.title}
                 </h3>
-                <p className="mt-1.5 flex-1 text-[0.875rem] leading-relaxed text-ink-soft">
+                <p className="mt-1.5 flex-1 text-[0.9375rem] leading-relaxed text-ink-soft">
                   {p.body}
                 </p>
                 <span
                   aria-hidden="true"
-                  className="mt-3 text-[0.9375rem] font-bold text-indigo group-hover:underline"
+                  className="mt-3 text-[1rem] font-bold text-indigo group-hover:underline"
                 >
                   &rarr;
                 </span>

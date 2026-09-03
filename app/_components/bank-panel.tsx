@@ -40,7 +40,7 @@ export function BankPanel({
         {bank.suretyQuote && (
           <blockquote className="body-fluid border-l-4 border-saffron pl-4 font-serif leading-[1.6] text-ink">
             &ldquo;{bank.suretyQuote}&rdquo;
-            <footer className="mt-2 font-sans text-[0.875rem] not-italic text-ink-soft">
+            <footer className="mt-2 font-sans text-[0.9375rem] not-italic text-ink-soft">
               — {bank.name}
             </footer>
           </blockquote>
@@ -81,7 +81,7 @@ export function BankPanel({
           </ul>
         )}
 
-        <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-rule-faint pt-4 text-[0.9375rem]">
+        <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-rule-faint pt-4 text-[1rem]">
           <BankLink label="Its deceased-claim page" url={bank.pageUrl} />
           <BankLink label="Its claim form" url={bank.claimFormUrl} />
           <BankLink label="Its published policy" url={bank.policyUrl} />
@@ -103,7 +103,7 @@ export function BankPanel({
         </div>
       )}
 
-      <p data-print="hide" className="mt-4 text-[0.9375rem] text-ink-soft">
+      <p data-print="hide" className="mt-4 text-[1rem] text-ink-soft">
         Different bank?{" "}
         {BANKS.filter((b) => b.id !== bank.id).map((b, i, arr) => (
           <span key={b.id}>
@@ -151,7 +151,7 @@ function BankPicker({ hrefFor }: { hrefFor: (id: string) => string }) {
           <li key={b.id}>
             <Link
               href={hrefFor(b.id)}
-              className="inline-block rounded-pill border-2 border-indigo bg-white px-5 py-2.5 text-[0.9375rem] font-bold text-indigo transition-colors hover:bg-indigo hover:text-white"
+              className="inline-block rounded-pill border-2 border-indigo bg-white px-5 py-2.5 text-[1rem] font-bold text-indigo transition-colors hover:bg-indigo hover:text-white"
             >
               {b.short}
             </Link>
@@ -159,7 +159,7 @@ function BankPicker({ hrefFor }: { hrefFor: (id: string) => string }) {
         ))}
       </ul>
 
-      <p className="mt-4 text-[0.9375rem] text-ink-soft">
+      <p className="mt-4 text-[1rem] text-ink-soft">
         Another bank? The RBI&apos;s rule above applies to it just the same. We
         have only compiled four so far —{" "}
         <Link
@@ -180,7 +180,7 @@ function BankPicker({ hrefFor }: { hrefFor: (id: string) => string }) {
 function BankField({ label, value }: { label: string; value: string | null }) {
   return (
     <div>
-      <dt className="text-[0.75rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+      <dt className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
         {label}
       </dt>
       <dd

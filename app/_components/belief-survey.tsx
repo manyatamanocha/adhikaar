@@ -55,7 +55,7 @@ export function BeliefSurvey({ outcome }: { outcome: string }) {
       <p className="body-fluid font-bold text-indigo-ink">
         Before you read this, did you think you needed a succession certificate?
       </p>
-      <p className="mt-1 text-[0.875rem] text-ink-soft">
+      <p className="mt-1 text-[0.9375rem] text-ink-soft">
         One tap. It is the only thing we ask, and it is not stored against you.
       </p>
       <div className="mt-3 flex flex-wrap gap-2.5">
@@ -70,7 +70,7 @@ export function BeliefSurvey({ outcome }: { outcome: string }) {
             key={value}
             type="button"
             onClick={() => answer(value)}
-            className="rounded-pill border-2 border-indigo bg-white px-5 py-2.5 text-[0.9375rem] font-bold text-indigo transition-colors hover:bg-indigo hover:text-white"
+            className="rounded-pill border-2 border-indigo bg-white px-5 py-2.5 text-[1rem] font-bold text-indigo transition-colors hover:bg-indigo hover:text-white"
           >
             {label}
           </button>

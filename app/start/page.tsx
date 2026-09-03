@@ -80,7 +80,7 @@ export default async function Start({
               // the negative margin, so this is a hit-area change, not a
               // layout one -- and Back is the control a confused tester reaches
               // for first.
-              className="-my-2.5 inline-flex items-center gap-2 py-2.5 text-[0.9375rem] font-bold text-indigo"
+              className="-my-2.5 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
             >
               <span aria-hidden="true">&larr;</span>
               {back ? "Back a question" : "Back to the start"}
@@ -89,7 +89,7 @@ export default async function Start({
                 nothing here identifies anyone — but we do count which branch
                 of the law people land on, and saying "sent nowhere" would be
                 a lie on the one page that cannot afford one. */}
-            <p className="text-[0.875rem] text-ink-faint">
+            <p className="text-[0.9375rem] text-ink-faint">
               No sign-in, no cookie, nothing that identifies you. We count
               anonymous totals only.
             </p>
@@ -107,7 +107,7 @@ export default async function Start({
 function Progress({ current }: { current: number }) {
   return (
     <div>
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
+      <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
         Question {current} of {TOTAL_QUESTIONS}
       </p>
       <ol className="mt-2.5 flex gap-1.5" aria-hidden="true">

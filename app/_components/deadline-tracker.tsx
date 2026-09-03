@@ -86,7 +86,7 @@ export function DeadlineTracker() {
       <div className="mt-5">
         <label
           htmlFor="ack-date"
-          className="block text-[0.9375rem] font-bold text-indigo-ink"
+          className="block text-[1rem] font-bold text-indigo-ink"
         >
           Date on your acknowledgement
         </label>
@@ -96,19 +96,19 @@ export function DeadlineTracker() {
             type="date"
             value={date}
             onChange={(e) => save(e.target.value)}
-            className="rounded-lg border-2 border-rule bg-white px-4 py-2.5 text-[1rem] text-ink"
+            className="rounded-lg border-2 border-rule bg-white px-4 py-2.5 text-[1.0625rem] text-ink"
           />
           {date && (
             <button
               type="button"
               onClick={() => save("")}
-              className="text-[0.9375rem] font-bold text-link underline underline-offset-2"
+              className="text-[1rem] font-bold text-link underline underline-offset-2"
             >
               Clear
             </button>
           )}
         </div>
-        <p className="mt-2 text-[0.875rem] text-ink-faint">
+        <p className="mt-2 text-[0.9375rem] text-ink-faint">
           Kept in this browser only. It is never sent anywhere, it is not
           visible to us, and it will be gone if you clear your browsing data.
         </p>
@@ -169,7 +169,7 @@ export function DeadlineTracker() {
                 </a>
                 . It is free and it is real, and it is not a guarantee.
               </p>
-              <p className="mt-2 text-[0.9375rem] text-ink-soft">
+              <p className="mt-2 text-[1rem] text-ink-soft">
                 Expect the bank to argue about when the clock started. Your
                 dated acknowledgement is the answer to that.
               </p>
