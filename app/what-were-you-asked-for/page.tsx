@@ -59,10 +59,7 @@ export default async function Page({
       <main className="flex-1">
         <section className="bg-indigo">
           <div className="shell max-w-[860px] py-10 sm:py-12">
-            <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-              Check a demand
-            </p>
-            <h1 className="display-xl mt-3 font-serif font-bold tracking-[-0.015em] text-white">
+            <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-white">
               What were you asked for?
             </h1>
             <p className="lede-fluid mt-4 max-w-[60ch] text-white/90">

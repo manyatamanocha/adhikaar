@@ -28,10 +28,7 @@ export function BankPanel({
 
   return (
     <section className="mt-10">
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-        Your bank&apos;s own words
-      </p>
-      <h2 className="display-lg mt-2 font-serif font-bold text-indigo-ink">
+      <h2 className="display-lg font-serif font-bold text-indigo-ink">
         What {bank.short} itself publishes
       </h2>
       <p className="body-fluid mt-2.5 max-w-[68ch] text-ink-soft">
@@ -139,10 +136,7 @@ function BankPicker({ hrefFor }: { hrefFor: (id: string) => string }) {
       data-print="hide"
       className="mt-10 rounded-xl border-2 border-indigo bg-mist-deep p-6"
     >
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-        Add your bank
-      </p>
-      <h2 className="display-md mt-1.5 font-serif font-bold text-indigo-ink">
+      <h2 className="display-md font-serif font-bold text-indigo-ink">
         Which bank is the account with?
       </h2>
       <p className="body-fluid mt-2 max-w-[68ch] leading-relaxed text-ink-soft">

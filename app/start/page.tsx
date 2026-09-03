@@ -98,7 +98,7 @@ export default async function Start({
 function Progress({ current }: { current: number }) {
   return (
     <div>
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
+      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
         Question {current} of {TOTAL_QUESTIONS}
       </p>
       <ol className="mt-2.5 flex gap-1.5" aria-hidden="true">
@@ -159,7 +159,7 @@ function AnswerLink({
       <span
         aria-hidden="true"
         className={`mt-1 shrink-0 text-[1.25rem] font-bold ${
-          option.unsure ? "text-accent-violet" : "text-saffron"
+          option.unsure ? "text-accent-violet" : "text-saffron-ink"
         }`}
       >
         &rarr;

@@ -37,10 +37,7 @@ export default function Page() {
       <main className="flex-1">
         <section className="bg-indigo">
           <div className="shell max-w-[1100px] py-10 sm:py-14">
-            <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-              The bank table
-            </p>
-            <h1 className="display-xl mt-3 font-serif font-bold tracking-[-0.015em] text-white">
+            <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-white">
               The rule is the same everywhere. The practice is not.
             </h1>
             <p className="lede-fluid mt-4 max-w-[64ch] text-white/90">

@@ -25,6 +25,10 @@
   --color-maroon: #7b1e3a;
   --color-maroon-lift: #9b3a56;
   --color-saffron: #fe7f01;
+  /* Saffron is a fill, not an ink: #fe7f01 measures 2.55:1 on white. This is
+     the same hue taken down to 5.34:1 for anywhere saffron has to be TEXT on a
+     light ground. Text on a saffron fill uses indigo-ink, 6.34:1. */
+  --color-saffron-ink: #a85400;
 
   /* Grounds */
   --color-paper: #ffffff;
@@ -32,10 +36,14 @@
   --color-mist-deep: #eef2f8;
   --color-blush: #f9eef1;
 
-  /* Ink */
+  /* Ink.
+     ink-faint was #8a96ad, which measured 2.98:1 on white and 2.75:1 on mist —
+     below AA for the small caps labels it is used on. These labels are read by
+     people who are older, tired and under stress, so it is darkened to clear
+     4.5:1 on both grounds rather than kept for its lightness. */
   --color-ink: #1f2933;
   --color-ink-soft: #5d6683;
-  --color-ink-faint: #8a96ad;
+  --color-ink-faint: #616e88;
 
   /* Structure */
   --color-rule: #c5d0e5;
@@ -77,6 +85,43 @@ body {
 :focus-visible {
   outline: 3px solid var(--color-saffron);
   outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------------------
+   The surfaces the browser draws for us.
+
+   Selection, caret, scrollbar and list markers ship with defaults that belong
+   to no design system. Someone copying a paragraph of a statutory quote to
+   paste into an email to their bank sees the selection colour; it should be
+   ours. Cheap, and the difference between a page that was built and one that
+   was assembled.
+--------------------------------------------------------------------------- */
+
+::selection {
+  background: color-mix(in srgb, var(--color-saffron) 28%, transparent);
+  color: var(--color-indigo-ink);
+}
+
+html {
+  scrollbar-color: var(--color-rule) var(--color-mist);
+}
+
+input,
+textarea {
+  caret-color: var(--color-indigo);
+}
+
+/* Amounts, dates and paragraph numbers line up in columns. */
+table,
+time,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Underlines that clear the descenders rather than cutting through them. */
+a {
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: from-font;
 }
 
 /* ---------------------------------------------------------------------------

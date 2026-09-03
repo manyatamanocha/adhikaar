@@ -65,7 +65,7 @@ function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
             <Link
               href="/start"
-              className="inline-flex items-center gap-2 rounded-pill bg-saffron px-8 py-3.5 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#e57200]"
+              className="inline-flex items-center gap-2 rounded-pill bg-saffron px-8 py-3.5 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-[#e57200]"
             >
               Start — four questions
               <span aria-hidden="true">&rarr;</span>
@@ -113,7 +113,7 @@ function RuleStrip() {
             href={NOTIFICATION.url}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-saffron text-white"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-saffron text-indigo-ink"
             aria-label="Open the RBI notification"
           >
             <span aria-hidden="true">&rarr;</span>
@@ -178,8 +178,8 @@ const TONE: Record<
   saffron: {
     border: "border-saffron",
     chipBg: "bg-saffron/12",
-    chipText: "text-[#c25f00]",
-    link: "text-[#c25f00]",
+    chipText: "text-saffron-ink",
+    link: "text-saffron-ink",
   },
   indigo: {
     border: "border-indigo",
@@ -199,10 +199,7 @@ function WhereDoYouStand() {
   return (
     <section className="border-b border-rule-faint bg-mist">
       <div className="shell py-14 sm:py-16">
-        <p className="text-center text-[0.8125rem] font-bold uppercase tracking-[0.2em] text-saffron">
-          One fact decides the answer
-        </p>
-        <h2 className="display-lg mt-3 text-center font-serif font-bold text-indigo-ink">
+        <h2 className="display-lg text-center font-serif font-bold text-indigo-ink">
           Was a nominee on the account?
         </h2>
         <p className="body-fluid mx-auto mt-2.5 max-w-[60ch] text-center text-ink-soft">
@@ -249,10 +246,7 @@ function WhereDoYouStand() {
 function TheArgument() {
   return (
     <section className="shell py-14 sm:py-16">
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.2em] text-saffron">
-        Why families get told otherwise
-      </p>
-      <h2 className="display-lg mt-3 max-w-[24ch] font-serif font-bold text-indigo-ink">
+      <h2 className="display-lg max-w-[24ch] font-serif font-bold text-indigo-ink">
         The rule changed recently. Most of the internet has not caught up.
       </h2>
 

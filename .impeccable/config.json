@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-09-03T12:55:51.700Z",
         "reason": "Claude: remaining side-tab here is the <blockquote> for verbatim statutory text. The bar is the visual difference between a real quote (verbatim:true) and our summary (rendered as plain 'In summary:' prose) — the product's core safety mechanism. Decorative note-bar in the same file was removed, not suppressed."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "app/banks/page.tsx"
+        ],
+        "createdAt": "2026-09-03T15:49:48.055Z",
+        "reason": "Claude: both hits are <blockquote> elements holding a bank's own verbatim published sentence, same case already accepted in outcome.tsx and bank-panel.tsx. A rule beside quoted text is typographic convention, and it is what separates a real quote from our summary."
       }
     ]
   }

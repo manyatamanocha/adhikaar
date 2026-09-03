@@ -72,10 +72,7 @@ export function DeadlineTracker() {
 
   return (
     <section className="mt-10 rounded-xl border-2 border-indigo bg-mist-deep p-6">
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-        The clock
-      </p>
-      <h2 className="display-lg mt-2 font-serif font-bold text-indigo-ink">
+      <h2 className="display-lg font-serif font-bold text-indigo-ink">
         The bank has {WINDOW_DAYS} days
       </h2>
       <p className="body-fluid mt-2.5 max-w-[68ch] leading-relaxed text-ink-soft">

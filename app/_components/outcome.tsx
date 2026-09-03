@@ -87,10 +87,7 @@ function AskedChecker({ answers }: { answers: Answers }) {
       data-print="hide"
       className="mt-10 rounded-xl border-2 border-saffron bg-white p-6"
     >
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-        Check a demand
-      </p>
-      <h2 className="display-md mt-1.5 font-serif font-bold text-indigo-ink">
+      <h2 className="display-md font-serif font-bold text-indigo-ink">
         Were you asked for something that is not on this list?
       </h2>
       <p className="body-fluid mt-2 max-w-[68ch] leading-relaxed text-ink-soft">
@@ -115,23 +112,17 @@ function AskedChecker({ answers }: { answers: Answers }) {
 function Verdict({ id }: { id: OutcomeId }) {
   const outcome = OUTCOMES[id];
 
-  // Good news is indigo on white; hard news is maroon on blush. The word above
-  // the verdict says which it is, so the distinction survives a mono printout.
+  // Good news is indigo, hard news is maroon on blush — but the sentence itself
+  // is the carrier. "You should not be asked for a succession certificate" and
+  // "A succession certificate may genuinely be required here" say which this is
+  // in words, so it survives a mono printout with no label needed above it.
   const good = outcome.goodNews;
 
   return (
     <section className={good ? "bg-indigo" : "bg-blush border-b-4 border-maroon"}>
       <div className="shell max-w-[860px] py-10 sm:py-14">
-        <p
-          className={`text-[0.8125rem] font-bold uppercase tracking-[0.16em] ${
-            good ? "text-saffron" : "text-maroon"
-          }`}
-        >
-          {good ? "What the rules say" : "The honest answer"}
-        </p>
-
         <h1
-          className={`display-xl mt-3 font-serif font-bold tracking-[-0.015em] ${
+          className={`display-xl font-serif font-bold tracking-[-0.015em] ${
             good ? "text-white" : "text-indigo-ink"
           }`}
         >
@@ -165,7 +156,7 @@ function Verdict({ id }: { id: OutcomeId }) {
 
 function Steps({ steps }: { steps: string[] }) {
   return (
-    <Section eyebrow="What to do" title="Your next steps">
+    <Section title="Your next steps">
       <ol className="mt-5 space-y-4">
         {steps.map((step, i) => (
           <li key={i} className="flex gap-4">
@@ -187,7 +178,6 @@ function Documents({ ids }: { ids: DocId[] }) {
 
   return (
     <Section
-      eyebrow="What to bring"
       title={`The ${numberWord(ids.length)} documents the RBI names`}
       lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document."
     >
@@ -259,7 +249,6 @@ function Field({ label, value }: { label: string; value: string }) {
 function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
   return (
     <Section
-      eyebrow="The evidence"
       title="The rule, in the RBI's own words"
       lede="This is the part to show the bank. Every paragraph number below is in the notification, and the link opens it."
     >
@@ -317,7 +306,6 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
 function Tactics() {
   return (
     <Section
-      eyebrow="At the counter"
       title="Four things to do at the branch"
       lede="These are procedural, not legal. Each one closes a specific way a claim stalls."
     >
@@ -327,7 +315,7 @@ function Tactics() {
             key={tactic.title}
             className="rounded-xl border border-rule bg-mist p-5"
           >
-            <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-saffron">
+            <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-saffron-ink">
               {i + 1}
             </p>
             <h3 className="display-md mt-1.5 font-serif font-bold text-indigo-ink">
@@ -347,7 +335,7 @@ function Tactics() {
 
 function Caveats({ caveats }: { caveats: (typeof OUTCOMES)[OutcomeId]["caveats"] }) {
   return (
-    <Section eyebrow="Read this too" title="What could change the answer">
+    <Section title="What could change the answer">
       <ul className="mt-5 space-y-4">
         {caveats.map((caveat) => (
           <li
@@ -441,23 +429,21 @@ function SourceLine() {
 
 /* ------------------------------------------------------------------ */
 
+/* No kicker above the heading. Each one repeated what the heading beneath it
+   already said, and on a phone that is a screenful of scroll bought with
+   nothing — on a page a grieving reader is already scrolling too much of. */
 function Section({
-  eyebrow,
   title,
   lede,
   children,
 }: {
-  eyebrow: string;
   title: string;
   lede?: string;
   children: React.ReactNode;
 }) {
   return (
     <section className="mt-12 first:mt-0">
-      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-        {eyebrow}
-      </p>
-      <h2 className="display-lg mt-2 font-serif font-bold text-indigo-ink">
+      <h2 className="display-lg font-serif font-bold text-indigo-ink">
         {title}
       </h2>
       {lede && (

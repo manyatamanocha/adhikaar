@@ -23,10 +23,7 @@ export default function Page() {
       <main className="flex-1">
         <section className="bg-indigo">
           <div className="shell max-w-[900px] py-10 sm:py-14">
-            <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-              Outside what we cover
-            </p>
-            <h1 className="display-xl mt-3 font-serif font-bold tracking-[-0.015em] text-white">
+            <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-white">
               Everything else you will have to deal with
             </h1>
             <p className="lede-fluid mt-4 max-w-[62ch] text-white/90">
@@ -51,10 +48,7 @@ export default function Page() {
           </p>
 
           <section className="mt-10">
-            <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-              Where each one is claimed
-            </p>
-            <h2 className="display-lg mt-2 font-serif font-bold text-indigo-ink">
+            <h2 className="display-lg font-serif font-bold text-indigo-ink">
               Six other rails
             </h2>
 
@@ -97,10 +91,7 @@ export default function Page() {
           </section>
 
           <section className="mt-12">
-            <p className="text-[0.8125rem] font-bold uppercase tracking-[0.16em] text-saffron">
-              Before any of it
-            </p>
-            <h2 className="display-lg mt-2 font-serif font-bold text-indigo-ink">
+            <h2 className="display-lg font-serif font-bold text-indigo-ink">
               Finding out what exists
             </h2>
             <p className="body-fluid mt-2.5 max-w-[68ch] text-ink-soft">

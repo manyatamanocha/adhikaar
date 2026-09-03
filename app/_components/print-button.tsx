@@ -13,7 +13,7 @@ export function PrintButton() {
     <button
       type="button"
       onClick={() => window.print()}
-      className="inline-flex items-center gap-2 rounded-pill bg-saffron px-6 py-3 text-[1rem] font-bold text-white transition-colors hover:bg-[#e57200]"
+      className="inline-flex items-center gap-2 rounded-pill bg-saffron px-6 py-3 text-[1rem] font-bold text-indigo-ink transition-colors hover:bg-[#e57200]"
     >
       <PrinterIcon />
       Print this page
