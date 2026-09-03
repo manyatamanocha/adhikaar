@@ -30,6 +30,7 @@ import { OUTCOMES, type OutcomeId } from "@/lib/outcomes";
 import { parseAnswers, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
 import { DeadlineTracker } from "./deadline-tracker";
+import { BeliefSurvey } from "./belief-survey";
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -54,6 +55,9 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
         <Verdict id={id} />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
+          {/* Asked here, under the verdict, because the belief it measures is
+              the one they walked in with. */}
+          {outcome.goodNews && <BeliefSurvey outcome={id} />}
           <Steps steps={outcome.steps} />
           {outcome.documents && <Documents ids={outcome.documents} />}
           {id !== "out-of-scope" && <AskedChecker answers={answers} />}

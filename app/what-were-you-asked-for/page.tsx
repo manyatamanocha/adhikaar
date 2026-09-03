@@ -138,7 +138,9 @@ export default async function Page({
               {NOTIFICATION.title}
             </a>{" "}
             · {NOTIFICATION.number}, issued {NOTIFICATION.issued}. Information,
-            not legal advice. Nothing you tick is stored or sent anywhere.
+            not legal advice. What you tick is not stored, and nothing here
+            identifies you — we count only how many items were checked, never
+            which ones.
           </p>
         </div>
       </main>

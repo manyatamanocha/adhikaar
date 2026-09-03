@@ -81,8 +81,13 @@ export default async function Start({
               <span aria-hidden="true">&larr;</span>
               {back ? "Back a question" : "Back to the start"}
             </Link>
+            {/* Precise, because it has to be. The answers are not stored and
+                nothing here identifies anyone — but we do count which branch
+                of the law people land on, and saying "sent nowhere" would be
+                a lie on the one page that cannot afford one. */}
             <p className="text-[0.875rem] text-ink-faint">
-              Nothing you tap here is stored or sent anywhere.
+              No sign-in, no cookie, nothing that identifies you. We count
+              anonymous totals only.
             </p>
           </div>
         </div>

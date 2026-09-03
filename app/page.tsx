@@ -49,7 +49,7 @@ function Hero() {
           <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2.5">
             {[
               "No sign-in needed",
-              "Nothing about your family is stored",
+              "No cookie, nothing that identifies you",
               "Free to use",
             ].map((t) => (
               <li

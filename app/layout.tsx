@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import {
   Source_Sans_3,
   Merriweather,
   Noto_Sans_Devanagari,
 } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "./_components/analytics";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
@@ -74,6 +76,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           with the finish review, the verdict, DESIGN.md, and every shipping
           raster carrying its provenance.
         */}
+        {/* Reads route changes to derive events. Suspended so it can never
+            hold up the first paint of a page someone is reading at a counter,
+            and a no-op entirely when no Mixpanel token is configured. */}
+        <Suspense fallback={null}>
+          <Analytics />
+        </Suspense>
         {children}
       </body>
     </html>
