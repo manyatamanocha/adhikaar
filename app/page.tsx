@@ -36,7 +36,6 @@ export default function Home() {
 
       <main className="flex-1">
         <Hero />
-        <Numbers />
         <WhereDoYouStand />
         <TheArgument />
         <SecondDoors />
@@ -80,66 +79,56 @@ function Head({
 function Hero() {
   return (
     <section className="bg-indigo">
-      <div className="shell grid gap-9 py-11 sm:py-14 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-14">
+      <div className="shell grid gap-9 py-11 sm:py-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-14">
         <div>
-        <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-white">
-          <span className="block font-deva text-[0.82em] leading-[1.3] text-saffron-lift">
-            उत्तराधिकार प्रमाणपत्र
-          </span>
-          <span className="mt-1 block">You probably do not need one.</span>
-        </h1>
+          <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-white">
+            <span className="block font-deva text-[0.82em] leading-[1.3] text-saffron-lift">
+              उत्तराधिकार प्रमाणपत्र
+            </span>
+            <span className="mt-1 block">You probably do not need one.</span>
+          </h1>
 
-        <p className="lede-fluid mt-4 max-w-[56ch] text-white/90">
-          A bank has asked your family for a succession certificate. Since{" "}
-          <strong className="font-semibold text-white">31 March 2026</strong> the
-          Reserve Bank&apos;s rules say that in most deposit claims a bank must
-          not insist on one.
-        </p>
+          <p className="lede-fluid mt-4 max-w-[46ch] text-white/90">
+            Since 31 March 2026 a bank usually must not ask a family for one.
+          </p>
 
-        <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3">
           <Link
             href="/start"
-            className="inline-flex items-center gap-2 rounded-pill bg-saffron px-8 py-3.5 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-[#ab6314]"
+            className="mt-7 inline-flex items-center gap-2 rounded-pill bg-saffron px-8 py-3.5 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-[#ab6314]"
           >
             Start — four questions
             <span aria-hidden="true">&rarr;</span>
           </Link>
-          <p className="text-[0.875rem] text-white/75">
-            About two minutes. No sign-in, no cookie, nothing that identifies
-            you.
+          <p className="mt-3 text-[0.875rem] text-white/75">
+            Two minutes. No sign-in.
           </p>
-        </div>
         </div>
 
-        {/* The proof, beside the claim. Where the reference portal puts a
-            ministerial portrait we put the sentence itself: it is the only
-            thing on this page with real authority. */}
-        <figure className="rounded-2xl bg-paper p-6 shadow-[0_10px_40px_rgba(0,0,0,0.22)] sm:p-7">
-          <figcaption className="text-step font-bold uppercase tracking-[0.12em] text-maroon">
-            The rule, in the RBI&apos;s own words
-          </figcaption>
-          <blockquote className="body-fluid mt-3.5 font-serif leading-[1.6] text-ink">
-            &ldquo;… the bank shall not insist on production of legal documents
-            such as Succession Certificate, Letter of Administration, Probate of
-            Will, etc., or seek any bond of indemnity/ surety … irrespective of
-            the amount standing to the credit.&rdquo;
-          </blockquote>
-          <p className="mt-4 border-t border-rule-faint pt-3.5 text-[0.875rem] text-ink-soft">
-            Paragraph {CLAUSES.nomineeNoDocuments.para}, applying where a
-            nominee or surviving joint holder is on record.{" "}
-            <span className="text-ink-faint">
-              {NOTIFICATION.number} · issued {NOTIFICATION.issued}
-            </span>
-          </p>
-          <a
-            href={NOTIFICATION.url}
-            target="_blank"
-            rel="noreferrer"
-            className="-my-2 mt-2 inline-block py-2 font-bold text-link underline underline-offset-2"
-          >
-            Read the Directions themselves &rarr;
-          </a>
-        </figure>
+        {/* The numbers sit beside the claim rather than in a band of their own:
+            it is one block instead of two, and they are the argument. */}
+        <ul className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl bg-white/25">
+          {NUMBERS.map((n) => (
+            <li key={n.label} className="bg-indigo p-4 sm:p-5">
+              <span className="block text-saffron-lift" aria-hidden="true">
+                {n.icon}
+              </span>
+              <p className="mt-2.5 font-serif text-[clamp(1.5rem,4.4vw,2.125rem)] font-bold leading-[1.05] text-white">
+                {n.figure}
+                {"unit" in n && n.unit && (
+                  <span className="block font-sans text-[0.875rem] font-bold text-white/75">
+                    {n.unit}
+                  </span>
+                )}
+              </p>
+              <p className="mt-1.5 text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-saffron-lift">
+                {n.label}
+              </p>
+              <p className="mt-1 text-[0.8125rem] leading-snug text-white/70">
+                {n.note}
+              </p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
@@ -153,66 +142,30 @@ const NUMBERS = [
     icon: <RupeeIcon />,
     figure: "₹17,000",
     label: "What it costs",
-    note: "Court fees of about 3% of the amount, plus a lawyer, for a succession certificate.",
+    note: "Court fees plus a lawyer.",
   },
   {
     icon: <ClockIcon />,
     figure: "4–7",
     unit: "months",
     label: "How long it takes",
-    note: "Uncontested. One to two years if any heir objects.",
+    note: "Longer if anyone objects.",
   },
   {
     icon: <ScaleIcon />,
     figure: "₹15 lakh",
     label: "The RBI floor",
-    note: "Below it, a commercial bank must follow the simplified procedure. A bank may set its own higher — never assume this is yours.",
+    note: "A floor, not your bank’s number. Yours may be higher.",
   },
   {
     icon: <CalendarIcon />,
     figure: "31 Mar",
     unit: "2026",
     label: "In force from",
-    note: "The date the Directions took effect. Most advice online still predates it.",
+    note: "Most advice online is older.",
   },
 ] as const;
 
-function Numbers() {
-  return (
-    <section className="border-b border-rule-faint bg-white">
-      <div className="shell py-11 sm:py-14">
-        <Head
-          title="What a court document actually costs"
-          sub="The four figures this whole site turns on. Every one is from the RBI's own Directions or a published court-fee schedule."
-        />
-
-        <ul className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-rule bg-rule lg:grid-cols-4">
-          {NUMBERS.map((n) => (
-            <li key={n.label} className="bg-paper p-5 sm:p-6">
-              <span className="block text-indigo" aria-hidden="true">
-                {n.icon}
-              </span>
-              <p className="mt-3 font-serif text-[clamp(1.75rem,5vw,2.5rem)] font-bold leading-[1.05] text-indigo-ink">
-                {n.figure}
-                {"unit" in n && n.unit && (
-                  <span className="block font-sans text-[0.9375rem] font-bold tracking-normal text-ink-soft">
-                    {n.unit}
-                  </span>
-                )}
-              </p>
-              <p className="mt-2 text-[0.75rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
-                {n.label}
-              </p>
-              <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-soft">
-                {n.note}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  );
-}
 
 
 /* ------------------------------------------------------------------ */
@@ -222,31 +175,27 @@ function Numbers() {
    the verdict; the other two still need the amount and the dispute question. */
 const PATHS = [
   {
-    chip: "para 9",
+    chip: "No certificate",
     tone: "green",
-    title: "A nominee was registered",
-    body: "Nothing further, whatever the amount.",
+    title: "Someone was named as nominee",
     href: "/nominee",
   },
   {
-    chip: "para 9",
+    chip: "No certificate",
     tone: "saffron",
     title: "It was a joint account",
-    body: "A survivorship clause works the same way.",
     href: "/survivorship",
   },
   {
-    chip: "para 10",
+    chip: "Six documents",
     tone: "indigo",
-    title: "There was no nominee",
-    body: "A fixed list of six documents, below the floor.",
+    title: "No nominee was named",
     href: "/start?claiming=deposit&nominee=no",
   },
   {
-    chip: "start here",
+    chip: "Start here",
     tone: "violet",
     title: "I don't know",
-    body: "Most families do not. We will tell you how to find out.",
     href: "/start?claiming=deposit&nominee=unknown",
   },
 ] as const;
@@ -282,7 +231,7 @@ function WhereDoYouStand() {
         <Head
           center
           title="Was a nominee on the account?"
-          sub="The law splits here first, so the questions do too. Pick the one that describes your situation."
+          sub="Pick the one that matches. It changes the whole answer."
         />
 
         <div className="mt-8 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
@@ -294,23 +243,22 @@ function WhereDoYouStand() {
                 href={p.href}
                 className={`group flex flex-col rounded-xl border-2 bg-paper p-4 transition-shadow hover:shadow-[0_6px_24px_rgba(29,52,97,0.14)] sm:p-5 ${t.border}`}
               >
-                <span
-                  className={`inline-flex w-fit rounded-md px-2 py-0.5 text-[0.6875rem] font-bold uppercase tracking-[0.08em] sm:text-[0.75rem] ${t.chipBg} ${t.chipText}`}
-                >
-                  {p.chip}
+                <span className="flex items-center justify-between gap-2">
+                  <span
+                    className={`inline-flex w-fit rounded-md px-2 py-0.5 text-[0.6875rem] font-bold uppercase tracking-[0.08em] sm:text-[0.75rem] ${t.chipBg} ${t.chipText}`}
+                  >
+                    {p.chip}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="text-[1rem] font-bold text-indigo group-hover:translate-x-0.5"
+                  >
+                    &rarr;
+                  </span>
                 </span>
-                <h3 className="display-md mt-3 font-serif font-bold text-indigo-ink">
+                <h3 className="display-md mt-3 flex-1 font-serif font-bold text-indigo-ink">
                   {p.title}
                 </h3>
-                <p className="mt-1.5 flex-1 text-[0.875rem] leading-relaxed text-ink-soft">
-                  {p.body}
-                </p>
-                <span
-                  aria-hidden="true"
-                  className="mt-3 text-[0.9375rem] font-bold text-indigo group-hover:underline"
-                >
-                  &rarr;
-                </span>
               </Link>
             );
           })}
@@ -325,40 +273,27 @@ function WhereDoYouStand() {
 function TheArgument() {
   return (
     <section className="bg-mist">
-      <div className="shell py-12 sm:py-16">
-        <Head
-          title="The rule changed. Most of the internet has not caught up."
-          sub="The Reserve Bank has issued this instruction three times — 2005, January 2013, and September 2025. A rule reissued three times in twenty years is one that is not reaching the counter."
-        />
-
-        <div className="mt-8 grid gap-4 lg:grid-cols-2">
-          <div className="rounded-xl border border-rule bg-blush p-5 sm:p-6">
-            <p className="text-step font-bold uppercase tracking-[0.1em] text-maroon">
-              What a search usually tells you
-            </p>
-            <ul className="body-fluid mt-3 space-y-2 text-ink">
-              <li>Claimable only through a succession certificate</li>
-              <li>A petition before a District Judge</li>
-              <li>Notice to every heir, and a newspaper advertisement</li>
-              <li>Roughly ₹17,000, and four to seven months</li>
-            </ul>
-          </div>
-
-          <div className="rounded-xl border-2 border-indigo bg-paper p-5 sm:p-6">
-            <p className="text-step font-bold uppercase tracking-[0.1em] text-indigo">
-              What the Directions actually say
-            </p>
-            <ul className="body-fluid mt-3 space-y-2 text-ink">
-              <li>
-                With a nominee or survivor on record, a bank must not insist at
-                all — whatever the amount
-              </li>
-              <li>No succession certificate, probate or administration</li>
-              <li>No indemnity bond, and no third-party surety</li>
-              <li>With no nominee, a simplified procedure below the floor</li>
-            </ul>
-          </div>
-        </div>
+      <div className="shell py-11 sm:py-14">
+        <figure className="mx-auto max-w-[64ch] text-center">
+          <blockquote className="lede-fluid font-serif leading-[1.5] text-ink">
+            &ldquo;… the bank shall not insist on production of legal documents
+            such as Succession Certificate … irrespective of the amount standing
+            to the credit.&rdquo;
+          </blockquote>
+          <figcaption className="mt-3 text-[0.875rem] text-ink-soft">
+            The Reserve Bank of India, paragraph{" "}
+            {CLAUSES.nomineeNoDocuments.para} — where a nominee or joint holder
+            is on record.{" "}
+            <a
+              href={NOTIFICATION.url}
+              target="_blank"
+              rel="noreferrer"
+              className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
+            >
+              Read it yourself &rarr;
+            </a>
+          </figcaption>
+        </figure>
       </div>
     </section>
   );
@@ -369,13 +304,13 @@ function TheArgument() {
 const DOORS = [
   {
     title: "Already in court?",
-    body: "These Directions took effect after many cases began. We can show you what changed, to put to your lawyer.",
+    body: "We can show you what changed, to put to your lawyer.",
     cta: "What changed on 31 March 2026",
     href: "/already-in-court",
   },
   {
     title: "What this does not cover",
-    body: "Bank deposits, lockers and safe custody only. Insurance, mutual funds, shares, provident fund, pension and post office savings run on their own rails.",
+    body: "Bank deposits and lockers only. Insurance, shares, PF and pension run elsewhere.",
     cta: "Where those are claimed",
     href: "/other-assets",
   },
