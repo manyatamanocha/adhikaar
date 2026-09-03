@@ -167,7 +167,7 @@ export default function Page() {
                           href={bank.claimFormUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="font-bold text-link underline underline-offset-2"
+                          className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
                         >
                           Its form
                         </a>
@@ -237,7 +237,7 @@ export default function Page() {
                             href={url}
                             target="_blank"
                             rel="noreferrer"
-                            className="font-bold text-link underline underline-offset-2"
+                            className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
                           >
                             {label}
                           </a>
@@ -269,7 +269,7 @@ export default function Page() {
             <p className="mt-2">
               <Link
                 href="/start"
-                className="font-bold text-link underline underline-offset-2"
+                className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
               >
                 Find out what applies to your claim
               </Link>

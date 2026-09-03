@@ -241,7 +241,11 @@ function Documents({
                   becoming link text. */}
               <Link
                 href={hrefFor(id)}
-                className="group flex items-start gap-3"
+                // Negative margin cancels the padding, so the row looks
+                // identical while the thumb gets a 44px target instead of 30.
+                // These readers are grieving, tired and often older, and this
+                // is the primary control on the page.
+                className="group -my-2 flex items-start gap-3 py-2"
                 aria-label={
                   on
                     ? `${doc.name} — you have this. Select to untick.`
@@ -584,7 +588,10 @@ function SourceLine() {
         Sukanya Samriddhi. Paragraph 6(b) places those outside these Directions.
       </p>
       <p className="mt-2" data-print="hide">
-        <Link href="/start" className="font-bold text-link underline underline-offset-2">
+        <Link
+          href="/start"
+          className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
+        >
           Answer the questions again
         </Link>
       </p>

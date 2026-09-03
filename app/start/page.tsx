@@ -76,7 +76,11 @@ export default async function Start({
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule-faint pt-5">
             <Link
               href={back ? `/start${toQuery(back)}` : "/"}
-              className="inline-flex items-center gap-2 text-[0.9375rem] font-bold text-indigo"
+              // 23px of link is not a thumb target. The padding is cancelled by
+              // the negative margin, so this is a hit-area change, not a
+              // layout one -- and Back is the control a confused tester reaches
+              // for first.
+              className="-my-2.5 inline-flex items-center gap-2 py-2.5 text-[0.9375rem] font-bold text-indigo"
             >
               <span aria-hidden="true">&larr;</span>
               {back ? "Back a question" : "Back to the start"}

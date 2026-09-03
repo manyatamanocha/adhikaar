@@ -17,7 +17,11 @@ export function SiteHeader() {
       className="border-b border-rule-faint bg-[#f0f2f5]"
     >
       <div className="shell flex flex-wrap items-center justify-between gap-3 py-2.5">
-        <Link href="/" className="flex items-baseline gap-2.5">
+        <Link
+          href="/"
+          // The go-home control on every page; 23px was not a thumb target.
+          className="-my-1.5 flex items-baseline gap-2.5 py-1.5"
+        >
           <span className="font-deva text-[1.25rem] font-bold leading-none text-indigo">
             अधिकार
           </span>

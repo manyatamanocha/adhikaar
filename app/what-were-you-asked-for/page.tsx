@@ -185,7 +185,9 @@ function Situation({
       <p className="mt-3 text-[0.9375rem]" data-print="hide">
         <Link
           href={`/start${toQuery(answers)}`}
-          className="font-bold text-link underline underline-offset-2"
+          // Standalone control, not an inline link in a sentence — it gets a
+          // thumb-sized hit area without moving anything.
+          className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
         >
           {known ? "Change your answers" : "Answer the questions"}
         </Link>
