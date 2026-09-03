@@ -68,8 +68,8 @@ function Hero() {
           <ul className="mt-7 flex flex-wrap gap-x-7 gap-y-3">
             {[
               { icon: <ShieldIcon />, label: "RBI-backed rules" },
-              { icon: <LockIcon />, label: "No data stored" },
               { icon: <QuoteMarkIcon />, label: "Every claim cited" },
+              { icon: <TickIcon />, label: "Free to use" },
             ].map((t) => (
               <li
                 key={t.label}
@@ -133,22 +133,6 @@ function Hero() {
               </p>
             </div>
 
-            <div className="flex items-center gap-4 rounded-xl border border-rule bg-mist-deep p-4">
-              <div>
-                <p className="text-[1.0625rem] font-bold text-indigo-ink">
-                  31 March 2026
-                </p>
-                <p className="text-[0.875rem] text-ink-soft">
-                  Rule in force from
-                </p>
-              </div>
-              <span
-                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-paper text-indigo"
-                aria-hidden="true"
-              >
-                <CalendarIcon />
-              </span>
-            </div>
           </div>
         </div>
       </div>
