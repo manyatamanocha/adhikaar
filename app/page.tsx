@@ -26,18 +26,25 @@
 import Link from "next/link";
 import { NOTIFICATION, CLAUSES } from "@/lib/rbi";
 import { SiteHeader, SiteFooter } from "./_components/chrome";
+import { T, parseLocale, withLang, type Locale } from "@/lib/i18n";
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const lang = parseLocale((await searchParams).lang);
+
   return (
     <>
-      <SiteHeader />
+      <SiteHeader lang={lang} path="/" />
 
       <main className="flex-1 bg-paper">
-        <Hero />
-        <Numbers />
-        <Situations />
-        <Assurance />
-        <TrustStrip />
+        <Hero lang={lang} />
+        <Numbers lang={lang} />
+        <Situations lang={lang} />
+        <Assurance lang={lang} />
+        <TrustStrip lang={lang} />
       </main>
 
       <SiteFooter />
@@ -47,29 +54,26 @@ export default function Home() {
 
 /* ------------------------------------------------------------------ 1 */
 
-function Hero() {
+function Hero({ lang }: { lang: Locale }) {
+  const t = T[lang];
   return (
     <section className="border-b border-rule-faint bg-mist">
       <div className="shell grid items-center gap-12 py-12 sm:py-16 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
         <div>
           <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-indigo-ink">
-            You probably{" "}
-            <span className="text-indigo">
-              do not need a succession certificate.
-            </span>
+            {t.heroLead}{" "}
+            <span className="text-indigo">{t.heroClaim}</span>
           </h1>
 
           <p className="lede-fluid mt-5 max-w-[46ch] text-ink-soft">
-            RBI rules say that in most deposit claims, a bank{" "}
-            <strong className="font-bold text-ink">must not insist</strong> on
-            one.
+            {t.heroSub}
           </p>
 
           <ul className="mt-7 flex flex-wrap gap-x-7 gap-y-3">
             {[
-              { icon: <ShieldIcon />, label: "RBI-backed rules" },
-              { icon: <QuoteMarkIcon />, label: "Every claim cited" },
-              { icon: <TickIcon />, label: "Free to use" },
+              { icon: <ShieldIcon />, label: t.trustRules },
+              { icon: <QuoteMarkIcon />, label: t.trustCited },
+              { icon: <TickIcon />, label: t.trustFree },
             ].map((t) => (
               <li
                 key={t.label}
@@ -84,10 +88,10 @@ function Hero() {
           </ul>
 
           <Link
-            href="/start"
+            href={withLang("/start", lang)}
             className="mt-8 inline-flex items-center gap-3 rounded-xl bg-indigo px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-indigo-lift"
           >
-            Check your options
+            {t.cta}
             <span aria-hidden="true">&rarr;</span>
           </Link>
 
@@ -95,7 +99,7 @@ function Hero() {
             <span className="text-indigo" aria-hidden="true">
               <TickIcon />
             </span>
-            Takes less than 2 minutes
+            {t.ctaNote}
           </p>
         </div>
 
@@ -103,17 +107,30 @@ function Hero() {
         <div className="relative">
           <div className="rounded-2xl border border-rule bg-paper p-6 shadow-[0_12px_44px_rgba(23,37,29,0.10)] sm:p-8">
             <p className="text-step font-bold uppercase tracking-[0.12em] text-maroon">
-              The rule, in the RBI&apos;s own words
+              {t.quoteLabel}
             </p>
-            <blockquote className="body-fluid mt-4 font-serif leading-[1.6] text-ink">
+            {lang !== "en" && (
+              /* Translated gloss above, English clause below. A translated
+                 statutory quote stops being a quote and a branch officer can
+                 refuse it on that ground. */
+              <p className="body-fluid mt-3 text-ink" lang={lang}>
+                {t.quoteGloss}
+              </p>
+            )}
+            <blockquote
+              lang="en"
+              className="body-fluid mt-4 font-serif leading-[1.6] text-ink"
+            >
               &ldquo;… the bank shall not insist on production of legal documents
               such as Succession Certificate, Letter of Administration, Probate
               of Will, etc., or seek any bond of indemnity/ surety …
               irrespective of the amount standing to the credit.&rdquo;
             </blockquote>
             <p className="mt-5 border-t border-rule-faint pt-4 text-[0.875rem] leading-relaxed text-ink-soft">
-              Paragraph {CLAUSES.nomineeNoDocuments.para}, where a nominee or
-              surviving joint holder is on record.{" "}
+              {t.quoteAttribution.replace(
+                "9",
+                String(CLAUSES.nomineeNoDocuments.para),
+              )}{" "}
               <span className="text-ink-faint">
                 {NOTIFICATION.number} · issued {NOTIFICATION.issued}
               </span>
@@ -126,10 +143,8 @@ function Hero() {
                 <ShieldIcon />
               </span>
               <p className="text-[0.9375rem] leading-snug text-ink">
-                <strong className="font-bold">
-                  Most families are surprised to learn this.
-                </strong>{" "}
-                <span className="text-ink-soft">The rule changed recently.</span>
+                <strong className="font-bold">{t.surpriseStrong}</strong>{" "}
+                <span className="text-ink-soft">{t.surpriseRest}</span>
               </p>
             </div>
 
@@ -142,40 +157,19 @@ function Hero() {
 
 /* ------------------------------------------------------------------ 2 */
 
-const NUMBERS = [
-  {
-    icon: <RupeeIcon />,
-    figure: "₹17,000",
-    label: "What it costs",
-    note: "Court fees of about 3% of the amount, plus a lawyer.",
-  },
-  {
-    icon: <ClockIcon />,
-    figure: "4–7",
-    unit: "months",
-    label: "How long it takes",
-    note: "Uncontested. One to two years if any heir objects.",
-  },
-  {
-    icon: <ScaleIcon />,
-    figure: "₹15 lakh",
-    label: "The RBI floor",
-    note: "Below it a bank must follow the simplified procedure. A bank may set its own higher.",
-  },
-  {
-    icon: <CalendarIcon />,
-    figure: "31 Mar 2026",
-    label: "In force from",
-    note: "The date the Directions took effect.",
-  },
-] as const;
-
-function Numbers() {
+function Numbers({ lang }: { lang: Locale }) {
+  const t = T[lang];
+  const NUMBERS = [
+    { icon: <RupeeIcon />, figure: t.costFigure, label: t.costLabel, note: t.costNote },
+    { icon: <ClockIcon />, figure: t.timeFigure, unit: t.timeUnit, label: t.timeLabel, note: t.timeNote },
+    { icon: <ScaleIcon />, figure: t.floorFigure, label: t.floorLabel, note: t.floorNote },
+    { icon: <CalendarIcon />, figure: t.dateFigure, label: t.dateLabel, note: t.dateNote },
+  ];
   return (
     <section className="bg-paper">
       <div className="shell py-14 sm:py-16">
         <h2 className="display-lg text-center font-serif font-bold text-indigo-ink">
-          Four things to know first
+          {t.numbersHeading}
         </h2>
         {/* The mockup's small rule-and-dot under the heading. */}
         <div
@@ -202,7 +196,7 @@ function Numbers() {
               <p className="mt-4 font-serif text-[clamp(1.5rem,4.5vw,2rem)] font-bold leading-[1.1] text-indigo-ink">
                 {n.figure}
               </p>
-              {"unit" in n && n.unit && (
+              {n.unit && (
                 <p className="text-[1rem] font-bold text-ink-soft">{n.unit}</p>
               )}
               <p className="mt-2 text-[0.9375rem] font-bold text-ink">
@@ -221,41 +215,6 @@ function Numbers() {
 
 /* ------------------------------------------------------------------ 3 */
 
-const PATHS = [
-  {
-    icon: <PersonIcon />,
-    chip: "No certificate",
-    tone: "green",
-    title: "A nominee was registered",
-    body: "Nothing further, whatever the amount.",
-    href: "/nominee",
-  },
-  {
-    icon: <TwoPeopleIcon />,
-    chip: "No certificate",
-    tone: "amber",
-    title: "It was a joint account",
-    body: "A survivorship clause works the same way.",
-    href: "/survivorship",
-  },
-  {
-    icon: <DocIcon />,
-    chip: "Six documents",
-    tone: "blue",
-    title: "There was no nominee",
-    body: "A fixed list of six documents, below the floor.",
-    href: "/start?claiming=deposit&nominee=no",
-  },
-  {
-    icon: <QuestionIcon />,
-    chip: "Start here",
-    tone: "violet",
-    title: "I don't know",
-    body: "Most families do not. We will help you find out.",
-    href: "/start?claiming=deposit&nominee=unknown",
-  },
-] as const;
-
 const TONE: Record<string, { tint: string; ink: string }> = {
   green: { tint: "bg-indigo/10", ink: "text-indigo" },
   amber: { tint: "bg-saffron/15", ink: "text-saffron-ink" },
@@ -263,15 +222,22 @@ const TONE: Record<string, { tint: string; ink: string }> = {
   violet: { tint: "bg-accent-violet/10", ink: "text-accent-violet" },
 };
 
-function Situations() {
+function Situations({ lang }: { lang: Locale }) {
+  const t = T[lang];
+  const PATHS = [
+    { icon: <PersonIcon />, chip: t.chipNoCertificate, tone: "green", title: t.pathNominee, body: t.pathNomineeBody, href: "/nominee" },
+    { icon: <TwoPeopleIcon />, chip: t.chipNoCertificate, tone: "amber", title: t.pathJoint, body: t.pathJointBody, href: "/survivorship" },
+    { icon: <DocIcon />, chip: t.chipSixDocuments, tone: "blue", title: t.pathNoNominee, body: t.pathNoNomineeBody, href: "/start?claiming=deposit&nominee=no" },
+    { icon: <QuestionIcon />, chip: t.chipStartHere, tone: "violet", title: t.pathUnknown, body: t.pathUnknownBody, href: "/start?claiming=deposit&nominee=unknown" },
+  ];
   return (
     <section className="border-y border-rule-faint bg-mist">
       <div className="shell py-14 sm:py-16">
         <h2 className="display-lg font-serif font-bold text-indigo-ink">
-          What best describes your situation?
+          {t.situationsHeading}
         </h2>
         <p className="body-fluid mt-2 text-ink-soft">
-          We&apos;ll show you exactly what to do next.
+          {t.situationsSub}
         </p>
 
         <div className="mt-8 grid gap-4 lg:grid-cols-2 lg:gap-5">
@@ -280,7 +246,7 @@ function Situations() {
             return (
               <Link
                 key={p.title}
-                href={p.href}
+                href={withLang(p.href, lang)}
                 className="group flex items-start gap-4 rounded-2xl border border-rule-faint bg-paper p-5 transition-shadow hover:shadow-[0_10px_32px_rgba(23,37,29,0.10)] sm:p-6"
               >
                 <span
@@ -321,7 +287,8 @@ function Situations() {
 
 /* ------------------------------------------------------------------ 4 */
 
-function Assurance() {
+function Assurance({ lang }: { lang: Locale }) {
+  const t = T[lang];
   return (
     <section className="bg-paper">
       <div className="shell py-10 sm:py-12">
@@ -334,10 +301,10 @@ function Assurance() {
           </span>
           <div className="min-w-[16rem] flex-1">
             <p className="display-md font-serif font-bold text-indigo-ink">
-              The RBI&apos;s rules, in plain language, step by step.
+              {t.assuranceTitle}
             </p>
             <p className="mt-1 text-[0.9375rem] text-ink-soft">
-              We quote. You decide. Every sentence carries its paragraph number.
+              {t.assuranceSub}
             </p>
           </div>
           <a
@@ -346,7 +313,7 @@ function Assurance() {
             rel="noreferrer"
             className="-my-2 inline-flex items-center gap-2 py-2 text-[0.9375rem] font-bold text-link underline underline-offset-2"
           >
-            Read the rule itself
+            {t.assuranceLink}
             <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
@@ -357,26 +324,14 @@ function Assurance() {
 
 /* ------------------------------------------------------------------ 5 */
 
-const TRUST = [
-  { icon: <TickIcon />, title: "No sign-in", note: "No account needed" },
-  {
-    icon: <LockIcon />,
-    title: "No data stored",
-    note: "Nothing reaches a server",
-  },
-  {
-    icon: <QuoteMarkIcon />,
-    title: "Plain language",
-    note: "No unexplained jargon",
-  },
-  {
-    icon: <PrinterIcon />,
-    title: "A page to print",
-    note: "To hand across the counter",
-  },
-] as const;
-
-function TrustStrip() {
+function TrustStrip({ lang }: { lang: Locale }) {
+  const t = T[lang];
+  const TRUST = [
+    { icon: <TickIcon />, title: t.tNoSignIn, note: t.tNoSignInNote },
+    { icon: <LockIcon />, title: t.tNoData, note: t.tNoDataNote },
+    { icon: <QuoteMarkIcon />, title: t.tPlain, note: t.tPlainNote },
+    { icon: <PrinterIcon />, title: t.tPrint, note: t.tPrintNote },
+  ];
   return (
     <section className="border-t border-rule-faint bg-paper">
       <div className="shell grid grid-cols-2 gap-6 py-10 lg:grid-cols-4">

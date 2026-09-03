@@ -9,8 +9,24 @@
 
 import Link from "next/link";
 import { NOTIFICATION } from "@/lib/rbi";
+import {
+  LOCALES,
+  LOCALE_LABEL,
+  LOCALE_SHORT,
+  T,
+  withLang,
+  type Locale,
+} from "@/lib/i18n";
 
-export function SiteHeader() {
+export function SiteHeader({
+  lang = "en",
+  path = "/",
+}: {
+  lang?: Locale;
+  /** The page the switcher should stay on. */
+  path?: string;
+} = {}) {
+  const t = T[lang];
   return (
     <header
       data-print="hide"
@@ -18,7 +34,7 @@ export function SiteHeader() {
     >
       <div className="shell flex flex-wrap items-center justify-between gap-3 py-2.5">
         <Link
-          href="/"
+          href={withLang("/", lang)}
           // The go-home control on every page; 23px was not a thumb target.
           className="-my-1.5 flex items-baseline gap-2.5 py-1.5"
         >
@@ -31,16 +47,47 @@ export function SiteHeader() {
         </Link>
 
         <div className="flex items-center gap-2.5">
+          {/* The locale lives in the URL, never a cookie: "no cookie, nothing
+              that identifies you" is shipped copy, and a language cookie would
+              make it false. Each language is named in its own script, because
+              someone looking for Kannada is not looking for the word
+              "Kannada". */}
+          <nav
+            aria-label={t.language}
+            className="flex items-center rounded-pill border border-rule bg-white p-0.5"
+          >
+            {LOCALES.map((l) => {
+              const on = l === lang;
+              return (
+                <Link
+                  key={l}
+                  href={withLang(path, l)}
+                  hrefLang={l}
+                  lang={l}
+                  aria-current={on ? "true" : undefined}
+                  className={`rounded-pill px-3 py-1.5 text-[0.875rem] font-semibold transition-colors ${
+                    on
+                      ? "bg-indigo text-white"
+                      : "text-ink-soft hover:text-indigo"
+                  }`}
+                >
+                  <span className="sm:hidden">{LOCALE_SHORT[l]}</span>
+                  <span className="hidden sm:inline">{LOCALE_LABEL[l]}</span>
+                </Link>
+              );
+            })}
+          </nav>
+
           <a
             href={NOTIFICATION.url}
             target="_blank"
             rel="noreferrer"
-            className="hidden rounded-pill border border-rule bg-white px-3.5 py-1.5 text-[0.875rem] font-semibold text-indigo sm:inline-block"
+            className="hidden rounded-pill border border-rule bg-white px-3.5 py-1.5 text-[0.875rem] font-semibold text-indigo lg:inline-block"
           >
-            The RBI rules
+            {t.theRbiRules}
           </a>
           <span className="rounded-pill border border-maroon/35 bg-white px-3.5 py-1.5 text-[0.875rem] font-semibold text-maroon">
-            Not a government website
+            {t.notGovernment}
           </span>
         </div>
       </div>

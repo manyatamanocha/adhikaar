@@ -4,6 +4,7 @@ import {
   Source_Sans_3,
   Spectral,
   Noto_Sans_Devanagari,
+  Noto_Sans_Kannada,
 } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "./_components/analytics";
@@ -37,6 +38,15 @@ const notoDeva = Noto_Sans_Devanagari({
   display: "swap",
 });
 
+/* Kannada needs its own face; Noto Sans has no Kannada coverage, and the
+   fallback renders as boxes on most Windows machines. */
+const notoKannada = Noto_Sans_Kannada({
+  variable: "--font-noto-kannada",
+  subsets: ["kannada"],
+  weight: ["400", "600", "700"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Adhikaar — you probably do not need a succession certificate",
   description:
@@ -47,7 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sourceSans.variable} ${spectral.variable} ${notoDeva.variable} h-full antialiased`}
+      className={`${sourceSans.variable} ${spectral.variable} ${notoDeva.variable} ${notoKannada.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
         {/*

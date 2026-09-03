@@ -70,6 +70,7 @@ type Dict = {
   trustRules: string;
   trustNoData: string;
   trustCited: string;
+  trustFree: string;
   cta: string;
   ctaNote: string;
 
@@ -139,6 +140,7 @@ const en: Dict = {
   trustRules: "RBI-backed rules",
   trustNoData: "No data stored",
   trustCited: "Every claim cited",
+  trustFree: "Free to use",
   cta: "Check your options",
   ctaNote: "Takes less than 2 minutes",
 
@@ -208,6 +210,7 @@ const hi: Dict = {
   trustRules: "आरबीआई के नियमों पर आधारित",
   trustNoData: "कोई जानकारी संग्रहीत नहीं",
   trustCited: "हर बात का स्रोत दिया गया",
+  trustFree: "उपयोग निःशुल्क",
   cta: "अपने विकल्प देखें",
   ctaNote: "दो मिनट से भी कम समय",
 
@@ -277,6 +280,7 @@ const kn: Dict = {
   trustRules: "ಆರ್‌ಬಿಐ ನಿಯಮಗಳ ಆಧಾರದ ಮೇಲೆ",
   trustNoData: "ಯಾವುದೇ ಮಾಹಿತಿ ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ",
   trustCited: "ಪ್ರತಿ ಮಾತಿಗೂ ಆಧಾರ",
+  trustFree: "ಉಚಿತ ಬಳಕೆ",
   cta: "ನಿಮ್ಮ ಆಯ್ಕೆಗಳನ್ನು ನೋಡಿ",
   ctaNote: "ಎರಡು ನಿಮಿಷಗಳಿಗಿಂತ ಕಡಿಮೆ",
 

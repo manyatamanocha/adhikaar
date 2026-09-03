@@ -70,13 +70,17 @@
 
   --color-link: #2d5443;
 
+  /* The Indic faces sit IN the body stack, not only on the wordmark: a Hindi
+     or Kannada page is set in the same sans as an English one, and the browser
+     reaches past Source Sans for glyphs it does not carry. */
   --font-sans:
-    var(--font-source-sans), "Noto Sans", system-ui, -apple-system, "Segoe UI",
-    Roboto, Arial, sans-serif;
+    var(--font-source-sans), var(--font-noto-deva), var(--font-noto-kannada),
+    "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   /* Headlines are set in a serif because a verdict quoting a statute should
      look like a document, not like an app. */
   --font-serif: var(--font-spectral), Georgia, "Times New Roman", serif;
   --font-deva: var(--font-noto-deva), "Nirmala UI", sans-serif;
+  --font-kannada: var(--font-noto-kannada), "Nirmala UI", sans-serif;
 
   /* Category accents, for the outcome cards that need to be told apart at a
      glance. Never the sole carrier of a distinction — each card also says in
