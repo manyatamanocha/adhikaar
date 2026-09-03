@@ -32,6 +32,7 @@ import { parseAnswers, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
 import { DeadlineTracker } from "./deadline-tracker";
 import { BeliefSurvey } from "./belief-survey";
+import { SectionNav } from "./section-nav";
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -71,6 +72,17 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
 
       <main className="flex-1">
         <Verdict id={id} />
+
+        {/* Placed under the verdict, not above it: the answer is the one thing
+            that must never compete for the first screen. */}
+        <SectionNav
+          present={[
+            "steps",
+            ...(outcome.documents ? ["documents", "tactics"] : []),
+            "evidence",
+            ...(outcome.caveats?.length ? ["caveats"] : []),
+          ]}
+        />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
           {/* Asked here, under the verdict, because the belief it measures is
@@ -184,7 +196,7 @@ function Verdict({ id }: { id: OutcomeId }) {
 
 function Steps({ steps }: { steps: string[] }) {
   return (
-    <Section title="Your next steps">
+    <Section id="steps" title="Your next steps">
       <ol className="mt-5 space-y-4">
         {steps.map((step, i) => (
           <li key={i} className="flex gap-4">
@@ -212,6 +224,7 @@ function Documents({
 }) {
   return (
     <Section
+      id="documents"
       title={`The ${numberWord(ids.length)} documents the RBI names`}
       lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document. Tick the ones you already have."
     >
@@ -380,11 +393,16 @@ function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
 
 function Field({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <dt className="text-[0.75rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+    // Label beside the value on a phone, above it once there is room for three
+    // columns. Stacking all three on a 390px screen cost about fifty pixels a
+    // document for no gain in scanability.
+    <div className="flex gap-3 sm:block">
+      {/* Fixed label column on a phone so the three values share a left edge;
+          "WHERE FROM" is wider than "COST" and a ragged column reads as sloppy. */}
+      <dt className="w-[5.25rem] shrink-0 text-[0.75rem] font-bold uppercase leading-[1.6] tracking-[0.1em] text-ink-faint sm:w-auto sm:leading-normal">
         {label}
       </dt>
-      <dd className="mt-0.5 text-ink">{value}</dd>
+      <dd className="text-ink sm:mt-0.5">{value}</dd>
     </div>
   );
 }
@@ -394,6 +412,7 @@ function Field({ label, value }: { label: string; value: string }) {
 function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
   return (
     <Section
+      id="evidence"
       title="The rule, in the RBI's own words"
       lede="This is the part to show the bank. Every paragraph number below is in the notification, and the link opens it."
     >
@@ -451,6 +470,7 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
 function Tactics() {
   return (
     <Section
+      id="tactics"
       title="Four things to do at the branch"
       lede="These are procedural, not legal. Each one closes a specific way a claim stalls."
     >
@@ -480,7 +500,7 @@ function Tactics() {
 
 function Caveats({ caveats }: { caveats: (typeof OUTCOMES)[OutcomeId]["caveats"] }) {
   return (
-    <Section title="What could change the answer">
+    <Section id="caveats" title="What could change the answer">
       <ul className="mt-5 space-y-4">
         {caveats.map((caveat) => (
           <li
@@ -578,16 +598,23 @@ function SourceLine() {
    already said, and on a phone that is a screenful of scroll bought with
    nothing — on a page a grieving reader is already scrolling too much of. */
 function Section({
+  id,
   title,
   lede,
   children,
 }: {
+  id?: string;
   title: string;
   lede?: string;
   children: React.ReactNode;
 }) {
   return (
-    <section className="mt-12 first:mt-0">
+    <section
+      id={id}
+      // Clears the sticky jump bar when an anchor lands here, so the heading
+      // is not hidden underneath it.
+      className="mt-12 scroll-mt-20 first:mt-0"
+    >
       <h2 className="display-lg font-serif font-bold text-indigo-ink">
         {title}
       </h2>
