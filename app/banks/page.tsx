@@ -87,15 +87,26 @@ export default function Page() {
             </div>
           )}
 
+          {/* Six columns cannot fit a phone, and a table that scrolls with no
+              sign that it scrolls just looks like a table with its right-hand
+              side chopped off. Say so, once, on the screens where it is true. */}
+          <p
+            data-print="hide"
+            className="mt-8 text-[0.875rem] text-ink-soft lg:hidden"
+          >
+            Swipe the table sideways for the rest of the columns. The bank names
+            stay put.
+          </p>
+
           {/* Wide content scrolls inside its own box; the page never does. */}
-          <div className="mt-8 overflow-x-auto rounded-xl border border-rule">
+          <div className="mt-2.5 overflow-x-auto rounded-xl border border-rule lg:mt-8">
             <table className="w-full min-w-[820px] border-collapse text-left text-[0.9375rem]">
               <caption className="sr-only">
                 Deceased-claim practice at {BANKS.length} banks
               </caption>
               <thead>
                 <tr className="bg-indigo text-white">
-                  <Th>Bank</Th>
+                  <Th stick>Bank</Th>
                   <Th>Its own threshold</Th>
                   <Th>Third-party surety below it</Th>
                   <Th>Policy published</Th>
@@ -109,7 +120,7 @@ export default function Page() {
                     key={bank.id}
                     className={i % 2 ? "bg-mist" : "bg-white"}
                   >
-                    <Td>
+                    <Td stick zebra={i % 2 ? "bg-mist" : "bg-white"}>
                       <span className="font-bold text-indigo-ink">
                         {bank.short}
                       </span>
@@ -274,20 +285,54 @@ export default function Page() {
 
 /* ------------------------------------------------------------------ */
 
-function Th({ children }: { children: React.ReactNode }) {
+/**
+ * `stick` pins the bank-name column while the other five scroll under it.
+ *
+ * Six columns need 820px and the primary device is a 390px phone, so half the
+ * table is always off-screen. That is survivable; losing which bank's row you
+ * are reading is not, and this table's whole argument is a comparison between
+ * named banks. The shadow on the right edge is what makes the pinned column
+ * read as sitting above the scrolling ones rather than as a rendering seam.
+ */
+function Th({
+  children,
+  stick,
+}: {
+  children: React.ReactNode;
+  stick?: boolean;
+}) {
   return (
     <th
       scope="col"
-      className="border-b border-indigo-deep px-4 py-3 text-[0.8125rem] font-bold uppercase tracking-[0.06em]"
+      className={`border-b border-indigo-deep px-4 py-3 text-[0.8125rem] font-bold uppercase tracking-[0.06em] ${
+        stick
+          ? "sticky left-0 z-10 bg-indigo shadow-[1px_0_0_var(--color-indigo-deep)]"
+          : ""
+      }`}
     >
       {children}
     </th>
   );
 }
 
-function Td({ children }: { children: React.ReactNode }) {
+function Td({
+  children,
+  stick,
+  zebra,
+}: {
+  children: React.ReactNode;
+  stick?: boolean;
+  /** The row's own ground, repeated so the pinned cell is never transparent. */
+  zebra?: string;
+}) {
   return (
-    <td className="border-b border-rule-faint px-4 py-3.5 align-top">
+    <td
+      className={`border-b border-rule-faint px-4 py-3.5 align-top ${
+        stick
+          ? `sticky left-0 z-10 ${zebra ?? "bg-white"} shadow-[1px_0_0_var(--color-rule)]`
+          : ""
+      }`}
+    >
       {children}
     </td>
   );
