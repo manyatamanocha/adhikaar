@@ -46,3 +46,7 @@ next-env.d.ts
 # impeccable: keep config.json (the design-rule decisions), drop session state
 .impeccable/questions/
 .impeccable/hook.cache.json
+
+# design canvas working files (the seeded output is 200KB of editor payload)
+design/adhikaar-landing-page.html
+design/extracted/

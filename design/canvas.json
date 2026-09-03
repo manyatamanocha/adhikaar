@@ -1,0 +1,23 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 5200, "title": "Phone — 390px" },
+    { "file": "Desktop.dc.html", "x": 520, "y": 0, "w": 1280, "h": 2700, "title": "Desktop — 1280px" }
+  ],
+  "annotations": [
+    {
+      "id": "how-to-use",
+      "x": 0,
+      "y": -220,
+      "w": 460,
+      "text": "Adhikaar landing page, as it stands on localhost:3000.\n\nDrag, retype, resize, restyle anything. The Type slider above each frame scales the whole page at once — that is the lever for the text-size question.\n\nTell me what you changed and I will put it into the real site."
+    },
+    {
+      "id": "phone-first",
+      "x": 1880,
+      "y": 0,
+      "w": 300,
+      "text": "The phone is the real device. PRODUCT.md: the reader is often standing at a bank counter, on a mid-range Android. Judge it on the left frame first."
+    }
+  ],
+  "launch": { "view": "canvas" }
+}

@@ -32,10 +32,10 @@
   /* Brand. Token NAMES are kept from the first pass so no component has to
      change; only the values are ours. "indigo" is now a deep navy and
      "saffron" an ochre — the names are historical, the colours are not. */
-  --color-indigo: #1d3461;
-  --color-indigo-lift: #2b4a80;
-  --color-indigo-deep: #12233f;
-  --color-indigo-ink: #0d1b30;
+  --color-indigo: #2d5443;
+  --color-indigo-lift: #3a6b56;
+  --color-indigo-deep: #1f3d31;
+  --color-indigo-ink: #17251d;
   --color-maroon: #7a2233;
   --color-maroon-lift: #96394b;
   --color-saffron: #c8761a;
@@ -53,8 +53,8 @@
      cool blue-grey ground, which is a screen colour; this one is the colour of
      the thing being handed across the counter. */
   --color-paper: #ffffff;
-  --color-mist: #f5f3ee;
-  --color-mist-deep: #ebe7de;
+  --color-mist: #f4f1e9;
+  --color-mist-deep: #e8e2d5;
   --color-blush: #f7ede9;
 
   /* Ink. Warm neutrals to match the ground. ink-faint carries the small-caps
@@ -65,10 +65,10 @@
   --color-ink-faint: #6b6459;
 
   /* Structure */
-  --color-rule: #d3ccc0;
-  --color-rule-faint: #e8e3d9;
+  --color-rule: #d8d2c4;
+  --color-rule-faint: #ebe6dc;
 
-  --color-link: #1d3461;
+  --color-link: #2d5443;
 
   --font-sans:
     var(--font-source-sans), "Noto Sans", system-ui, -apple-system, "Segoe UI",
@@ -81,8 +81,9 @@
   /* Category accents, for the outcome cards that need to be told apart at a
      glance. Never the sole carrier of a distinction — each card also says in
      words which paragraph it runs on. */
-  --color-accent-green: #1f6b47;
-  --color-accent-violet: #5c4a7d;
+  --color-accent-green: #2d5443;
+  --color-accent-violet: #6b5490;
+  --color-accent-blue: #3b5ea8;
 
   --text-step: 0.9375rem;
   --text-body: 1.1875rem;
