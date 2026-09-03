@@ -231,10 +231,6 @@ function Results({
         What the RBI&apos;s list says about each one
       </h2>
 
-      <div data-print="hide" className="mt-4">
-        <PrintButton />
-      </div>
-
       {not.length > 0 && (
         <Group
           heading={`${count(not.length)} not in the RBI's list for your situation`}
@@ -252,6 +248,20 @@ function Results({
           items={prescribed}
         />
       )}
+
+      {/* Below the answer, not above it. An orange button between the heading
+          and the comparison interrupts the reader at the exact moment they are
+          reaching for the result -- and printing is what you do once you have
+          it and want to carry it to the counter. */}
+      <div
+        data-print="hide"
+        className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-rule pt-6"
+      >
+        <PrintButton />
+        <p className="text-[0.875rem] text-ink-soft">
+          Takes the paragraph numbers with it, so the officer can check each one.
+        </p>
+      </div>
     </section>
   );
 }
