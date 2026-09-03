@@ -79,7 +79,12 @@ function Head({
 
 function Hero() {
   return (
-    <section className="bg-indigo">
+    <section className="relative overflow-hidden bg-indigo">
+      {/* A ledger rule and an outlined passbook, drawn once and set very low.
+          The hero was a flat rectangle of navy; this gives it the texture of
+          the object the whole page is about, without an illustration that
+          would be cheerful at a family that has just had a death. */}
+      <HeroField />
       <div className="shell grid gap-9 py-11 sm:py-14 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:gap-14">
         <div>
         <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-white">
@@ -189,7 +194,10 @@ function Numbers() {
         <ul className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-rule bg-rule lg:grid-cols-4">
           {NUMBERS.map((n) => (
             <li key={n.label} className="bg-paper p-5 sm:p-6">
-              <span className="block text-indigo" aria-hidden="true">
+              <span
+                aria-hidden="true"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-indigo/8 text-indigo"
+              >
                 {n.icon}
               </span>
               <p className="mt-3 font-serif text-[clamp(1.75rem,5vw,2.5rem)] font-bold leading-[1.05] text-indigo-ink">
@@ -222,6 +230,7 @@ function Numbers() {
    the verdict; the other two still need the amount and the dispute question. */
 const PATHS = [
   {
+    icon: <PersonNamedIcon />,
     chip: "para 9",
     tone: "green",
     title: "A nominee was registered",
@@ -229,6 +238,7 @@ const PATHS = [
     href: "/nominee",
   },
   {
+    icon: <TwoPeopleIcon />,
     chip: "para 9",
     tone: "saffron",
     title: "It was a joint account",
@@ -236,6 +246,7 @@ const PATHS = [
     href: "/survivorship",
   },
   {
+    icon: <ChecklistIcon />,
     chip: "para 10",
     tone: "indigo",
     title: "There was no nominee",
@@ -243,6 +254,7 @@ const PATHS = [
     href: "/start?claiming=deposit&nominee=no",
   },
   {
+    icon: <QuestionIcon />,
     chip: "start here",
     tone: "violet",
     title: "I don't know",
@@ -295,11 +307,17 @@ function WhereDoYouStand() {
                 className={`group flex flex-col rounded-xl border-2 bg-paper p-4 transition-shadow hover:shadow-[0_6px_24px_rgba(29,52,97,0.14)] sm:p-5 ${t.border}`}
               >
                 <span
-                  className={`inline-flex w-fit rounded-md px-2 py-0.5 text-[0.6875rem] font-bold uppercase tracking-[0.08em] sm:text-[0.75rem] ${t.chipBg} ${t.chipText}`}
+                  aria-hidden="true"
+                  className={`inline-flex h-11 w-11 items-center justify-center rounded-full ${t.chipBg} ${t.chipText}`}
+                >
+                  {p.icon}
+                </span>
+                <span
+                  className={`mt-3 inline-flex w-fit rounded-md px-2 py-0.5 text-[0.6875rem] font-bold uppercase tracking-[0.08em] sm:text-[0.75rem] ${t.chipBg} ${t.chipText}`}
                 >
                   {p.chip}
                 </span>
-                <h3 className="display-md mt-3 font-serif font-bold text-indigo-ink">
+                <h3 className="display-md mt-2.5 font-serif font-bold text-indigo-ink">
                   {p.title}
                 </h3>
                 <p className="mt-1.5 flex-1 text-[0.875rem] leading-relaxed text-ink-soft">
@@ -473,5 +491,92 @@ function CalendarIcon() {
         strokeLinecap="round"
       />
     </svg>
+  );
+}
+
+function PersonNamedIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="8" r="3.6" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M5 20c0-3.4 3.1-5.6 7-5.6s7 2.2 7 5.6"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function TwoPeopleIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="9" cy="8.4" r="3.2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M17 6.2a3.2 3.2 0 0 1 0 4.6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path
+        d="M3 19.6c0-3 2.7-4.9 6-4.9s6 1.9 6 4.9M17.5 15.2c2.1.5 3.5 1.9 3.5 4.4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function ChecklistIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="4.5" y="3.5" width="15" height="17" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M8.4 9h7.2M8.4 12.6h7.2M8.4 16.2h4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function QuestionIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" strokeWidth="1.5" />
+      <path
+        d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.7-.9 1.3v.5"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+      <circle cx="12" cy="16.4" r="0.95" fill="currentColor" />
+    </svg>
+  );
+}
+
+/** Texture behind the hero. Decorative only, and never on paper. */
+function HeroField() {
+  return (
+    <div
+      aria-hidden="true"
+      data-print="hide"
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+    >
+      <svg
+        className="absolute -right-16 top-1/2 h-[125%] -translate-y-1/2 opacity-[0.07]"
+        viewBox="0 0 320 320"
+        fill="none"
+      >
+        <rect x="52" y="34" width="196" height="252" rx="10" stroke="#e8a34a" strokeWidth="2.5" />
+        <rect x="76" y="10" width="196" height="252" rx="10" stroke="#e8a34a" strokeWidth="2.5" />
+        {Array.from({ length: 9 }).map((_, i) => (
+          <path
+            key={i}
+            d={`M100 ${58 + i * 22}h150`}
+            stroke="#e8a34a"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        ))}
+      </svg>
+    </div>
   );
 }
