@@ -326,7 +326,7 @@ function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
     const longest = ids.filter((id) => DOCUMENTS[id].startFirst);
     if (longest.length === 0) return null;
     return (
-      <p className="hardbox mt-5 body-fluid">
+      <p className="actionbox mt-5 body-fluid">
         <strong className="font-bold">Start today: </strong>
         {longest.map((id) => DOCUMENTS[id].name).join(", ")}
         {" — "}
@@ -338,7 +338,7 @@ function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
 
   if (r.complete) {
     return (
-      <p className="hardbox mt-5 body-fluid">
+      <p className="actionbox mt-5 body-fluid">
         <strong className="font-bold">
           You have all {numberWord(r.total)}.{" "}
         </strong>
@@ -353,7 +353,7 @@ function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
   const others = r.missing.length - 1;
 
   return (
-    <div className="hardbox mt-5 body-fluid">
+    <div className="actionbox mt-5 body-fluid">
       <p>
         <strong className="font-bold">
           You have {r.haveCount} of {r.total}.

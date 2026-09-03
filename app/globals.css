@@ -178,6 +178,17 @@ a {
   background: var(--color-blush);
 }
 
+/* An instruction carries the same "do not skim this" weight as a caveat, so it
+   gets the same box — but in the product's own indigo. Maroon on blush is what
+   this product says hard news in ("a succession certificate may genuinely be
+   required here"), and telling someone which document to start collecting today
+   is not hard news. Same structure, different claim. */
+.actionbox {
+  border: 3px solid var(--color-indigo);
+  padding: 1rem 1.125rem;
+  background: var(--color-mist);
+}
+
 /* ---------------------------------------------------------------------------
    PRINT — the counter sheet.
    The page IS the artifact. Everything here exists so that Ctrl+P produces
@@ -214,7 +225,8 @@ a {
     box-shadow: none !important;
   }
 
-  .hardbox {
+  .hardbox,
+  .actionbox {
     border: 2px solid #000 !important;
   }
 
