@@ -3,11 +3,23 @@
 /* ---------------------------------------------------------------------------
    Adhikaar — tokens
 
-   Register: an Indian official financial-services portal, in the family of
-   unclaimedassetsportal.in (DFS / PSB Alliance). Palette and type sampled from
-   that portal's own stylesheet on 3 Sep 2026.
+   Register: an Indian public-information tool that a bank officer will accept
+   as a document. Adjacent to the official financial-services portals in tone,
+   deliberately not in appearance.
 
-   HARD LINE: the register is borrowed, the identity is NOT. No state emblem,
+   The first pass sampled its palette and display face directly from
+   unclaimedassetsportal.in's stylesheet, which was a mistake and was replaced
+   on 4 Sep 2026. Borrowing a register is fair; wearing another site's specific
+   colours and serif is not, and it made this look like that portal rather than
+   like itself.
+
+   What replaced it: a warm ground instead of a cool blue-grey one, because the
+   artifact is a piece of paper and paper is warm; a deep navy that carries
+   authority without the violet cast of the sampled indigo; and ochre rather
+   than a saturated orange, so the accent reads as printed ink rather than as a
+   web button.
+
+   HARD LINE: the register is adjacent, the identity is NOT. No state emblem,
    no ministry marks, no tricolour device, nothing that lets a reader conclude
    this is a government site. Adhikaar cites the government; it never wears it.
 
@@ -17,50 +29,60 @@
 --------------------------------------------------------------------------- */
 
 @theme {
-  /* Brand — sampled from the reference portal */
-  --color-indigo: #2d3079;
-  --color-indigo-lift: #3b3fa0;
-  --color-indigo-deep: #182a63;
-  --color-indigo-ink: #0f1f45;
-  --color-maroon: #7b1e3a;
-  --color-maroon-lift: #9b3a56;
-  --color-saffron: #fe7f01;
-  /* Saffron is a fill, not an ink: #fe7f01 measures 2.55:1 on white. This is
-     the same hue taken down to 5.34:1 for anywhere saffron has to be TEXT on a
-     light ground. Text on a saffron fill uses indigo-ink, 6.34:1. */
-  --color-saffron-ink: #a85400;
+  /* Brand. Token NAMES are kept from the first pass so no component has to
+     change; only the values are ours. "indigo" is now a deep navy and
+     "saffron" an ochre — the names are historical, the colours are not. */
+  --color-indigo: #1d3461;
+  --color-indigo-lift: #2b4a80;
+  --color-indigo-deep: #12233f;
+  --color-indigo-ink: #0d1b30;
+  --color-maroon: #7a2233;
+  --color-maroon-lift: #96394b;
+  --color-saffron: #c8761a;
+  /* Ochre is a fill, not an ink: #c8761a measures 3.46:1 on white, which is
+     fine behind large text or as a rule and not fine as body copy. This is the
+     same hue taken down for anywhere it has to be TEXT on a light ground. */
+  --color-saffron-ink: #8a4e0c;
+  /* And taken UP for the opposite case: ochre as text on the dark indigo hero.
+     The fill weight manages only 3.53:1 there, which fails AA on the small pill
+     label; this clears 5.69:1. One hue, three weights, because a colour that
+     has to work as a fill on white and as type on navy cannot be one value. */
+  --color-saffron-lift: #e8a34a;
 
-  /* Grounds */
+  /* Grounds. Warm, because the deliverable is paper. The sampled palette ran a
+     cool blue-grey ground, which is a screen colour; this one is the colour of
+     the thing being handed across the counter. */
   --color-paper: #ffffff;
-  --color-mist: #f4f6fa;
-  --color-mist-deep: #eef2f8;
-  --color-blush: #f9eef1;
+  --color-mist: #f5f3ee;
+  --color-mist-deep: #ebe7de;
+  --color-blush: #f7ede9;
 
-  /* Ink.
-     ink-faint was #8a96ad, which measured 2.98:1 on white and 2.75:1 on mist —
-     below AA for the small caps labels it is used on. These labels are read by
-     people who are older, tired and under stress, so it is darkened to clear
-     4.5:1 on both grounds rather than kept for its lightness. */
-  --color-ink: #1f2933;
-  --color-ink-soft: #5d6683;
-  --color-ink-faint: #616e88;
+  /* Ink. Warm neutrals to match the ground. ink-faint carries the small-caps
+     labels, which are read by people who are older, tired and under stress, so
+     it clears 4.5:1 on BOTH white and mist rather than being kept light. */
+  --color-ink: #22201c;
+  --color-ink-soft: #55504a;
+  --color-ink-faint: #6b6459;
 
   /* Structure */
-  --color-rule: #c5d0e5;
-  --color-rule-faint: #e2e8f0;
+  --color-rule: #d3ccc0;
+  --color-rule-faint: #e8e3d9;
 
-  --color-link: #2d3079;
+  --color-link: #1d3461;
 
   --font-sans:
     var(--font-source-sans), "Noto Sans", system-ui, -apple-system, "Segoe UI",
     Roboto, Arial, sans-serif;
-  /* Headlines are set in a serif, as the reference portal sets them. */
-  --font-serif: var(--font-merriweather), Georgia, "Times New Roman", serif;
+  /* Headlines are set in a serif because a verdict quoting a statute should
+     look like a document, not like an app. */
+  --font-serif: var(--font-spectral), Georgia, "Times New Roman", serif;
   --font-deva: var(--font-noto-deva), "Nirmala UI", sans-serif;
 
-  /* Category accents — the reference gives each card its own border colour. */
-  --color-accent-green: #1b7a4b;
-  --color-accent-violet: #5b4b9b;
+  /* Category accents, for the outcome cards that need to be told apart at a
+     glance. Never the sole carrier of a distinction — each card also says in
+     words which paragraph it runs on. */
+  --color-accent-green: #1f6b47;
+  --color-accent-violet: #5c4a7d;
 
   --text-step: 0.8125rem;
   --text-body: 1.0625rem;
@@ -126,9 +148,10 @@ a {
 
 /* ---------------------------------------------------------------------------
    Shell + fluid type.
-   The reference portal runs a 1440px container with ~40px gutters, and sets
-   display type with clamp() against the viewport rather than at fixed steps —
-   which is why it fills a wide screen instead of sitting in a narrow column.
+   A wide container with generous gutters, and display type set with clamp()
+   against the viewport rather than at fixed breakpoints, so a verdict fills
+   the screen it is read on instead of sitting in a narrow column on a laptop
+   and overflowing on a phone.
 --------------------------------------------------------------------------- */
 
 .shell {
@@ -148,7 +171,8 @@ a {
   }
 }
 
-/* clamp(32px, 4.2vw, 54px) — the reference's own display ramp. */
+/* The verdict sentence. Large enough to be the first thing read, capped so it
+   never costs more than one screen on a phone. */
 .display-xl {
   font-size: clamp(2rem, 4.2vw, 3.375rem);
   line-height: 1.14;
@@ -212,6 +236,20 @@ a {
   nav,
   button {
     display: none !important;
+  }
+
+  /* A folded section still reaches the counter. On screen the reference matter
+     is collapsed so the reader is not buried; on paper it is all there, whether
+     or not they happened to tap the heading. The sheet is the artifact and it
+     has to be complete. `open` is also forced from JS on beforeprint, because
+     ::details-content is not supported everywhere. */
+  details > summary {
+    display: none !important;
+  }
+  details::details-content {
+    content-visibility: visible !important;
+    display: block !important;
+    block-size: auto !important;
   }
 
   [data-print="only"] {

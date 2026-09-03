@@ -32,7 +32,6 @@ import { parseAnswers, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
 import { DeadlineTracker } from "./deadline-tracker";
 import { BeliefSurvey } from "./belief-survey";
-import { SectionNav } from "./section-nav";
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -72,17 +71,6 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
 
       <main className="flex-1">
         <Verdict id={id} />
-
-        {/* Placed under the verdict, not above it: the answer is the one thing
-            that must never compete for the first screen. */}
-        <SectionNav
-          present={[
-            "steps",
-            ...(outcome.documents ? ["documents", "tactics"] : []),
-            "evidence",
-            ...(outcome.caveats?.length ? ["caveats"] : []),
-          ]}
-        />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
           {/* Asked here, under the verdict, because the belief it measures is
@@ -225,8 +213,10 @@ function Documents({
   return (
     <Section
       id="documents"
+      fold
       title={`The ${numberWord(ids.length)} documents the RBI names`}
-      lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document. Tick the ones you already have."
+      note={`What to bring, what each one costs and how long it takes. Tick the ones you already have.`}
+      lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document."
     >
       <ReadinessBox ids={ids} have={have} />
 
@@ -417,8 +407,10 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
   return (
     <Section
       id="evidence"
+      fold
       title="The rule, in the RBI's own words"
-      lede="This is the part to show the bank. Every paragraph number below is in the notification, and the link opens it."
+      note="The paragraphs to show the bank, quoted exactly, each one linked to the notification."
+      lede="Every paragraph number below is in the notification, and the link opens it."
     >
       <ul className="mt-5 space-y-5">
         {clauses.map((key) => {
@@ -475,8 +467,9 @@ function Tactics() {
   return (
     <Section
       id="tactics"
+      fold
       title="Four things to do at the branch"
-      lede="These are procedural, not legal. Each one closes a specific way a claim stalls."
+      note="Procedural, not legal. Each one closes a specific way a claim stalls."
     >
       <ol className="mt-5 grid gap-4 sm:grid-cols-2">
         {TACTICS.map((tactic, i) => (
@@ -604,24 +597,79 @@ function SourceLine() {
 /* No kicker above the heading. Each one repeated what the heading beneath it
    already said, and on a phone that is a screenful of scroll bought with
    nothing — on a page a grieving reader is already scrolling too much of. */
+/**
+ * `fold` collapses a section behind its own heading.
+ *
+ * A verdict page carries about ten thousand pixels of legitimate content, and
+ * showing all of it at once was too much: the reader gets their answer and then
+ * twelve screens of material, with no signal about which part is for now and
+ * which is for the bank counter later. The answer, the next steps and the hard
+ * caveats stay open. The reference matter folds.
+ *
+ * Nothing is removed. Every folded section is still in the DOM, still found by
+ * in-page search, and still on the printed sheet — the print rules force every
+ * <details> open, because the artifact handed across a counter has to be
+ * complete whether or not the reader happened to tap that heading.
+ *
+ * <details> is native: no JavaScript, no client state, and the open/closed
+ * state is the browser's, not ours.
+ */
 function Section({
   id,
   title,
   lede,
+  fold,
+  note,
   children,
 }: {
   id?: string;
   title: string;
   lede?: string;
+  fold?: boolean;
+  /** A word on what is inside, shown on the closed heading. */
+  note?: string;
   children: React.ReactNode;
 }) {
+  if (fold) {
+    return (
+      <details id={id} className="group mt-8 border-t border-rule pt-6 first:mt-0">
+        <summary className="-my-2 flex cursor-pointer list-none items-baseline justify-between gap-4 py-2 [&::-webkit-details-marker]:hidden">
+          <span>
+            {/* A folded heading is a label in a list of sections, not a title
+                on a page of its own. At display-lg it wrapped to two lines and
+                crowded the Show control; the open sections keep the big size,
+                so the difference also tells you which is which. */}
+            <span className="display-md block font-serif font-bold text-indigo-ink">
+              {title}
+            </span>
+            {note && (
+              <span className="mt-1 block text-[0.9375rem] text-ink-soft">
+                {note}
+              </span>
+            )}
+          </span>
+          {/* Drawn, not a glyph: a rule that rotates. Reads as open/closed
+              without relying on an icon font or an emoji. */}
+          <span
+            aria-hidden="true"
+            className="mt-2 shrink-0 text-[0.8125rem] font-bold uppercase tracking-[0.08em] text-saffron-ink"
+          >
+            <span className="group-open:hidden">Show</span>
+            <span className="hidden group-open:inline">Hide</span>
+          </span>
+        </summary>
+        <div className="mt-4">
+          {lede && (
+            <p className="body-fluid max-w-[68ch] text-ink-soft">{lede}</p>
+          )}
+          {children}
+        </div>
+      </details>
+    );
+  }
+
   return (
-    <section
-      id={id}
-      // Clears the sticky jump bar when an anchor lands here, so the heading
-      // is not hidden underneath it.
-      className="mt-12 scroll-mt-20 first:mt-0"
-    >
+    <section id={id} className="mt-12 scroll-mt-20 first:mt-0">
       <h2 className="display-lg font-serif font-bold text-indigo-ink">
         {title}
       </h2>

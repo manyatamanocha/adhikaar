@@ -27,13 +27,13 @@ function Hero() {
     <section className="bg-indigo">
       <div className="shell grid gap-10 py-12 sm:py-16 lg:grid-cols-[1.15fr_1fr] lg:items-center lg:gap-14">
         <div>
-          <span className="inline-flex items-center gap-2 rounded-pill bg-white/12 px-3.5 py-1.5 text-[0.8125rem] font-semibold text-saffron ring-1 ring-inset ring-white/25">
+          <span className="inline-flex items-center gap-2 rounded-pill bg-white/12 px-3.5 py-1.5 text-[0.8125rem] font-semibold text-saffron-lift ring-1 ring-inset ring-white/25">
             <ShieldIcon />
             Independent public-information tool
           </span>
 
           <h1 className="display-xl mt-5 font-serif font-bold tracking-[-0.015em] text-white">
-            <span className="block font-deva text-[0.82em] leading-[1.3] text-saffron">
+            <span className="block font-deva text-[0.82em] leading-[1.3] text-saffron-lift">
               उत्तराधिकार प्रमाणपत्र
             </span>
             <span className="mt-1 block">You probably do not need one.</span>
@@ -65,7 +65,7 @@ function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
             <Link
               href="/start"
-              className="inline-flex items-center gap-2 rounded-pill bg-saffron px-8 py-3.5 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-[#e57200]"
+              className="inline-flex items-center gap-2 rounded-pill bg-saffron px-8 py-3.5 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-[#ab6314]"
             >
               Start — four questions
               <span aria-hidden="true">&rarr;</span>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import {
   Source_Sans_3,
-  Merriweather,
+  Spectral,
   Noto_Sans_Devanagari,
 } from "next/font/google";
 import "./globals.css";
@@ -14,11 +14,19 @@ const sourceSans = Source_Sans_3({
   display: "swap",
 });
 
-/* Headlines. The reference portal sets its display type in Merriweather. */
-const merriweather = Merriweather({
-  variable: "--font-merriweather",
+/* Headlines.
+ *
+ * Was Merriweather, chosen only because the reference portal we looked at uses
+ * it -- which is not a reason, and made this look like that site rather than
+ * like itself. Spectral is a different argument: a serif drawn for long-form
+ * reading on screen, with a narrower, more literary colour than Merriweather's
+ * wide newspaper face. It sets a verdict sentence at display size without
+ * shouting, and it holds up at 11.5pt on the printed counter sheet, which is
+ * the size that actually decides whether a bank officer reads this. */
+const spectral = Spectral({
+  variable: "--font-spectral",
   subsets: ["latin"],
-  weight: ["700", "900"],
+  weight: ["600", "700", "800"],
   display: "swap",
 });
 
@@ -39,7 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sourceSans.variable} ${merriweather.variable} ${notoDeva.variable} h-full antialiased`}
+      className={`${sourceSans.variable} ${spectral.variable} ${notoDeva.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
         {/*
@@ -50,12 +58,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           card deck, whose startup styling loses authority at the one place that
           matters: a bank counter.
 
-          OWN-WORLD: Indian official financial-services portal, sampled from
-          unclaimedassetsportal.in — indigo #2d3079 on pale blue-grey #f4f6fa,
-          maroon #7b1e3a for anything that can hurt you, saffron #fe7f01 for the
-          one action per screen. Source Sans 3. Rounded rectangles and pill
-          actions. Register borrowed, identity never: no emblem, no ministry
-          mark, no tricolour.
+          OWN-WORLD: the register of an Indian public-information notice, near
+          the official financial portals in tone and deliberately not in
+          appearance. Deep navy #1d3461 on a WARM ground #f5f3ee — warm because
+          the artifact is paper; oxblood #7a2233 for anything that can hurt you;
+          ochre #c8761a for the one action per screen, lifted to #e8a34a where
+          it has to be type on navy. Spectral for display, Source Sans 3 for
+          text. Rounded rectangles and pill actions.
+
+          The first pass sampled its palette and serif straight out of
+          unclaimedassetsportal.in's stylesheet and looked like that site rather
+          than like itself. Replaced 4 Sep 2026. Register adjacent, identity
+          never: no emblem, no ministry mark, no tricolour.
 
           STORY: The visitor arrives holding a demand they believe is lawful.
           They learn the rule changed on 31 March 2026, answer four questions,

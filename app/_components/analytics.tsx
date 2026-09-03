@@ -30,9 +30,34 @@ export function Analytics() {
   }, []);
 
   useEffect(() => {
-    const onPrint = () => track("sheet_printed", { path: pathname });
+    const onPrint = () => {
+      track("sheet_printed", { path: pathname });
+      // Open every folded section before the sheet is rendered. The print
+      // stylesheet also forces this via ::details-content, but that is not
+      // supported everywhere, and a counter sheet missing the RBI's paragraphs
+      // because the reader never tapped a heading would be the worst possible
+      // failure of this product.
+      document
+        .querySelectorAll<HTMLDetailsElement>("details:not([open])")
+        .forEach((d) => {
+          d.open = true;
+          d.dataset.openedForPrint = "true";
+        });
+    };
+    const afterPrint = () => {
+      document
+        .querySelectorAll<HTMLDetailsElement>("details[data-opened-for-print]")
+        .forEach((d) => {
+          d.open = false;
+          delete d.dataset.openedForPrint;
+        });
+    };
     window.addEventListener("beforeprint", onPrint);
-    return () => window.removeEventListener("beforeprint", onPrint);
+    window.addEventListener("afterprint", afterPrint);
+    return () => {
+      window.removeEventListener("beforeprint", onPrint);
+      window.removeEventListener("afterprint", afterPrint);
+    };
   }, [pathname]);
 
   useEffect(() => {
