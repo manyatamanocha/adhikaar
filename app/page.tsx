@@ -69,8 +69,8 @@ export default async function Home({
         <Hero lang={lang} />
         <Numbers lang={lang} />
         <Situations lang={lang} />
-        <Assurance lang={lang} />
-        <TrustStrip lang={lang} />
+        <UdgamStrip lang={lang} />
+        <Trust lang={lang} />
         <FinalCta lang={lang} />
       </main>
 
@@ -128,33 +128,15 @@ function Hero({ lang }: { lang: Locale }) {
             </span>
             {t.ctaNote}
           </p>
-
-          {/* UDGAM answers "how do I even find the deposit?" -- the question
-              this page's own headline can raise before the wizard answers it.
-              Small, on purpose: UDGAM finds it, Adhikaar explains how to claim
-              it once found. Verified live at udgam.rbi.org.in before linking. */}
-          <div className="mt-6 rounded-xl border border-rule bg-mist-deep p-4">
-            <p className="text-[0.9375rem] font-bold text-indigo-ink">
-              {t.udgamStripHeading}
-            </p>
-            <p className="mt-1 text-[0.875rem] leading-relaxed text-ink-soft">
-              {t.udgamStripBody}
-            </p>
-            <a
-              href="https://udgam.rbi.org.in/"
-              target="_blank"
-              rel="noreferrer"
-              className="-my-2.5 mt-2 inline-flex items-center gap-1.5 py-2.5 text-[0.875rem] font-bold text-link underline underline-offset-2"
-            >
-              {t.udgamStripCta}
-              <span aria-hidden="true">↗</span>
-            </a>
-          </div>
         </div>
 
-        {/* The proof, where the mockup puts a photograph. */}
-        <div className="relative">
-          <div className="rounded-2xl border border-rule bg-paper p-6 shadow-[0_12px_44px_rgba(23,37,29,0.10)] sm:p-8">
+        {/* The proof, where the mockup puts a photograph. One card, not two:
+            the "most families are surprised" line used to float on its own
+            below this and left a block of dead space under it -- it is now
+            the card's own closing band, so the whole right column is one
+            self-contained object instead of two mismatched ones. */}
+        <div className="overflow-hidden rounded-2xl border border-rule bg-paper shadow-[0_12px_44px_rgba(23,37,29,0.10)]">
+          <div className="p-6 sm:p-8">
             <p className="text-step font-bold uppercase tracking-[0.12em] text-maroon">
               {t.quoteLabel}
             </p>
@@ -186,17 +168,14 @@ function Hero({ lang }: { lang: Locale }) {
             </p>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-4 lg:mt-6">
-            <div className="flex flex-1 items-start gap-3 rounded-xl border border-indigo/25 bg-indigo/8 p-4">
-              <span className="mt-0.5 shrink-0 text-indigo" aria-hidden="true">
-                <ShieldIcon />
-              </span>
-              <p className="text-[0.9375rem] leading-snug text-ink">
-                <strong className="font-bold">{t.surpriseStrong}</strong>{" "}
-                <span className="text-ink-soft">{t.surpriseRest}</span>
-              </p>
-            </div>
-
+          <div className="flex items-start gap-3 border-t border-rule-faint bg-indigo/8 p-6 sm:p-8">
+            <span className="mt-0.5 shrink-0 text-indigo" aria-hidden="true">
+              <ShieldIcon />
+            </span>
+            <p className="text-[0.9375rem] leading-snug text-ink">
+              <strong className="font-bold">{t.surpriseStrong}</strong>{" "}
+              <span className="text-ink-soft">{t.surpriseRest}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -337,26 +316,64 @@ function Situations({ lang }: { lang: Locale }) {
 
 /* ------------------------------------------------------------------ 4 */
 
-function Assurance({ lang }: { lang: Locale }) {
+/**
+ * UDGAM has its own section now, not a small box wedged into the hero's
+ * left column -- that made the hero lopsided (the right column's photo-slot
+ * card was left half the height of the left column, with a block of dead
+ * space under it). Same two facts the strip said, given the room a real
+ * question ("how do I find the deposit in the first place?") deserves.
+ */
+function UdgamStrip({ lang }: { lang: Locale }) {
   const t = T[lang];
   return (
-    <section className="bg-paper">
-      <div className="shell py-10 sm:py-12">
-        <div className="flex flex-wrap items-center gap-5 rounded-2xl bg-indigo/8 p-6 sm:p-7">
-          <span
-            aria-hidden="true"
-            className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-indigo/12 text-indigo"
-          >
-            <ShieldIcon />
-          </span>
-          <div className="min-w-[16rem] flex-1">
-            <p className="display-md font-serif font-bold text-indigo-ink">
-              {t.assuranceTitle}
-            </p>
-            <p className="mt-1 text-[0.9375rem] text-ink-soft">
-              {t.assuranceSub}
-            </p>
-          </div>
+    <section className="border-t border-rule-faint bg-paper">
+      <div className="shell grid items-center gap-8 py-12 sm:py-14 lg:grid-cols-[1fr_auto] lg:gap-14">
+        <div>
+          <p className="display-md font-serif font-bold text-indigo-ink">
+            {t.udgamStripHeading}
+          </p>
+          <p className="mt-2 max-w-[58ch] text-[0.9375rem] leading-relaxed text-ink-soft">
+            {t.udgamStripBody}
+          </p>
+        </div>
+        <a
+          href="https://udgam.rbi.org.in/"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex shrink-0 items-center gap-2 rounded-xl border-2 border-indigo px-6 py-3.5 text-[0.9375rem] font-bold text-indigo transition-colors hover:bg-indigo/8"
+        >
+          {t.udgamStripCta}
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ 5 */
+
+/**
+ * The old Assurance banner and TrustStrip row were two disconnected pieces --
+ * a flat tinted bar, then a bare row of icon+text with no card treatment at
+ * all, the one part of the page that looked unfinished next to everything
+ * else. One section now: the assurance heading owns it, the four facts are
+ * cards in the same visual language as "Four things to know first" above.
+ */
+function Trust({ lang }: { lang: Locale }) {
+  const t = T[lang];
+  const TRUST = [
+    { icon: <TickIcon />, title: t.tNoSignIn, note: t.tNoSignInNote },
+    { icon: <LockIcon />, title: t.tNoData, note: t.tNoDataNote },
+    { icon: <QuoteMarkIcon />, title: t.tPlain, note: t.tPlainNote },
+    { icon: <PrinterIcon />, title: t.tPrint, note: t.tPrintNote },
+  ];
+  return (
+    <section className="border-t border-rule-faint bg-mist">
+      <div className="shell py-14 sm:py-16">
+        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
+          <h2 className="display-lg font-serif font-bold text-indigo-ink">
+            {t.assuranceTitle}
+          </h2>
           <a
             href={NOTIFICATION.url}
             target="_blank"
@@ -367,37 +384,31 @@ function Assurance({ lang }: { lang: Locale }) {
             <span aria-hidden="true">&rarr;</span>
           </a>
         </div>
-      </div>
-    </section>
-  );
-}
+        <p className="mt-2 max-w-[60ch] text-[0.9375rem] text-ink-soft">
+          {t.assuranceSub}
+        </p>
 
-/* ------------------------------------------------------------------ 5 */
-
-function TrustStrip({ lang }: { lang: Locale }) {
-  const t = T[lang];
-  const TRUST = [
-    { icon: <TickIcon />, title: t.tNoSignIn, note: t.tNoSignInNote },
-    { icon: <LockIcon />, title: t.tNoData, note: t.tNoDataNote },
-    { icon: <QuoteMarkIcon />, title: t.tPlain, note: t.tPlainNote },
-    { icon: <PrinterIcon />, title: t.tPrint, note: t.tPrintNote },
-  ];
-  return (
-    <section className="border-t border-rule-faint bg-paper">
-      <div className="shell grid grid-cols-2 gap-6 py-10 lg:grid-cols-4">
-        {TRUST.map((t) => (
-          <div key={t.title} className="flex items-start gap-3">
-            <span className="mt-0.5 shrink-0 text-indigo" aria-hidden="true">
-              {t.icon}
-            </span>
-            <div>
-              <p className="text-[0.9375rem] font-bold text-indigo-ink">
-                {t.title}
+        <ul className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          {TRUST.map((item) => (
+            <li
+              key={item.title}
+              className="rounded-2xl border border-rule-faint bg-paper p-5"
+            >
+              <span
+                aria-hidden="true"
+                className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo/10 text-indigo"
+              >
+                {item.icon}
+              </span>
+              <p className="mt-4 text-[0.9375rem] font-bold text-indigo-ink">
+                {item.title}
               </p>
-              <p className="text-[0.875rem] text-ink-soft">{t.note}</p>
-            </div>
-          </div>
-        ))}
+              <p className="mt-1 text-[0.8125rem] leading-relaxed text-ink-soft">
+                {item.note}
+              </p>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
