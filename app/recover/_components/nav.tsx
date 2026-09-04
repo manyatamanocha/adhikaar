@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { LeafMark } from "./brand";
-import { ChevronDownIcon, ArrowRightIcon } from "./icons";
+import { ChevronDownIcon } from "./icons";
 import { LOCALES, LOCALE_LABEL, LOCALE_SHORT, withLang } from "@/lib/i18n";
 import { useHomeT } from "./home-i18n";
 
@@ -31,7 +31,9 @@ export function RecoverNav() {
           <LeafMark className="h-[7.49rem] w-[7.49rem]" />
           <span className="leading-tight">
             <span className="block font-serif text-[5.62rem] font-bold">Adhikaar</span>
-            <span className="block text-[1.7551rem] text-[#6B6255]">{t.tagline}</span>
+            <span className="block text-[1.7551rem] text-[#6B6255]">
+              The counter companion for deceased-bank claims in India
+            </span>
           </span>
         </Link>
 
@@ -42,19 +44,19 @@ export function RecoverNav() {
               onClick={() => setLangOpen((v) => !v)}
               aria-expanded={langOpen}
               aria-haspopup="menu"
-              className={`flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[0.875rem] font-bold transition-colors ${
+              className={`flex cursor-pointer items-center gap-[0.5833rem] rounded-full border px-[1.4583rem] py-[0.7292rem] text-[1.4583rem] font-bold transition-colors ${
                 langOpen
                   ? "border-[#E2653B] bg-[#FBE4D8] text-[#E2653B]"
                   : "border-[#E3D8C4] bg-white text-[#4A4335] hover:border-[#E2653B] hover:bg-[#FBE4D8] hover:text-[#E2653B]"
               }`}
             >
               {LOCALE_SHORT[locale]}
-              <ChevronDownIcon className={`h-3.5 w-3.5 transition-transform ${langOpen ? "rotate-180" : ""}`} />
+              <ChevronDownIcon className={`h-[1.4583rem] w-[1.4583rem] transition-transform ${langOpen ? "rotate-180" : ""}`} />
             </button>
             {langOpen && (
               <div
                 role="menu"
-                className="absolute right-0 top-full mt-2 w-36 overflow-hidden rounded-lg border border-[#EFE7D8] bg-white py-1 shadow-[0_8px_24px_rgba(22,35,63,0.14)]"
+                className="absolute right-0 top-full mt-2 w-max overflow-hidden rounded-lg border border-[#EFE7D8] bg-white py-1 shadow-[0_8px_24px_rgba(22,35,63,0.14)]"
               >
                 {LOCALES.map((l) => (
                   <Link
@@ -63,7 +65,7 @@ export function RecoverNav() {
                     role="menuitem"
                     onClick={() => setLangOpen(false)}
                     aria-current={l === locale ? "true" : undefined}
-                    className={`block px-4 py-2 text-[0.9375rem] hover:bg-[#FAF5EC] ${
+                    className={`block px-[1.4583rem] py-[0.875rem] text-[1.4583rem] whitespace-nowrap hover:bg-[#FAF5EC] ${
                       l === locale ? "font-bold text-[#E2653B]" : "text-[#16233F]"
                     }`}
                   >
@@ -73,35 +75,31 @@ export function RecoverNav() {
               </div>
             )}
           </div>
-          <Link
-            href="/start"
-            className="inline-flex items-center gap-2 rounded bg-[#E2653B] px-5 py-2.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
-          >
-            {t.nav.start}
-            <ArrowRightIcon className="h-3.5 w-3.5" />
-          </Link>
         </div>
       </div>
 
       <nav
         aria-label="Quick links"
-        className="flex items-center justify-center gap-6 border-t border-[#EFE7D8] py-2.5 text-[0.875rem] font-bold text-[#4A4335] sm:gap-8"
+        className="flex w-full flex-wrap items-center justify-center gap-x-28 gap-y-4 bg-[#16233F] px-5 py-6 text-[2.1875rem] font-bold text-white sm:px-8"
       >
-        <Link href={withLang("/", locale)} className="transition-colors hover:text-[#E2653B]">
+        <Link href={withLang("/", locale)} className="transition-colors hover:text-[#F0B892]">
           {t.nav.home}
         </Link>
-        <a href="#how" className="transition-colors hover:text-[#E2653B]">
-          {t.nav.how}
-        </a>
-        <a href="#find" className="transition-colors hover:text-[#E2653B]">
-          {t.nav.find}
-        </a>
-        <Link href="/guide" className="transition-colors hover:text-[#E2653B]">
-          {t.nav.about}
+        <Link href="/guide" className="transition-colors hover:text-[#F0B892]">
+          {t.nav.aboutAdhikaar}
         </Link>
-        <a href="#faq" className="transition-colors hover:text-[#E2653B]">
+        <a href="#" className="transition-colors hover:text-[#F0B892]">
+          {t.nav.policy}
+        </a>
+        <a href="#" className="transition-colors hover:text-[#F0B892]">
+          {t.nav.updates}
+        </a>
+        <a href="#faq" className="transition-colors hover:text-[#F0B892]">
           {t.nav.faq}
         </a>
+        <Link href="/contact" className="transition-colors hover:text-[#F0B892]">
+          {t.nav.contact}
+        </Link>
       </nav>
     </header>
   );

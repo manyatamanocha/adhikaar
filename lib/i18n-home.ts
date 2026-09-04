@@ -20,6 +20,10 @@ export type HomeDict = {
     find: string;
     faq: string;
     about: string;
+    aboutAdhikaar: string;
+    policy: string;
+    updates: string;
+    contact: string;
     start: string;
   };
   tagline: string;
@@ -140,6 +144,13 @@ export type HomeDict = {
     madeFor: string;
     disclaimer: string;
   };
+
+  contact: {
+    heading: string;
+    intro: string;
+    phoneLabel: string;
+    emailLabel: string;
+  };
 };
 
 const en: HomeDict = {
@@ -149,6 +160,10 @@ const en: HomeDict = {
     find: "What you can find",
     faq: "FAQs",
     about: "About",
+    aboutAdhikaar: "About Adhikaar",
+    policy: "Policy",
+    updates: "Updates",
+    contact: "Contact",
     start: "Start a Search",
   },
   tagline: "What's yours should find its way home.",
@@ -160,7 +175,7 @@ const en: HomeDict = {
   hero: {
     eyebrow: "For families. For what matters.",
     headline: "Money left behind shouldn't stay lost.",
-    sub: "Adhikaar helps families find and claim financial assets left behind by a loved one — with one simple, guided process.",
+    sub: "Adhikaar gives families a clear, printable path for claiming a deceased person's bank deposits—without storing personal information.",
     start: "Start a Search",
     seeHow: "See how it works",
     trustFree: "Free to search",
@@ -284,6 +299,13 @@ const en: HomeDict = {
     disclaimer:
       "Adhikaar is an independent guidance tool. It does not represent any bank, insurer, government agency or other financial institution unless explicitly stated. Nothing here is legal advice.",
   },
+
+  contact: {
+    heading: "Contact us",
+    intro: "Please contact us using the details below:",
+    phoneLabel: "Mobile",
+    emailLabel: "Email",
+  },
 };
 
 const hi: HomeDict = {
@@ -293,6 +315,10 @@ const hi: HomeDict = {
     find: "आप क्या ढूँढ सकते हैं",
     faq: "सवाल-जवाब",
     about: "जानकारी",
+    aboutAdhikaar: "अधिकार के बारे में",
+    policy: "नीति",
+    updates: "अपडेट",
+    contact: "संपर्क करें",
     start: "खोज शुरू करें",
   },
   tagline: "आपकी चीज़ें, उन्हीं तक वापस पहुँचें।",
@@ -428,6 +454,13 @@ const hi: HomeDict = {
     disclaimer:
       "अधिकार एक स्वतंत्र मार्गदर्शन उपकरण है। यह किसी बैंक, बीमा कंपनी, सरकारी एजेंसी या अन्य वित्तीय संस्था का प्रतिनिधित्व नहीं करता, जब तक स्पष्ट रूप से न बताया जाए। यहाँ कुछ भी क़ानूनी सलाह नहीं है।",
   },
+
+  contact: {
+    heading: "संपर्क करें",
+    intro: "कृपया नीचे दिए गए विवरण से हमसे संपर्क करें:",
+    phoneLabel: "मोबाइल",
+    emailLabel: "ईमेल",
+  },
 };
 
 const kn: HomeDict = {
@@ -437,6 +470,10 @@ const kn: HomeDict = {
     find: "ನೀವು ಏನನ್ನು ಕಂಡುಕೊಳ್ಳಬಹುದು",
     faq: "ಪ್ರಶ್ನೋತ್ತರಗಳು",
     about: "ಮಾಹಿತಿ",
+    aboutAdhikaar: "ಅಧಿಕಾರ್ ಬಗ್ಗೆ",
+    policy: "ನೀತಿ",
+    updates: "ಅಪ್‌ಡೇಟ್‌ಗಳು",
+    contact: "ಸಂಪರ್ಕಿಸಿ",
     start: "ಹುಡುಕಾಟ ಪ್ರಾರಂಭಿಸಿ",
   },
   tagline: "ನಿಮ್ಮದು ನಿಮ್ಮ ದಾರಿ ಕಂಡುಕೊಳ್ಳಲಿ.",
@@ -571,6 +608,13 @@ const kn: HomeDict = {
     madeFor: "ಭಾರತೀಯ ಕುಟುಂಬಗಳಿಗಾಗಿ ರೂಪಿಸಲಾಗಿದೆ",
     disclaimer:
       "ಅಧಿಕಾರ್ ಒಂದು ಸ್ವತಂತ್ರ ಮಾರ್ಗದರ್ಶನ ಸಾಧನ. ಸ್ಪಷ್ಟವಾಗಿ ಹೇಳದ ಹೊರತು, ಇದು ಯಾವುದೇ ಬ್ಯಾಂಕ್, ವಿಮಾದಾರ, ಸರ್ಕಾರಿ ಸಂಸ್ಥೆ ಅಥವಾ ಇತರ ಹಣಕಾಸು ಸಂಸ್ಥೆಯನ್ನು ಪ್ರತಿನಿಧಿಸುವುದಿಲ್ಲ. ಇಲ್ಲಿ ಯಾವುದೂ ಕಾನೂನು ಸಲಹೆಯಲ್ಲ.",
+  },
+
+  contact: {
+    heading: "ಸಂಪರ್ಕಿಸಿ",
+    intro: "ದಯವಿಟ್ಟು ಕೆಳಗಿನ ವಿವರಗಳ ಮೂಲಕ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ:",
+    phoneLabel: "ಮೊಬೈಲ್",
+    emailLabel: "ಇಮೇಲ್",
   },
 };
 
