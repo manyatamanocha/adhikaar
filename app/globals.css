@@ -159,9 +159,19 @@ a {
    and overflowing on a phone.
 --------------------------------------------------------------------------- */
 
+/* Reported twice, directly: "the sides are blank" / "still there is empty
+   space" -- on a STANDARD LAPTOP, after the first widen to 1680px had
+   already shipped. A tiered cap was the wrong instrument: it keeps
+   re-triggering the same report at every screen size we didn't happen to
+   test. 1920px stops binding on anything up to a full-HD laptop screen --
+   the overwhelmingly common case -- and only a monitor wider than that
+   sees any margin at all, which is where a margin stops reading as a bug
+   and starts reading as normal page furniture. Every paragraph still caps
+   at its own max-w-[Nch], so this widens the CARD GRIDS, not the line
+   length of anything meant to be read continuously. */
 .shell {
   width: 100%;
-  max-width: 1440px;
+  max-width: 1920px;
   margin-inline: auto;
   padding-inline: 1.25rem;
 }
@@ -173,17 +183,6 @@ a {
 @media (min-width: 1024px) {
   .shell {
     padding-inline: 2.5rem;
-  }
-}
-/* 1440px left a wide monitor with two solid bars of empty ground down each
-   side of every section -- reported directly ("the sides are blank"),
-   confirmed by screenshotting the real page at 1920px. Widened rather than
-   left capped: the extra room goes to the card grids (Four things, the four
-   situations), which spread out and use it, not to any text measure -- every
-   paragraph still caps at its own max-w-[Nch]. */
-@media (min-width: 1536px) {
-  .shell {
-    max-width: 1680px;
   }
 }
 
