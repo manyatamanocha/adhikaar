@@ -83,18 +83,17 @@ type Dict = {
   inForceDate: string;
   inForceLabel: string;
 
-  /** Numbers */
+  /** Numbers -- each one traces to a specific paragraph in lib/rbi.ts */
   numbersHeading: string;
-  costFigure: string;
-  costLabel: string;
-  costNote: string;
-  timeFigure: string;
-  timeUnit: string;
-  timeLabel: string;
-  timeNote: string;
-  floorFigure: string;
-  floorLabel: string;
-  floorNote: string;
+  thresholdFigure: string;
+  thresholdLabel: string;
+  thresholdNote: string;
+  docsFigure: string;
+  docsLabel: string;
+  docsNote: string;
+  daysFigure: string;
+  daysLabel: string;
+  daysNote: string;
   dateFigure: string;
   dateLabel: string;
   dateNote: string;
@@ -114,6 +113,11 @@ type Dict = {
   pathUnknown: string;
   pathUnknownBody: string;
 
+  /** UDGAM strip -- small, directly under the hero CTA */
+  udgamStripHeading: string;
+  udgamStripBody: string;
+  udgamStripCta: string;
+
   /** Assurance + trust strip */
   assuranceTitle: string;
   assuranceSub: string;
@@ -126,6 +130,11 @@ type Dict = {
   tPlainNote: string;
   tPrint: string;
   tPrintNote: string;
+
+  /** Final CTA -- the page's actual closing action */
+  finalCtaHeading: string;
+  finalCtaSub: string;
+  finalCta: string;
 };
 
 const en: Dict = {
@@ -137,12 +146,17 @@ const en: Dict = {
   heroClaim: "do not need a succession certificate.",
   heroSub:
     "RBI rules say that in most deposit claims, a bank must not insist on one.",
-  trustRules: "RBI-backed rules",
+  trustRules: "Based on RBI Directions",
   trustNoData: "No data stored",
   trustCited: "Every claim cited",
   trustFree: "Free to use",
   cta: "Check your options",
   ctaNote: "Takes less than 2 minutes",
+
+  udgamStripHeading: "Still looking for the deposit?",
+  udgamStripBody:
+    "The RBI's UDGAM portal can help you search for unclaimed bank deposits. Once you find one, Adhikaar helps you understand the claim route.",
+  udgamStripCta: "Find it on UDGAM",
 
   quoteLabel: "The rule, in the RBI's own words",
   quoteGloss:
@@ -155,20 +169,20 @@ const en: Dict = {
   inForceLabel: "Rule in force from",
 
   numbersHeading: "Four things to know first",
-  costFigure: "₹17,000",
-  costLabel: "What it costs",
-  costNote: "Court fees of about 3% of the amount, plus a lawyer.",
-  timeFigure: "4–7",
-  timeUnit: "months",
-  timeLabel: "How long it takes",
-  timeNote: "Uncontested. One to two years if any heir objects.",
-  floorFigure: "₹15 lakh",
-  floorLabel: "The RBI floor",
-  floorNote:
-    "Below it a bank must follow the simplified procedure. A bank may set its own higher.",
+  thresholdFigure: "₹15 lakh",
+  thresholdLabel: "Simplified-claim threshold",
+  thresholdNote:
+    "For banks other than co-operative banks (₹5 lakh for a co-operative bank). A bank may set its own higher limit.",
+  docsFigure: "3 documents",
+  docsLabel: "If a nominee or survivor is on record",
+  docsNote:
+    "Claim form, death certificate and ID proof. No succession certificate, whatever the amount.",
+  daysFigure: "15 days",
+  daysLabel: "RBI settlement deadline",
+  daysNote: "From the date the bank has received every required document.",
   dateFigure: "31 Mar 2026",
-  dateLabel: "In force from",
-  dateNote: "The date the Directions took effect.",
+  dateLabel: "Directions in force from",
+  dateNote: "The date banks had to have these rules in place.",
 
   situationsHeading: "What best describes your situation?",
   situationsSub: "We'll show you exactly what to do next.",
@@ -176,9 +190,9 @@ const en: Dict = {
   chipSixDocuments: "Six documents",
   chipStartHere: "Start here",
   pathNominee: "A nominee was registered",
-  pathNomineeBody: "Nothing further, whatever the amount.",
+  pathNomineeBody: "You'll typically still need the claim form, death certificate and ID proof.",
   pathJoint: "It was a joint account",
-  pathJointBody: "A survivorship clause works the same way.",
+  pathJointBody: "A survivorship clause works the same way — the same three documents apply.",
   pathNoNominee: "There was no nominee",
   pathNoNomineeBody: "A fixed list of six documents, below the floor.",
   pathUnknown: "I don't know",
@@ -196,6 +210,11 @@ const en: Dict = {
   tPlainNote: "No unexplained jargon",
   tPrint: "A page to print",
   tPrintNote: "To hand across the counter",
+
+  finalCtaHeading: "Know what applies to your claim.",
+  finalCtaSub:
+    "Four questions, about two minutes, and a straight answer with its paragraph number.",
+  finalCta: "Check your situation",
 };
 
 const hi: Dict = {
@@ -207,12 +226,17 @@ const hi: Dict = {
   heroClaim: "उत्तराधिकार प्रमाणपत्र की ज़रूरत नहीं है।",
   heroSub:
     "आरबीआई के नियम कहते हैं कि ज़्यादातर जमा दावों में बैंक इसके लिए ज़ोर नहीं दे सकता।",
-  trustRules: "आरबीआई के नियमों पर आधारित",
+  trustRules: "आरबीआई निर्देशों पर आधारित",
   trustNoData: "कोई जानकारी संग्रहीत नहीं",
   trustCited: "हर बात का स्रोत दिया गया",
   trustFree: "उपयोग निःशुल्क",
   cta: "अपने विकल्प देखें",
   ctaNote: "दो मिनट से भी कम समय",
+
+  udgamStripHeading: "अभी भी जमा राशि ढूँढ रहे हैं?",
+  udgamStripBody:
+    "आरबीआई का उद्गम पोर्टल बिना दावे की बैंक जमा खोजने में मदद कर सकता है। कुछ मिलने पर, अधिकार आपको दावा करने का तरीक़ा समझाता है।",
+  udgamStripCta: "उद्गम पर खोजें",
 
   quoteLabel: "नियम, आरबीआई के अपने शब्दों में",
   quoteGloss:
@@ -225,20 +249,20 @@ const hi: Dict = {
   inForceLabel: "नियम इस तारीख़ से लागू",
 
   numbersHeading: "पहले ये चार बातें जान लें",
-  costFigure: "₹17,000",
-  costLabel: "कितना ख़र्च",
-  costNote: "रकम का लगभग 3% अदालती शुल्क, और वकील का ख़र्च अलग।",
-  timeFigure: "4–7",
-  timeUnit: "महीने",
-  timeLabel: "कितना समय",
-  timeNote: "बिना विवाद के। कोई वारिस आपत्ति करे तो एक से दो साल।",
-  floorFigure: "₹15 लाख",
-  floorLabel: "आरबीआई की न्यूनतम सीमा",
-  floorNote:
-    "इससे कम पर बैंक को सरल प्रक्रिया अपनानी होगी। बैंक अपनी सीमा इससे ऊँची रख सकता है।",
+  thresholdFigure: "₹15 लाख",
+  thresholdLabel: "सरल दावा प्रक्रिया की सीमा",
+  thresholdNote:
+    "सहकारी बैंकों को छोड़कर अन्य बैंकों के लिए (सहकारी बैंक के लिए ₹5 लाख)। बैंक अपनी सीमा इससे ऊँची रख सकता है।",
+  docsFigure: "3 दस्तावेज़",
+  docsLabel: "नामांकित या संयुक्त धारक दर्ज होने पर",
+  docsNote:
+    "दावा फ़ॉर्म, मृत्यु प्रमाणपत्र और पहचान प्रमाण। रकम चाहे जितनी हो, उत्तराधिकार प्रमाणपत्र नहीं चाहिए।",
+  daysFigure: "15 दिन",
+  daysLabel: "आरबीआई की निपटान समय-सीमा",
+  daysNote: "बैंक को सभी ज़रूरी दस्तावेज़ मिलने की तारीख़ से।",
   dateFigure: "31 मार्च 2026",
-  dateLabel: "लागू होने की तारीख़",
-  dateNote: "इसी दिन से ये निर्देश प्रभावी हुए।",
+  dateLabel: "निर्देश लागू होने की तारीख़",
+  dateNote: "इसी तारीख़ तक बैंकों को यह नियम लागू करना था।",
 
   situationsHeading: "आपकी स्थिति इनमें से कौन-सी है?",
   situationsSub: "हम बताएँगे कि आगे ठीक-ठीक क्या करना है।",
@@ -246,9 +270,9 @@ const hi: Dict = {
   chipSixDocuments: "छह दस्तावेज़",
   chipStartHere: "यहाँ से शुरू करें",
   pathNominee: "खाते में नामांकित व्यक्ति दर्ज था",
-  pathNomineeBody: "इसके आगे कुछ नहीं, रकम चाहे जितनी हो।",
+  pathNomineeBody: "फिर भी सामान्यतः दावा फ़ॉर्म, मृत्यु प्रमाणपत्र और पहचान प्रमाण चाहिए होंगे।",
   pathJoint: "यह संयुक्त खाता था",
-  pathJointBody: "उत्तरजीविता की शर्त पर भी यही नियम लागू होता है।",
+  pathJointBody: "उत्तरजीविता की शर्त पर भी यही नियम लागू होता है — वही तीन दस्तावेज़ चाहिए।",
   pathNoNominee: "कोई नामांकित व्यक्ति नहीं था",
   pathNoNomineeBody: "सीमा से कम रकम पर छह दस्तावेज़ों की तय सूची।",
   pathUnknown: "मुझे नहीं पता",
@@ -266,6 +290,10 @@ const hi: Dict = {
   tPlainNote: "बिना समझाए कोई क़ानूनी शब्द नहीं",
   tPrint: "छापने लायक़ पन्ना",
   tPrintNote: "बैंक काउंटर पर देने के लिए",
+
+  finalCtaHeading: "जानिए आपके दावे पर क्या लागू होता है।",
+  finalCtaSub: "चार सवाल, लगभग दो मिनट, और पैराग्राफ़ नंबर के साथ सीधा जवाब।",
+  finalCta: "अपनी स्थिति जानें",
 };
 
 const kn: Dict = {
@@ -277,12 +305,17 @@ const kn: Dict = {
   heroClaim: "ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರದ ಅಗತ್ಯವಿಲ್ಲ.",
   heroSub:
     "ಬಹುತೇಕ ಠೇವಣಿ ಕ್ಲೇಮ್‌ಗಳಲ್ಲಿ ಬ್ಯಾಂಕ್ ಇದನ್ನು ಕೇಳುವಂತಿಲ್ಲ ಎಂದು ಆರ್‌ಬಿಐ ನಿಯಮಗಳು ಹೇಳುತ್ತವೆ.",
-  trustRules: "ಆರ್‌ಬಿಐ ನಿಯಮಗಳ ಆಧಾರದ ಮೇಲೆ",
+  trustRules: "ಆರ್‌ಬಿಐ ನಿರ್ದೇಶನಗಳ ಆಧಾರದ ಮೇಲೆ",
   trustNoData: "ಯಾವುದೇ ಮಾಹಿತಿ ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ",
   trustCited: "ಪ್ರತಿ ಮಾತಿಗೂ ಆಧಾರ",
   trustFree: "ಉಚಿತ ಬಳಕೆ",
   cta: "ನಿಮ್ಮ ಆಯ್ಕೆಗಳನ್ನು ನೋಡಿ",
   ctaNote: "ಎರಡು ನಿಮಿಷಗಳಿಗಿಂತ ಕಡಿಮೆ",
+
+  udgamStripHeading: "ಇನ್ನೂ ಠೇವಣಿ ಹುಡುಕುತ್ತಿದ್ದೀರಾ?",
+  udgamStripBody:
+    "ಆರ್‌ಬಿಐನ ಉದ್ಗಮ್ ಪೋರ್ಟಲ್ ಹಕ್ಕು ಸಲ್ಲಿಸದ ಬ್ಯಾಂಕ್ ಠೇವಣಿ ಹುಡುಕಲು ನೆರವಾಗುತ್ತದೆ. ಏನಾದರೂ ಸಿಕ್ಕರೆ, ಅದನ್ನು ಹೇಗೆ ಪಡೆಯುವುದು ಎಂದು ಅಧಿಕಾರ್ ವಿವರಿಸುತ್ತದೆ.",
+  udgamStripCta: "ಉದ್ಗಮ್‌ನಲ್ಲಿ ಹುಡುಕಿ",
 
   quoteLabel: "ನಿಯಮ, ಆರ್‌ಬಿಐ ಅವರದೇ ಮಾತುಗಳಲ್ಲಿ",
   quoteGloss:
@@ -295,20 +328,20 @@ const kn: Dict = {
   inForceLabel: "ನಿಯಮ ಜಾರಿಗೆ ಬಂದ ದಿನಾಂಕ",
 
   numbersHeading: "ಮೊದಲು ತಿಳಿಯಬೇಕಾದ ನಾಲ್ಕು ಸಂಗತಿಗಳು",
-  costFigure: "₹17,000",
-  costLabel: "ಎಷ್ಟು ವೆಚ್ಚ",
-  costNote: "ಮೊತ್ತದ ಸುಮಾರು 3% ನ್ಯಾಯಾಲಯ ಶುಲ್ಕ, ಜೊತೆಗೆ ವಕೀಲರ ವೆಚ್ಚ.",
-  timeFigure: "4–7",
-  timeUnit: "ತಿಂಗಳು",
-  timeLabel: "ಎಷ್ಟು ಸಮಯ",
-  timeNote: "ವಿವಾದವಿಲ್ಲದಿದ್ದರೆ. ಯಾರಾದರೂ ಆಕ್ಷೇಪಿಸಿದರೆ ಒಂದರಿಂದ ಎರಡು ವರ್ಷ.",
-  floorFigure: "₹15 ಲಕ್ಷ",
-  floorLabel: "ಆರ್‌ಬಿಐ ನಿಗದಿಪಡಿಸಿದ ಕನಿಷ್ಠ ಮಿತಿ",
-  floorNote:
-    "ಇದಕ್ಕಿಂತ ಕಡಿಮೆಗೆ ಬ್ಯಾಂಕ್ ಸರಳ ಪ್ರಕ್ರಿಯೆ ಅನುಸರಿಸಬೇಕು. ಬ್ಯಾಂಕ್ ತನ್ನ ಮಿತಿಯನ್ನು ಹೆಚ್ಚಿಸಬಹುದು.",
+  thresholdFigure: "₹15 ಲಕ್ಷ",
+  thresholdLabel: "ಸರಳ ಕ್ಲೇಮ್ ಮಿತಿ",
+  thresholdNote:
+    "ಸಹಕಾರಿ ಬ್ಯಾಂಕುಗಳನ್ನು ಹೊರತುಪಡಿಸಿ ಇತರ ಬ್ಯಾಂಕುಗಳಿಗೆ (ಸಹಕಾರಿ ಬ್ಯಾಂಕಿಗೆ ₹5 ಲಕ್ಷ). ಬ್ಯಾಂಕ್ ತನ್ನ ಮಿತಿಯನ್ನು ಹೆಚ್ಚಿಸಬಹುದು.",
+  docsFigure: "3 ದಾಖಲೆಗಳು",
+  docsLabel: "ನಾಮನಿರ್ದೇಶಿತರು ಅಥವಾ ಜಂಟಿ ಖಾತೆದಾರರು ದಾಖಲಾಗಿದ್ದರೆ",
+  docsNote:
+    "ಕ್ಲೇಮ್ ಫಾರ್ಮ್, ಮರಣ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು ಗುರುತಿನ ಪುರಾವೆ. ಮೊತ್ತ ಎಷ್ಟೇ ಇರಲಿ, ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಬೇಕಿಲ್ಲ.",
+  daysFigure: "15 ದಿನಗಳು",
+  daysLabel: "ಆರ್‌ಬಿಐ ಇತ್ಯರ್ಥ ಗಡುವು",
+  daysNote: "ಬ್ಯಾಂಕಿಗೆ ಎಲ್ಲಾ ಅಗತ್ಯ ದಾಖಲೆಗಳು ಸಿಕ್ಕ ದಿನಾಂಕದಿಂದ.",
   dateFigure: "31 ಮಾರ್ಚ್ 2026",
-  dateLabel: "ಜಾರಿಗೆ ಬಂದದ್ದು",
-  dateNote: "ಈ ದಿನದಿಂದ ಈ ನಿರ್ದೇಶನಗಳು ಜಾರಿಗೆ ಬಂದವು.",
+  dateLabel: "ನಿರ್ದೇಶನಗಳು ಜಾರಿಗೆ ಬಂದ ದಿನಾಂಕ",
+  dateNote: "ಈ ದಿನಾಂಕದೊಳಗೆ ಬ್ಯಾಂಕುಗಳು ಈ ನಿಯಮ ಜಾರಿಗೊಳಿಸಬೇಕಿತ್ತು.",
 
   situationsHeading: "ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿ ಯಾವುದು?",
   situationsSub: "ಮುಂದೆ ನಿಖರವಾಗಿ ಏನು ಮಾಡಬೇಕೆಂದು ನಾವು ತಿಳಿಸುತ್ತೇವೆ.",
@@ -316,9 +349,9 @@ const kn: Dict = {
   chipSixDocuments: "ಆರು ದಾಖಲೆಗಳು",
   chipStartHere: "ಇಲ್ಲಿಂದ ಆರಂಭಿಸಿ",
   pathNominee: "ಖಾತೆಯಲ್ಲಿ ನಾಮನಿರ್ದೇಶಿತರು ಇದ್ದರು",
-  pathNomineeBody: "ಇದಕ್ಕಿಂತ ಹೆಚ್ಚೇನೂ ಬೇಡ, ಮೊತ್ತ ಎಷ್ಟೇ ಇರಲಿ.",
+  pathNomineeBody: "ಆದರೂ ಸಾಮಾನ್ಯವಾಗಿ ಕ್ಲೇಮ್ ಫಾರ್ಮ್, ಮರಣ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು ಗುರುತಿನ ಪುರಾವೆ ಬೇಕಾಗುತ್ತದೆ.",
   pathJoint: "ಇದು ಜಂಟಿ ಖಾತೆಯಾಗಿತ್ತು",
-  pathJointBody: "ಉತ್ತರಜೀವಿತ್ವದ ಷರತ್ತಿಗೂ ಇದೇ ನಿಯಮ.",
+  pathJointBody: "ಉತ್ತರಜೀವಿತ್ವದ ಷರತ್ತಿಗೂ ಇದೇ ನಿಯಮ — ಅದೇ ಮೂರು ದಾಖಲೆಗಳು ಬೇಕು.",
   pathNoNominee: "ನಾಮನಿರ್ದೇಶಿತರು ಇರಲಿಲ್ಲ",
   pathNoNomineeBody: "ಮಿತಿಗಿಂತ ಕಡಿಮೆ ಮೊತ್ತಕ್ಕೆ ಆರು ದಾಖಲೆಗಳ ನಿಗದಿತ ಪಟ್ಟಿ.",
   pathUnknown: "ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
@@ -336,6 +369,10 @@ const kn: Dict = {
   tPlainNote: "ವಿವರಿಸದ ಕಾನೂನು ಪದಗಳಿಲ್ಲ",
   tPrint: "ಮುದ್ರಿಸಬಹುದಾದ ಪುಟ",
   tPrintNote: "ಬ್ಯಾಂಕ್ ಕೌಂಟರ್‌ನಲ್ಲಿ ಕೊಡಲು",
+
+  finalCtaHeading: "ನಿಮ್ಮ ಕ್ಲೇಮ್‌ಗೆ ಏನು ಅನ್ವಯಿಸುತ್ತದೆ ಎಂದು ತಿಳಿಯಿರಿ.",
+  finalCtaSub: "ನಾಲ್ಕು ಪ್ರಶ್ನೆಗಳು, ಸುಮಾರು ಎರಡು ನಿಮಿಷ, ಮತ್ತು ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ ನೇರ ಉತ್ತರ.",
+  finalCta: "ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿ ಪರಿಶೀಲಿಸಿ",
 };
 
 export const T: Record<Locale, Dict> = { en, hi, kn };

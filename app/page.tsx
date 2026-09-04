@@ -21,6 +21,32 @@
  * Every figure is from lib/rbi.ts. The threshold card says "floor" in as many
  * words: para 7(h) lets a bank set its own higher one, and stating a single
  * universal number is a prohibition.
+ *
+ * ─── Legal-accuracy pass, 4 Sep 2026 evening ───
+ *
+ * An advisor review caught two overclaims and a sourcing gap:
+ *
+ *   · The nominee/joint-account cards read "Nothing further, whatever the
+ *     amount." That is wrong: para 9 removes the SUCCESSION documents
+ *     (certificate, probate, indemnity bond, surety), not every document.
+ *     lib/documents.ts's NOMINEE_PROCEDURE still lists three: claim form,
+ *     death certificate, ID proof. The cards now say so.
+ *   · The threshold card said "The RBI floor" with no mention that para 7(h)
+ *     sets a LOWER figure for co-operative banks (₹5 lakh vs ₹15 lakh) and
+ *     that a bank may set its own higher limit either way. Both now stated.
+ *   · The cost/time cards (₹17,000, "4-7 months") described the succession
+ *     certificate process most readers will never go through, with no
+ *     citation and real state-to-state variance. Replaced with four cards
+ *     that each trace to one paragraph: the threshold (7(h)), the document
+ *     count for a nominee/survivor claim (para 9 + NOMINEE_PROCEDURE), the
+ *     15-day settlement deadline (para 31), and the compliance date (para 5).
+ *
+ * Also added: a small UDGAM strip under the hero CTA (the RBI's own portal
+ * for finding unclaimed deposits; this page only helps once something is
+ * found), "Based on RBI Directions" replacing "RBI-backed rules" (the old
+ * wording could read as an endorsement), and a real closing section — the
+ * page previously ended on an explanatory banner and a trust grid, neither
+ * of which asks the reader to do anything.
  */
 
 import Link from "next/link";
@@ -45,6 +71,7 @@ export default async function Home({
         <Situations lang={lang} />
         <Assurance lang={lang} />
         <TrustStrip lang={lang} />
+        <FinalCta lang={lang} />
       </main>
 
       <SiteFooter />
@@ -101,6 +128,28 @@ function Hero({ lang }: { lang: Locale }) {
             </span>
             {t.ctaNote}
           </p>
+
+          {/* UDGAM answers "how do I even find the deposit?" -- the question
+              this page's own headline can raise before the wizard answers it.
+              Small, on purpose: UDGAM finds it, Adhikaar explains how to claim
+              it once found. Verified live at udgam.rbi.org.in before linking. */}
+          <div className="mt-6 rounded-xl border border-rule bg-mist-deep p-4">
+            <p className="text-[0.9375rem] font-bold text-indigo-ink">
+              {t.udgamStripHeading}
+            </p>
+            <p className="mt-1 text-[0.875rem] leading-relaxed text-ink-soft">
+              {t.udgamStripBody}
+            </p>
+            <a
+              href="https://udgam.rbi.org.in/"
+              target="_blank"
+              rel="noreferrer"
+              className="-my-2.5 mt-2 inline-flex items-center gap-1.5 py-2.5 text-[0.875rem] font-bold text-link underline underline-offset-2"
+            >
+              {t.udgamStripCta}
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
 
         {/* The proof, where the mockup puts a photograph. */}
@@ -159,10 +208,14 @@ function Hero({ lang }: { lang: Locale }) {
 
 function Numbers({ lang }: { lang: Locale }) {
   const t = T[lang];
+  // Each card traces to one paragraph in lib/rbi.ts. The previous cost/time
+  // cards (₹17,000, 4-7 months) were dropped: those figures describe a court
+  // process most readers will not go through, vary by state and circumstance,
+  // and had no citation on this page. These four are all sourced facts.
   const NUMBERS = [
-    { icon: <RupeeIcon />, figure: t.costFigure, label: t.costLabel, note: t.costNote },
-    { icon: <ClockIcon />, figure: t.timeFigure, unit: t.timeUnit, label: t.timeLabel, note: t.timeNote },
-    { icon: <ScaleIcon />, figure: t.floorFigure, label: t.floorLabel, note: t.floorNote },
+    { icon: <ScaleIcon />, figure: t.thresholdFigure, label: t.thresholdLabel, note: t.thresholdNote },
+    { icon: <DocIcon />, figure: t.docsFigure, label: t.docsLabel, note: t.docsNote },
+    { icon: <ClockIcon />, figure: t.daysFigure, label: t.daysLabel, note: t.daysNote },
     { icon: <CalendarIcon />, figure: t.dateFigure, label: t.dateLabel, note: t.dateNote },
   ];
   return (
@@ -196,9 +249,6 @@ function Numbers({ lang }: { lang: Locale }) {
               <p className="mt-4 font-serif text-[clamp(1.5rem,4.5vw,2rem)] font-bold leading-[1.1] text-indigo-ink">
                 {n.figure}
               </p>
-              {n.unit && (
-                <p className="text-[1rem] font-bold text-ink-soft">{n.unit}</p>
-              )}
               <p className="mt-2 text-[0.9375rem] font-bold text-ink">
                 {n.label}
               </p>
@@ -353,6 +403,33 @@ function TrustStrip({ lang }: { lang: Locale }) {
   );
 }
 
+/* ------------------------------------------------------------------ 6 */
+
+/** The page's actual closing action. Assurance and TrustStrip both explain;
+    neither asks for anything, so the page previously ended without one. */
+function FinalCta({ lang }: { lang: Locale }) {
+  const t = T[lang];
+  return (
+    <section className="border-t border-rule-faint bg-indigo">
+      <div className="shell flex flex-col items-center gap-4 py-14 text-center sm:py-16">
+        <p className="display-lg max-w-[26ch] font-serif font-bold text-white">
+          {t.finalCtaHeading}
+        </p>
+        <p className="max-w-[46ch] text-[1rem] text-white/85">
+          {t.finalCtaSub}
+        </p>
+        <Link
+          href={withLang("/start", lang)}
+          className="mt-2 inline-flex items-center gap-3 rounded-xl bg-saffron px-8 py-4 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-[#ab6314] hover:text-white"
+        >
+          {t.finalCta}
+          <span aria-hidden="true">&rarr;</span>
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* Drawn marks. One stroke weight, 24px grid. */
 
@@ -396,14 +473,6 @@ function PrinterIcon() {
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M7 9V3.5h10V9M7 19H5a1.5 1.5 0 0 1-1.5-1.5v-6A1.5 1.5 0 0 1 5 10h14a1.5 1.5 0 0 1 1.5 1.5v6A1.5 1.5 0 0 1 19 19h-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
       <rect x="7" y="15.5" width="10" height="5" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function RupeeIcon() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M7 4h10M7 8.5h10M7 4c4.2 0 6.4 1.6 6.4 4.3S11.2 12.6 7 12.6h1.4L15.5 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
