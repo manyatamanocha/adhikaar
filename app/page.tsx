@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { RecoverPage } from "./recover/_components/recover-page";
 
 export const metadata = {
@@ -16,7 +17,15 @@ export const metadata = {
  *
  * See recover/_components/recover-page.tsx for the page itself and its own
  * direction contract; nothing about the component changed in this move.
+ *
+ * Suspense boundary added 5 Sep 2026 -- RecoverPage now reads ?lang= via
+ * useSearchParams() for its Hindi/Kannada switch, and Next refuses to
+ * statically prerender a page that calls it outside a Suspense boundary.
  */
 export default function Home() {
-  return <RecoverPage />;
+  return (
+    <Suspense fallback={null}>
+      <RecoverPage />
+    </Suspense>
+  );
 }

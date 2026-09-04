@@ -1,10 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { RecoverNav } from "./nav";
 import { Reveal } from "./reveal";
 import { LeafMark } from "./brand";
+import { HomeI18nProvider, useHomeT } from "./home-i18n";
+import { parseLocale, withLang } from "@/lib/i18n";
+import { HOME_T } from "@/lib/i18n-home";
 import {
   ArrowRightIcon,
   PlayIcon,
@@ -41,36 +45,47 @@ import {
  *     for being dishonest about that. The hero's action stays a plain
  *     button into the real wizard, and the "found it" illustration later
  *     on the page is explicitly labelled an example, never live data.
+ *
+ * Fully localised (English / Hindi / Kannada) 5 Sep 2026 -- own dictionary
+ * in lib/i18n-home.ts, separate from the older /guide flow's Dict, since
+ * none of this page's copy existed when that one was written. Same rule
+ * as that file: Hindi and Kannada here have NOT been checked by a native
+ * speaker yet.
  */
 export function RecoverPage() {
+  const searchParams = useSearchParams();
+  const locale = parseLocale(searchParams.get("lang") ?? undefined);
+  const t = HOME_T[locale];
+
   return (
-    <div className="bg-[#FAF5EC] text-[#16233F] antialiased selection:bg-[#E2653B]/20 selection:text-[#16233F]">
-      <NoticeBar />
-      <RecoverNav />
-      <Hero />
-      <StatsOverlap />
-      <Timeline />
-      <HowItWorks />
-      <ClaimTracker />
-      <UdgamBand />
-      <FindGrid />
-      <TrustRow />
-      <Faq />
-      <FinalCta />
-      <RecoverFooter />
-    </div>
+    <HomeI18nProvider value={{ t, locale }}>
+      <div className="bg-[#FAF5EC] text-[#16233F] antialiased selection:bg-[#E2653B]/20 selection:text-[#16233F]">
+        <NoticeBar />
+        <RecoverNav />
+        <Hero />
+        <StatsOverlap />
+        <Timeline />
+        <HowItWorks />
+        <ClaimTracker />
+        <UdgamBand />
+        <FindGrid />
+        <TrustRow />
+        <Faq />
+        <FinalCta />
+        <RecoverFooter />
+      </div>
+    </HomeI18nProvider>
   );
 }
 
 /* ------------------------------------------------------------ NOTICE BAR */
 
 function NoticeBar() {
+  const { t } = useHomeT();
   return (
-    <div className="bg-[#16233F] px-4 py-2 text-center text-[0.8125rem] text-[#D8DEEA]">
-      Adhikaar is an independent guidance tool, not a government service.{" "}
-      <strong className="font-semibold text-[#F0B892]">
-        Verify any claim directly with your bank or the RBI&apos;s UDGAM portal.
-      </strong>
+    <div className="bg-[#16233F] px-4 py-3 text-center text-[1.625rem] text-[#D8DEEA]">
+      {t.notice.pre}{" "}
+      <strong className="font-semibold text-[#F0B892]">{t.notice.strong}</strong>
     </div>
   );
 }
@@ -78,19 +93,19 @@ function NoticeBar() {
 /* ------------------------------------------------------------------ HERO */
 
 function Hero() {
+  const { t } = useHomeT();
   return (
     <section className="bg-[#FAF5EC] pb-20 pt-14 sm:pt-16">
-      <div className="mx-auto grid max-w-[1440px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+      <div className="mx-auto grid max-w-[1920px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
         <div>
           <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
-            For families. For what matters.
+            {t.hero.eyebrow}
           </p>
           <h1 className="mx-auto mt-3 whitespace-normal font-serif text-[clamp(1.75rem,3.4vw,2.5rem)] font-bold leading-[1.15] tracking-[-0.01em] lg:mx-0 lg:whitespace-nowrap">
-            Money left behind shouldn&apos;t stay lost.
+            {t.hero.headline}
           </h1>
           <p className="mt-4 max-w-[52ch] text-[1.0625rem] leading-[1.5] text-[#5B5344]">
-            Adhikaar helps families find and claim financial assets left
-            behind by a loved one — with one simple, guided process.
+            {t.hero.sub}
           </p>
 
           <Reveal delay={80} className="mt-8 flex flex-wrap items-center gap-5">
@@ -98,7 +113,7 @@ function Hero() {
               href="/start"
               className="inline-flex items-center gap-2.5 rounded bg-[#E2653B] px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
             >
-              Start a Search
+              {t.hero.start}
               <ArrowRightIcon className="h-4 w-4" />
             </Link>
             <a
@@ -106,19 +121,19 @@ function Hero() {
               className="inline-flex items-center gap-2 text-[1rem] font-bold text-[#16233F] transition-colors hover:text-[#E2653B]"
             >
               <PlayIcon className="h-7 w-7" />
-              See how it works
+              {t.hero.seeHow}
             </a>
           </Reveal>
 
           <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-[0.8125rem] text-[#6B6255]">
             <span className="inline-flex items-center gap-1.5">
-              <span className="font-bold text-[#E2653B]">₹</span> Free to search
+              <span className="font-bold text-[#E2653B]">₹</span> {t.hero.trustFree}
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <LockIcon className="h-3.5 w-3.5" /> Secure
+              <LockIcon className="h-3.5 w-3.5" /> {t.hero.trustSecure}
             </span>
             <span className="inline-flex items-center gap-1.5">
-              <CheckIcon className="h-3.5 w-3.5" /> Step-by-step guidance
+              <CheckIcon className="h-3.5 w-3.5" /> {t.hero.trustGuidance}
             </span>
           </div>
         </div>
@@ -128,17 +143,13 @@ function Hero() {
             possible assets found" card are deliberately not reproduced. */}
         <Reveal delay={120}>
           <div className="rounded-2xl bg-white p-6 shadow-[0_20px_50px_rgba(22,35,63,0.12)]">
-            <p className="text-[0.9375rem] font-bold text-[#16233F]">
-              What Adhikaar helps you check
-            </p>
-            <p className="mt-1 text-[0.8125rem] text-[#6B6255]">
-              A guided walkthrough for each asset type below.
-            </p>
+            <p className="text-[0.9375rem] font-bold text-[#16233F]">{t.hero.cardTitle}</p>
+            <p className="mt-1 text-[0.8125rem] text-[#6B6255]">{t.hero.cardSub}</p>
             <div className="mt-5 space-y-3">
               {[
-                { icon: BankIcon, label: "Bank Deposit", sub: "Savings, current, FD" },
-                { icon: ShieldIcon, label: "Insurance Policy", sub: "Life, general" },
-                { icon: PfIcon, label: "Provident Fund", sub: "EPF, PPF balances" },
+                { icon: BankIcon, label: t.hero.rowBank, sub: t.hero.rowBankSub },
+                { icon: ShieldIcon, label: t.hero.rowInsurance, sub: t.hero.rowInsuranceSub },
+                { icon: PfIcon, label: t.hero.rowPf, sub: t.hero.rowPfSub },
               ].map((row) => (
                 <div
                   key={row.label}
@@ -166,13 +177,14 @@ function Hero() {
 /* ------------------------------------------------------------ STATS BAR */
 
 function StatsOverlap() {
+  const { t } = useHomeT();
   const STATS = [
-    { num: "4", label: "banks compared at launch — SBI, PNB, HDFC, ICICI" },
-    { num: "15 days", label: "the RBI's own deadline to settle a claim once filed" },
-    { num: "₹0", label: "cost to use Adhikaar — no login, nothing stored" },
+    { num: "4", label: t.stats.banks },
+    { num: t.stats.daysFigure, label: t.stats.days },
+    { num: "₹0", label: t.stats.free },
   ];
   return (
-    <div className="relative mx-auto -mt-6 max-w-[1440px] px-5 sm:px-8">
+    <div className="relative mx-auto -mt-6 max-w-[1920px] px-5 sm:px-8">
       <Reveal className="grid grid-cols-1 divide-y divide-[#EFE7D8] rounded-xl bg-white shadow-[0_8px_24px_rgba(22,35,63,0.1)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {STATS.map((s) => (
           <div key={s.label} className="p-6 sm:p-7">
@@ -187,26 +199,24 @@ function StatsOverlap() {
 
 /* ------------------------------------------------------------- TIMELINE */
 
-const ASSET_NODES = [
-  { icon: BankIcon, label: "Banks", bg: "#E6EEFA", fg: "#3B5EA8" },
-  { icon: UmbrellaIcon, label: "Insurance", bg: "#FBE4D8", fg: "#E2653B" },
-  { icon: PfIcon, label: "Provident Fund", bg: "#E1F0E6", fg: "#3F7A5D" },
-  { icon: SharesIcon, label: "Investments", bg: "#F1E9FB", fg: "#7147C4" },
-  { icon: DividendIcon, label: "Dividends", bg: "#FCEFCF", fg: "#B8860B" },
-  { icon: OtherIcon, label: "Other assets", bg: "#EDEAE3", fg: "#6B6255" },
-] as const;
-
 function Timeline() {
+  const { t } = useHomeT();
+  const ASSET_NODES = [
+    { icon: BankIcon, label: t.timeline.banks, bg: "#E6EEFA", fg: "#3B5EA8" },
+    { icon: UmbrellaIcon, label: t.timeline.insurance, bg: "#FBE4D8", fg: "#E2653B" },
+    { icon: PfIcon, label: t.timeline.pf, bg: "#E1F0E6", fg: "#3F7A5D" },
+    { icon: SharesIcon, label: t.timeline.investments, bg: "#F1E9FB", fg: "#7147C4" },
+    { icon: DividendIcon, label: t.timeline.dividends, bg: "#FCEFCF", fg: "#B8860B" },
+    { icon: OtherIcon, label: t.timeline.other, bg: "#EDEAE3", fg: "#6B6255" },
+  ];
   return (
     <section className="bg-[#E9EFF9] py-16">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <Reveal className="text-center">
           <h2 className="font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#16233F]">
-            One search. Multiple places.
+            {t.timeline.heading}
           </h2>
-          <p className="mt-2 text-[0.9688rem] text-[#5B6478]">
-            Adhikaar brings the journey together — across more than just banks.
-          </p>
+          <p className="mt-2 text-[0.9688rem] text-[#5B6478]">{t.timeline.sub}</p>
         </Reveal>
 
         <Reveal
@@ -236,49 +246,47 @@ function Timeline() {
 
 /* ------------------------------------------------------------ HOW IT WORKS */
 
-const STEPS = [
-  {
-    n: "01",
-    icon: BookIcon,
-    bg: "#FBE4D8",
-    fg: "#E2653B",
-    title: "Tell us about your loved one",
-    body: "Enter a few basic details to begin.",
-  },
-  {
-    n: "02",
-    icon: SearchIcon,
-    bg: "#E1F0E6",
-    fg: "#3F7A5D",
-    title: "See where money may be waiting",
-    body: "We help you understand which institutions may hold unclaimed assets.",
-  },
-  {
-    n: "03",
-    icon: CheckIcon,
-    bg: "#E6EEFA",
-    fg: "#3B5EA8",
-    title: "Follow the claim",
-    body: "Get the documents, steps and status in one place.",
-  },
-] as const;
-
 function HowItWorks() {
+  const { t } = useHomeT();
+  const STEPS = [
+    {
+      n: "01",
+      icon: BookIcon,
+      bg: "#FBE4D8",
+      fg: "#E2653B",
+      title: t.how.step1Title,
+      body: t.how.step1Body,
+    },
+    {
+      n: "02",
+      icon: SearchIcon,
+      bg: "#E1F0E6",
+      fg: "#3F7A5D",
+      title: t.how.step2Title,
+      body: t.how.step2Body,
+    },
+    {
+      n: "03",
+      icon: CheckIcon,
+      bg: "#E6EEFA",
+      fg: "#3B5EA8",
+      title: t.how.step3Title,
+      body: t.how.step3Body,
+    },
+  ];
   return (
     <section id="how" className="scroll-mt-16 bg-[#FAF5EC] py-16">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <Reveal className="max-w-[35rem]">
           <h2 className="font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#16233F]">
-            A complicated process, made simple.
+            {t.how.heading}
           </h2>
-          <p className="mt-2.5 text-[0.9688rem] text-[#6B6255]">
-            Three simple steps to go from search to claim.
-          </p>
+          <p className="mt-2.5 text-[0.9688rem] text-[#6B6255]">{t.how.sub}</p>
           <a
             href="#find"
             className="mt-5 inline-flex items-center gap-2 rounded bg-[#FBE4D8] px-5 py-2.5 text-[0.9375rem] font-bold text-[#E2653B] transition-colors hover:bg-[#F6D4C0]"
           >
-            See what you can find
+            {t.how.cta}
             <ArrowRightIcon className="h-3.5 w-3.5" />
           </a>
         </Reveal>
@@ -311,34 +319,34 @@ function HowItWorks() {
    has no backend to search or confirm anything"). The button goes to the
    real wizard rather than promising a "demo" that doesn't exist. */
 function ClaimTracker() {
+  const { t } = useHomeT();
   const CHECKLIST = [
-    { label: "Identity details", done: true },
-    { label: "Death certificate", done: true },
-    { label: "Proof of relationship", done: false },
-    { label: "Claim form", done: false },
-    { label: "Submit to institution", done: false },
+    { label: t.tracker.identity, done: true },
+    { label: t.tracker.death, done: true },
+    { label: t.tracker.relationship, done: false },
+    { label: t.tracker.claimForm, done: false },
+    { label: t.tracker.submit, done: false },
   ];
   const doneCount = CHECKLIST.filter((c) => c.done).length;
 
   return (
     <section className="bg-[#FAF5EC] py-16">
-      <div className="mx-auto grid max-w-[1440px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-16">
+      <div className="mx-auto grid max-w-[1920px] items-center gap-12 px-5 sm:px-8 lg:grid-cols-2 lg:gap-16">
         <Reveal>
           <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
-            Not just find it.
+            {t.tracker.eyebrow}
           </p>
           <h2 className="mt-2 font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#16233F]">
-            Help you claim it.
+            {t.tracker.heading}
           </h2>
           <p className="mt-3 max-w-[46ch] text-[0.9688rem] leading-relaxed text-[#6B6255]">
-            Once a possible asset is found, Adhikaar guides you through
-            every next step.
+            {t.tracker.sub}
           </p>
           <Link
             href="/start"
             className="mt-5 inline-flex items-center gap-2.5 rounded bg-[#16233F] px-6 py-3 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#243257]"
           >
-            Start a Search
+            {t.tracker.cta}
             <ArrowRightIcon className="h-3.5 w-3.5" />
           </Link>
         </Reveal>
@@ -352,15 +360,15 @@ function ClaimTracker() {
                 </span>
                 <span>
                   <span className="block text-[0.9375rem] font-bold text-[#16233F]">
-                    Bank deposit claim
+                    {t.tracker.cardTitle}
                   </span>
                   <span className="block text-[0.8125rem] text-[#6B6255]">
-                    Illustrative example
+                    {t.tracker.illustrative}
                   </span>
                 </span>
               </div>
               <span className="shrink-0 rounded-full bg-[#EFE7D8] px-2.5 py-1 text-[0.6875rem] font-bold uppercase tracking-[0.06em] text-[#6B6255]">
-                Example
+                {t.tracker.exampleTag}
               </span>
             </div>
 
@@ -371,7 +379,7 @@ function ClaimTracker() {
               />
             </div>
             <p className="mt-1.5 text-[0.75rem] text-[#6B6255]">
-              {doneCount} of {CHECKLIST.length} completed
+              {t.tracker.progress(doneCount, CHECKLIST.length)}
             </p>
 
             <div className="mt-4 divide-y divide-[#EFE7D8]">
@@ -388,7 +396,7 @@ function ClaimTracker() {
                       c.done ? "text-[#3F7A5D]" : "text-[#B8AE96]"
                     }`}
                   >
-                    {c.done ? "Completed" : "Pending"}
+                    {c.done ? t.tracker.completed : t.tracker.pending}
                   </span>
                 </div>
               ))}
@@ -404,25 +412,23 @@ function ClaimTracker() {
 
 /* ------------------------------------------------------------ UDGAM BAND */
 
-const UDGAM_STEPS = [
-  { icon: SearchIcon, label: "Search", sub: "UDGAM" },
-  { icon: BookIcon, label: "Understand", sub: "Adhikaar" },
-  { icon: CheckIcon, label: "Claim", sub: "Adhikaar" },
-] as const;
-
 function UdgamBand() {
+  const { t } = useHomeT();
+  const UDGAM_STEPS = [
+    { icon: SearchIcon, label: t.udgam.search, sub: "UDGAM" },
+    { icon: BookIcon, label: t.udgam.understand, sub: "Adhikaar" },
+    { icon: CheckIcon, label: t.udgam.claim, sub: "Adhikaar" },
+  ];
   return (
     <section id="sources" className="scroll-mt-16 bg-[#F1E7D6] py-14">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <Reveal className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center lg:gap-16">
           <div>
             <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
-              Already heard of UDGAM?
+              {t.udgam.eyebrow}
             </p>
             <p className="mt-2 max-w-[52ch] text-[0.9688rem] leading-relaxed text-[#5B5344]">
-              UDGAM is the RBI&apos;s own portal for searching unclaimed bank
-              deposits. Adhikaar helps you understand what to do next — and
-              guides you across more than just bank deposits.
+              {t.udgam.body}
             </p>
             <a
               href="https://udgam.rbi.org.in"
@@ -430,7 +436,7 @@ function UdgamBand() {
               rel="noreferrer"
               className="mt-3 inline-block text-[0.9375rem] font-bold text-[#16233F] underline decoration-[#E2653B] decoration-2 underline-offset-4"
             >
-              Learn about UDGAM →
+              {t.udgam.link}
             </a>
           </div>
 
@@ -462,23 +468,23 @@ function UdgamBand() {
 
 /* ------------------------------------------------------------ FIND GRID */
 
-const FIND_ITEMS = [
-  { icon: BankIcon, label: "Bank deposits" },
-  { icon: BankIcon, label: "Fixed deposits" },
-  { icon: ShieldIcon, label: "Insurance" },
-  { icon: PfIcon, label: "Provident fund" },
-  { icon: SharesIcon, label: "Shares & investments" },
-  { icon: DividendIcon, label: "Dividends" },
-  { icon: OtherIcon, label: "Other eligible assets" },
-] as const;
-
 function FindGrid() {
+  const { t } = useHomeT();
+  const FIND_ITEMS = [
+    { icon: BankIcon, label: t.find.bank },
+    { icon: BankIcon, label: t.find.fixed },
+    { icon: ShieldIcon, label: t.find.insurance },
+    { icon: PfIcon, label: t.find.pf },
+    { icon: SharesIcon, label: t.find.shares },
+    { icon: DividendIcon, label: t.find.dividends },
+    { icon: OtherIcon, label: t.find.other },
+  ];
   return (
     <section id="find" className="scroll-mt-16 bg-[#FAF5EC] py-16">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <Reveal className="text-center">
           <h2 className="font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#16233F]">
-            What can Adhikaar help find?
+            {t.find.heading}
           </h2>
         </Reveal>
 
@@ -502,21 +508,21 @@ function FindGrid() {
 
 /* ------------------------------------------------------------ TRUST ROW */
 
-const TRUST_ITEMS = [
-  { icon: LockIcon, label: "Your information stays private" },
-  { icon: BookIcon, label: "We explain every step in plain language" },
-  { icon: CheckIcon, label: "No confusing jargon" },
-  { icon: ShieldIcon, label: "You stay in control" },
-] as const;
-
 function TrustRow() {
+  const { t } = useHomeT();
+  const TRUST_ITEMS = [
+    { icon: LockIcon, label: t.trust.privacy },
+    { icon: BookIcon, label: t.trust.plain },
+    { icon: CheckIcon, label: t.trust.jargon },
+    { icon: ShieldIcon, label: t.trust.control },
+  ];
   return (
     <section className="bg-[#F1E7D6] py-14">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <Reveal className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-start lg:gap-16">
           <div>
             <h2 className="font-serif text-[1.5rem] font-bold tracking-[-0.01em] text-[#16233F]">
-              Designed around trust
+              {t.trust.heading}
             </h2>
             <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
               {TRUST_ITEMS.map((it) => (
@@ -530,8 +536,7 @@ function TrustRow() {
             </div>
           </div>
           <p className="text-[0.875rem] leading-relaxed text-[#6B6255] lg:pt-1">
-            Adhikaar does not hold or transfer your money. Claims are
-            ultimately processed by the relevant bank, insurer or fund.
+            {t.trust.disclaimer}
           </p>
         </Reveal>
       </div>
@@ -541,34 +546,22 @@ function TrustRow() {
 
 /* ------------------------------------------------------------------ FAQ */
 
-const FAQS = [
-  {
-    q: "What kinds of assets does this cover?",
-    a: "Bank deposits and fixed deposits, insurance policies, provident fund, shares and dividends — and a general path for anything else that doesn't fit those.",
-  },
-  {
-    q: "Will Adhikaar ever tell me it found a match?",
-    a: "No. Adhikaar has no backend or database of accounts — it cannot search or confirm anything. What it gives you is a checklist of where to look and, once something is found, exactly what the institution will ask for.",
-  },
-  {
-    q: "What happens after I find something?",
-    a: "Adhikaar walks you through the documents and steps that institution will ask for, one at a time, so nothing arrives as a surprise at the counter.",
-  },
-  {
-    q: "Is my information safe?",
-    a: "Nothing you enter is stored or shared for marketing. There's no account, no login, and no data reaches a server beyond what a page needs to render.",
-  },
-] as const;
-
 function Faq() {
+  const { t } = useHomeT();
   const [open, setOpen] = useState<number | null>(null);
+  const FAQS = [
+    { q: t.faq.q1, a: t.faq.a1 },
+    { q: t.faq.q2, a: t.faq.a2 },
+    { q: t.faq.q3, a: t.faq.a3 },
+    { q: t.faq.q4, a: t.faq.a4 },
+  ];
   return (
     <section id="faq" className="scroll-mt-16 bg-[#FAF5EC] py-16">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <Reveal className="max-w-[35rem]">
-          <p className="text-[0.875rem] text-[#6B6255]">Questions</p>
+          <p className="text-[0.875rem] text-[#6B6255]">{t.faq.eyebrow}</p>
           <h2 className="mt-1.5 font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#16233F]">
-            Before you start
+            {t.faq.heading}
           </h2>
         </Reveal>
 
@@ -608,25 +601,22 @@ function Faq() {
 /* --------------------------------------------------------------- FINAL CTA */
 
 function FinalCta() {
+  const { t } = useHomeT();
   return (
     <section className="bg-[#FAF5EC] py-16 text-center">
-      <Reveal className="mx-auto max-w-[1440px] px-5 sm:px-8">
+      <Reveal className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <p className="font-serif text-[1.625rem] font-bold text-[#16233F]">
-          Something may still be waiting for your family.
+          {t.finalCta.heading}
         </p>
-        <p className="mt-1.5 text-[0.9688rem] text-[#6B6255]">
-          Start with a simple search. We&apos;ll help you understand what comes next.
-        </p>
+        <p className="mt-1.5 text-[0.9688rem] text-[#6B6255]">{t.finalCta.sub}</p>
         <Link
           href="/start"
           className="mt-6 inline-flex items-center gap-2.5 rounded bg-[#E2653B] px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
         >
-          Start a Search
+          {t.finalCta.cta}
           <ArrowRightIcon className="h-4 w-4" />
         </Link>
-        <p className="mt-3 text-[0.8125rem] text-[#6B6255]">
-          It&apos;s free, secure and takes just a few minutes.
-        </p>
+        <p className="mt-3 text-[0.8125rem] text-[#6B6255]">{t.finalCta.note}</p>
       </Reveal>
     </section>
   );
@@ -635,36 +625,31 @@ function FinalCta() {
 /* ------------------------------------------------------------------ FOOTER */
 
 function RecoverFooter() {
+  const { t, locale } = useHomeT();
   return (
     <footer className="border-t border-[#EFE7D8] bg-white py-10 text-[0.8125rem] text-[#6B6255]">
-      <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-8 pb-6">
-          <Link href="/" className="flex items-center gap-2.5">
+          <Link href={withLang("/", locale)} className="flex items-center gap-2.5">
             <LeafMark className="h-7 w-7" />
             <span className="leading-tight">
               <span className="block font-serif text-[1.0625rem] font-bold text-[#16233F]">
                 Adhikaar
               </span>
-              <span className="block text-[0.6875rem] text-[#6B6255]">
-                What&apos;s yours should find its way home.
-              </span>
+              <span className="block text-[0.6875rem] text-[#6B6255]">{t.tagline}</span>
             </span>
           </Link>
           <div className="flex flex-wrap gap-6 text-[0.875rem]">
-            <Link href="/guide" className="hover:text-[#16233F]">About</Link>
-            <a href="#" className="hover:text-[#16233F]">Privacy</a>
-            <a href="#" className="hover:text-[#16233F]">Terms</a>
-            <a href="#" className="hover:text-[#16233F]">Help</a>
-            <a href="#faq" className="hover:text-[#16233F]">FAQs</a>
+            <Link href="/guide" className="hover:text-[#16233F]">{t.footer.about}</Link>
+            <a href="#" className="hover:text-[#16233F]">{t.footer.privacy}</a>
+            <a href="#" className="hover:text-[#16233F]">{t.footer.terms}</a>
+            <a href="#" className="hover:text-[#16233F]">{t.footer.help}</a>
+            <a href="#faq" className="hover:text-[#16233F]">{t.footer.faqs}</a>
           </div>
         </div>
         <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#EFE7D8] pt-5">
-          <p>Made for Indian families</p>
-          <p className="max-w-[60ch]">
-            Adhikaar is an independent guidance tool. It does not represent
-            any bank, insurer, government agency or other financial
-            institution unless explicitly stated. Nothing here is legal advice.
-          </p>
+          <p>{t.footer.madeFor}</p>
+          <p className="max-w-[60ch]">{t.footer.disclaimer}</p>
         </div>
       </div>
     </footer>
