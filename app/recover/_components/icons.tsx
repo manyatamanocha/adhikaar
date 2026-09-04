@@ -23,10 +23,24 @@ export function UmbrellaIcon({ className }: P) {
   );
 }
 
+/* Was drawn identical to BankIcon above -- same building outline, no
+   distinct mark for provident fund at all. A briefcase reads as "your
+   employment-linked fund" without borrowing the bank glyph. */
 export function PfIcon({ className }: P) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
-      <path d="M3.5 9.5h17L12 4 3.5 9.5zM5 20h14M6.5 12v6M11 12v6M15.5 12v6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="3.5" y="8" width="17" height="11.5" rx="2" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M8.5 8V6a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3.5 13h17M11 13v2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function DocumentIcon({ className }: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <rect x="4.5" y="3.5" width="15" height="17" rx="2" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M8.4 9h7.2M8.4 12.6h7.2M8.4 16.2h4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
     </svg>
   );
 }

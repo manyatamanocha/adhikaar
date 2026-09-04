@@ -12,6 +12,7 @@ import {
   DividendIcon,
   OtherIcon,
   SearchIcon,
+  DocumentIcon,
   CheckIcon,
   CircleIcon,
   LockIcon,
@@ -19,6 +20,44 @@ import {
   CompassIcon,
   ArrowRightIcon,
 } from "./icons";
+
+/**
+ * A margin note standing in for a hand-scrawled aside next to a printout --
+ * purely decorative emphasis, never unique information, so it's marked
+ * aria-hidden rather than competing with the real heading for a screen
+ * reader's attention. Desktop only: there's no free margin for it on a
+ * phone-width layout, and the brief's own device priority is the phone.
+ */
+function HandNote({
+  text,
+  className = "",
+  flip = false,
+}: {
+  text: string;
+  className?: string;
+  flip?: boolean;
+}) {
+  return (
+    <div aria-hidden="true" className={`pointer-events-none hidden lg:block ${className}`}>
+      <svg
+        width="64"
+        height="40"
+        viewBox="0 0 64 40"
+        fill="none"
+        className={flip ? "-scale-x-100" : ""}
+      >
+        <path d="M4 5c16 2 38 9 54 30" stroke="#BE7519" strokeWidth="1.5" strokeDasharray="1 7" strokeLinecap="round" />
+        <path d="M52 30l6 5-8 1.5" stroke="#BE7519" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <p
+        className={`-mt-1 max-w-[15ch] text-[1.0625rem] leading-snug text-[#8A5A0D] ${flip ? "rotate-[2deg] text-right" : "rotate-[-2deg]"}`}
+        style={{ fontFamily: "var(--font-hand)" }}
+      >
+        {text}
+      </p>
+    </div>
+  );
+}
 
 /**
  * The homepage ("/", formerly /recover) -- a from-scratch visual redesign of
@@ -47,9 +86,9 @@ export function RecoverPage() {
       <Hero />
       <OneSearchManyPlaces />
       <HowItWorks />
+      <GuidedClaim />
       <UdgamNote />
       <WhatCanBeRecovered />
-      <GuidedClaim />
       <Trust />
       <FinalCta />
       <RecoverFooter />
@@ -72,6 +111,20 @@ function Hero() {
       >
         <line x1="0" y1="0" x2="100%" y2="0" stroke="#E4DCC8" strokeWidth="2" strokeDasharray="1 10" strokeLinecap="round" />
       </svg>
+
+      {/* Two soft fields of colour behind the copy -- the palette's own
+          navy and saffron at very low opacity, not a new hue, so the hero
+          has some depth without borrowing the reference's blue/peach wash. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-40 -top-40 h-[34rem] w-[34rem] rounded-full opacity-[0.07]"
+        style={{ background: "radial-gradient(circle, #16233F, transparent 70%)" }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-32 bottom-0 h-[26rem] w-[26rem] rounded-full opacity-[0.08]"
+        style={{ background: "radial-gradient(circle, #BE7519, transparent 70%)" }}
+      />
 
       <div className="relative mx-auto grid max-w-[1240px] items-center gap-14 px-5 pb-16 pt-10 sm:px-8 sm:pb-24 sm:pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pb-28 lg:pt-20">
         <div>
@@ -110,8 +163,24 @@ function Hero() {
           </ul>
         </div>
 
-        <Reveal delay={120} className="flex justify-center lg:justify-end">
-          <HeroDemo />
+        <Reveal delay={120} className="relative flex justify-center lg:justify-end">
+          {/* Layered-card depth, matching the reference's stacked panels --
+              a second, blurred card behind the real one. It carries no text
+              of its own (nothing for a fabricated "match" to hide in), only
+              the same rounded shape offset behind, the way a stack of
+              papers reads before you've picked the top one up. */}
+          <div
+            aria-hidden="true"
+            className="absolute right-4 top-6 hidden h-full w-full max-w-[26rem] rounded-[1.75rem] border border-[#E4DCC8] bg-white/70 sm:block"
+            style={{ transform: "rotate(2.5deg)" }}
+          />
+          <HandNote
+            text="From a simple search to real possibilities"
+            className="absolute -left-4 -top-11"
+          />
+          <div className="relative">
+            <HeroDemo />
+          </div>
         </Reveal>
       </div>
     </section>
@@ -125,13 +194,14 @@ const PLACES = [
   { icon: UmbrellaIcon, label: "Insurance" },
   { icon: PfIcon, label: "Provident fund" },
   { icon: SharesIcon, label: "Investments" },
+  { icon: DividendIcon, label: "Dividends" },
   { icon: OtherIcon, label: "Other assets" },
 ] as const;
 
 function OneSearchManyPlaces() {
   return (
-    <section className="border-y border-[#E4DCC8] bg-white py-16 sm:py-20">
-      <Reveal className="mx-auto max-w-[1240px] px-5 text-center sm:px-8">
+    <section className="relative overflow-hidden border-y border-[#E4DCC8] bg-[#16233F]/[0.03] py-16 sm:py-20">
+      <Reveal className="relative mx-auto max-w-[1240px] px-5 text-center sm:px-8">
         <h2 className="font-serif text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-[#16233F]">
           One search. Multiple places.
         </h2>
@@ -142,7 +212,7 @@ function OneSearchManyPlaces() {
             keeping one gradient direction draws correctly on exactly one of
             the two layouts and a solid sliver on the other, so mobile and
             desktop each get the div shaped for them. */}
-        <div className="relative mx-auto mt-12 flex max-w-[52rem] flex-col items-center gap-8 sm:flex-row sm:justify-between sm:gap-4">
+        <div className="relative mx-auto mt-12 flex max-w-[58rem] flex-col items-center gap-8 sm:flex-row sm:justify-between sm:gap-3">
           <div
             aria-hidden="true"
             className="absolute left-6 top-6 bottom-6 w-px sm:hidden"
@@ -161,7 +231,7 @@ function OneSearchManyPlaces() {
           />
           {PLACES.map((p) => (
             <div key={p.label} className="relative z-10 flex items-center gap-3 sm:flex-col sm:gap-3">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#E4DCC8] bg-[#FBF8F2] text-[#16233F]">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#E4DCC8] bg-white text-[#16233F]">
                 <p.icon className="h-5 w-5" />
               </span>
               <span className="text-[0.9375rem] font-bold text-[#3B4258]">
@@ -169,6 +239,12 @@ function OneSearchManyPlaces() {
               </span>
             </div>
           ))}
+
+          <HandNote
+            text="Across more than just banks"
+            flip
+            className="absolute right-2 -top-16"
+          />
         </div>
 
         <p className="mx-auto mt-12 max-w-[42ch] font-serif text-[1.375rem] font-bold text-[#16233F]">
@@ -183,17 +259,17 @@ function OneSearchManyPlaces() {
 
 const STEPS = [
   {
-    n: "01",
+    icon: DocumentIcon,
     title: "Tell us about your loved one",
     body: "Enter a few basic details to begin.",
   },
   {
-    n: "02",
+    icon: SearchIcon,
     title: "See where money may be waiting",
     body: "We help you understand which institutions may hold unclaimed assets.",
   },
   {
-    n: "03",
+    icon: DocumentIcon,
     title: "Follow the claim",
     body: "Get the documents, steps and status in one place.",
   },
@@ -203,10 +279,22 @@ function HowItWorks() {
   return (
     <section id="how" className="scroll-mt-16 py-20 sm:py-28">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-        <Reveal>
-          <h2 className="max-w-[16ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#16233F]">
-            One connected journey, not a form.
-          </h2>
+        <Reveal className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <h2 className="max-w-[16ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#16233F]">
+              A complicated process, made simple.
+            </h2>
+            <p className="mt-3 max-w-[42ch] text-[1.0625rem] text-[#52586A]">
+              Three simple steps to go from search to claim.
+            </p>
+          </div>
+          <a
+            href="#recover"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full border-2 border-[#16233F]/20 px-6 py-3 text-[0.9375rem] font-bold text-[#16233F] transition-colors hover:border-[#16233F]/40"
+          >
+            See how it works
+            <ArrowRightIcon className="h-4 w-4" />
+          </a>
         </Reveal>
 
         <div className="relative mt-16 grid gap-16 sm:grid-cols-3 sm:gap-8">
@@ -214,7 +302,9 @@ function HowItWorks() {
               Vertical on mobile, horizontal from sm -- this was "hidden"
               below sm entirely in the first pass, which left the phone
               layout (the primary device, per the brief's own words) with
-              three plain numbered items and no thread at all. */}
+              three plain numbered items and no thread at all. Arrowheads
+              replace the reference's plain dashed line between steps on
+              desktop, dashed thread stays underneath on mobile. */}
           <div
             aria-hidden="true"
             className="absolute left-6 top-6 bottom-6 w-px sm:hidden"
@@ -232,9 +322,15 @@ function HowItWorks() {
             }}
           />
           {STEPS.map((s, i) => (
-            <Reveal key={s.n} delay={i * 110} className="relative">
-              <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#16233F] font-serif text-[1.0625rem] font-bold text-white">
-                {i + 1}
+            <Reveal key={s.title} delay={i * 110} className="relative">
+              {i > 0 && (
+                <ArrowRightIcon
+                  aria-hidden="true"
+                  className="absolute -left-11 top-2.5 hidden h-4 w-4 text-[#BE7519] sm:block"
+                />
+              )}
+              <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#16233F] text-white">
+                <s.icon className="h-5 w-5" />
               </span>
               <p className="mt-5 font-serif text-[1.375rem] font-bold text-[#16233F]">
                 {s.title}
@@ -299,57 +395,39 @@ function UdgamNote() {
 
 /* ------------------------------------------------------------ RECOVERABLE */
 
+const RECOVERABLE = [
+  { icon: BankIcon, label: "Bank deposits" },
+  { icon: BankIcon, label: "Fixed deposits" },
+  { icon: UmbrellaIcon, label: "Insurance" },
+  { icon: PfIcon, label: "Provident fund" },
+  { icon: SharesIcon, label: "Shares & investments" },
+  { icon: DividendIcon, label: "Dividends" },
+  { icon: OtherIcon, label: "Other eligible assets" },
+] as const;
+
 function WhatCanBeRecovered() {
   return (
-    <section id="recover" className="scroll-mt-16 py-20 sm:py-28">
-      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+    <section id="recover" className="scroll-mt-16 bg-[#F3EEE3] py-20 sm:py-28">
+      <div className="mx-auto max-w-[1240px] px-5 text-center sm:px-8">
         <Reveal>
           <h2 className="font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold text-[#16233F]">
-            What can be recovered
+            What can Adhikaar help find?
           </h2>
         </Reveal>
 
-        {/* A bento, not seven equal cards: one wide lead tile, the rest sized
-            by how self-explanatory each label already is. */}
         <Reveal delay={80}>
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            <div className="col-span-2 row-span-2 rounded-[1.5rem] bg-[#16233F] p-6 text-white sm:p-8">
-              <BankIcon className="h-9 w-9 text-[#F0B45B]" />
-              <p className="mt-6 font-serif text-[1.5rem] font-bold sm:text-[1.75rem]">
-                Bank deposits &amp; fixed deposits
-              </p>
-              <p className="mt-2 max-w-[34ch] text-[0.9375rem] text-white/75">
-                Savings, current and dormant accounts across any bank.
-              </p>
-            </div>
-
-            {[
-              { icon: UmbrellaIcon, label: "Insurance" },
-              { icon: PfIcon, label: "Provident fund" },
-              { icon: SharesIcon, label: "Shares & investments" },
-              { icon: DividendIcon, label: "Dividends" },
-            ].map((c) => (
-              <div
-                key={c.label}
-                className="rounded-[1.5rem] border border-[#E4DCC8] bg-white p-5 sm:p-6"
-              >
-                <c.icon className="h-7 w-7 text-[#16233F]" />
-                <p className="mt-4 text-[0.9375rem] font-bold leading-snug text-[#16233F]">
+          <ul className="mx-auto mt-12 grid max-w-[52rem] grid-cols-2 gap-x-6 gap-y-9 sm:grid-cols-4">
+            {RECOVERABLE.map((c) => (
+              <li key={c.label} className="flex flex-col items-center gap-3">
+                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#BE7519]/12 text-[#8A5A0D]">
+                  <c.icon className="h-6 w-6" />
+                </span>
+                <span className="text-[0.9375rem] font-bold leading-snug text-[#16233F]">
                   {c.label}
-                </p>
-              </div>
+                </span>
+              </li>
             ))}
-
-            <div className="col-span-2 rounded-[1.5rem] border border-dashed border-[#D6CBA8] bg-[#F3EEE3] p-5 sm:col-span-4 sm:flex sm:items-center sm:justify-between sm:p-6">
-              <div className="flex items-center gap-3">
-                <OtherIcon className="h-7 w-7 shrink-0 text-[#8A5A0D]" />
-                <p className="text-[0.9375rem] font-bold text-[#16233F]">
-                  Other eligible financial assets — places your family may
-                  not know to check.
-                </p>
-              </div>
-            </div>
-          </div>
+          </ul>
         </Reveal>
       </div>
     </section>
@@ -372,8 +450,11 @@ function GuidedClaim() {
     <section className="bg-white py-20 sm:py-28">
       <div className="mx-auto grid max-w-[1240px] items-center gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20">
         <Reveal>
-          <h2 className="max-w-[18ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#16233F]">
-            Not just a search. A guide through the claim.
+          <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-[#8A5A0D]">
+            Not just find it.
+          </p>
+          <h2 className="mt-2 max-w-[18ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#16233F]">
+            Help you claim it.
           </h2>
           <p className="mt-5 max-w-[46ch] text-[1.0625rem] leading-relaxed text-[#52586A]">
             Once something is found worth pursuing, Adhikaar walks you
@@ -384,12 +465,12 @@ function GuidedClaim() {
             href="/start"
             className="mt-7 inline-flex items-center gap-2.5 rounded-full bg-[#16233F] px-7 py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#223055]"
           >
-            Continue a claim
+            See a demo
             <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </Reveal>
 
-        <Reveal delay={100}>
+        <Reveal delay={100} className="relative">
           <div className="mx-auto w-full max-w-[24rem] overflow-hidden rounded-[1.5rem] border border-[#E4DCC8] bg-[#FBF8F2] shadow-[0_24px_50px_-20px_rgba(15,25,50,0.28)]">
             <div className="border-b border-[#E4DCC8] bg-white p-5">
               <p className="text-[0.75rem] font-bold uppercase tracking-[0.08em] text-[#8A5A0D]">
@@ -437,9 +518,62 @@ function GuidedClaim() {
               </div>
             </div>
           </div>
+
+          <RoadHomeIllustration className="mt-8 hidden lg:block" />
+          <HandNote
+            text="Clear steps. Less confusion. More closure."
+            className="absolute -right-16 top-4"
+          />
+          <HandNote
+            text="Bringing financial journeys home."
+            flip
+            className="absolute -bottom-2 -right-10"
+          />
         </Reveal>
       </div>
     </section>
+  );
+}
+
+/**
+ * The one authored illustration on this page, in the same spirit as the
+ * hand-drawn scenes on /discovery: no image generation available, and a
+ * stock substitute would undercut the trust this project is built on more
+ * than having no illustration at all. Flat shapes, the product's own
+ * palette, no house-of-cards literalism -- a winding path and a roofline,
+ * nothing more specific than that.
+ */
+function RoadHomeIllustration({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 320 170"
+      className={className}
+      role="img"
+    >
+      <path
+        d="M0 150C50 150 60 100 110 95S180 130 220 110 300 40 320 30"
+        stroke="#3F7355"
+        strokeWidth="16"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.18"
+      />
+      <path
+        d="M0 150C50 150 60 100 110 95S180 130 220 110 300 40 320 30"
+        stroke="#FBF8F2"
+        strokeWidth="3"
+        strokeDasharray="1 10"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <circle cx="272" cy="46" r="16" fill="#F0B45B" opacity="0.5" />
+      <g transform="translate(232 20)">
+        <path d="M0 26L26 4l26 22" stroke="#16233F" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <rect x="6" y="24" width="40" height="28" rx="2" fill="#16233F" />
+        <rect x="20" y="34" width="12" height="18" fill="#FBF8F2" />
+      </g>
+    </svg>
   );
 }
 
@@ -526,13 +660,30 @@ function FinalCta() {
           Start with a simple search. We&apos;ll help you understand what
           comes next.
         </p>
-        <Link
-          href="/start"
-          className="mt-8 inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-[1.0625rem] font-bold text-[#16233F] transition-colors hover:bg-[#F0B45B]"
-        >
-          Start a Search
-          <ArrowRightIcon className="h-4 w-4" />
-        </Link>
+        <div className="relative mt-8 inline-block">
+          <Link
+            href="/start"
+            className="inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-[1.0625rem] font-bold text-[#16233F] transition-colors hover:bg-[#F0B45B]"
+          >
+            Start a Search
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-24 -top-16 hidden lg:block"
+          >
+            <svg width="70" height="46" viewBox="0 0 70 46" fill="none">
+              <path d="M6 40C24 30 40 12 62 5" stroke="#F0B45B" strokeWidth="1.5" strokeDasharray="1 7" strokeLinecap="round" />
+              <path d="M52 4l10 1-4 9" stroke="#F0B45B" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <p
+              className="mt-0.5 max-w-[16ch] rotate-[2deg] text-left text-[1.0625rem] leading-snug text-[#F0B45B]"
+              style={{ fontFamily: "var(--font-hand)" }}
+            >
+              Because every story deserves a proper ending.
+            </p>
+          </div>
+        </div>
       </Reveal>
     </section>
   );
