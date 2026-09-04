@@ -7,17 +7,23 @@
    as a document. Adjacent to the official financial-services portals in tone,
    deliberately not in appearance.
 
-   Fourth palette, applied site-wide 4 Sep 2026 late evening: the navy/saffron
-   pass that preceded this one read as heavy and cold in practice, not just in
-   theory -- confirmed by looking at the rendered site, not by re-arguing the
-   brief. Replaced with a deep forest-pine ink (still an authority colour,
-   still dark enough to anchor a hero or a footer, but a warm hue rather than
-   a cold one) and a muted terracotta accent in place of the more saturated
-   saffron-orange, used the same way: never as a text background, only as
-   icon fills, thread lines and tinted chips, with its own darker "ink" weight
-   for text and a lighter "lift" weight for text on the dark ink. Token NAMES
-   are unchanged again -- "indigo" and "saffron" are historical labels now,
-   not literal colour names, same as the passes before this one.
+   Fifth palette, applied site-wide 4 Sep 2026 late evening: the user asked
+   directly for maroon/burgundy after both the navy and the forest-green
+   passes were rejected on sight. Brand ink is now a deep wine burgundy, dark
+   enough to anchor a hero or a footer the way navy and green both did.
+   Accent is a muted gold rather than saffron-orange or terracotta -- the
+   classic burgundy/gold pairing, at the same three weights every accent on
+   this page has used all session (fill / ink for text on light / lift for
+   text on dark).
+
+   --color-maroon and --color-indigo are now both wine-family hues by
+   coincidence of naming, not by intent: "maroon" was the PRE-EXISTING
+   token for a caveat/warning colour ("anything that can hurt you", per
+   layout.tsx's own comment), unrelated to this brand-colour swap. Shifted
+   it to a brighter red (#A33447) so it stays visually distinct from the new
+   burgundy brand ink (#5C1B28) rather than reading as the same colour twice.
+   Token NAMES are unchanged again -- "indigo" and "saffron" are historical
+   labels now, not literal colour names, same as every pass before this one.
 
    HARD LINE: the register is adjacent, the identity is NOT. No state emblem,
    no ministry marks, no tricolour device, nothing that lets a reader conclude
@@ -33,22 +39,22 @@
      to change; only the values move. "indigo" is now the navy, "saffron" is
      unchanged in name and now closer to its literal colour than the ochre
      it briefly was. */
-  --color-indigo: #1E3B32;
-  --color-indigo-lift: #2C5245;
-  --color-indigo-deep: #122620;
-  --color-indigo-ink: #122620;
-  --color-maroon: #7a2233;
-  --color-maroon-lift: #96394b;
-  --color-saffron: #A8551E;
+  --color-indigo: #5C1B28;
+  --color-indigo-lift: #7A2838;
+  --color-indigo-deep: #3D1119;
+  --color-indigo-ink: #3D1119;
+  --color-maroon: #A33447;
+  --color-maroon-lift: #C14D63;
+  --color-saffron: #A87A1E;
   /* Saffron is a fill, not an ink: it is never used as a text background —
      only icon fills, thread lines and tinted chips paired with saffron-ink
      text. This is the same hue taken down for anywhere it has to be TEXT on
      a light ground. */
-  --color-saffron-ink: #7A3D14;
+  --color-saffron-ink: #8C6317;
   /* And taken UP for the opposite case: saffron as text/pill on the dark navy
      hero, where the fill weight would fail AA on small text. One hue, three
      weights, verified against every real usage site-wide, not just the hero. */
-  --color-saffron-lift: #E39A5C;
+  --color-saffron-lift: #E0B563;
 
   /* Grounds. Warm ivory, because the deliverable is paper. */
   --color-paper: #ffffff;
@@ -56,19 +62,19 @@
   --color-mist-deep: #f3eee3;
   --color-blush: #f7ede9;
 
-  /* Ink. Navy-leaning neutrals to match the new brand colour. ink-faint
+  /* Ink. Wine-leaning neutrals to match the new brand colour. ink-faint
      carries the small-caps labels, which are read by people who are older,
      tired and under stress, so it clears 4.5:1 on BOTH white and mist rather
      than being kept light. */
-  --color-ink: #1E3B32;
-  --color-ink-soft: #4B5750;
-  --color-ink-faint: #6B6459;
+  --color-ink: #5C1B28;
+  --color-ink-soft: #5A4C4E;
+  --color-ink-faint: #6E6062;
 
   /* Structure */
   --color-rule: #e4dcc8;
   --color-rule-faint: #ebe6dc;
 
-  --color-link: #1E3B32;
+  --color-link: #5C1B28;
 
   /* The Indic faces sit IN the body stack, not only on the wordmark: a Hindi
      or Kannada page is set in the same sans as an English one, and the browser
@@ -84,10 +90,7 @@
 
   /* Category accents, for the outcome cards that need to be told apart at a
      glance. Never the sole carrier of a distinction — each card also says in
-     words which paragraph it runs on. accent-green shifted brighter/tealer
-     than the ink token now that the brand colour is itself a forest green --
-     it needs to read as a distinct fourth accent, not a paler copy of the
-     page's own chrome. */
+     words which paragraph it runs on. */
   --color-accent-green: #2B7A67;
   --color-accent-violet: #6b5490;
   --color-accent-blue: #3b5ea8;

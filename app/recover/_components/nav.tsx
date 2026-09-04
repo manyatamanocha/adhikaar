@@ -24,7 +24,7 @@ export function RecoverNav() {
       }`}
     >
       <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-6 px-5 py-4 sm:px-8">
-        <Link href="/" className="font-serif text-[1.375rem] font-bold text-[#1E3B32]">
+        <Link href="/" className="font-serif text-[1.375rem] font-bold text-[#5C1B28]">
           Adhikaar
         </Link>
 
@@ -38,7 +38,7 @@ export function RecoverNav() {
             <a
               key={l}
               href={href}
-              className="text-[0.9375rem] font-semibold text-[#4B5750] transition-colors hover:text-[#1E3B32]"
+              className="text-[0.9375rem] font-semibold text-[#5A4C4E] transition-colors hover:text-[#5C1B28]"
             >
               {l}
             </a>
@@ -47,7 +47,7 @@ export function RecoverNav() {
 
         <Link
           href="/start"
-          className="rounded-full bg-[#1E3B32] px-5 py-2.5 text-[0.875rem] font-bold text-white transition-colors hover:bg-[#2C5245]"
+          className="rounded-full bg-[#5C1B28] px-5 py-2.5 text-[0.875rem] font-bold text-white transition-colors hover:bg-[#7A2838]"
         >
           Start a Search
         </Link>
