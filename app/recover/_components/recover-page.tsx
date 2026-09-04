@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { RecoverNav } from "./nav";
-import { HeroDemo } from "./hero-demo";
 import { Reveal } from "./reveal";
 import { ArrowRightIcon } from "./icons";
 
@@ -26,12 +25,14 @@ import { ArrowRightIcon } from "./icons";
  * equivalent facts ("Before you search"), rather than kept as separate
  * sections the reference has no counterpart for.
  *
- * ─── The one thing this page may not claim ───
+ * ─── No search bar ───
  *
- * Adhikaar has no backend, no data source, and no API into any bank,
- * insurer or UDGAM -- it cannot search or find a match. Every reveal on
- * this page is a CHECKLIST of where to look, never a claimed result, and
- * says so in the UI itself. See hero-demo.tsx for the full note.
+ * The hero originally had a name-entry field that played a canned
+ * animation into a fixed checklist -- honestly labelled "not a live
+ * search" underneath, but still a search-shaped interaction for a product
+ * that has no backend, no data source, and no API into any bank, insurer
+ * or UDGAM to search against. Told directly to remove it, so the hero's
+ * only action now is a plain button straight into the real wizard.
  *
  * ─── Every stat below is real, not a placeholder ───
  *
@@ -74,8 +75,8 @@ function NoticeBar() {
 
 function Hero() {
   return (
-    <section className="bg-[#2B2361] pb-16 pt-12 text-white sm:pb-24 sm:pt-16">
-      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+    <section className="bg-[#2B2361] pb-16 pt-12 text-white sm:pb-16 sm:pt-14">
+      <div className="mx-auto max-w-[1080px] px-5 sm:px-8">
         <div className="max-w-[42rem]">
           <h1 className="font-serif text-[clamp(2rem,4.6vw,2.75rem)] font-bold leading-[1.15] tracking-[-0.01em]">
             Money left behind shouldn&apos;t stay lost.
@@ -86,7 +87,16 @@ function Hero() {
           </p>
 
           <Reveal delay={80} className="mt-8">
-            <HeroDemo />
+            <Link
+              href="/start"
+              className="inline-flex items-center gap-2.5 rounded bg-[#D9A441] px-8 py-4 text-[1.0625rem] font-bold text-[#1B1740] transition-colors hover:bg-[#EFCC85]"
+            >
+              Start
+              <ArrowRightIcon className="h-4 w-4" />
+            </Link>
+            <p className="mt-3 text-[0.8125rem] text-[#9C93BE]">
+              Free to use. No account needed.
+            </p>
           </Reveal>
         </div>
       </div>
@@ -107,7 +117,7 @@ function StatsOverlap() {
     { num: "₹0", label: "cost to use Adhikaar — no login, nothing stored" },
   ];
   return (
-    <div className="relative mx-auto -mt-10 max-w-[1240px] px-5 sm:px-8">
+    <div className="relative mx-auto -mt-10 max-w-[1080px] px-5 sm:px-8">
       <Reveal className="grid grid-cols-1 divide-y divide-[#DCD5EE] rounded-lg bg-white shadow-[0_8px_24px_rgba(27,23,64,0.14)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
         {STATS.map((s) => (
           <div key={s.label} className="p-6 sm:p-7">
@@ -149,8 +159,8 @@ const STEPS = [
 
 function HowItWorks() {
   return (
-    <section id="how" className="scroll-mt-16 py-20">
-      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+    <section id="how" className="scroll-mt-16 py-16">
+      <div className="mx-auto max-w-[1080px] px-5 sm:px-8">
         <Reveal className="max-w-[35rem]">
           <p className="text-[0.875rem] text-[#5A5470]">How it works</p>
           <h2 className="mt-1.5 font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#2B2361]">
@@ -201,7 +211,7 @@ const SOURCES = [
 function SourcesBand() {
   return (
     <div id="sources" className="scroll-mt-16 bg-[#1B1740] py-14 text-white sm:py-16">
-      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1080px] px-5 sm:px-8">
         <Reveal className="max-w-[35rem]">
           <p className="text-[0.875rem] text-[#B7ADD9]">
             Where this data actually lives
@@ -261,12 +271,12 @@ const FAQS = [
 function Faq() {
   const [open, setOpen] = useState<number | null>(null);
   return (
-    <section id="faq" className="scroll-mt-16 py-20">
-      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+    <section id="faq" className="scroll-mt-16 py-16">
+      <div className="mx-auto max-w-[1080px] px-5 sm:px-8">
         <Reveal className="max-w-[35rem]">
           <p className="text-[0.875rem] text-[#5A5470]">Questions</p>
           <h2 className="mt-1.5 font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#2B2361]">
-            Before you search
+            Before you start
           </h2>
         </Reveal>
 
@@ -308,7 +318,7 @@ function Faq() {
 function FinalCta() {
   return (
     <section className="bg-[#EBE6F5] py-14 text-center">
-      <Reveal className="mx-auto max-w-[1240px] px-5 sm:px-8">
+      <Reveal className="mx-auto max-w-[1080px] px-5 sm:px-8">
         <p className="font-serif text-[1.625rem] font-bold text-[#2B2361]">
           Two minutes could turn up real money.
         </p>
@@ -319,7 +329,7 @@ function FinalCta() {
           href="/start"
           className="mt-5 inline-flex items-center gap-2.5 rounded bg-[#2B2361] px-7 py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#3D3178]"
         >
-          Search your name
+          Start
           <ArrowRightIcon className="h-4 w-4" />
         </Link>
       </Reveal>
@@ -332,7 +342,7 @@ function FinalCta() {
 function RecoverFooter() {
   return (
     <footer className="bg-[#1B1740] py-10 text-[0.8125rem] text-[#9C93BE]">
-      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+      <div className="mx-auto max-w-[1080px] px-5 sm:px-8">
         <div className="flex flex-wrap items-start justify-between gap-8 border-b border-white/10 pb-6">
           <p className="font-serif text-[1.125rem] font-bold text-[#D9CFF0]">
             Adhikaar

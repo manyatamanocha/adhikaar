@@ -9,14 +9,14 @@ import Link from "next/link";
 export function RecoverNav() {
   return (
     <header className="bg-[#2B2361] text-white">
-      <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-6 px-5 py-5 sm:px-8">
-        <Link href="/" className="flex items-center gap-2 font-serif text-[1.25rem] font-bold">
+      <div className="mx-auto flex max-w-[1080px] items-center justify-between gap-6 px-5 py-4 sm:px-8">
+        <Link href="/" className="flex items-center gap-2.5 font-serif text-[1.875rem] font-bold sm:text-[2.125rem]">
           {/* A brand mark, not an emblem -- an abstract compass-like glyph in
               the product's own two accent colours. No state or ministry
               association is possible to read into an arbitrary shape, which
               is exactly why it's arbitrary rather than referencing anything
               real (no ashoka chakra, no seal silhouette, no tricolour). */}
-          <svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 26 26" aria-hidden="true">
             <circle cx="13" cy="13" r="11.5" stroke="#D9A441" strokeWidth="1.6" fill="none" />
             <path d="M13 6.5v3M13 16.5v3M6.5 13h3M16.5 13h3" stroke="#D9A441" strokeWidth="1.6" strokeLinecap="round" />
           </svg>
