@@ -19,12 +19,12 @@ export function RecoverNav() {
     <header
       className={`sticky top-0 z-40 transition-colors duration-300 ${
         scrolled
-          ? "border-b border-[#E4DCC8] bg-[#FBF8F2]/90 backdrop-blur-md"
+          ? "border-b border-[#DCD5EE] bg-[#F6F4FB]/90 backdrop-blur-md"
           : "border-b border-transparent bg-transparent"
       }`}
     >
       <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-6 px-5 py-4 sm:px-8">
-        <Link href="/" className="font-serif text-[1.375rem] font-bold text-[#5C1B28]">
+        <Link href="/" className="font-serif text-[1.375rem] font-bold text-[#2B2361]">
           Adhikaar
         </Link>
 
@@ -38,7 +38,7 @@ export function RecoverNav() {
             <a
               key={l}
               href={href}
-              className="text-[0.9375rem] font-semibold text-[#5A4C4E] transition-colors hover:text-[#5C1B28]"
+              className="text-[0.9375rem] font-semibold text-[#5A5470] transition-colors hover:text-[#2B2361]"
             >
               {l}
             </a>
@@ -47,7 +47,7 @@ export function RecoverNav() {
 
         <Link
           href="/start"
-          className="rounded-full bg-[#5C1B28] px-5 py-2.5 text-[0.875rem] font-bold text-white transition-colors hover:bg-[#7A2838]"
+          className="rounded-full bg-[#2B2361] px-5 py-2.5 text-[0.875rem] font-bold text-white transition-colors hover:bg-[#3D3178]"
         >
           Start a Search
         </Link>

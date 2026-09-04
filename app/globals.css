@@ -7,23 +7,24 @@
    as a document. Adjacent to the official financial-services portals in tone,
    deliberately not in appearance.
 
-   Fifth palette, applied site-wide 4 Sep 2026 late evening: the user asked
-   directly for maroon/burgundy after both the navy and the forest-green
-   passes were rejected on sight. Brand ink is now a deep wine burgundy, dark
-   enough to anchor a hero or a footer the way navy and green both did.
-   Accent is a muted gold rather than saffron-orange or terracotta -- the
-   classic burgundy/gold pairing, at the same three weights every accent on
-   this page has used all session (fill / ink for text on light / lift for
-   text on dark).
+   Sixth palette, applied site-wide 4 Sep 2026 late evening: taken directly
+   from a reference file the user provided (unclaimed-money-finder.html), not
+   guessed. Deep indigo-purple (ink900/ink800) replaces burgundy as the
+   authority colour; warm gold stays the accent, closer to the reference's
+   own gold than the earlier saffron/terracotta attempts; a clay/rust joins
+   as a second accent for anything urgent (claim buttons in the reference,
+   the caveat role here). Ground shifts from a warm ivory to the reference's
+   cool lavender-white -- a deliberate break from this project's earlier
+   "warm ground because paper is warm" reasoning, because the user pointed at
+   a concrete reference this time rather than asking for another guess.
 
-   --color-maroon and --color-indigo are now both wine-family hues by
-   coincidence of naming, not by intent: "maroon" was the PRE-EXISTING
-   token for a caveat/warning colour ("anything that can hurt you", per
-   layout.tsx's own comment), unrelated to this brand-colour swap. Shifted
-   it to a brighter red (#A33447) so it stays visually distinct from the new
-   burgundy brand ink (#5C1B28) rather than reading as the same colour twice.
-   Token NAMES are unchanged again -- "indigo" and "saffron" are historical
-   labels now, not literal colour names, same as every pass before this one.
+   --color-maroon (the PRE-EXISTING caveat/warning token, "anything that can
+   hurt you" per layout.tsx) now carries the reference's clay/rust, darkened
+   from its literal #E2703A to #B84E1E so white text and the colour-as-text
+   both clear 4.5:1 -- the reference used it only as a button fill and a
+   15px label, neither checked against AA. Token NAMES are unchanged again --
+   "indigo" and "saffron" are historical labels now, not literal colour
+   names, same as every pass before this one.
 
    HARD LINE: the register is adjacent, the identity is NOT. No state emblem,
    no ministry marks, no tricolour device, nothing that lets a reader conclude
@@ -39,13 +40,13 @@
      to change; only the values move. "indigo" is now the navy, "saffron" is
      unchanged in name and now closer to its literal colour than the ochre
      it briefly was. */
-  --color-indigo: #5C1B28;
-  --color-indigo-lift: #7A2838;
-  --color-indigo-deep: #3D1119;
-  --color-indigo-ink: #3D1119;
-  --color-maroon: #A33447;
-  --color-maroon-lift: #C14D63;
-  --color-saffron: #A87A1E;
+  --color-indigo: #2B2361;
+  --color-indigo-lift: #3D3178;
+  --color-indigo-deep: #1B1740;
+  --color-indigo-ink: #1B1740;
+  --color-maroon: #B84E1E;
+  --color-maroon-lift: #E2703A;
+  --color-saffron: #D9A441;
   /* Saffron is a fill, not an ink: it is never used as a text background —
      only icon fills, thread lines and tinted chips paired with saffron-ink
      text. This is the same hue taken down for anywhere it has to be TEXT on
@@ -54,27 +55,27 @@
   /* And taken UP for the opposite case: saffron as text/pill on the dark navy
      hero, where the fill weight would fail AA on small text. One hue, three
      weights, verified against every real usage site-wide, not just the hero. */
-  --color-saffron-lift: #E0B563;
+  --color-saffron-lift: #EFCC85;
 
-  /* Grounds. Warm ivory, because the deliverable is paper. */
+  /* Grounds. Cool lavender-white, from the reference file directly. */
   --color-paper: #ffffff;
-  --color-mist: #fbf8f2;
-  --color-mist-deep: #f3eee3;
+  --color-mist: #F6F4FB;
+  --color-mist-deep: #EBE6F5;
   --color-blush: #f7ede9;
 
   /* Ink. Wine-leaning neutrals to match the new brand colour. ink-faint
      carries the small-caps labels, which are read by people who are older,
      tired and under stress, so it clears 4.5:1 on BOTH white and mist rather
      than being kept light. */
-  --color-ink: #5C1B28;
-  --color-ink-soft: #5A4C4E;
-  --color-ink-faint: #6E6062;
+  --color-ink: #2B2361;
+  --color-ink-soft: #5A5470;
+  --color-ink-faint: #5A5470;
 
   /* Structure */
-  --color-rule: #e4dcc8;
-  --color-rule-faint: #ebe6dc;
+  --color-rule: #DCD5EE;
+  --color-rule-faint: #eae6f5;
 
-  --color-link: #5C1B28;
+  --color-link: #2B2361;
 
   /* The Indic faces sit IN the body stack, not only on the wordmark: a Hindi
      or Kannada page is set in the same sans as an English one, and the browser
@@ -92,7 +93,7 @@
      glance. Never the sole carrier of a distinction — each card also says in
      words which paragraph it runs on. */
   --color-accent-green: #2B7A67;
-  --color-accent-violet: #6b5490;
+  --color-accent-violet: #7147C4;
   --color-accent-blue: #3b5ea8;
 
   --text-step: 0.9375rem;

@@ -68,12 +68,12 @@ export function HeroPictures() {
 /* ------------------------------------------------------------------ */
 /* Authored scenes. Flat shapes in the product palette, line detail on top. */
 
-const GREEN = "#5C1B28";
+const GREEN = "#2B2361";
 const GREEN_SOFT = "#dde1ea";
-const OCHRE = "#A87A1E";
-const CREAM = "#f3eee3";
+const OCHRE = "#D9A441";
+const CREAM = "#EBE6F5";
 const PAPER = "#ffffff";
-const RULE = "#e4dcc8";
+const RULE = "#DCD5EE";
 
 /** A table with a passbook, papers and a cup: where the paperwork happens. */
 function DeskScene() {

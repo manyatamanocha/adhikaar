@@ -34,23 +34,23 @@ export function HeroDemo() {
   };
 
   return (
-    <div className="w-full max-w-[26rem] rounded-[1.75rem] border border-[#E4DCC8] bg-white p-2 shadow-[0_28px_60px_-24px_rgba(15,25,50,0.35)]">
-      <div className="rounded-[1.4rem] bg-[#FBF8F2] p-5 sm:p-6">
+    <div className="w-full max-w-[26rem] rounded-[1.75rem] border border-[#DCD5EE] bg-white p-2 shadow-[0_28px_60px_-24px_rgba(15,25,50,0.35)]">
+      <div className="rounded-[1.4rem] bg-[#F6F4FB] p-5 sm:p-6">
         <div className="flex items-center gap-2">
           <span className="h-2.5 w-2.5 rounded-full bg-[#D98E2B]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#E4DCC8]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#E4DCC8]" />
-          <p className="ml-auto text-[0.75rem] font-semibold tracking-[0.02em] text-[#6E6062]">
+          <span className="h-2.5 w-2.5 rounded-full bg-[#DCD5EE]" />
+          <span className="h-2.5 w-2.5 rounded-full bg-[#DCD5EE]" />
+          <p className="ml-auto text-[0.75rem] font-semibold tracking-[0.02em] text-[#5A5470]">
             adhikaar.in/start
           </p>
         </div>
 
-        <p className="mt-5 text-[0.9375rem] font-bold text-[#5C1B28]">
+        <p className="mt-5 text-[0.9375rem] font-bold text-[#2B2361]">
           Tell us who you&apos;re searching for
         </p>
 
         <label className="mt-4 block">
-          <span className="text-[0.8125rem] font-semibold text-[#5A4C4E]">
+          <span className="text-[0.8125rem] font-semibold text-[#5A5470]">
             Full name
           </span>
           <input
@@ -58,19 +58,19 @@ export function HeroDemo() {
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Ramesh Kumar Sharma"
             disabled={stage !== "idle"}
-            className="mt-1.5 w-full rounded-xl border border-[#E4DCC8] bg-white px-3.5 py-3 text-[0.9375rem] text-[#5C1B28] placeholder:text-[#A39C8A] focus:border-[#5C1B28] focus:outline-none focus:ring-2 focus:ring-[#5C1B28]/15 disabled:opacity-60"
+            className="mt-1.5 w-full rounded-xl border border-[#DCD5EE] bg-white px-3.5 py-3 text-[0.9375rem] text-[#2B2361] placeholder:text-[#A39C8A] focus:border-[#2B2361] focus:outline-none focus:ring-2 focus:ring-[#2B2361]/15 disabled:opacity-60"
           />
         </label>
 
         <label className="mt-3 block">
-          <span className="text-[0.8125rem] font-semibold text-[#5A4C4E]">
+          <span className="text-[0.8125rem] font-semibold text-[#5A5470]">
             Bank or institution{" "}
             <span className="font-normal text-[#A39C8A]">(optional)</span>
           </span>
           <input
             placeholder="If you know it"
             disabled={stage !== "idle"}
-            className="mt-1.5 w-full rounded-xl border border-[#E4DCC8] bg-white px-3.5 py-3 text-[0.9375rem] text-[#5C1B28] placeholder:text-[#A39C8A] focus:border-[#5C1B28] focus:outline-none focus:ring-2 focus:ring-[#5C1B28]/15 disabled:opacity-60"
+            className="mt-1.5 w-full rounded-xl border border-[#DCD5EE] bg-white px-3.5 py-3 text-[0.9375rem] text-[#2B2361] placeholder:text-[#A39C8A] focus:border-[#2B2361] focus:outline-none focus:ring-2 focus:ring-[#2B2361]/15 disabled:opacity-60"
           />
         </label>
 
@@ -78,7 +78,7 @@ export function HeroDemo() {
           type="button"
           onClick={run}
           disabled={stage !== "idle"}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#5C1B28] py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#7A2838] disabled:opacity-70"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#2B2361] py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#3D3178] disabled:opacity-70"
         >
           <SearchIcon className="h-4 w-4" />
           {stage === "idle" && "Preview my checklist"}
@@ -125,20 +125,20 @@ export function HeroDemo() {
                   style={{
                     transitionDelay: stage === "done" ? `${i * 90}ms` : "0ms",
                   }}
-                  className={`motion-safe:transition-all motion-safe:duration-500 flex items-center gap-3 rounded-xl border border-[#E4DCC8] bg-white p-3 ${
+                  className={`motion-safe:transition-all motion-safe:duration-500 flex items-center gap-3 rounded-xl border border-[#DCD5EE] bg-white p-3 ${
                     stage === "done"
                       ? "opacity-100 translate-x-0"
                       : "opacity-0 motion-safe:-translate-x-2"
                   }`}
                 >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#5C1B28]/8 text-[#5C1B28]">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2B2361]/8 text-[#2B2361]">
                     <r.icon className="h-[1.05rem] w-[1.05rem]" />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block text-[0.875rem] font-bold text-[#5C1B28]">
+                    <span className="block text-[0.875rem] font-bold text-[#2B2361]">
                       {r.label}
                     </span>
-                    <span className="block text-[0.75rem] text-[#6E6062]">
+                    <span className="block text-[0.75rem] text-[#5A5470]">
                       {r.note}
                     </span>
                   </span>
@@ -146,7 +146,7 @@ export function HeroDemo() {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-[0.75rem] leading-relaxed text-[#6E6062]">
+            <p className="mt-3 text-[0.75rem] leading-relaxed text-[#5A5470]">
               A preview, not a live search. The real version asks a few more
               questions and gives you a checklist to work through.
             </p>

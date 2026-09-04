@@ -42,7 +42,7 @@ import {
  */
 export function RecoverPage() {
   return (
-    <div className="bg-[#FBF8F2] text-[#5C1B28] antialiased [selection:bg-[#A87A1E]/25 selection:text-[#5C1B28]]">
+    <div className="bg-[#F6F4FB] text-[#2B2361] antialiased [selection:bg-[#D9A441]/25 selection:text-[#2B2361]]">
       <RecoverNav />
       <Hero />
       <OneSearchManyPlaces />
@@ -70,16 +70,16 @@ function Hero() {
         aria-hidden="true"
         className="pointer-events-none absolute -left-24 top-1/2 hidden h-[1px] w-[140%] -translate-y-1/2 lg:block"
       >
-        <line x1="0" y1="0" x2="100%" y2="0" stroke="#E4DCC8" strokeWidth="2" strokeDasharray="1 10" strokeLinecap="round" />
+        <line x1="0" y1="0" x2="100%" y2="0" stroke="#DCD5EE" strokeWidth="2" strokeDasharray="1 10" strokeLinecap="round" />
       </svg>
 
       <div className="relative mx-auto grid max-w-[1240px] items-center gap-14 px-5 pb-16 pt-10 sm:px-8 sm:pb-24 sm:pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pb-28 lg:pt-20">
         <div>
-          <h1 className="max-w-[15ch] font-serif text-[clamp(2.5rem,5.2vw,4rem)] font-bold leading-[1.05] tracking-[-0.02em] text-[#5C1B28]">
+          <h1 className="max-w-[15ch] font-serif text-[clamp(2.5rem,5.2vw,4rem)] font-bold leading-[1.05] tracking-[-0.02em] text-[#2B2361]">
             Money left behind shouldn&apos;t stay lost.
           </h1>
 
-          <p className="mt-6 max-w-[46ch] text-[clamp(1.1875rem,1.6vw,1.375rem)] leading-[1.5] text-[#5A4C4E]">
+          <p className="mt-6 max-w-[46ch] text-[clamp(1.1875rem,1.6vw,1.375rem)] leading-[1.5] text-[#5A5470]">
             Adhikaar helps families find and claim financial assets left
             behind by a loved one — with one simple, guided process.
           </p>
@@ -87,20 +87,20 @@ function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href="/start"
-              className="inline-flex items-center gap-2.5 rounded-full bg-[#5C1B28] px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#7A2838]"
+              className="inline-flex items-center gap-2.5 rounded-full bg-[#2B2361] px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#3D3178]"
             >
               Start a Search
               <ArrowRightIcon className="h-4 w-4" />
             </Link>
             <a
               href="#how"
-              className="inline-flex items-center gap-2 rounded-full border-2 border-[#5C1B28]/20 px-7 py-[0.9375rem] text-[1.0625rem] font-bold text-[#5C1B28] transition-colors hover:border-[#5C1B28]/40"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-[#2B2361]/20 px-7 py-[0.9375rem] text-[1.0625rem] font-bold text-[#2B2361] transition-colors hover:border-[#2B2361]/40"
             >
               See how it works
             </a>
           </div>
 
-          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[0.9375rem] font-semibold text-[#5A4C4E]">
+          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[0.9375rem] font-semibold text-[#5A5470]">
             {["Free to search", "Secure", "Step-by-step guidance"].map((l) => (
               <li key={l} className="flex items-center gap-2">
                 <CheckIcon className="h-[1.05rem] w-[1.05rem] text-[#3F7355]" />
@@ -130,9 +130,9 @@ const PLACES = [
 
 function OneSearchManyPlaces() {
   return (
-    <section className="border-y border-[#E4DCC8] bg-white py-16 sm:py-20">
+    <section className="border-y border-[#DCD5EE] bg-white py-16 sm:py-20">
       <Reveal className="mx-auto max-w-[1240px] px-5 text-center sm:px-8">
-        <h2 className="font-serif text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-[#5C1B28]">
+        <h2 className="font-serif text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-[#2B2361]">
           One search. Multiple places.
         </h2>
 
@@ -148,7 +148,7 @@ function OneSearchManyPlaces() {
             className="absolute left-6 top-6 bottom-6 w-px sm:hidden"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(to bottom, #E4DCC8 0 6px, transparent 6px 14px)",
+                "repeating-linear-gradient(to bottom, #DCD5EE 0 6px, transparent 6px 14px)",
             }}
           />
           <div
@@ -156,22 +156,22 @@ function OneSearchManyPlaces() {
             className="absolute left-0 right-0 top-6 hidden h-px sm:block"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(to right, #E4DCC8 0 6px, transparent 6px 14px)",
+                "repeating-linear-gradient(to right, #DCD5EE 0 6px, transparent 6px 14px)",
             }}
           />
           {PLACES.map((p) => (
             <div key={p.label} className="relative z-10 flex items-center gap-3 sm:flex-col sm:gap-3">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#E4DCC8] bg-[#FBF8F2] text-[#5C1B28]">
+              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#DCD5EE] bg-[#F6F4FB] text-[#2B2361]">
                 <p.icon className="h-5 w-5" />
               </span>
-              <span className="text-[0.9375rem] font-bold text-[#5A4C4E]">
+              <span className="text-[0.9375rem] font-bold text-[#5A5470]">
                 {p.label}
               </span>
             </div>
           ))}
         </div>
 
-        <p className="mx-auto mt-12 max-w-[42ch] font-serif text-[1.375rem] font-bold text-[#5C1B28]">
+        <p className="mx-auto mt-12 max-w-[42ch] font-serif text-[1.375rem] font-bold text-[#2B2361]">
           Adhikaar brings the journey together.
         </p>
       </Reveal>
@@ -204,7 +204,7 @@ function HowItWorks() {
     <section id="how" className="scroll-mt-16 py-20 sm:py-28">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <Reveal>
-          <h2 className="max-w-[16ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#5C1B28]">
+          <h2 className="max-w-[16ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#2B2361]">
             One connected journey, not a form.
           </h2>
         </Reveal>
@@ -220,7 +220,7 @@ function HowItWorks() {
             className="absolute left-6 top-6 bottom-6 w-px sm:hidden"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(to bottom, #E4DCC8 0 6px, transparent 6px 14px)",
+                "repeating-linear-gradient(to bottom, #DCD5EE 0 6px, transparent 6px 14px)",
             }}
           />
           <div
@@ -228,18 +228,18 @@ function HowItWorks() {
             className="absolute left-6 right-6 top-6 hidden h-px sm:block"
             style={{
               backgroundImage:
-                "repeating-linear-gradient(to right, #E4DCC8 0 6px, transparent 6px 14px)",
+                "repeating-linear-gradient(to right, #DCD5EE 0 6px, transparent 6px 14px)",
             }}
           />
           {STEPS.map((s, i) => (
             <Reveal key={s.n} delay={i * 110} className="relative">
-              <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#5C1B28] font-serif text-[1.0625rem] font-bold text-white">
+              <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#2B2361] font-serif text-[1.0625rem] font-bold text-white">
                 {i + 1}
               </span>
-              <p className="mt-5 font-serif text-[1.375rem] font-bold text-[#5C1B28]">
+              <p className="mt-5 font-serif text-[1.375rem] font-bold text-[#2B2361]">
                 {s.title}
               </p>
-              <p className="mt-2 max-w-[32ch] text-[0.9375rem] leading-relaxed text-[#5A4C4E]">
+              <p className="mt-2 max-w-[32ch] text-[0.9375rem] leading-relaxed text-[#5A5470]">
                 {s.body}
               </p>
             </Reveal>
@@ -256,12 +256,12 @@ function UdgamNote() {
   return (
     <section className="bg-white py-16 sm:py-20">
       <Reveal className="mx-auto max-w-[1240px] px-5 sm:px-8">
-        <div className="grid gap-10 rounded-[1.75rem] border border-[#E4DCC8] bg-[#FBF8F2] p-8 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16">
+        <div className="grid gap-10 rounded-[1.75rem] border border-[#DCD5EE] bg-[#F6F4FB] p-8 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16">
           <div>
-            <p className="font-serif text-[1.5rem] font-bold text-[#5C1B28]">
+            <p className="font-serif text-[1.5rem] font-bold text-[#2B2361]">
               Already heard of UDGAM?
             </p>
-            <p className="mt-3 max-w-[58ch] text-[0.9375rem] leading-relaxed text-[#5A4C4E]">
+            <p className="mt-3 max-w-[58ch] text-[0.9375rem] leading-relaxed text-[#5A5470]">
               UDGAM is the RBI&apos;s portal for searching unclaimed bank
               deposits. Adhikaar helps you understand what to do next — and
               guides you across more than just bank deposits.
@@ -285,7 +285,7 @@ function UdgamNote() {
               href="https://udgam.rbi.org.in/"
               target="_blank"
               rel="noreferrer"
-              className="mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-bold text-[#5C1B28] underline underline-offset-2"
+              className="mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-bold text-[#2B2361] underline underline-offset-2"
             >
               Learn about UDGAM
               <ArrowRightIcon className="h-3.5 w-3.5" />
@@ -304,7 +304,7 @@ function WhatCanBeRecovered() {
     <section id="recover" className="scroll-mt-16 py-20 sm:py-28">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <Reveal>
-          <h2 className="font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold text-[#5C1B28]">
+          <h2 className="font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold text-[#2B2361]">
             What can be recovered
           </h2>
         </Reveal>
@@ -313,8 +313,8 @@ function WhatCanBeRecovered() {
             by how self-explanatory each label already is. */}
         <Reveal delay={80}>
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            <div className="col-span-2 row-span-2 rounded-[1.5rem] bg-[#5C1B28] p-6 text-white sm:p-8">
-              <BankIcon className="h-9 w-9 text-[#E0B563]" />
+            <div className="col-span-2 row-span-2 rounded-[1.5rem] bg-[#2B2361] p-6 text-white sm:p-8">
+              <BankIcon className="h-9 w-9 text-[#EFCC85]" />
               <p className="mt-6 font-serif text-[1.5rem] font-bold sm:text-[1.75rem]">
                 Bank deposits &amp; fixed deposits
               </p>
@@ -331,19 +331,19 @@ function WhatCanBeRecovered() {
             ].map((c) => (
               <div
                 key={c.label}
-                className="rounded-[1.5rem] border border-[#E4DCC8] bg-white p-5 sm:p-6"
+                className="rounded-[1.5rem] border border-[#DCD5EE] bg-white p-5 sm:p-6"
               >
-                <c.icon className="h-7 w-7 text-[#5C1B28]" />
-                <p className="mt-4 text-[0.9375rem] font-bold leading-snug text-[#5C1B28]">
+                <c.icon className="h-7 w-7 text-[#2B2361]" />
+                <p className="mt-4 text-[0.9375rem] font-bold leading-snug text-[#2B2361]">
                   {c.label}
                 </p>
               </div>
             ))}
 
-            <div className="col-span-2 rounded-[1.5rem] border border-dashed border-[#D6CBA8] bg-[#F3EEE3] p-5 sm:col-span-4 sm:flex sm:items-center sm:justify-between sm:p-6">
+            <div className="col-span-2 rounded-[1.5rem] border border-dashed border-[#D6CBA8] bg-[#EBE6F5] p-5 sm:col-span-4 sm:flex sm:items-center sm:justify-between sm:p-6">
               <div className="flex items-center gap-3">
                 <OtherIcon className="h-7 w-7 shrink-0 text-[#8C6317]" />
-                <p className="text-[0.9375rem] font-bold text-[#5C1B28]">
+                <p className="text-[0.9375rem] font-bold text-[#2B2361]">
                   Other eligible financial assets — places your family may
                   not know to check.
                 </p>
@@ -372,17 +372,17 @@ function GuidedClaim() {
     <section className="bg-white py-20 sm:py-28">
       <div className="mx-auto grid max-w-[1240px] items-center gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20">
         <Reveal>
-          <h2 className="max-w-[18ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#5C1B28]">
+          <h2 className="max-w-[18ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#2B2361]">
             Not just a search. A guide through the claim.
           </h2>
-          <p className="mt-5 max-w-[46ch] text-[1.0625rem] leading-relaxed text-[#5A4C4E]">
+          <p className="mt-5 max-w-[46ch] text-[1.0625rem] leading-relaxed text-[#5A5470]">
             Once something is found worth pursuing, Adhikaar walks you
             through exactly what the institution will ask for — one step at
             a time, so nothing arrives as a surprise at the counter.
           </p>
           <Link
             href="/start"
-            className="mt-7 inline-flex items-center gap-2.5 rounded-full bg-[#5C1B28] px-7 py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#7A2838]"
+            className="mt-7 inline-flex items-center gap-2.5 rounded-full bg-[#2B2361] px-7 py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#3D3178]"
           >
             Continue a claim
             <ArrowRightIcon className="h-4 w-4" />
@@ -390,12 +390,12 @@ function GuidedClaim() {
         </Reveal>
 
         <Reveal delay={100}>
-          <div className="mx-auto w-full max-w-[24rem] overflow-hidden rounded-[1.5rem] border border-[#E4DCC8] bg-[#FBF8F2] shadow-[0_24px_50px_-20px_rgba(15,25,50,0.28)]">
-            <div className="border-b border-[#E4DCC8] bg-white p-5">
+          <div className="mx-auto w-full max-w-[24rem] overflow-hidden rounded-[1.5rem] border border-[#DCD5EE] bg-[#F6F4FB] shadow-[0_24px_50px_-20px_rgba(15,25,50,0.28)]">
+            <div className="border-b border-[#DCD5EE] bg-white p-5">
               <p className="text-[0.75rem] font-bold uppercase tracking-[0.08em] text-[#8C6317]">
                 Bank deposit — worth checking
               </p>
-              <p className="mt-1 text-[1.0625rem] font-bold text-[#5C1B28]">
+              <p className="mt-1 text-[1.0625rem] font-bold text-[#2B2361]">
                 Your next steps
               </p>
             </div>
@@ -411,8 +411,8 @@ function GuidedClaim() {
                     <span
                       className={`text-[0.9375rem] ${
                         s.done
-                          ? "text-[#5A4C4E] line-through decoration-[#A39C8A]"
-                          : "font-semibold text-[#5C1B28]"
+                          ? "text-[#5A5470] line-through decoration-[#A39C8A]"
+                          : "font-semibold text-[#2B2361]"
                       }`}
                     >
                       {s.label}
@@ -421,14 +421,14 @@ function GuidedClaim() {
                 ))}
               </ul>
 
-              <div className="mt-5 border-t border-[#E4DCC8] pt-4">
-                <div className="flex items-center justify-between text-[0.8125rem] font-bold text-[#5A4C4E]">
+              <div className="mt-5 border-t border-[#DCD5EE] pt-4">
+                <div className="flex items-center justify-between text-[0.8125rem] font-bold text-[#5A5470]">
                   <span>Progress</span>
                   <span>
                     {done} of {CLAIM_STEPS.length} completed
                   </span>
                 </div>
-                <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#E4DCC8]">
+                <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#DCD5EE]">
                   <div
                     className="h-full rounded-full bg-[#3F7355] transition-[width] duration-700"
                     style={{ width: `${(done / CLAIM_STEPS.length) * 100}%` }}
@@ -473,7 +473,7 @@ function Trust() {
     <section id="trust" className="scroll-mt-16 py-20 sm:py-28">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         <Reveal>
-          <h2 className="font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold text-[#5C1B28]">
+          <h2 className="font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold text-[#2B2361]">
             Built to be trusted
           </h2>
         </Reveal>
@@ -482,14 +482,14 @@ function Trust() {
           <ul className="mt-12 grid gap-x-10 gap-y-8 sm:grid-cols-2">
             {TRUST.map((t) => (
               <li key={t.title} className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#5C1B28]/8 text-[#5C1B28]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#2B2361]/8 text-[#2B2361]">
                   <t.icon className="h-5 w-5" />
                 </span>
                 <div>
-                  <p className="font-bold text-[1.0625rem] text-[#5C1B28]">
+                  <p className="font-bold text-[1.0625rem] text-[#2B2361]">
                     {t.title}
                   </p>
-                  <p className="mt-1 text-[0.9375rem] leading-relaxed text-[#5A4C4E]">
+                  <p className="mt-1 text-[0.9375rem] leading-relaxed text-[#5A5470]">
                     {t.body}
                   </p>
                 </div>
@@ -499,7 +499,7 @@ function Trust() {
         </Reveal>
 
         <Reveal delay={140}>
-          <p className="mt-10 max-w-[70ch] border-t border-[#E4DCC8] pt-6 text-[0.875rem] leading-relaxed text-[#6E6062]">
+          <p className="mt-10 max-w-[70ch] border-t border-[#DCD5EE] pt-6 text-[0.875rem] leading-relaxed text-[#5A5470]">
             Adhikaar does not hold or transfer your money. Claims are
             ultimately processed by the relevant bank, insurer, fund or
             institution.
@@ -514,9 +514,9 @@ function Trust() {
 
 function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-[#5C1B28] py-24 sm:py-28">
+    <section className="relative overflow-hidden bg-[#2B2361] py-24 sm:py-28">
       <svg aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-full w-full opacity-[0.06]">
-        <line x1="-10%" y1="30%" x2="110%" y2="60%" stroke="#E0B563" strokeWidth="1.4" strokeDasharray="1 12" strokeLinecap="round" />
+        <line x1="-10%" y1="30%" x2="110%" y2="60%" stroke="#EFCC85" strokeWidth="1.4" strokeDasharray="1 12" strokeLinecap="round" />
       </svg>
       <Reveal className="relative mx-auto max-w-[1240px] px-5 text-center sm:px-8">
         <p className="mx-auto max-w-[24ch] font-serif text-[clamp(2rem,3.6vw,2.75rem)] font-bold leading-[1.15] text-white">
@@ -528,7 +528,7 @@ function FinalCta() {
         </p>
         <Link
           href="/start"
-          className="mt-8 inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-[1.0625rem] font-bold text-[#5C1B28] transition-colors hover:bg-[#E0B563]"
+          className="mt-8 inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-[1.0625rem] font-bold text-[#2B2361] transition-colors hover:bg-[#EFCC85]"
         >
           Start a Search
           <ArrowRightIcon className="h-4 w-4" />
@@ -542,7 +542,7 @@ function FinalCta() {
 
 function RecoverFooter() {
   return (
-    <footer className="bg-[#3D1119] py-12">
+    <footer className="bg-[#1B1740] py-12">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
         {/* Motif, final and quietest appearance. */}
         <div
