@@ -72,7 +72,6 @@ export function RecoverPage() {
         <FindGrid />
         <TrustRow />
         <Faq />
-        <FinalCta />
         <RecoverFooter />
       </div>
     </HomeI18nProvider>
@@ -585,28 +584,6 @@ function Faq() {
 }
 
 /* --------------------------------------------------------------- FINAL CTA */
-
-function FinalCta() {
-  const { t } = useHomeT();
-  return (
-    <section className="bg-[#FAF5EC] py-16 text-center">
-      <Reveal className="mx-auto max-w-[1920px] px-5 sm:px-8">
-        <p className="font-serif text-[1.625rem] font-bold text-[#16233F]">
-          {t.finalCta.heading}
-        </p>
-        <p className="mt-1.5 text-[0.9688rem] text-[#6B6255]">{t.finalCta.sub}</p>
-        <Link
-          href="/start"
-          className="mt-6 inline-flex items-center gap-2.5 rounded bg-[#E2653B] px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
-        >
-          {t.finalCta.cta}
-          <ArrowRightIcon className="h-4 w-4" />
-        </Link>
-        <p className="mt-3 text-[0.8125rem] text-[#6B6255]">{t.finalCta.note}</p>
-      </Reveal>
-    </section>
-  );
-}
 
 /* ------------------------------------------------------------------ FOOTER */
 
