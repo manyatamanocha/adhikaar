@@ -29,6 +29,12 @@
         ],
         "createdAt": "2026-09-03T15:49:48.055Z",
         "reason": "Claude: both hits are <blockquote> elements holding a bank's own verbatim published sentence, same case already accepted in outcome.tsx and bank-panel.tsx. A rule beside quoted text is typographic convention, and it is what separates a real quote from our summary."
+      },
+      {
+        "rule": "side-tab",
+        "value": "border-l-4 border-saffron",
+        "createdAt": "2026-09-04T22:11:01.542Z",
+        "reason": "matches existing blockquote pattern in app/_components/outcome.tsx Evidence section, used site-wide for verbatim RBI quotes"
       }
     ]
   }

@@ -35,37 +35,37 @@ export function ContactPage() {
 function Body() {
   const { t } = useHomeT();
   return (
-    <main className="mx-auto max-w-[640px] px-5 py-20 sm:px-8">
-      <h1 className="font-serif text-[2.25rem] font-bold tracking-[-0.01em] text-[#16233F]">
+    <main className="mx-auto max-w-[1920px] px-5 py-20 sm:px-8">
+      <div className="max-w-[760px]">
+      <h1 className="font-serif text-[3.25rem] font-bold tracking-[-0.01em] text-[#16233F]">
         {t.contact.heading}
       </h1>
-      <p className="mt-3 text-[1.0625rem] leading-relaxed text-[#5B5344]">
-        {t.contact.intro}
-      </p>
+      <p className="mt-2 text-[1.5rem] text-[#5B5344]">{t.contact.sub}</p>
 
-      <div className="mt-8 divide-y divide-[#EFE7D8] rounded-2xl bg-white shadow-[0_20px_50px_rgba(22,35,63,0.12)]">
-        <div className="flex items-center justify-between gap-4 p-6">
-          <span className="text-[0.8125rem] font-bold uppercase tracking-[0.08em] text-[#6B6255]">
+      <div className="mt-10 divide-y divide-[#EFE7D8] rounded-2xl bg-white shadow-[0_20px_50px_rgba(22,35,63,0.12)]">
+        <div className="flex items-center justify-between gap-4 p-8">
+          <span className="text-[1.125rem] font-bold uppercase tracking-[0.08em] text-[#6B6255]">
             {t.contact.phoneLabel}
           </span>
           <a
             href={`tel:${PHONE.replace(/\s+/g, "")}`}
-            className="text-[1.125rem] font-bold text-[#16233F] hover:text-[#E2653B]"
+            className="text-[1.75rem] font-bold text-[#16233F] hover:text-[#E2653B]"
           >
             {PHONE}
           </a>
         </div>
-        <div className="flex items-center justify-between gap-4 p-6">
-          <span className="text-[0.8125rem] font-bold uppercase tracking-[0.08em] text-[#6B6255]">
+        <div className="flex items-center justify-between gap-4 p-8">
+          <span className="text-[1.125rem] font-bold uppercase tracking-[0.08em] text-[#6B6255]">
             {t.contact.emailLabel}
           </span>
           <a
             href={`mailto:${EMAIL}`}
-            className="text-[1.125rem] font-bold text-[#16233F] hover:text-[#E2653B]"
+            className="text-[1.75rem] font-bold text-[#16233F] hover:text-[#E2653B]"
           >
             {EMAIL}
           </a>
         </div>
+      </div>
       </div>
     </main>
   );
@@ -74,20 +74,18 @@ function Body() {
 function Footer() {
   const { t, locale } = useHomeT();
   return (
-    <footer className="border-t border-[#EFE7D8] bg-white py-10 text-[0.8125rem] text-[#6B6255]">
+    <footer className="border-t border-[#EFE7D8] bg-white py-16 text-[1.125rem] text-[#6B6255]">
       <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
-        <div className="flex flex-wrap items-start justify-between gap-8 pb-6">
-          <Link href={withLang("/", locale)} className="flex items-center gap-2.5">
-            <LeafMark className="h-7 w-7" />
+        <div className="flex flex-wrap items-center justify-between gap-8">
+          <Link href={withLang("/", locale)} className="flex items-center gap-4">
+            <LeafMark className="h-[3.575rem] w-[3.575rem]" />
             <span className="leading-tight">
-              <span className="block font-serif text-[1.0625rem] font-bold text-[#16233F]">
+              <span className="block font-serif text-[2.275rem] font-bold text-[#16233F]">
                 Adhikaar
               </span>
-              <span className="block text-[0.6875rem] text-[#6B6255]">{t.tagline}</span>
+              <span className="block text-[1.2188rem] text-[#6B6255]">{t.tagline}</span>
             </span>
           </Link>
-        </div>
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-[#EFE7D8] pt-5">
           <p>{t.footer.madeFor}</p>
         </div>
       </div>

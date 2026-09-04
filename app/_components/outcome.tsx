@@ -32,6 +32,8 @@ import { parseAnswers, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
 import { DeadlineTracker } from "./deadline-tracker";
 import { BeliefSurvey } from "./belief-survey";
+import { CounterMode } from "./counter-mode";
+import { COUNTER_SCRIPT } from "@/lib/counter";
 
 type Params = Record<string, string | string[] | undefined>;
 
@@ -39,6 +41,21 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   const outcome = OUTCOMES[id];
   const answers = parseAnswers(sp);
   const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
+
+  // Counter mode: the same URL, one parameter switched, so it stays a real
+  // link. Falls back to the full page for out-of-scope, which has no
+  // counter script.
+  if (sp.mode === "counter" && id in COUNTER_SCRIPT) {
+    return (
+      <>
+        <SiteHeader />
+        <main className="flex-1">
+          <CounterMode id={id} answers={answers} />
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
 
   // Which documents the reader already has. Constrained to this claim's own
   // list, so a hand-edited URL cannot claim one that does not apply.
@@ -70,7 +87,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
       <SiteHeader />
 
       <main className="flex-1">
-        <Verdict id={id} />
+        <Verdict id={id} answers={answers} bankId={bankId} />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
           {/* Asked here, under the verdict, because the belief it measures is
@@ -137,7 +154,15 @@ function AskedChecker({ answers }: { answers: Answers }) {
 
 /* ------------------------------------------------------------------ 1 */
 
-function Verdict({ id }: { id: OutcomeId }) {
+function Verdict({
+  id,
+  answers,
+  bankId,
+}: {
+  id: OutcomeId;
+  answers: Answers;
+  bankId?: string;
+}) {
   const outcome = OUTCOMES[id];
 
   // Good news is indigo, hard news is maroon on blush — but the sentence itself
@@ -170,6 +195,19 @@ function Verdict({ id }: { id: OutcomeId }) {
           className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
         >
           <PrintButton />
+          {id in COUNTER_SCRIPT && (
+            <Link
+              href={counterHref(outcome.path, answers, bankId)}
+              className={`inline-flex items-center gap-2 rounded-pill border-2 px-6 py-3 text-[1.0625rem] font-bold transition-colors ${
+                good
+                  ? "border-white/40 text-white hover:bg-white/10"
+                  : "border-indigo text-indigo-ink hover:bg-indigo/8"
+              }`}
+            >
+              At the counter now? Shorter version
+              <span aria-hidden="true">&rarr;</span>
+            </Link>
+          )}
           <p className={`text-[0.9375rem] ${good ? "text-white/70" : "text-ink-soft"}`}>
             Take the printed page to the branch. It carries the rule and its
             paragraph number.
@@ -557,6 +595,13 @@ function Escalation() {
         </a>{" "}
         · {ESCALATION.email} · {ESCALATION.post}
       </p>
+      <Link
+        href="/bank-refused"
+        className="mt-4 inline-flex items-center gap-2 text-[0.9375rem] font-bold text-link underline underline-offset-2"
+      >
+        The full route, plus a written complaint you can fill in
+        <span aria-hidden="true">&rarr;</span>
+      </Link>
     </section>
   );
 }
@@ -679,6 +724,13 @@ function Section({
       {children}
     </section>
   );
+}
+
+function counterHref(path: string, answers: Answers, bankId?: string) {
+  const q = new URLSearchParams(toQuery(answers).replace(/^\?/, ""));
+  if (bankId) q.set("bank", bankId);
+  q.set("mode", "counter");
+  return `${path}?${q.toString()}`;
 }
 
 /** numberWord() at the head of a sentence. */

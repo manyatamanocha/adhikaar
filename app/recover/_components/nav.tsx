@@ -80,7 +80,7 @@ export function RecoverNav() {
 
       <nav
         aria-label="Quick links"
-        className="flex w-full flex-wrap items-center justify-center gap-x-28 gap-y-4 bg-[#16233F] px-5 py-6 text-[2.1875rem] font-bold text-white sm:px-8"
+        className="flex w-full flex-wrap items-center justify-center gap-x-28 gap-y-4 bg-[#16233F] px-5 py-6 text-[1.9688rem] font-bold text-white sm:px-8"
       >
         <Link href={withLang("/", locale)} className="transition-colors hover:text-[#F0B892]">
           {t.nav.home}

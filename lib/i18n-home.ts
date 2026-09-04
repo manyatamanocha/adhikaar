@@ -147,6 +147,7 @@ export type HomeDict = {
 
   contact: {
     heading: string;
+    sub: string;
     intro: string;
     phoneLabel: string;
     emailLabel: string;
@@ -301,7 +302,8 @@ const en: HomeDict = {
   },
 
   contact: {
-    heading: "Contact us",
+    heading: "Happy to Help",
+    sub: "Please reach out to us.",
     intro: "Please contact us using the details below:",
     phoneLabel: "Mobile",
     emailLabel: "Email",
@@ -456,7 +458,8 @@ const hi: HomeDict = {
   },
 
   contact: {
-    heading: "संपर्क करें",
+    heading: "हम मदद के लिए यहाँ हैं",
+    sub: "कृपया हमसे संपर्क करें।",
     intro: "कृपया नीचे दिए गए विवरण से हमसे संपर्क करें:",
     phoneLabel: "मोबाइल",
     emailLabel: "ईमेल",
@@ -611,7 +614,8 @@ const kn: HomeDict = {
   },
 
   contact: {
-    heading: "ಸಂಪರ್ಕಿಸಿ",
+    heading: "ಸಹಾಯ ಮಾಡಲು ಸಂತೋಷ",
+    sub: "ದಯವಿಟ್ಟು ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ.",
     intro: "ದಯವಿಟ್ಟು ಕೆಳಗಿನ ವಿವರಗಳ ಮೂಲಕ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ:",
     phoneLabel: "ಮೊಬೈಲ್",
     emailLabel: "ಇಮೇಲ್",

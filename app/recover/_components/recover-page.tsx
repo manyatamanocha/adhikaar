@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { RecoverNav } from "./nav";
 import { Reveal } from "./reveal";
 import { LeafMark } from "./brand";
@@ -138,35 +139,20 @@ function Hero() {
           </div>
         </div>
 
-        {/* Static illustration -- NOT a live search. Real categories, no
-            fabricated match status; the old name/PAN form and its "3
-            possible assets found" card are deliberately not reproduced. */}
+        {/* Static guidance illustration -- NOT a live search. The artwork
+            makes the product promise visible: a confusing problem becomes
+            a clear set of next steps. */}
         <Reveal delay={120}>
-          <div className="rounded-2xl bg-white p-6 shadow-[0_20px_50px_rgba(22,35,63,0.12)]">
-            <p className="text-[0.9375rem] font-bold text-[#16233F]">{t.hero.cardTitle}</p>
-            <p className="mt-1 text-[0.8125rem] text-[#6B6255]">{t.hero.cardSub}</p>
-            <div className="mt-5 space-y-3">
-              {[
-                { icon: BankIcon, label: t.hero.rowBank, sub: t.hero.rowBankSub },
-                { icon: ShieldIcon, label: t.hero.rowInsurance, sub: t.hero.rowInsuranceSub },
-                { icon: PfIcon, label: t.hero.rowPf, sub: t.hero.rowPfSub },
-              ].map((row) => (
-                <div
-                  key={row.label}
-                  className="flex items-center gap-3 rounded-lg border border-[#EFE7D8] p-3.5"
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#FBE4D8] text-[#E2653B]">
-                    <row.icon className="h-4.5 w-4.5" />
-                  </span>
-                  <span>
-                    <span className="block text-[0.9375rem] font-bold text-[#16233F]">
-                      {row.label}
-                    </span>
-                    <span className="block text-[0.8125rem] text-[#6B6255]">{row.sub}</span>
-                  </span>
-                </div>
-              ))}
-            </div>
+          <div className="overflow-hidden rounded-2xl bg-[#F5EBDD] shadow-[0_20px_50px_rgba(22,35,63,0.12)]">
+            <Image
+              src="/images/adhikaar-guided-tool.png"
+              alt="A person uses Adhikaar to turn a confusing problem into clear next steps."
+              width={1536}
+              height={1024}
+              sizes="(max-width: 1023px) 100vw, 42vw"
+              preload
+              className="h-auto w-full"
+            />
           </div>
         </Reveal>
       </div>
