@@ -1,27 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { BankIcon, UmbrellaIcon, PfIcon, SearchIcon, ArrowRightIcon } from "./icons";
+import { BankIcon, UmbrellaIcon, PfIcon, ArrowRightIcon } from "./icons";
 
 /**
- * The hero's product visual: a real, interactive mock of the first screen of
- * the actual wizard, not a stock photograph and not a static illustration.
+ * The hero's search bar. Rewritten 4 Sep 2026 late evening to match the
+ * reference file's single white bar (one input, one button, inline) instead
+ * of the earlier multi-field card floating beside the headline -- the
+ * reference has no second field for "bank or institution", so this drops it
+ * too, matching its exact rhythm.
  *
  * ─── The one claim this component may NOT make ───
  *
- * The brief this was built from shows the reveal as "3 possible assets
- * found -- Bank Deposit, Possible Match." Adhikaar has no backend, no data
- * source, and no API into any bank, insurer or the RBI's UDGAM portal (which
- * has none for third parties either) -- it cannot find anything. Showing a
- * fabricated "match" would present a capability that does not exist as if it
- * were real, which is the same category of error this product's own safety
- * rules exist to prevent elsewhere (quote-and-cite-never-assert; a null is a
- * better answer than a guess).
- *
- * So the reveal is a CHECKLIST of where to look, not a list of results, and
- * says so in words directly under the panel: "This is a preview, not a live
- * search." The interaction, the motion, and the panel are as ambitious as
- * the brief asked for; the claim inside it is not.
+ * Adhikaar has no backend, no data source, and no API into any bank,
+ * insurer or the RBI's UDGAM portal -- it cannot find anything. So the
+ * reveal is a CHECKLIST of where to look, never a claimed result, and says
+ * so in words directly under the panel: "This is a preview, not a live
+ * search."
  */
 export function HeroDemo() {
   const [stage, setStage] = useState<"idle" | "loading" | "done">("idle");
@@ -34,123 +29,95 @@ export function HeroDemo() {
   };
 
   return (
-    <div className="w-full max-w-[26rem] rounded-[1.75rem] border border-[#DCD5EE] bg-white p-2 shadow-[0_28px_60px_-24px_rgba(15,25,50,0.35)]">
-      <div className="rounded-[1.4rem] bg-[#F6F4FB] p-5 sm:p-6">
-        <div className="flex items-center gap-2">
-          <span className="h-2.5 w-2.5 rounded-full bg-[#D98E2B]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#DCD5EE]" />
-          <span className="h-2.5 w-2.5 rounded-full bg-[#DCD5EE]" />
-          <p className="ml-auto text-[0.75rem] font-semibold tracking-[0.02em] text-[#5A5470]">
-            adhikaar.in/start
-          </p>
-        </div>
-
-        <p className="mt-5 text-[0.9375rem] font-bold text-[#2B2361]">
-          Tell us who you&apos;re searching for
-        </p>
-
-        <label className="mt-4 block">
-          <span className="text-[0.8125rem] font-semibold text-[#5A5470]">
-            Full name
-          </span>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Ramesh Kumar Sharma"
-            disabled={stage !== "idle"}
-            className="mt-1.5 w-full rounded-xl border border-[#DCD5EE] bg-white px-3.5 py-3 text-[0.9375rem] text-[#2B2361] placeholder:text-[#A39C8A] focus:border-[#2B2361] focus:outline-none focus:ring-2 focus:ring-[#2B2361]/15 disabled:opacity-60"
-          />
-        </label>
-
-        <label className="mt-3 block">
-          <span className="text-[0.8125rem] font-semibold text-[#5A5470]">
-            Bank or institution{" "}
-            <span className="font-normal text-[#A39C8A]">(optional)</span>
-          </span>
-          <input
-            placeholder="If you know it"
-            disabled={stage !== "idle"}
-            className="mt-1.5 w-full rounded-xl border border-[#DCD5EE] bg-white px-3.5 py-3 text-[0.9375rem] text-[#2B2361] placeholder:text-[#A39C8A] focus:border-[#2B2361] focus:outline-none focus:ring-2 focus:ring-[#2B2361]/15 disabled:opacity-60"
-          />
-        </label>
-
+    <div>
+      <div className="flex flex-col gap-2 rounded-lg bg-white p-2 shadow-[0_12px_32px_rgba(0,0,0,0.22)] sm:flex-row">
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && run()}
+          placeholder="Enter your loved one's full name"
+          disabled={stage !== "idle"}
+          className="flex-1 rounded border-none px-4 py-3.5 text-[1rem] text-[#211D33] placeholder:text-[#8B8698] focus:outline-none disabled:opacity-60"
+        />
         <button
           type="button"
           onClick={run}
           disabled={stage !== "idle"}
-          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-[#2B2361] py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#3D3178] disabled:opacity-70"
+          className="whitespace-nowrap rounded bg-[#D9A441] px-7 py-3.5 text-[0.9375rem] font-bold text-[#1B1740] transition-colors hover:bg-[#EFCC85] disabled:opacity-70"
         >
-          <SearchIcon className="h-4 w-4" />
-          {stage === "idle" && "Preview my checklist"}
+          {stage === "idle" && "Search"}
           {stage === "loading" && "One moment…"}
           {stage === "done" && "Checklist ready"}
         </button>
+      </div>
+      <p className="mt-2.5 text-[0.8125rem] text-[#9C93BE]">
+        Free to search. No account needed.
+      </p>
 
-        {/* Loading state: three shimmer rows, the same shape as the results
-            that replace them -- so the transition reads as "resolving",
-            not "swapping". */}
-        <div
-          aria-hidden={stage !== "loading"}
-          className={`grid transition-[grid-template-rows] duration-500 ${
-            stage === "loading" ? "grid-rows-[1fr] mt-4" : "grid-rows-[0fr]"
-          }`}
-        >
-          <div className="overflow-hidden">
-            <div className="space-y-2">
-              {[0, 1, 2].map((i) => (
-                <div
-                  key={i}
-                  className="h-14 animate-pulse rounded-xl bg-[#EFE9D9]"
-                  style={{ animationDelay: `${i * 120}ms` }}
-                />
-              ))}
-            </div>
+      {/* Loading state: three shimmer rows, the same shape as the results
+          that replace them -- so the transition reads as "resolving", not
+          "swapping". */}
+      <div
+        aria-hidden={stage !== "loading"}
+        className={`grid transition-[grid-template-rows] duration-500 ${
+          stage === "loading" ? "grid-rows-[1fr] mt-4" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="space-y-2">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-14 animate-pulse rounded bg-white/10"
+                style={{ animationDelay: `${i * 120}ms` }}
+              />
+            ))}
           </div>
         </div>
+      </div>
 
-        <div
-          className={`grid transition-[grid-template-rows] duration-500 ${
-            stage === "done" ? "grid-rows-[1fr] mt-4" : "grid-rows-[0fr]"
-          }`}
-        >
-          <div className="overflow-hidden">
-            <ul className="space-y-2">
-              {[
-                { icon: BankIcon, label: "Bank deposits", note: "Worth checking with your bank" },
-                { icon: UmbrellaIcon, label: "Insurance", note: "Check with the insurer directly" },
-                { icon: PfIcon, label: "Provident fund", note: "EPFO has its own portal" },
-              ].map((r, i) => (
-                <li
-                  key={r.label}
-                  style={{
-                    transitionDelay: stage === "done" ? `${i * 90}ms` : "0ms",
-                  }}
-                  className={`motion-safe:transition-all motion-safe:duration-500 flex items-center gap-3 rounded-xl border border-[#DCD5EE] bg-white p-3 ${
-                    stage === "done"
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 motion-safe:-translate-x-2"
-                  }`}
-                >
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2B2361]/8 text-[#2B2361]">
-                    <r.icon className="h-[1.05rem] w-[1.05rem]" />
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block text-[0.875rem] font-bold text-[#2B2361]">
-                      {r.label}
-                    </span>
-                    <span className="block text-[0.75rem] text-[#5A5470]">
-                      {r.note}
-                    </span>
-                  </span>
-                  <ArrowRightIcon className="h-4 w-4 shrink-0 text-[#A39C8A]" />
-                </li>
-              ))}
-            </ul>
-            <p className="mt-3 text-[0.75rem] leading-relaxed text-[#5A5470]">
-              A preview, not a live search. The real version asks a few more
-              questions and gives you a checklist to work through.
-            </p>
+      <div
+        className={`grid transition-[grid-template-rows] duration-500 ${
+          stage === "done" ? "grid-rows-[1fr] mt-4" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden rounded-lg bg-white">
+          <div className="border-b border-[#DCD5EE] px-5 py-3 text-[0.8125rem] text-[#5A5470]">
+            A checklist for &ldquo;{name || "your search"}&rdquo; — for
+            preview only, not a live search
           </div>
+          <ul>
+            {[
+              { icon: BankIcon, label: "Bank deposits", note: "Worth checking with your bank" },
+              { icon: UmbrellaIcon, label: "Insurance", note: "Check with the insurer directly" },
+              { icon: PfIcon, label: "Provident fund", note: "EPFO has its own portal" },
+            ].map((r, i) => (
+              <li
+                key={r.label}
+                style={{
+                  transitionDelay: stage === "done" ? `${i * 90}ms` : "0ms",
+                }}
+                className={`motion-safe:transition-all motion-safe:duration-500 flex items-center gap-3 border-b border-[#DCD5EE] px-5 py-3.5 last:border-0 ${
+                  stage === "done"
+                    ? "opacity-100 translate-x-0"
+                    : "opacity-0 motion-safe:-translate-x-2"
+                }`}
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#2B2361]/8 text-[#2B2361]">
+                  <r.icon className="h-[1.05rem] w-[1.05rem]" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-[0.875rem] font-bold text-[#2B2361]">
+                    {r.label}
+                  </span>
+                  <span className="block text-[0.75rem] text-[#5A5470]">
+                    {r.note}
+                  </span>
+                </span>
+                <ArrowRightIcon className="h-4 w-4 shrink-0 text-[#A39C8A]" />
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

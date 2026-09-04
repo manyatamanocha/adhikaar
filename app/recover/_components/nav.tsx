@@ -1,56 +1,44 @@
-"use client";
-
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
-/** Sticky nav with a subtle background transition on scroll -- transparent
-    over the hero, solid once the visitor has moved past it. */
+/**
+ * A solid dark header, matching the reference file exactly -- no
+ * scroll-transition, no CTA button on the right (the reference's header
+ * carries only the wordmark and nav links; the CTA lives in the hero and
+ * the closing band instead).
+ */
 export function RecoverNav() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
   return (
-    <header
-      className={`sticky top-0 z-40 transition-colors duration-300 ${
-        scrolled
-          ? "border-b border-[#DCD5EE] bg-[#F6F4FB]/90 backdrop-blur-md"
-          : "border-b border-transparent bg-transparent"
-      }`}
-    >
-      <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-6 px-5 py-4 sm:px-8">
-        <Link href="/" className="font-serif text-[1.375rem] font-bold text-[#2B2361]">
+    <header className="bg-[#2B2361] text-white">
+      <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-6 px-5 py-5 sm:px-8">
+        <Link href="/" className="flex items-center gap-2 font-serif text-[1.25rem] font-bold">
+          {/* A brand mark, not an emblem -- an abstract compass-like glyph in
+              the product's own two accent colours. No state or ministry
+              association is possible to read into an arbitrary shape, which
+              is exactly why it's arbitrary rather than referencing anything
+              real (no ashoka chakra, no seal silhouette, no tricolour). */}
+          <svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true">
+            <circle cx="13" cy="13" r="11.5" stroke="#D9A441" strokeWidth="1.6" fill="none" />
+            <path d="M13 6.5v3M13 16.5v3M6.5 13h3M16.5 13h3" stroke="#D9A441" strokeWidth="1.6" strokeLinecap="round" />
+          </svg>
           Adhikaar
         </Link>
 
-        <nav aria-label="Sections" className="hidden items-center gap-8 lg:flex">
+        <nav aria-label="Sections" className="hidden items-center gap-6 text-[0.9375rem] sm:flex sm:gap-8">
           {[
             ["How it works", "#how"],
-            ["What you can recover", "#recover"],
-            ["FAQs", "#trust"],
+            ["Sources", "#sources"],
+            ["FAQ", "#faq"],
             ["The full guide", "/guide"],
           ].map(([l, href]) => (
             <a
               key={l}
               href={href}
-              className="text-[0.9375rem] font-semibold text-[#5A5470] transition-colors hover:text-[#2B2361]"
+              className="text-[#D9CFF0] transition-colors hover:text-white"
             >
               {l}
             </a>
           ))}
         </nav>
-
-        <Link
-          href="/start"
-          className="rounded-full bg-[#2B2361] px-5 py-2.5 text-[0.875rem] font-bold text-white transition-colors hover:bg-[#3D3178]"
-        >
-          Start a Search
-        </Link>
       </div>
     </header>
   );

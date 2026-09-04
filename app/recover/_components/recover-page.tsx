@@ -1,58 +1,71 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { RecoverNav } from "./nav";
 import { HeroDemo } from "./hero-demo";
 import { Reveal } from "./reveal";
-import {
-  BankIcon,
-  UmbrellaIcon,
-  PfIcon,
-  SharesIcon,
-  DividendIcon,
-  OtherIcon,
-  SearchIcon,
-  CheckIcon,
-  CircleIcon,
-  LockIcon,
-  BookIcon,
-  CompassIcon,
-  ArrowRightIcon,
-} from "./icons";
+import { ArrowRightIcon } from "./icons";
 
 /**
- * The homepage ("/", formerly /recover) -- a from-scratch visual redesign of
- * the landing surface, built directly from a fully pinned brief (palette,
- * hero copy, section list and composition rules all specified), so the
- * concept-seed direction roll was skipped per its own rule: "never run the
- * script for a precisely specified request; shape those directly."
+ * The homepage ("/", formerly /recover).
  *
- * Moved to "/" on 4 Sep 2026, replacing the succession-certificate page that
- * used to live there -- that content moved to /guide, not discarded. This
- * page is search-first framing; /guide is where a visitor ends up once
- * there's something specific to claim (para 9 / no succession certificate).
+ * Rebuilt 4 Sep 2026 late evening directly against a reference file the user
+ * supplied (unclaimed-money-finder.html) after several rounds of guessing at
+ * a look failed. Previous builds matched its colours but kept this project's
+ * own, much longer and more decorated section list -- told directly "are
+ * completely different" -- so this pass matches the reference's actual
+ * SHAPE: a lean run of eight sections, a stats card overlapping the hero,
+ * a plain top-rule 3-step list with no icon circles, a dark "sources" band,
+ * and an FAQ accordion, rather than the bento grids, illustrated scenes and
+ * margin notes the last few passes kept adding.
+ *
+ * Content that had its own section before (what can be recovered, the
+ * guided-claim differentiator, the four trust facts) is real and stays --
+ * folded into the FAQ, which is exactly where the reference itself put the
+ * equivalent facts ("Before you search"), rather than kept as separate
+ * sections the reference has no counterpart for.
  *
  * ─── The one thing this page may not claim ───
  *
- * The brief's hero shows a live search returning "3 possible assets found --
- * Possible Match." Adhikaar has no backend, no data source, and no API into
- * any bank, insurer or UDGAM -- it cannot search or find a match. See
- * hero-demo.tsx for the full note; every reveal on this page is a CHECKLIST
- * of where to look, never a claimed result, and says so in the UI itself.
+ * Adhikaar has no backend, no data source, and no API into any bank,
+ * insurer or UDGAM -- it cannot search or find a match. Every reveal on
+ * this page is a CHECKLIST of where to look, never a claimed result, and
+ * says so in the UI itself. See hero-demo.tsx for the full note.
+ *
+ * ─── Every stat below is real, not a placeholder ───
+ *
+ * The reference's stat card shows aggregate figures (a real NAUPA number).
+ * Adhikaar has no equivalent verified Indian aggregate to cite, so the
+ * three stats here are true, checkable facts already used elsewhere on this
+ * site instead: the bank count at launch (PRODUCT.md), the RBI's own
+ * settlement deadline (para 31), and that the tool is free with no login.
  */
 export function RecoverPage() {
   return (
     <div className="bg-[#F6F4FB] text-[#2B2361] antialiased [selection:bg-[#D9A441]/25 selection:text-[#2B2361]]">
+      <NoticeBar />
       <RecoverNav />
       <Hero />
-      <OneSearchManyPlaces />
+      <StatsOverlap />
       <HowItWorks />
-      <UdgamNote />
-      <WhatCanBeRecovered />
-      <GuidedClaim />
-      <Trust />
+      <SourcesBand />
+      <Faq />
       <FinalCta />
       <RecoverFooter />
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------ NOTICE BAR */
+
+function NoticeBar() {
+  return (
+    <div className="bg-[#1B1740] px-4 py-2 text-center text-[0.8125rem] text-[#D9CFF0]">
+      Adhikaar is an independent guidance tool, not a government service.{" "}
+      <strong className="font-semibold text-[#EFCC85]">
+        Verify any claim directly with your bank or the RBI&apos;s UDGAM portal.
+      </strong>
     </div>
   );
 }
@@ -61,121 +74,53 @@ export function RecoverPage() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      {/* Motif, first appearance: a single dashed thread drawn low across the
-          hero, the path a family's money takes back to them. Reused, never
-          decorative-only -- the same line reappears in the journey section
-          and once more, quietly, above the footer. */}
-      <svg
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-24 top-1/2 hidden h-[1px] w-[140%] -translate-y-1/2 lg:block"
-      >
-        <line x1="0" y1="0" x2="100%" y2="0" stroke="#DCD5EE" strokeWidth="2" strokeDasharray="1 10" strokeLinecap="round" />
-      </svg>
-
-      <div className="relative mx-auto grid max-w-[1240px] items-center gap-14 px-5 pb-16 pt-10 sm:px-8 sm:pb-24 sm:pt-16 lg:grid-cols-[1.05fr_1fr] lg:gap-10 lg:pb-28 lg:pt-20">
-        <div>
-          <h1 className="max-w-[15ch] font-serif text-[clamp(2.5rem,5.2vw,4rem)] font-bold leading-[1.05] tracking-[-0.02em] text-[#2B2361]">
+    <section className="bg-[#2B2361] pb-16 pt-12 text-white sm:pb-24 sm:pt-16">
+      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+        <div className="max-w-[42rem]">
+          <h1 className="font-serif text-[clamp(2rem,4.6vw,2.75rem)] font-bold leading-[1.15] tracking-[-0.01em]">
             Money left behind shouldn&apos;t stay lost.
           </h1>
-
-          <p className="mt-6 max-w-[46ch] text-[clamp(1.1875rem,1.6vw,1.375rem)] leading-[1.5] text-[#5A5470]">
+          <p className="mt-4 max-w-[52ch] text-[1.0625rem] leading-[1.5] text-[#C7BEE8]">
             Adhikaar helps families find and claim financial assets left
             behind by a loved one — with one simple, guided process.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Link
-              href="/start"
-              className="inline-flex items-center gap-2.5 rounded-full bg-[#2B2361] px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#3D3178]"
-            >
-              Start a Search
-              <ArrowRightIcon className="h-4 w-4" />
-            </Link>
-            <a
-              href="#how"
-              className="inline-flex items-center gap-2 rounded-full border-2 border-[#2B2361]/20 px-7 py-[0.9375rem] text-[1.0625rem] font-bold text-[#2B2361] transition-colors hover:border-[#2B2361]/40"
-            >
-              See how it works
-            </a>
-          </div>
-
-          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[0.9375rem] font-semibold text-[#5A5470]">
-            {["Free to search", "Secure", "Step-by-step guidance"].map((l) => (
-              <li key={l} className="flex items-center gap-2">
-                <CheckIcon className="h-[1.05rem] w-[1.05rem] text-[#3F7355]" />
-                {l}
-              </li>
-            ))}
-          </ul>
+          <Reveal delay={80} className="mt-8">
+            <HeroDemo />
+          </Reveal>
         </div>
-
-        <Reveal delay={120} className="flex justify-center lg:justify-end">
-          <HeroDemo />
-        </Reveal>
       </div>
     </section>
   );
 }
 
-/* ------------------------------------------------------------ ONE SEARCH */
+/* ------------------------------------------------------------ STATS BAR */
 
-const PLACES = [
-  { icon: BankIcon, label: "Banks" },
-  { icon: UmbrellaIcon, label: "Insurance" },
-  { icon: PfIcon, label: "Provident fund" },
-  { icon: SharesIcon, label: "Investments" },
-  { icon: OtherIcon, label: "Other assets" },
-] as const;
-
-function OneSearchManyPlaces() {
+/* Overlaps the hero's bottom edge, per the reference: a white card pulled
+   up over the dark section below it with a negative margin, so the page
+   reads as one composed object at the fold rather than a hard section
+   break. Three REAL facts (see the file header note), not filler numbers. */
+function StatsOverlap() {
+  const STATS = [
+    { num: "4", label: "banks compared at launch — SBI, PNB, HDFC, ICICI" },
+    { num: "15 days", label: "the RBI's own deadline to settle a claim once filed" },
+    { num: "₹0", label: "cost to use Adhikaar — no login, nothing stored" },
+  ];
   return (
-    <section className="border-y border-[#DCD5EE] bg-white py-16 sm:py-20">
-      <Reveal className="mx-auto max-w-[1240px] px-5 text-center sm:px-8">
-        <h2 className="font-serif text-[clamp(1.75rem,3vw,2.5rem)] font-bold text-[#2B2361]">
-          One search. Multiple places.
-        </h2>
-
-        {/* The thread motif, second appearance: nodes strung on one line.
-            Two separate lines, not one div re-angled by breakpoint -- a
-            single element switched from tall+narrow to short+wide while
-            keeping one gradient direction draws correctly on exactly one of
-            the two layouts and a solid sliver on the other, so mobile and
-            desktop each get the div shaped for them. */}
-        <div className="relative mx-auto mt-12 flex max-w-[52rem] flex-col items-center gap-8 sm:flex-row sm:justify-between sm:gap-4">
-          <div
-            aria-hidden="true"
-            className="absolute left-6 top-6 bottom-6 w-px sm:hidden"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(to bottom, #DCD5EE 0 6px, transparent 6px 14px)",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            className="absolute left-0 right-0 top-6 hidden h-px sm:block"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(to right, #DCD5EE 0 6px, transparent 6px 14px)",
-            }}
-          />
-          {PLACES.map((p) => (
-            <div key={p.label} className="relative z-10 flex items-center gap-3 sm:flex-col sm:gap-3">
-              <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#DCD5EE] bg-[#F6F4FB] text-[#2B2361]">
-                <p.icon className="h-5 w-5" />
-              </span>
-              <span className="text-[0.9375rem] font-bold text-[#5A5470]">
-                {p.label}
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <p className="mx-auto mt-12 max-w-[42ch] font-serif text-[1.375rem] font-bold text-[#2B2361]">
-          Adhikaar brings the journey together.
-        </p>
+    <div className="relative mx-auto -mt-10 max-w-[1240px] px-5 sm:px-8">
+      <Reveal className="grid grid-cols-1 divide-y divide-[#DCD5EE] rounded-lg bg-white shadow-[0_8px_24px_rgba(27,23,64,0.14)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+        {STATS.map((s) => (
+          <div key={s.label} className="p-6 sm:p-7">
+            <p className="font-serif text-[1.75rem] font-bold text-[#2B2361]">
+              {s.num}
+            </p>
+            <p className="mt-1 text-[0.8125rem] leading-snug text-[#5A5470]">
+              {s.label}
+            </p>
+          </div>
+        ))}
       </Reveal>
-    </section>
+    </div>
   );
 }
 
@@ -184,16 +129,19 @@ function OneSearchManyPlaces() {
 const STEPS = [
   {
     n: "01",
+    color: "#B84E1E",
     title: "Tell us about your loved one",
     body: "Enter a few basic details to begin.",
   },
   {
     n: "02",
+    color: "#D9A441",
     title: "See where money may be waiting",
     body: "We help you understand which institutions may hold unclaimed assets.",
   },
   {
     n: "03",
+    color: "#D9A441",
     title: "Follow the claim",
     body: "Get the documents, steps and status in one place.",
   },
@@ -201,309 +149,154 @@ const STEPS = [
 
 function HowItWorks() {
   return (
-    <section id="how" className="scroll-mt-16 py-20 sm:py-28">
+    <section id="how" className="scroll-mt-16 py-20">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-        <Reveal>
-          <h2 className="max-w-[16ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#2B2361]">
-            One connected journey, not a form.
+        <Reveal className="max-w-[35rem]">
+          <p className="text-[0.875rem] text-[#5A5470]">How it works</p>
+          <h2 className="mt-1.5 font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#2B2361]">
+            Three steps to go from search to claim
           </h2>
+          <p className="mt-2.5 text-[0.9688rem] text-[#5A5470]">
+            Adhikaar covers bank deposits, insurance, provident fund, shares
+            and dividends — here&apos;s the general path, whichever it is.
+          </p>
         </Reveal>
 
-        <div className="relative mt-16 grid gap-16 sm:grid-cols-3 sm:gap-8">
-          {/* Motif, third appearance: the thread running through the steps.
-              Vertical on mobile, horizontal from sm -- this was "hidden"
-              below sm entirely in the first pass, which left the phone
-              layout (the primary device, per the brief's own words) with
-              three plain numbered items and no thread at all. */}
-          <div
-            aria-hidden="true"
-            className="absolute left-6 top-6 bottom-6 w-px sm:hidden"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(to bottom, #DCD5EE 0 6px, transparent 6px 14px)",
-            }}
-          />
-          <div
-            aria-hidden="true"
-            className="absolute left-6 right-6 top-6 hidden h-px sm:block"
-            style={{
-              backgroundImage:
-                "repeating-linear-gradient(to right, #DCD5EE 0 6px, transparent 6px 14px)",
-            }}
-          />
-          {STEPS.map((s, i) => (
-            <Reveal key={s.n} delay={i * 110} className="relative">
-              <span className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-[#2B2361] font-serif text-[1.0625rem] font-bold text-white">
-                {i + 1}
-              </span>
-              <p className="mt-5 font-serif text-[1.375rem] font-bold text-[#2B2361]">
+        <Reveal delay={80} className="mt-11 grid gap-8 sm:grid-cols-3">
+          {STEPS.map((s) => (
+            <div key={s.n} className="border-t-2 border-[#2B2361] pt-4">
+              <p
+                className="font-serif text-[0.9375rem] font-bold"
+                style={{ color: s.color }}
+              >
+                {s.n}
+              </p>
+              <p className="mt-2 font-serif text-[1.1875rem] font-bold text-[#2B2361]">
                 {s.title}
               </p>
-              <p className="mt-2 max-w-[32ch] text-[0.9375rem] leading-relaxed text-[#5A5470]">
+              <p className="mt-2 text-[0.9063rem] leading-relaxed text-[#5A5470]">
                 {s.body}
               </p>
-            </Reveal>
+            </div>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ UDGAM */
-
-function UdgamNote() {
-  return (
-    <section className="bg-white py-16 sm:py-20">
-      <Reveal className="mx-auto max-w-[1240px] px-5 sm:px-8">
-        <div className="grid gap-10 rounded-[1.75rem] border border-[#DCD5EE] bg-[#F6F4FB] p-8 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center lg:gap-16">
-          <div>
-            <p className="font-serif text-[1.5rem] font-bold text-[#2B2361]">
-              Already heard of UDGAM?
-            </p>
-            <p className="mt-3 max-w-[58ch] text-[0.9375rem] leading-relaxed text-[#5A5470]">
-              UDGAM is the RBI&apos;s portal for searching unclaimed bank
-              deposits. Adhikaar helps you understand what to do next — and
-              guides you across more than just bank deposits.
-            </p>
-
-            <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2 text-[0.875rem] font-bold text-[#8C6317]">
-              <span className="flex items-center gap-1.5">
-                <SearchIcon className="h-4 w-4" /> Search
-              </span>
-              <ArrowRightIcon className="h-3.5 w-3.5 text-[#A39C8A]" />
-              <span className="flex items-center gap-1.5">
-                <CompassIcon className="h-4 w-4" /> Understand
-              </span>
-              <ArrowRightIcon className="h-3.5 w-3.5 text-[#A39C8A]" />
-              <span className="flex items-center gap-1.5">
-                <CheckIcon className="h-4 w-4" /> Claim
-              </span>
-            </div>
-
-            <a
-              href="https://udgam.rbi.org.in/"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex items-center gap-1.5 text-[0.9375rem] font-bold text-[#2B2361] underline underline-offset-2"
-            >
-              Learn about UDGAM
-              <ArrowRightIcon className="h-3.5 w-3.5" />
-            </a>
-          </div>
-        </div>
-      </Reveal>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------ RECOVERABLE */
-
-function WhatCanBeRecovered() {
-  return (
-    <section id="recover" className="scroll-mt-16 py-20 sm:py-28">
-      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-        <Reveal>
-          <h2 className="font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold text-[#2B2361]">
-            What can be recovered
-          </h2>
-        </Reveal>
-
-        {/* A bento, not seven equal cards: one wide lead tile, the rest sized
-            by how self-explanatory each label already is. */}
-        <Reveal delay={80}>
-          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            <div className="col-span-2 row-span-2 rounded-[1.5rem] bg-[#2B2361] p-6 text-white sm:p-8">
-              <BankIcon className="h-9 w-9 text-[#EFCC85]" />
-              <p className="mt-6 font-serif text-[1.5rem] font-bold sm:text-[1.75rem]">
-                Bank deposits &amp; fixed deposits
-              </p>
-              <p className="mt-2 max-w-[34ch] text-[0.9375rem] text-white/75">
-                Savings, current and dormant accounts across any bank.
-              </p>
-            </div>
-
-            {[
-              { icon: UmbrellaIcon, label: "Insurance" },
-              { icon: PfIcon, label: "Provident fund" },
-              { icon: SharesIcon, label: "Shares & investments" },
-              { icon: DividendIcon, label: "Dividends" },
-            ].map((c) => (
-              <div
-                key={c.label}
-                className="rounded-[1.5rem] border border-[#DCD5EE] bg-white p-5 sm:p-6"
-              >
-                <c.icon className="h-7 w-7 text-[#2B2361]" />
-                <p className="mt-4 text-[0.9375rem] font-bold leading-snug text-[#2B2361]">
-                  {c.label}
-                </p>
-              </div>
-            ))}
-
-            <div className="col-span-2 rounded-[1.5rem] border border-dashed border-[#D6CBA8] bg-[#EBE6F5] p-5 sm:col-span-4 sm:flex sm:items-center sm:justify-between sm:p-6">
-              <div className="flex items-center gap-3">
-                <OtherIcon className="h-7 w-7 shrink-0 text-[#8C6317]" />
-                <p className="text-[0.9375rem] font-bold text-[#2B2361]">
-                  Other eligible financial assets — places your family may
-                  not know to check.
-                </p>
-              </div>
-            </div>
-          </div>
         </Reveal>
       </div>
     </section>
   );
 }
 
-/* ------------------------------------------------------------ GUIDED CLAIM */
+/* ------------------------------------------------------------ SOURCES */
 
-const CLAIM_STEPS = [
-  { label: "Identity details", done: true },
-  { label: "Death certificate", done: true },
-  { label: "Proof of relationship", done: false },
-  { label: "Claim form", done: false },
-  { label: "Submit to institution", done: false },
+/* Replaces both the old "one search, multiple places" node diagram and the
+   UDGAM callout -- the reference's honest equivalent is blunter and better:
+   here is exactly where the real data lives, because Adhikaar doesn't hold
+   any of it itself. */
+const SOURCES = [
+  { n: "RBI", l: "Issues the Directions this entire tool quotes and cites" },
+  { n: "UDGAM", l: "The RBI's own portal for searching unclaimed bank deposits" },
+  { n: "Your bank", l: "Must publish its deceased-claim policy since 31 Mar 2026" },
+  { n: "IEPF", l: "Investor Education & Protection Fund — shares and dividends" },
 ] as const;
 
-function GuidedClaim() {
-  const done = CLAIM_STEPS.filter((s) => s.done).length;
+function SourcesBand() {
   return (
-    <section className="bg-white py-20 sm:py-28">
-      <div className="mx-auto grid max-w-[1240px] items-center gap-14 px-5 sm:px-8 lg:grid-cols-2 lg:gap-20">
-        <Reveal>
-          <h2 className="max-w-[18ch] font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold leading-[1.15] text-[#2B2361]">
-            Not just a search. A guide through the claim.
-          </h2>
-          <p className="mt-5 max-w-[46ch] text-[1.0625rem] leading-relaxed text-[#5A5470]">
-            Once something is found worth pursuing, Adhikaar walks you
-            through exactly what the institution will ask for — one step at
-            a time, so nothing arrives as a surprise at the counter.
+    <div id="sources" className="scroll-mt-16 bg-[#1B1740] py-14 text-white sm:py-16">
+      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+        <Reveal className="max-w-[35rem]">
+          <p className="text-[0.875rem] text-[#B7ADD9]">
+            Where this data actually lives
           </p>
-          <Link
-            href="/start"
-            className="mt-7 inline-flex items-center gap-2.5 rounded-full bg-[#2B2361] px-7 py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#3D3178]"
-          >
-            Continue a claim
-            <ArrowRightIcon className="h-4 w-4" />
-          </Link>
+          <h2 className="mt-1.5 font-serif text-[1.875rem] font-bold tracking-[-0.01em]">
+            Adhikaar doesn&apos;t hold any of it
+          </h2>
+          <p className="mt-2.5 text-[0.9688rem] text-[#B7ADD9]">
+            A real search checks these directly — not a guess, and not
+            Adhikaar&apos;s own database, because it doesn&apos;t have one.
+          </p>
         </Reveal>
 
-        <Reveal delay={100}>
-          <div className="mx-auto w-full max-w-[24rem] overflow-hidden rounded-[1.5rem] border border-[#DCD5EE] bg-[#F6F4FB] shadow-[0_24px_50px_-20px_rgba(15,25,50,0.28)]">
-            <div className="border-b border-[#DCD5EE] bg-white p-5">
-              <p className="text-[0.75rem] font-bold uppercase tracking-[0.08em] text-[#8C6317]">
-                Bank deposit — worth checking
+        <Reveal
+          delay={80}
+          className="mt-9 grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-white/10 sm:grid-cols-4"
+        >
+          {SOURCES.map((s) => (
+            <div key={s.n} className="bg-[#1B1740] p-5">
+              <p className="font-serif text-[1.375rem] text-[#EFCC85]">
+                {s.n}
               </p>
-              <p className="mt-1 text-[1.0625rem] font-bold text-[#2B2361]">
-                Your next steps
-              </p>
+              <p className="mt-1 text-[0.8125rem] text-[#B7ADD9]">{s.l}</p>
             </div>
-            <div className="p-5">
-              <ul className="space-y-2.5">
-                {CLAIM_STEPS.map((s) => (
-                  <li key={s.label} className="flex items-center gap-3">
-                    {s.done ? (
-                      <CheckIcon className="h-5 w-5 shrink-0 text-[#3F7355]" />
-                    ) : (
-                      <CircleIcon className="h-5 w-5 shrink-0 text-[#A39C8A]" />
-                    )}
-                    <span
-                      className={`text-[0.9375rem] ${
-                        s.done
-                          ? "text-[#5A5470] line-through decoration-[#A39C8A]"
-                          : "font-semibold text-[#2B2361]"
-                      }`}
-                    >
-                      {s.label}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+          ))}
+        </Reveal>
+      </div>
+    </div>
+  );
+}
 
-              <div className="mt-5 border-t border-[#DCD5EE] pt-4">
-                <div className="flex items-center justify-between text-[0.8125rem] font-bold text-[#5A5470]">
-                  <span>Progress</span>
-                  <span>
-                    {done} of {CLAIM_STEPS.length} completed
+/* ------------------------------------------------------------------ FAQ */
+
+/* Everything the earlier draft gave its own section (what can be recovered,
+   the guided-claim differentiator, the four trust facts) lives here now --
+   the reference's own answer to "where do these supporting facts go" is an
+   FAQ, not four more page sections. */
+const FAQS = [
+  {
+    q: "What kinds of assets does this cover?",
+    a: "Bank deposits and fixed deposits, insurance policies, provident fund, shares and dividends — and a general path for anything else that doesn't fit those.",
+  },
+  {
+    q: "Will Adhikaar ever tell me it found a match?",
+    a: "No. Adhikaar has no backend or database of accounts — it cannot search or confirm anything. What it gives you is a checklist of where to look and, once something is found, exactly what the institution will ask for.",
+  },
+  {
+    q: "What happens after I find something?",
+    a: "Adhikaar walks you through the documents and steps that institution will ask for, one at a time, so nothing arrives as a surprise at the counter.",
+  },
+  {
+    q: "Is my information safe?",
+    a: "Nothing you enter is stored or shared for marketing. There's no account, no login, and no data reaches a server beyond what a page needs to render.",
+  },
+] as const;
+
+function Faq() {
+  const [open, setOpen] = useState<number | null>(null);
+  return (
+    <section id="faq" className="scroll-mt-16 py-20">
+      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
+        <Reveal className="max-w-[35rem]">
+          <p className="text-[0.875rem] text-[#5A5470]">Questions</p>
+          <h2 className="mt-1.5 font-serif text-[1.875rem] font-bold tracking-[-0.01em] text-[#2B2361]">
+            Before you search
+          </h2>
+        </Reveal>
+
+        <Reveal delay={80} className="mt-9 max-w-[45rem]">
+          {FAQS.map((f, i) => {
+            const isOpen = open === i;
+            return (
+              <div key={f.q} className="border-b border-[#DCD5EE]">
+                <button
+                  type="button"
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  aria-expanded={isOpen}
+                  className="flex w-full items-center justify-between gap-6 py-4 text-left text-[1rem] font-bold text-[#2B2361]"
+                >
+                  {f.q}
+                  <span
+                    aria-hidden="true"
+                    className={`shrink-0 font-serif text-[1.25rem] text-[#2B2361] transition-transform ${isOpen ? "rotate-45" : ""}`}
+                  >
+                    +
                   </span>
-                </div>
-                <div className="mt-2 h-2 overflow-hidden rounded-full bg-[#DCD5EE]">
-                  <div
-                    className="h-full rounded-full bg-[#3F7355] transition-[width] duration-700"
-                    style={{ width: `${(done / CLAIM_STEPS.length) * 100}%` }}
-                  />
+                </button>
+                <div
+                  className={`grid overflow-hidden text-[0.9375rem] leading-relaxed text-[#5A5470] transition-[grid-template-rows] duration-200 ${isOpen ? "grid-rows-[1fr] pb-4" : "grid-rows-[0fr]"}`}
+                >
+                  <p className="min-h-0 max-w-[58ch]">{f.a}</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------------ TRUST */
-
-const TRUST = [
-  {
-    icon: LockIcon,
-    title: "Your information stays private",
-    body: "Nothing you enter is sold or shared for marketing.",
-  },
-  {
-    icon: BookIcon,
-    title: "We explain every step",
-    body: "No confusing financial jargon — plain language throughout.",
-  },
-  {
-    icon: CompassIcon,
-    title: "You stay in control",
-    body: "Adhikaar guides; you decide what to do at each step.",
-  },
-  {
-    icon: CheckIcon,
-    title: "No false promises",
-    body: "A possible match is never presented as a confirmed one.",
-  },
-] as const;
-
-function Trust() {
-  return (
-    <section id="trust" className="scroll-mt-16 py-20 sm:py-28">
-      <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-        <Reveal>
-          <h2 className="font-serif text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold text-[#2B2361]">
-            Built to be trusted
-          </h2>
-        </Reveal>
-
-        <Reveal delay={80}>
-          <ul className="mt-12 grid gap-x-10 gap-y-8 sm:grid-cols-2">
-            {TRUST.map((t) => (
-              <li key={t.title} className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#2B2361]/8 text-[#2B2361]">
-                  <t.icon className="h-5 w-5" />
-                </span>
-                <div>
-                  <p className="font-bold text-[1.0625rem] text-[#2B2361]">
-                    {t.title}
-                  </p>
-                  <p className="mt-1 text-[0.9375rem] leading-relaxed text-[#5A5470]">
-                    {t.body}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
-
-        <Reveal delay={140}>
-          <p className="mt-10 max-w-[70ch] border-t border-[#DCD5EE] pt-6 text-[0.875rem] leading-relaxed text-[#5A5470]">
-            Adhikaar does not hold or transfer your money. Claims are
-            ultimately processed by the relevant bank, insurer, fund or
-            institution.
-          </p>
+            );
+          })}
         </Reveal>
       </div>
     </section>
@@ -514,23 +307,19 @@ function Trust() {
 
 function FinalCta() {
   return (
-    <section className="relative overflow-hidden bg-[#2B2361] py-24 sm:py-28">
-      <svg aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-full w-full opacity-[0.06]">
-        <line x1="-10%" y1="30%" x2="110%" y2="60%" stroke="#EFCC85" strokeWidth="1.4" strokeDasharray="1 12" strokeLinecap="round" />
-      </svg>
-      <Reveal className="relative mx-auto max-w-[1240px] px-5 text-center sm:px-8">
-        <p className="mx-auto max-w-[24ch] font-serif text-[clamp(2rem,3.6vw,2.75rem)] font-bold leading-[1.15] text-white">
-          Something may still be waiting for your family.
+    <section className="bg-[#EBE6F5] py-14 text-center">
+      <Reveal className="mx-auto max-w-[1240px] px-5 sm:px-8">
+        <p className="font-serif text-[1.625rem] font-bold text-[#2B2361]">
+          Two minutes could turn up real money.
         </p>
-        <p className="mx-auto mt-4 max-w-[42ch] text-[1.0625rem] text-white/75">
-          Start with a simple search. We&apos;ll help you understand what
-          comes next.
+        <p className="mt-1.5 text-[0.9688rem] text-[#5A5470]">
+          It costs nothing to look.
         </p>
         <Link
           href="/start"
-          className="mt-8 inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-[1.0625rem] font-bold text-[#2B2361] transition-colors hover:bg-[#EFCC85]"
+          className="mt-5 inline-flex items-center gap-2.5 rounded bg-[#2B2361] px-7 py-3.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#3D3178]"
         >
-          Start a Search
+          Search your name
           <ArrowRightIcon className="h-4 w-4" />
         </Link>
       </Reveal>
@@ -542,33 +331,38 @@ function FinalCta() {
 
 function RecoverFooter() {
   return (
-    <footer className="bg-[#1B1740] py-12">
+    <footer className="bg-[#1B1740] py-10 text-[0.8125rem] text-[#9C93BE]">
       <div className="mx-auto max-w-[1240px] px-5 sm:px-8">
-        {/* Motif, final and quietest appearance. */}
-        <div
-          aria-hidden="true"
-          className="mb-8 h-px w-full"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(to right, #2A3555 0 6px, transparent 6px 14px)",
-          }}
-        />
-        <p className="font-serif text-[1.25rem] font-bold text-white">
-          Adhikaar
+        <div className="flex flex-wrap items-start justify-between gap-8 border-b border-white/10 pb-6">
+          <p className="font-serif text-[1.125rem] font-bold text-[#D9CFF0]">
+            Adhikaar
+          </p>
+          <div className="flex flex-wrap gap-14">
+            <div>
+              <p className="font-bold text-[#D9CFF0]">Product</p>
+              <a href="#how" className="mt-2 block hover:text-white">
+                How it works
+              </a>
+              <Link href="/guide" className="mt-2 block hover:text-white">
+                The full RBI guide
+              </Link>
+            </div>
+            <div>
+              <p className="font-bold text-[#D9CFF0]">Learn</p>
+              <a href="#faq" className="mt-2 block hover:text-white">
+                FAQ
+              </a>
+            </div>
+          </div>
+        </div>
+        <p className="mt-5 max-w-[70ch] leading-relaxed">
+          <strong className="text-[#D9CFF0]">
+            Adhikaar is an independent guidance tool.
+          </strong>{" "}
+          It does not represent any bank, insurer, government agency or
+          other financial institution unless explicitly stated, and does
+          not hold or transfer your money. Nothing here is legal advice.
         </p>
-        <p className="mt-3 max-w-[60ch] text-[0.875rem] leading-relaxed text-white/55">
-          Adhikaar is an independent guidance platform. It does not represent
-          any bank, insurer, government agency or other financial
-          institution unless explicitly stated, and does not hold or
-          transfer your money.
-        </p>
-        <Link
-          href="/guide"
-          className="mt-4 inline-flex items-center gap-1.5 text-[0.875rem] font-bold text-white/75 underline underline-offset-2 hover:text-white"
-        >
-          Read the RBI rules on bank deposit claims, paragraph by paragraph
-          <ArrowRightIcon className="h-3.5 w-3.5" />
-        </Link>
       </div>
     </footer>
   );
