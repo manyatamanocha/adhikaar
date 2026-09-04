@@ -152,6 +152,22 @@ export type HomeDict = {
     phoneLabel: string;
     emailLabel: string;
   };
+
+  about: {
+    heading: string;
+    intro: string;
+    whatHeading: string;
+    whatBody: string;
+    whyHeading: string;
+    whyBody: string;
+    whoHeading: string;
+    whoBody: string;
+    notHeading: string;
+    notBody: string;
+    nameHeading: string;
+    nameBody: string;
+    cta: string;
+  };
 };
 
 const en: HomeDict = {
@@ -307,6 +323,28 @@ const en: HomeDict = {
     intro: "Please contact us using the details below:",
     phoneLabel: "Mobile",
     emailLabel: "Email",
+  },
+
+  about: {
+    heading: "About Adhikaar",
+    intro:
+      "Adhikaar is a free, guided tool that helps a family understand what a bank can and cannot ask for when claiming a deceased relative's bank deposit.",
+    whatHeading: "What it is",
+    whatBody:
+      "Three questions, a straight answer, and a printable page carrying the RBI's own words alongside that bank's own published policy — to hand across the counter.",
+    whyHeading: "Why it exists",
+    whyBody:
+      "Since the RBI's 2025 Directions on the settlement of claims for deceased bank customers, in force from 31 March 2026, a bank usually cannot demand a succession certificate — a civil court process that typically costs around ₹17,000 and takes four to seven months. Almost nobody knows the rule changed. Adhikaar exists so a family can show the bank its own rules, instead of arguing an opinion against it.",
+    whoHeading: "Who it's for",
+    whoBody:
+      "Anyone who has already been to a bank about a deceased relative's account and been handed a list of demands — usually an adult legal heir or a registered nominee, often doing this for the first time, often on a phone, often while still grieving.",
+    notHeading: "What Adhikaar does not do",
+    notBody:
+      "No login, no account, and nothing about your family is stored or sent to a server beyond what a page needs to render. Adhikaar has no backend and cannot search bank records — it quotes and cites, and never asserts a legal position on its own.",
+    nameHeading: "The name",
+    nameBody:
+      "Adhikaar means right, entitlement, in Hindi and Urdu. The claim isn't that the money is yours — it's that you're entitled to be told the correct rule before spending money and months on a document you may not need.",
+    cta: "Read the full RBI-cited guide",
   },
 };
 
@@ -464,6 +502,28 @@ const hi: HomeDict = {
     phoneLabel: "मोबाइल",
     emailLabel: "ईमेल",
   },
+
+  about: {
+    heading: "अधिकार के बारे में",
+    intro:
+      "अधिकार एक मुफ़्त, मार्गदर्शित उपकरण है जो परिवारों को यह समझने में मदद करता है कि किसी दिवंगत रिश्तेदार के बैंक जमा पर दावा करते समय बैंक क्या माँग सकता है और क्या नहीं।",
+    whatHeading: "यह क्या है",
+    whatBody:
+      "तीन सवाल, एक सीधा जवाब, और एक छापने लायक़ पन्ना जो आरबीआई के अपने शब्दों के साथ-साथ उस बैंक की अपनी प्रकाशित नीति भी बताता है — काउंटर पर देने के लिए।",
+    whyHeading: "यह क्यों ज़रूरी है",
+    whyBody:
+      "दिवंगत बैंक ग्राहकों के दावों के निपटान पर आरबीआई के 2025 निर्देश, जो 31 मार्च 2026 से लागू हैं, के बाद बैंक आमतौर पर उत्तराधिकार प्रमाणपत्र नहीं माँग सकता — एक सिविल अदालती प्रक्रिया जिसमें आमतौर पर लगभग ₹17,000 और चार से सात महीने लगते हैं। लगभग किसी को नहीं पता कि नियम बदल गया है। अधिकार इसलिए है ताकि एक परिवार बैंक को उसके अपने नियम दिखा सके, न कि उससे राय पर बहस करे।",
+    whoHeading: "यह किसके लिए है",
+    whoBody:
+      "हर उस व्यक्ति के लिए जो पहले ही किसी दिवंगत रिश्तेदार के खाते के बारे में बैंक जा चुका है और उसे माँगों की एक सूची थमाई गई है — आमतौर पर एक वयस्क क़ानूनी उत्तराधिकारी या पंजीकृत नामांकित व्यक्ति, अक्सर पहली बार यह कर रहा, अक्सर फ़ोन पर, अक्सर अभी भी दुख में।",
+    notHeading: "अधिकार क्या नहीं करता",
+    notBody:
+      "कोई लॉगिन नहीं, कोई खाता नहीं, और आपके परिवार के बारे में कुछ भी संग्रहीत या सर्वर तक नहीं पहुँचता, सिवाय उसके जो पेज को दिखाने के लिए ज़रूरी है। अधिकार के पास कोई बैकएंड नहीं है और यह बैंक रिकॉर्ड नहीं खोज सकता — यह क़ानून बताता और उद्धृत करता है, कभी अपनी ओर से क़ानूनी राय नहीं देता।",
+    nameHeading: "नाम",
+    nameBody:
+      "अधिकार का अर्थ है हक़, स्वत्व। दावा यह नहीं कि पैसा आपका ही है — दावा यह है कि पैसे और महीनों को उस दस्तावेज़ पर ख़र्च करने से पहले आपको सही नियम बताया जाना चाहिए, जिसकी शायद ज़रूरत ही न हो।",
+    cta: "पूरी आरबीआई-उद्धृत गाइड पढ़ें",
+  },
 };
 
 const kn: HomeDict = {
@@ -619,6 +679,28 @@ const kn: HomeDict = {
     intro: "ದಯವಿಟ್ಟು ಕೆಳಗಿನ ವಿವರಗಳ ಮೂಲಕ ನಮ್ಮನ್ನು ಸಂಪರ್ಕಿಸಿ:",
     phoneLabel: "ಮೊಬೈಲ್",
     emailLabel: "ಇಮೇಲ್",
+  },
+
+  about: {
+    heading: "ಅಧಿಕಾರ್ ಬಗ್ಗೆ",
+    intro:
+      "ಅಧಿಕಾರ್ ಒಂದು ಉಚಿತ, ಮಾರ್ಗದರ್ಶಿತ ಸಾಧನವಾಗಿದ್ದು, ದಿವಂಗತ ಸಂಬಂಧಿಕರ ಬ್ಯಾಂಕ್ ಠೇವಣಿಗೆ ಹಕ್ಕು ಸಲ್ಲಿಸುವಾಗ ಬ್ಯಾಂಕ್ ಏನನ್ನು ಕೇಳಬಹುದು ಮತ್ತು ಏನನ್ನು ಕೇಳಲಾಗುವುದಿಲ್ಲ ಎಂಬುದನ್ನು ಕುಟುಂಬಗಳಿಗೆ ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
+    whatHeading: "ಇದು ಏನು",
+    whatBody:
+      "ಮೂರು ಪ್ರಶ್ನೆಗಳು, ಒಂದು ನೇರ ಉತ್ತರ, ಮತ್ತು ಆರ್‌ಬಿಐನ ಸ್ವಂತ ಮಾತುಗಳ ಜೊತೆಗೆ ಆ ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಪ್ರಕಟಿತ ನೀತಿಯನ್ನೂ ಹೊಂದಿರುವ ಮುದ್ರಿಸಬಹುದಾದ ಪುಟ — ಕೌಂಟರ್‌ನಲ್ಲಿ ಕೊಡಲು.",
+    whyHeading: "ಇದು ಏಕೆ ಇದೆ",
+    whyBody:
+      "31 ಮಾರ್ಚ್ 2026 ರಿಂದ ಜಾರಿಗೆ ಬಂದ, ದಿವಂಗತ ಬ್ಯಾಂಕ್ ಗ್ರಾಹಕರ ಹಕ್ಕುಗಳ ಇತ್ಯರ್ಥದ ಕುರಿತ ಆರ್‌ಬಿಐನ 2025 ನಿರ್ದೇಶನಗಳ ನಂತರ, ಬ್ಯಾಂಕ್ ಸಾಮಾನ್ಯವಾಗಿ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರವನ್ನು ಕೇಳುವಂತಿಲ್ಲ — ಇದು ಸಾಮಾನ್ಯವಾಗಿ ಸುಮಾರು ₹17,000 ಮತ್ತು ನಾಲ್ಕರಿಂದ ಏಳು ತಿಂಗಳು ತೆಗೆದುಕೊಳ್ಳುವ ಸಿವಿಲ್ ನ್ಯಾಯಾಲಯ ಪ್ರಕ್ರಿಯೆ. ನಿಯಮ ಬದಲಾಗಿದೆ ಎಂದು ಬಹುತೇಕ ಯಾರಿಗೂ ತಿಳಿದಿಲ್ಲ. ಒಂದು ಕುಟುಂಬ ಬ್ಯಾಂಕಿಗೆ ಅದರದೇ ನಿಯಮಗಳನ್ನು ತೋರಿಸಲು ಸಾಧ್ಯವಾಗಲಿ, ಅಭಿಪ್ರಾಯದ ಮೇಲೆ ವಾದಿಸುವ ಬದಲು — ಇದಕ್ಕಾಗಿ ಅಧಿಕಾರ್ ಇದೆ.",
+    whoHeading: "ಇದು ಯಾರಿಗಾಗಿ",
+    whoBody:
+      "ದಿವಂಗತ ಸಂಬಂಧಿಕರ ಖಾತೆಯ ಬಗ್ಗೆ ಈಗಾಗಲೇ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿ, ಬೇಡಿಕೆಗಳ ಪಟ್ಟಿಯನ್ನು ಪಡೆದ ಯಾರಿಗಾದರೂ — ಸಾಮಾನ್ಯವಾಗಿ ವಯಸ್ಕ ಕಾನೂನುಬದ್ಧ ಉತ್ತರಾಧಿಕಾರಿ ಅಥವಾ ನೋಂದಾಯಿತ ನಾಮನಿರ್ದೇಶಿತ ವ್ಯಕ್ತಿ, ಆಗಾಗ್ಗೆ ಇದನ್ನು ಮೊದಲ ಬಾರಿಗೆ ಮಾಡುತ್ತಿರುವ, ಆಗಾಗ್ಗೆ ಫೋನ್‌ನಲ್ಲಿ, ಆಗಾಗ್ಗೆ ಇನ್ನೂ ದುಃಖದಲ್ಲಿರುವ.",
+    notHeading: "ಅಧಿಕಾರ್ ಏನು ಮಾಡುವುದಿಲ್ಲ",
+    notBody:
+      "ಲಾಗಿನ್ ಇಲ್ಲ, ಖಾತೆ ಇಲ್ಲ, ಮತ್ತು ಪುಟವನ್ನು ತೋರಿಸಲು ಬೇಕಾದುದನ್ನು ಹೊರತುಪಡಿಸಿ ನಿಮ್ಮ ಕುಟುಂಬದ ಬಗ್ಗೆ ಏನೂ ಸಂಗ್ರಹವಾಗುವುದಿಲ್ಲ ಅಥವಾ ಸರ್ವರ್‌ಗೆ ತಲುಪುವುದಿಲ್ಲ. ಅಧಿಕಾರ್‌ಗೆ ಯಾವುದೇ ಬ್ಯಾಕೆಂಡ್ ಇಲ್ಲ ಮತ್ತು ಇದು ಬ್ಯಾಂಕ್ ದಾಖಲೆಗಳನ್ನು ಹುಡುಕಲು ಸಾಧ್ಯವಿಲ್ಲ — ಇದು ಉಲ್ಲೇಖಿಸುತ್ತದೆ ಮತ್ತು ಉದ್ಧರಿಸುತ್ತದೆ, ಎಂದಿಗೂ ತನ್ನದೇ ಆದ ಕಾನೂನು ಅಭಿಪ್ರಾಯವನ್ನು ಹೇಳುವುದಿಲ್ಲ.",
+    nameHeading: "ಹೆಸರು",
+    nameBody:
+      "ಅಧಿಕಾರ್ ಎಂದರೆ ಹಕ್ಕು, ಸ್ವತ್ವ. ಹಣ ನಿಮ್ಮದೇ ಎಂಬುದು ಹಕ್ಕುದಾವೆಯಲ್ಲ — ಅಗತ್ಯವಿಲ್ಲದಿರಬಹುದಾದ ದಾಖಲೆಗಾಗಿ ಹಣ ಮತ್ತು ತಿಂಗಳುಗಳನ್ನು ಖರ್ಚು ಮಾಡುವ ಮೊದಲು ಸರಿಯಾದ ನಿಯಮವನ್ನು ನಿಮಗೆ ತಿಳಿಸಬೇಕು ಎಂಬುದೇ ಹಕ್ಕುದಾವೆ.",
+    cta: "ಪೂರ್ಣ ಆರ್‌ಬಿಐ-ಉಲ್ಲೇಖಿತ ಮಾರ್ಗದರ್ಶಿ ಓದಿ",
   },
 };
 
