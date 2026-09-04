@@ -25,14 +25,7 @@ export function RecoverNav() {
   return (
     <header className="bg-[#FAF5EC] text-[#16233F]">
       <div className="mx-auto grid max-w-[1920px] grid-cols-[1fr_auto_1fr] items-center gap-6 px-5 py-4 sm:px-8">
-        <nav aria-label="Sections" className="hidden items-center gap-7 text-[0.9375rem] sm:flex">
-          <a href="#how" className="text-[#4A4335] transition-colors hover:text-[#16233F]">
-            {t.nav.how}
-          </a>
-          <a href="#find" className="text-[#4A4335] transition-colors hover:text-[#16233F]">
-            {t.nav.find}
-          </a>
-        </nav>
+        <div />
 
         <Link href={withLang("/", locale)} className="flex items-center justify-center gap-7">
           <LeafMark className="h-[7.49rem] w-[7.49rem]" />
@@ -43,14 +36,6 @@ export function RecoverNav() {
         </Link>
 
         <div className="flex items-center justify-end gap-6">
-          <nav aria-label="More sections" className="hidden items-center gap-7 text-[0.9375rem] sm:flex">
-            <a href="#faq" className="text-[#4A4335] transition-colors hover:text-[#16233F]">
-              {t.nav.faq}
-            </a>
-            <Link href="/guide" className="text-[#4A4335] transition-colors hover:text-[#16233F]">
-              {t.nav.about}
-            </Link>
-          </nav>
           <div className="relative hidden sm:block">
             <button
               type="button"
@@ -97,6 +82,27 @@ export function RecoverNav() {
           </Link>
         </div>
       </div>
+
+      <nav
+        aria-label="Quick links"
+        className="flex items-center justify-center gap-6 border-t border-[#EFE7D8] py-2.5 text-[0.875rem] font-bold text-[#4A4335] sm:gap-8"
+      >
+        <Link href={withLang("/", locale)} className="transition-colors hover:text-[#E2653B]">
+          {t.nav.home}
+        </Link>
+        <a href="#how" className="transition-colors hover:text-[#E2653B]">
+          {t.nav.how}
+        </a>
+        <a href="#find" className="transition-colors hover:text-[#E2653B]">
+          {t.nav.find}
+        </a>
+        <Link href="/guide" className="transition-colors hover:text-[#E2653B]">
+          {t.nav.about}
+        </Link>
+        <a href="#faq" className="transition-colors hover:text-[#E2653B]">
+          {t.nav.faq}
+        </a>
+      </nav>
     </header>
   );
 }

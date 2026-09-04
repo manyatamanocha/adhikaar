@@ -15,6 +15,7 @@ import type { Locale } from "./i18n";
 
 export type HomeDict = {
   nav: {
+    home: string;
     how: string;
     find: string;
     faq: string;
@@ -143,6 +144,7 @@ export type HomeDict = {
 
 const en: HomeDict = {
   nav: {
+    home: "Home",
     how: "How it works",
     find: "What you can find",
     faq: "FAQs",
@@ -286,6 +288,7 @@ const en: HomeDict = {
 
 const hi: HomeDict = {
   nav: {
+    home: "होम",
     how: "यह कैसे काम करता है",
     find: "आप क्या ढूँढ सकते हैं",
     faq: "सवाल-जवाब",
@@ -429,6 +432,7 @@ const hi: HomeDict = {
 
 const kn: HomeDict = {
   nav: {
+    home: "ಮುಖಪುಟ",
     how: "ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ",
     find: "ನೀವು ಏನನ್ನು ಕಂಡುಕೊಳ್ಳಬಹುದು",
     faq: "ಪ್ರಶ್ನೋತ್ತರಗಳು",
