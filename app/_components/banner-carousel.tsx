@@ -68,9 +68,9 @@ export function HeroPictures() {
 /* ------------------------------------------------------------------ */
 /* Authored scenes. Flat shapes in the product palette, line detail on top. */
 
-const GREEN = "#16233f";
+const GREEN = "#1E3B32";
 const GREEN_SOFT = "#dde1ea";
-const OCHRE = "#be7519";
+const OCHRE = "#A8551E";
 const CREAM = "#f3eee3";
 const PAPER = "#ffffff";
 const RULE = "#e4dcc8";
