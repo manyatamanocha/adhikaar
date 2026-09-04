@@ -30,6 +30,7 @@
  */
 
 import Link from "next/link";
+import { HeroPictures } from "../_components/banner-carousel";
 import {
   LOCALES,
   LOCALE_LABEL,
@@ -177,21 +178,13 @@ function Hero({ lang }: { lang: Locale }) {
           </p>
         </div>
 
-        <div className="relative">
-          {/* Hero A from /discovery/variants: photo beside the words, the
-              mockup's own layout. Photograph is a placeholder cropped from
-              the user's own mockup -- swap public/images/hands.jpg for a
-              licensed image before this ships publicly. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/hands.jpg"
-            alt="Two people holding hands across a table"
-            width={1200}
-            height={456}
-            className="h-auto w-full rounded-2xl object-cover"
-          />
+        <div>
+          {/* Hero C from /discovery/variants: no photograph, the authored
+              drawn scenes. The hands photo was removed on the user's
+              instruction. */}
+          <HeroPictures />
 
-          <div className="mt-4 flex flex-wrap gap-3 lg:absolute lg:-bottom-6 lg:-left-6 lg:mt-0">
+          <div className="mt-5 flex flex-wrap gap-3">
             {[d.cardBank, d.cardInsurance, d.cardInvestments].map((l) => (
               <p
                 key={l}
