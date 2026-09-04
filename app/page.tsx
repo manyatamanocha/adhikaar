@@ -54,6 +54,16 @@ import { NOTIFICATION, CLAUSES } from "@/lib/rbi";
 import { SiteHeader, SiteFooter } from "./_components/chrome";
 import { T, parseLocale, withLang, type Locale } from "@/lib/i18n";
 
+// Shared across Numbers, Situations and Trust so the page reads as one
+// considered palette of accents rather than a single navy circle repeated
+// twelve times.
+const TONE: Record<string, { tint: string; ink: string }> = {
+  green: { tint: "bg-indigo/10", ink: "text-indigo" },
+  amber: { tint: "bg-saffron/15", ink: "text-saffron-ink" },
+  blue: { tint: "bg-accent-blue/10", ink: "text-accent-blue" },
+  violet: { tint: "bg-accent-violet/10", ink: "text-accent-violet" },
+};
+
 export default async function Home({
   searchParams,
 }: {
@@ -116,7 +126,7 @@ function Hero({ lang }: { lang: Locale }) {
 
           <Link
             href={withLang("/start", lang)}
-            className="mt-8 inline-flex items-center gap-3 rounded-xl bg-indigo px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-indigo-lift"
+            className="mt-8 inline-flex items-center gap-3 rounded-xl bg-indigo px-8 py-4 text-[1.0625rem] font-bold text-white shadow-[0_10px_30px_rgba(14,24,48,0.22)] transition-all hover:-translate-y-0.5 hover:bg-indigo-lift hover:shadow-[0_14px_36px_rgba(14,24,48,0.28)]"
           >
             {t.cta}
             <span aria-hidden="true">&rarr;</span>
@@ -191,11 +201,16 @@ function Numbers({ lang }: { lang: Locale }) {
   // cards (₹17,000, 4-7 months) were dropped: those figures describe a court
   // process most readers will not go through, vary by state and circumstance,
   // and had no citation on this page. These four are all sourced facts.
+  //
+  // Each also carries its own tone (the same four used in Situations below)
+  // rather than one repeated navy circle -- four identical grey marks in a
+  // row is what made this section read as a scaffold rather than four
+  // distinct, considered facts.
   const NUMBERS = [
-    { icon: <ScaleIcon />, figure: t.thresholdFigure, label: t.thresholdLabel, note: t.thresholdNote },
-    { icon: <DocIcon />, figure: t.docsFigure, label: t.docsLabel, note: t.docsNote },
-    { icon: <ClockIcon />, figure: t.daysFigure, label: t.daysLabel, note: t.daysNote },
-    { icon: <CalendarIcon />, figure: t.dateFigure, label: t.dateLabel, note: t.dateNote },
+    { icon: <ScaleIcon />, tone: "green", figure: t.thresholdFigure, label: t.thresholdLabel, note: t.thresholdNote },
+    { icon: <DocIcon />, tone: "amber", figure: t.docsFigure, label: t.docsLabel, note: t.docsNote },
+    { icon: <ClockIcon />, tone: "blue", figure: t.daysFigure, label: t.daysLabel, note: t.daysNote },
+    { icon: <CalendarIcon />, tone: "violet", figure: t.dateFigure, label: t.dateLabel, note: t.dateNote },
   ];
   return (
     <section className="bg-paper">
@@ -214,28 +229,31 @@ function Numbers({ lang }: { lang: Locale }) {
         </div>
 
         <ul className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
-          {NUMBERS.map((n) => (
-            <li
-              key={n.label}
-              className="rounded-2xl border border-rule-faint bg-mist p-5 text-center sm:p-6"
-            >
-              <span
-                aria-hidden="true"
-                className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-indigo/10 text-indigo"
+          {NUMBERS.map((n) => {
+            const tone = TONE[n.tone];
+            return (
+              <li
+                key={n.label}
+                className="rounded-2xl border border-rule-faint bg-paper p-5 text-center shadow-[0_2px_10px_rgba(14,24,48,0.05)] transition-shadow hover:shadow-[0_10px_28px_rgba(14,24,48,0.09)] sm:p-6"
               >
-                {n.icon}
-              </span>
-              <p className="mt-4 font-serif text-[clamp(1.5rem,4.5vw,2rem)] font-bold leading-[1.1] text-indigo-ink">
-                {n.figure}
-              </p>
-              <p className="mt-2 text-[0.9375rem] font-bold text-ink">
-                {n.label}
-              </p>
-              <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-soft">
-                {n.note}
-              </p>
-            </li>
-          ))}
+                <span
+                  aria-hidden="true"
+                  className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full ${tone.tint} ${tone.ink}`}
+                >
+                  {n.icon}
+                </span>
+                <p className="mt-4 font-serif text-[clamp(1.5rem,4.5vw,2rem)] font-bold leading-[1.1] text-indigo-ink">
+                  {n.figure}
+                </p>
+                <p className="mt-2 text-[0.9375rem] font-bold text-ink">
+                  {n.label}
+                </p>
+                <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-soft">
+                  {n.note}
+                </p>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>
@@ -243,13 +261,6 @@ function Numbers({ lang }: { lang: Locale }) {
 }
 
 /* ------------------------------------------------------------------ 3 */
-
-const TONE: Record<string, { tint: string; ink: string }> = {
-  green: { tint: "bg-indigo/10", ink: "text-indigo" },
-  amber: { tint: "bg-saffron/15", ink: "text-saffron-ink" },
-  blue: { tint: "bg-accent-blue/10", ink: "text-accent-blue" },
-  violet: { tint: "bg-accent-violet/10", ink: "text-accent-violet" },
-};
 
 function Situations({ lang }: { lang: Locale }) {
   const t = T[lang];
@@ -362,10 +373,10 @@ function UdgamStrip({ lang }: { lang: Locale }) {
 function Trust({ lang }: { lang: Locale }) {
   const t = T[lang];
   const TRUST = [
-    { icon: <TickIcon />, title: t.tNoSignIn, note: t.tNoSignInNote },
-    { icon: <LockIcon />, title: t.tNoData, note: t.tNoDataNote },
-    { icon: <QuoteMarkIcon />, title: t.tPlain, note: t.tPlainNote },
-    { icon: <PrinterIcon />, title: t.tPrint, note: t.tPrintNote },
+    { icon: <TickIcon />, tone: "green", title: t.tNoSignIn, note: t.tNoSignInNote },
+    { icon: <LockIcon />, tone: "amber", title: t.tNoData, note: t.tNoDataNote },
+    { icon: <QuoteMarkIcon />, tone: "blue", title: t.tPlain, note: t.tPlainNote },
+    { icon: <PrinterIcon />, tone: "violet", title: t.tPrint, note: t.tPrintNote },
   ];
   return (
     <section className="border-t border-rule-faint bg-mist">
@@ -389,25 +400,28 @@ function Trust({ lang }: { lang: Locale }) {
         </p>
 
         <ul className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {TRUST.map((item) => (
-            <li
-              key={item.title}
-              className="rounded-2xl border border-rule-faint bg-paper p-5"
-            >
-              <span
-                aria-hidden="true"
-                className="flex h-11 w-11 items-center justify-center rounded-full bg-indigo/10 text-indigo"
+          {TRUST.map((item) => {
+            const tone = TONE[item.tone];
+            return (
+              <li
+                key={item.title}
+                className="rounded-2xl border border-rule-faint bg-paper p-5 shadow-[0_2px_10px_rgba(14,24,48,0.05)]"
               >
-                {item.icon}
-              </span>
-              <p className="mt-4 text-[0.9375rem] font-bold text-indigo-ink">
-                {item.title}
-              </p>
-              <p className="mt-1 text-[0.8125rem] leading-relaxed text-ink-soft">
-                {item.note}
-              </p>
-            </li>
-          ))}
+                <span
+                  aria-hidden="true"
+                  className={`flex h-11 w-11 items-center justify-center rounded-full ${tone.tint} ${tone.ink}`}
+                >
+                  {item.icon}
+                </span>
+                <p className="mt-4 text-[0.9375rem] font-bold text-indigo-ink">
+                  {item.title}
+                </p>
+                <p className="mt-1 text-[0.8125rem] leading-relaxed text-ink-soft">
+                  {item.note}
+                </p>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>
@@ -421,8 +435,14 @@ function Trust({ lang }: { lang: Locale }) {
 function FinalCta({ lang }: { lang: Locale }) {
   const t = T[lang];
   return (
-    <section className="border-t border-rule-faint bg-indigo">
-      <div className="shell flex flex-col items-center gap-4 py-14 text-center sm:py-16">
+    <section
+      className="relative overflow-hidden border-t border-rule-faint bg-indigo"
+      style={{
+        backgroundImage:
+          "radial-gradient(ellipse 900px 500px at 15% -20%, rgba(240,180,91,0.14), transparent), radial-gradient(ellipse 700px 500px at 100% 120%, rgba(255,255,255,0.06), transparent)",
+      }}
+    >
+      <div className="shell relative flex flex-col items-center gap-4 py-14 text-center sm:py-16">
         <p className="display-lg max-w-[26ch] font-serif font-bold text-white">
           {t.finalCtaHeading}
         </p>
@@ -431,7 +451,7 @@ function FinalCta({ lang }: { lang: Locale }) {
         </p>
         <Link
           href={withLang("/start", lang)}
-          className="mt-2 inline-flex items-center gap-3 rounded-xl bg-saffron px-8 py-4 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-[#ab6314] hover:text-white"
+          className="mt-2 inline-flex items-center gap-3 rounded-xl bg-saffron px-8 py-4 text-[1.0625rem] font-bold text-indigo-ink shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-colors hover:bg-[#ab6314] hover:text-white"
         >
           {t.finalCta}
           <span aria-hidden="true">&rarr;</span>

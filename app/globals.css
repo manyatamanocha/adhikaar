@@ -7,17 +7,12 @@
    as a document. Adjacent to the official financial-services portals in tone,
    deliberately not in appearance.
 
-   The first pass sampled its palette and display face directly from
-   unclaimedassetsportal.in's stylesheet, which was a mistake and was replaced
-   on 4 Sep 2026. Borrowing a register is fair; wearing another site's specific
-   colours and serif is not, and it made this look like that portal rather than
-   like itself.
-
-   What replaced it: a warm ground instead of a cool blue-grey one, because the
-   artifact is a piece of paper and paper is warm; a deep navy that carries
-   authority without the violet cast of the sampled indigo; and ochre rather
-   than a saturated orange, so the accent reads as printed ink rather than as a
-   web button.
+   Third palette, applied site-wide on 4 Sep 2026: navy / ivory / saffron,
+   carried over unchanged from the /recover surface once that was confirmed as
+   the direction — same token NAMES again (nothing downstream had to change),
+   new values. Deep navy replaces the green as the authority colour; saffron
+   returns as the accent, at the three weights /recover already had verified
+   for contrast (fill on white, ink for body text, lift for text on navy).
 
    HARD LINE: the register is adjacent, the identity is NOT. No state emblem,
    no ministry marks, no tricolour device, nothing that lets a reader conclude
@@ -29,46 +24,46 @@
 --------------------------------------------------------------------------- */
 
 @theme {
-  /* Brand. Token NAMES are kept from the first pass so no component has to
-     change; only the values are ours. "indigo" is now a deep navy and
-     "saffron" an ochre — the names are historical, the colours are not. */
-  --color-indigo: #2d5443;
-  --color-indigo-lift: #3a6b56;
-  --color-indigo-deep: #1f3d31;
-  --color-indigo-ink: #17251d;
+  /* Brand. Token NAMES are kept from the first two passes so no component has
+     to change; only the values move. "indigo" is now the navy, "saffron" is
+     unchanged in name and now closer to its literal colour than the ochre
+     it briefly was. */
+  --color-indigo: #16233f;
+  --color-indigo-lift: #223055;
+  --color-indigo-deep: #0e1830;
+  --color-indigo-ink: #0e1830;
   --color-maroon: #7a2233;
   --color-maroon-lift: #96394b;
-  --color-saffron: #c8761a;
-  /* Ochre is a fill, not an ink: #c8761a measures 3.46:1 on white, which is
-     fine behind large text or as a rule and not fine as body copy. This is the
-     same hue taken down for anywhere it has to be TEXT on a light ground. */
-  --color-saffron-ink: #8a4e0c;
-  /* And taken UP for the opposite case: ochre as text on the dark indigo hero.
-     The fill weight manages only 3.53:1 there, which fails AA on the small pill
-     label; this clears 5.69:1. One hue, three weights, because a colour that
-     has to work as a fill on white and as type on navy cannot be one value. */
-  --color-saffron-lift: #e8a34a;
+  --color-saffron: #be7519;
+  /* Saffron is a fill, not an ink: it is never used as a text background —
+     only icon fills, thread lines and tinted chips paired with saffron-ink
+     text. This is the same hue taken down for anywhere it has to be TEXT on
+     a light ground. */
+  --color-saffron-ink: #8a5a0d;
+  /* And taken UP for the opposite case: saffron as text/pill on the dark navy
+     hero, where the fill weight would fail AA on small text. One hue, three
+     weights, verified against every real usage site-wide, not just the hero. */
+  --color-saffron-lift: #f0b45b;
 
-  /* Grounds. Warm, because the deliverable is paper. The sampled palette ran a
-     cool blue-grey ground, which is a screen colour; this one is the colour of
-     the thing being handed across the counter. */
+  /* Grounds. Warm ivory, because the deliverable is paper. */
   --color-paper: #ffffff;
-  --color-mist: #f4f1e9;
-  --color-mist-deep: #e8e2d5;
+  --color-mist: #fbf8f2;
+  --color-mist-deep: #f3eee3;
   --color-blush: #f7ede9;
 
-  /* Ink. Warm neutrals to match the ground. ink-faint carries the small-caps
-     labels, which are read by people who are older, tired and under stress, so
-     it clears 4.5:1 on BOTH white and mist rather than being kept light. */
-  --color-ink: #22201c;
-  --color-ink-soft: #55504a;
-  --color-ink-faint: #6b6459;
+  /* Ink. Navy-leaning neutrals to match the new brand colour. ink-faint
+     carries the small-caps labels, which are read by people who are older,
+     tired and under stress, so it clears 4.5:1 on BOTH white and mist rather
+     than being kept light. */
+  --color-ink: #16233f;
+  --color-ink-soft: #52586a;
+  --color-ink-faint: #6e6558;
 
   /* Structure */
-  --color-rule: #d8d2c4;
+  --color-rule: #e4dcc8;
   --color-rule-faint: #ebe6dc;
 
-  --color-link: #2d5443;
+  --color-link: #16233f;
 
   /* The Indic faces sit IN the body stack, not only on the wordmark: a Hindi
      or Kannada page is set in the same sans as an English one, and the browser
@@ -85,7 +80,7 @@
   /* Category accents, for the outcome cards that need to be told apart at a
      glance. Never the sole carrier of a distinction — each card also says in
      words which paragraph it runs on. */
-  --color-accent-green: #2d5443;
+  --color-accent-green: #3f7355;
   --color-accent-violet: #6b5490;
   --color-accent-blue: #3b5ea8;
 
