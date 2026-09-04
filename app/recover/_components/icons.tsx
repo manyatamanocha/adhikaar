@@ -109,6 +109,41 @@ export function CompassIcon({ className }: P) {
   );
 }
 
+export function PlayIcon({ className }: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M10 8.5l6 3.5-6 3.5z" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function ChevronDownIcon({ className }: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ShieldIcon({ className }: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M12 3.5l7 3v5.5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6.5z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function HouseIcon({ className }: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="M4 11l8-6.5 8 6.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 10v9h12v-9" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+      <path d="M10 19v-5h4v5" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function ArrowRightIcon({ className }: P) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
