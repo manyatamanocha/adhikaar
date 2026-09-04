@@ -21,15 +21,16 @@ import {
 } from "./icons";
 
 /**
- * /recover -- a from-scratch visual redesign of the landing surface, built
- * directly from a fully pinned brief (palette, hero copy, section list and
- * composition rules all specified), so the concept-seed direction roll was
- * skipped per its own rule: "never run the script for a precisely specified
- * request; shape those directly."
+ * The homepage ("/", formerly /recover) -- a from-scratch visual redesign of
+ * the landing surface, built directly from a fully pinned brief (palette,
+ * hero copy, section list and composition rules all specified), so the
+ * concept-seed direction roll was skipped per its own rule: "never run the
+ * script for a precisely specified request; shape those directly."
  *
- * A SEPARATE surface, not a replacement of "/" or "/discovery". Those carry
- * the actual product (para 9 / no succession certificate) and its own
- * research-backed identity, unmoved by this build.
+ * Moved to "/" on 4 Sep 2026, replacing the succession-certificate page that
+ * used to live there -- that content moved to /guide, not discarded. This
+ * page is search-first framing; /guide is where a visitor ends up once
+ * there's something specific to claim (para 9 / no succession certificate).
  *
  * ─── The one thing this page may not claim ───
  *
@@ -561,6 +562,13 @@ function RecoverFooter() {
           institution unless explicitly stated, and does not hold or
           transfer your money.
         </p>
+        <Link
+          href="/guide"
+          className="mt-4 inline-flex items-center gap-1.5 text-[0.875rem] font-bold text-white/75 underline underline-offset-2 hover:text-white"
+        >
+          Read the RBI rules on bank deposit claims, paragraph by paragraph
+          <ArrowRightIcon className="h-3.5 w-3.5" />
+        </Link>
       </div>
     </footer>
   );

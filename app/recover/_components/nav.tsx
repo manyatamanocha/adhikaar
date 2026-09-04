@@ -24,7 +24,7 @@ export function RecoverNav() {
       }`}
     >
       <div className="mx-auto flex max-w-[1240px] items-center justify-between gap-6 px-5 py-4 sm:px-8">
-        <Link href="/recover" className="font-serif text-[1.375rem] font-bold text-[#16233F]">
+        <Link href="/" className="font-serif text-[1.375rem] font-bold text-[#16233F]">
           Adhikaar
         </Link>
 
@@ -33,7 +33,7 @@ export function RecoverNav() {
             ["How it works", "#how"],
             ["What you can recover", "#recover"],
             ["FAQs", "#trust"],
-            ["About", "/recover"],
+            ["The full guide", "/guide"],
           ].map(([l, href]) => (
             <a
               key={l}
