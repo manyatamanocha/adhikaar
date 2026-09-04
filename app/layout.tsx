@@ -5,7 +5,6 @@ import {
   Spectral,
   Noto_Sans_Devanagari,
   Noto_Sans_Kannada,
-  Kalam,
 } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "./_components/analytics";
@@ -48,18 +47,6 @@ const notoKannada = Noto_Sans_Kannada({
   display: "swap",
 });
 
-/* Used in exactly one place: the homepage's margin annotations, standing in
-   for a note scrawled next to a printout -- never for anything a screen
-   reader needs to take seriously as a heading or a claim. Kalam over the
-   more common Caveat/Kalam alternatives because it also covers Devanagari,
-   matching how the rest of the type system is chosen for this project. */
-const kalam = Kalam({
-  variable: "--font-kalam",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-});
-
 export const metadata: Metadata = {
   title: "Adhikaar — you probably do not need a succession certificate",
   description:
@@ -70,7 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sourceSans.variable} ${spectral.variable} ${notoDeva.variable} ${notoKannada.variable} ${kalam.variable} h-full antialiased`}
+      className={`${sourceSans.variable} ${spectral.variable} ${notoDeva.variable} ${notoKannada.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-paper text-ink">
         {/*

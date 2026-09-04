@@ -76,7 +76,6 @@
   --font-serif: var(--font-spectral), Georgia, "Times New Roman", serif;
   --font-deva: var(--font-noto-deva), "Nirmala UI", sans-serif;
   --font-kannada: var(--font-noto-kannada), "Nirmala UI", sans-serif;
-  --font-hand: var(--font-kalam), "Comic Sans MS", cursive;
 
   /* Category accents, for the outcome cards that need to be told apart at a
      glance. Never the sole carrier of a distinction — each card also says in
