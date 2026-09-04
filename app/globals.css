@@ -175,6 +175,17 @@ a {
     padding-inline: 2.5rem;
   }
 }
+/* 1440px left a wide monitor with two solid bars of empty ground down each
+   side of every section -- reported directly ("the sides are blank"),
+   confirmed by screenshotting the real page at 1920px. Widened rather than
+   left capped: the extra room goes to the card grids (Four things, the four
+   situations), which spread out and use it, not to any text measure -- every
+   paragraph still caps at its own max-w-[Nch]. */
+@media (min-width: 1536px) {
+  .shell {
+    max-width: 1680px;
+  }
+}
 
 /* The verdict sentence. Large enough to be the first thing read, capped so it
    never costs more than one screen on a phone. */
