@@ -50,3 +50,4 @@ next-env.d.ts
 # design canvas working files (the seeded output is 200KB of editor payload)
 design/adhikaar-landing-page.html
 design/extracted/
+.superpowers

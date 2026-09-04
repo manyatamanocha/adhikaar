@@ -80,7 +80,7 @@ export default async function Home({
         <Numbers lang={lang} />
         <Situations lang={lang} />
         <UdgamStrip lang={lang} />
-        <Trust lang={lang} />
+        <Assurance lang={lang} />
         <FinalCta lang={lang} />
       </main>
 
@@ -94,58 +94,62 @@ export default async function Home({
 function Hero({ lang }: { lang: Locale }) {
   const t = T[lang];
   return (
-    <section className="border-b border-rule-faint bg-mist">
-      <div className="shell grid items-center gap-12 py-12 sm:py-16 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+    <section
+      className="relative overflow-hidden bg-indigo"
+      style={{
+        backgroundImage:
+          "radial-gradient(ellipse 900px 560px at 82% -10%, rgba(240,180,91,0.14), transparent), radial-gradient(ellipse 700px 480px at 6% 108%, rgba(255,255,255,0.05), transparent)",
+      }}
+    >
+      <div className="shell relative flex flex-col items-center gap-8 py-14 text-center sm:py-18">
+        <h1 className="display-xl max-w-[24ch] font-serif font-bold tracking-[-0.015em] text-white">
+          {t.heroLead}{" "}
+          <span className="text-saffron-lift">{t.heroClaim}</span>
+        </h1>
+
+        <p className="lede-fluid max-w-[46ch] text-white/80">
+          {t.heroSub}
+        </p>
+
+        <ul className="flex flex-wrap items-center justify-center gap-x-7 gap-y-3">
+          {[
+            { icon: <ShieldIcon />, label: t.trustRules },
+            { icon: <QuoteMarkIcon />, label: t.trustCited },
+            { icon: <TickIcon />, label: t.trustFree },
+          ].map((t) => (
+            <li
+              key={t.label}
+              className="flex items-center gap-2 text-[0.9375rem] font-semibold text-white/90"
+            >
+              <span className="text-saffron-lift" aria-hidden="true">
+                {t.icon}
+              </span>
+              {t.label}
+            </li>
+          ))}
+        </ul>
+
         <div>
-          <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-indigo-ink">
-            {t.heroLead}{" "}
-            <span className="text-indigo">{t.heroClaim}</span>
-          </h1>
-
-          <p className="lede-fluid mt-5 max-w-[46ch] text-ink-soft">
-            {t.heroSub}
-          </p>
-
-          <ul className="mt-7 flex flex-wrap gap-x-7 gap-y-3">
-            {[
-              { icon: <ShieldIcon />, label: t.trustRules },
-              { icon: <QuoteMarkIcon />, label: t.trustCited },
-              { icon: <TickIcon />, label: t.trustFree },
-            ].map((t) => (
-              <li
-                key={t.label}
-                className="flex items-center gap-2 text-[0.9375rem] font-semibold text-ink"
-              >
-                <span className="text-indigo" aria-hidden="true">
-                  {t.icon}
-                </span>
-                {t.label}
-              </li>
-            ))}
-          </ul>
-
           <Link
             href={withLang("/start", lang)}
-            className="mt-8 inline-flex items-center gap-3 rounded-xl bg-indigo px-8 py-4 text-[1.0625rem] font-bold text-white shadow-[0_10px_30px_rgba(14,24,48,0.22)] transition-all hover:-translate-y-0.5 hover:bg-indigo-lift hover:shadow-[0_14px_36px_rgba(14,24,48,0.28)]"
+            className="inline-flex items-center gap-3 rounded-xl bg-saffron px-8 py-4 text-[1.0625rem] font-bold text-indigo-ink shadow-[0_10px_30px_rgba(0,0,0,0.25)] transition-all hover:-translate-y-0.5 hover:bg-[#ab6314] hover:text-white hover:shadow-[0_14px_36px_rgba(0,0,0,0.3)]"
           >
             {t.cta}
             <span aria-hidden="true">&rarr;</span>
           </Link>
 
-          <p className="mt-4 flex items-center gap-2 text-[0.9375rem] text-ink-soft">
-            <span className="text-indigo" aria-hidden="true">
+          <p className="mt-4 flex items-center justify-center gap-2 text-[0.9375rem] text-white/70">
+            <span className="text-saffron-lift" aria-hidden="true">
               <TickIcon />
             </span>
             {t.ctaNote}
           </p>
         </div>
 
-        {/* The proof, where the mockup puts a photograph. One card, not two:
-            the "most families are surprised" line used to float on its own
-            below this and left a block of dead space under it -- it is now
-            the card's own closing band, so the whole right column is one
-            self-contained object instead of two mismatched ones. */}
-        <div className="overflow-hidden rounded-2xl border border-rule bg-paper shadow-[0_12px_44px_rgba(23,37,29,0.10)]">
+        {/* The proof, where the mockup puts a photograph -- now a full-width
+            band under the headline rather than a side column, so there is no
+            second column to fall out of balance with the first. */}
+        <div className="mt-4 w-full max-w-[52rem] overflow-hidden rounded-2xl bg-paper text-left shadow-[0_20px_50px_rgba(0,0,0,0.28)]">
           <div className="p-6 sm:p-8">
             <p className="text-step font-bold uppercase tracking-[0.12em] text-maroon">
               {t.quoteLabel}
@@ -206,7 +210,12 @@ function Numbers({ lang }: { lang: Locale }) {
   // rather than one repeated navy circle -- four identical grey marks in a
   // row is what made this section read as a scaffold rather than four
   // distinct, considered facts.
-  const NUMBERS = [
+  // The threshold leads: it is the one number the whole page turns on
+  // ("you probably don't need a certificate below this"), so it gets a
+  // hero-weight tile of its own. The other three support it rather than
+  // sitting as its equals -- an equal four-up grid was making a single
+  // headline fact compete for attention with three footnotes.
+  const [lead, ...rest] = [
     { icon: <ScaleIcon />, tone: "green", figure: t.thresholdFigure, label: t.thresholdLabel, note: t.thresholdNote },
     { icon: <DocIcon />, tone: "amber", figure: t.docsFigure, label: t.docsLabel, note: t.docsNote },
     { icon: <ClockIcon />, tone: "blue", figure: t.daysFigure, label: t.daysLabel, note: t.daysNote },
@@ -228,33 +237,47 @@ function Numbers({ lang }: { lang: Locale }) {
           <span className="h-px w-10 bg-indigo/40" />
         </div>
 
-        <ul className="mt-10 grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
-          {NUMBERS.map((n) => {
-            const tone = TONE[n.tone];
-            return (
-              <li
-                key={n.label}
-                className="rounded-2xl border border-rule-faint bg-paper p-5 text-center shadow-[0_2px_10px_rgba(14,24,48,0.05)] transition-shadow hover:shadow-[0_10px_28px_rgba(14,24,48,0.09)] sm:p-6"
-              >
-                <span
-                  aria-hidden="true"
-                  className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full ${tone.tint} ${tone.ink}`}
+        <div className="mt-10 flex flex-col gap-4 lg:flex-row lg:items-stretch">
+          <div className="rounded-2xl bg-indigo p-7 text-left shadow-[0_10px_30px_rgba(14,24,48,0.16)] lg:w-[38%] lg:p-8">
+            <p className="text-step font-bold uppercase tracking-[0.12em] text-saffron-lift">
+              {lead.label}
+            </p>
+            <p className="mt-3 font-serif text-[clamp(2.25rem,6vw,3rem)] font-bold leading-[1.05] text-white">
+              {lead.figure}
+            </p>
+            <p className="mt-3 max-w-[36ch] text-[0.9375rem] leading-relaxed text-white/75">
+              {lead.note}
+            </p>
+          </div>
+
+          <ul className="grid flex-1 grid-cols-1 gap-4 sm:grid-cols-3">
+            {rest.map((n) => {
+              const tone = TONE[n.tone];
+              return (
+                <li
+                  key={n.label}
+                  className="flex flex-col justify-center rounded-2xl border border-rule-faint bg-paper p-5 shadow-[0_2px_10px_rgba(14,24,48,0.05)]"
                 >
-                  {n.icon}
-                </span>
-                <p className="mt-4 font-serif text-[clamp(1.5rem,4.5vw,2rem)] font-bold leading-[1.1] text-indigo-ink">
-                  {n.figure}
-                </p>
-                <p className="mt-2 text-[0.9375rem] font-bold text-ink">
-                  {n.label}
-                </p>
-                <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-soft">
-                  {n.note}
-                </p>
-              </li>
-            );
-          })}
-        </ul>
+                  <span
+                    aria-hidden="true"
+                    className={`flex h-11 w-11 items-center justify-center rounded-full ${tone.tint} ${tone.ink}`}
+                  >
+                    {n.icon}
+                  </span>
+                  <p className="mt-3 font-serif text-[1.375rem] font-bold leading-[1.1] text-indigo-ink">
+                    {n.figure}
+                  </p>
+                  <p className="mt-1.5 text-[0.9375rem] font-bold text-ink">
+                    {n.label}
+                  </p>
+                  <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-ink-soft">
+                    {n.note}
+                  </p>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </section>
   );
@@ -364,65 +387,35 @@ function UdgamStrip({ lang }: { lang: Locale }) {
 /* ------------------------------------------------------------------ 5 */
 
 /**
- * The old Assurance banner and TrustStrip row were two disconnected pieces --
- * a flat tinted bar, then a bare row of icon+text with no card treatment at
- * all, the one part of the page that looked unfinished next to everything
- * else. One section now: the assurance heading owns it, the four facts are
- * cards in the same visual language as "Four things to know first" above.
+ * The four trust facts (no sign-in, no data stored, plain language, a page
+ * to print) moved into FinalCta as a reassurance line -- a fourth card grid
+ * stacked on top of Numbers and Situations was one grid too many. What's
+ * left here is the citation itself: the heading and the outbound link to
+ * the RBI notification, which is real content on its own and stays a slim
+ * band rather than being deleted along with the cards.
  */
-function Trust({ lang }: { lang: Locale }) {
+function Assurance({ lang }: { lang: Locale }) {
   const t = T[lang];
-  const TRUST = [
-    { icon: <TickIcon />, tone: "green", title: t.tNoSignIn, note: t.tNoSignInNote },
-    { icon: <LockIcon />, tone: "amber", title: t.tNoData, note: t.tNoDataNote },
-    { icon: <QuoteMarkIcon />, tone: "blue", title: t.tPlain, note: t.tPlainNote },
-    { icon: <PrinterIcon />, tone: "violet", title: t.tPrint, note: t.tPrintNote },
-  ];
   return (
     <section className="border-t border-rule-faint bg-mist">
-      <div className="shell py-14 sm:py-16">
-        <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2">
-          <h2 className="display-lg font-serif font-bold text-indigo-ink">
+      <div className="shell flex flex-wrap items-baseline justify-between gap-x-8 gap-y-2 py-10">
+        <div>
+          <h2 className="display-md font-serif font-bold text-indigo-ink">
             {t.assuranceTitle}
           </h2>
-          <a
-            href={NOTIFICATION.url}
-            target="_blank"
-            rel="noreferrer"
-            className="-my-2 inline-flex items-center gap-2 py-2 text-[0.9375rem] font-bold text-link underline underline-offset-2"
-          >
-            {t.assuranceLink}
-            <span aria-hidden="true">&rarr;</span>
-          </a>
+          <p className="mt-1.5 max-w-[60ch] text-[0.9375rem] text-ink-soft">
+            {t.assuranceSub}
+          </p>
         </div>
-        <p className="mt-2 max-w-[60ch] text-[0.9375rem] text-ink-soft">
-          {t.assuranceSub}
-        </p>
-
-        <ul className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          {TRUST.map((item) => {
-            const tone = TONE[item.tone];
-            return (
-              <li
-                key={item.title}
-                className="rounded-2xl border border-rule-faint bg-paper p-5 shadow-[0_2px_10px_rgba(14,24,48,0.05)]"
-              >
-                <span
-                  aria-hidden="true"
-                  className={`flex h-11 w-11 items-center justify-center rounded-full ${tone.tint} ${tone.ink}`}
-                >
-                  {item.icon}
-                </span>
-                <p className="mt-4 text-[0.9375rem] font-bold text-indigo-ink">
-                  {item.title}
-                </p>
-                <p className="mt-1 text-[0.8125rem] leading-relaxed text-ink-soft">
-                  {item.note}
-                </p>
-              </li>
-            );
-          })}
-        </ul>
+        <a
+          href={NOTIFICATION.url}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex shrink-0 items-center gap-2 text-[0.9375rem] font-bold text-link underline underline-offset-2"
+        >
+          {t.assuranceLink}
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </section>
   );
@@ -456,6 +449,27 @@ function FinalCta({ lang }: { lang: Locale }) {
           {t.finalCta}
           <span aria-hidden="true">&rarr;</span>
         </Link>
+
+        {/* The four trust facts, folded in from their own former section --
+            a reassurance line under the CTA rather than a fourth card grid. */}
+        <ul className="mt-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+          {[
+            { icon: <TickIcon />, label: t.tNoSignIn },
+            { icon: <LockIcon />, label: t.tNoData },
+            { icon: <QuoteMarkIcon />, label: t.tPlain },
+            { icon: <PrinterIcon />, label: t.tPrint },
+          ].map((item) => (
+            <li
+              key={item.label}
+              className="flex items-center gap-1.5 text-[0.8125rem] font-semibold text-white/75"
+            >
+              <span className="text-saffron-lift" aria-hidden="true">
+                {item.icon}
+              </span>
+              {item.label}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
