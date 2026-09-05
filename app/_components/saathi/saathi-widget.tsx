@@ -40,7 +40,23 @@ export function SaathiWidget() {
   const [input, setInput] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [contactShown, setContactShown] = useState<"call" | "email" | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Click anywhere outside the widget closes it, same as a typical chat
+  // widget -- listens only while open, so it never intercepts clicks
+  // elsewhere on the site the rest of the time.
+  useEffect(() => {
+    if (!open) return;
+    function handleClick(e: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
@@ -74,7 +90,11 @@ export function SaathiWidget() {
   }
 
   return (
-    <div data-print="hide" className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3">
+    <div
+      ref={containerRef}
+      data-print="hide"
+      className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3"
+    >
       {open && (
         <div className="flex h-[28rem] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-2xl border border-[#EFE7D8] bg-white shadow-[0_20px_50px_rgba(22,35,63,0.25)]">
           <div className="flex items-center gap-3 bg-[#16233F] px-4 py-3.5">
@@ -93,26 +113,40 @@ export function SaathiWidget() {
             </button>
           </div>
 
-          <div className="flex gap-2 border-b border-[#EFE7D8] px-4 py-2.5">
-            <a
-              href={`tel:${PHONE.replace(/\s+/g, "")}`}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-[#E3D8C4] py-1.5 text-[0.8125rem] font-bold text-[#16233F] transition-colors hover:border-[#E2653B] hover:text-[#E2653B]"
-            >
-              Call
-            </a>
-            <a
-              href={`mailto:${EMAIL}`}
-              className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-[#E3D8C4] py-1.5 text-[0.8125rem] font-bold text-[#16233F] transition-colors hover:border-[#E2653B] hover:text-[#E2653B]"
-            >
-              Email
-            </a>
+          <div className="border-b border-[#EFE7D8] px-4 py-2.5">
+            <div className="flex gap-2">
+              <a
+                href={`tel:${PHONE.replace(/\s+/g, "")}`}
+                onClick={() => setContactShown("call")}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-[#E3D8C4] py-1.5 text-[0.8125rem] font-bold text-[#16233F] transition-colors hover:border-[#E2653B] hover:text-[#E2653B]"
+              >
+                Call
+              </a>
+              <a
+                href={`mailto:${EMAIL}`}
+                onClick={() => setContactShown("email")}
+                className="flex flex-1 items-center justify-center gap-1.5 rounded-full border border-[#E3D8C4] py-1.5 text-[0.8125rem] font-bold text-[#16233F] transition-colors hover:border-[#E2653B] hover:text-[#E2653B]"
+              >
+                Email
+              </a>
+            </div>
+            {contactShown === "call" && (
+              <p className="mt-2 text-center text-[0.875rem] text-[#6B6255]">
+                {PHONE}
+              </p>
+            )}
+            {contactShown === "email" && (
+              <p className="mt-2 text-center text-[0.875rem] text-[#6B6255]">
+                {EMAIL}
+              </p>
+            )}
           </div>
 
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto px-4 py-4">
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[0.9375rem] leading-relaxed ${
+                className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[1.125rem] leading-relaxed ${
                   m.role === "user"
                     ? "ml-auto bg-[#E2653B] text-white"
                     : "bg-[#FAF5EC] text-[#16233F]"
@@ -122,7 +156,7 @@ export function SaathiWidget() {
               </div>
             ))}
             {sending && (
-              <div className="max-w-[85%] rounded-2xl bg-[#FAF5EC] px-3.5 py-2.5 text-[0.9375rem] text-[#6B6255]">
+              <div className="max-w-[85%] rounded-2xl bg-[#FAF5EC] px-3.5 py-2.5 text-[1.125rem] text-[#6B6255]">
                 Thinking…
               </div>
             )}

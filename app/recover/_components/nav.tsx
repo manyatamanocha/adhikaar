@@ -9,7 +9,7 @@ import { useHomeT } from "./home-i18n";
 
 /** Shared, responsive navigation. Native select supports keyboard and touch. */
 export function RecoverNav() {
-  return <Suspense fallback={<header data-print="hide" className="bg-[#FAF5EC] p-5"><Link href="/" className="font-serif text-3xl font-bold">Adhikaar</Link><nav aria-label="Quick links" className="mt-4 flex flex-wrap gap-6"><Link href="/#find">Find</Link><Link href="/banks">Bank policies</Link><Link href="/faq">FAQs</Link><Link href="/contact">Contact</Link></nav></header>}><Navigation /></Suspense>;
+  return <Suspense fallback={<header data-print="hide" className="bg-[#FAF5EC] p-5"><Link href="/" className="font-serif text-3xl font-bold">Adhikaar</Link><nav aria-label="Quick links" className="mt-4 flex flex-wrap gap-6"><Link href="/banks">Bank policies</Link><Link href="/faq">FAQs</Link><Link href="/contact">Contact</Link></nav></header>}><Navigation /></Suspense>;
 }
 
 function Navigation() {
@@ -25,7 +25,6 @@ function Navigation() {
   };
   const links = [
     { href: "/", label: t.nav.home },
-    { href: "/#find", label: t.nav.find },
     { href: "/banks", label: locale === "hi" ? "बैंक की नीतियाँ" : locale === "kn" ? "ಬ್ಯಾಂಕ್ ನೀತಿಗಳು" : "Bank policies" },
     { href: "/faq", label: t.nav.faq },
     { href: "/contact", label: t.nav.contact },
@@ -39,7 +38,9 @@ function Navigation() {
             <LeafMark className="h-12 w-12 shrink-0 sm:h-20 sm:w-20 lg:h-[7.49rem] lg:w-[7.49rem]" />
             <span className="font-serif text-[2.5rem] font-bold leading-tight sm:text-[4rem] lg:text-[5.62rem]">Adhikaar</span>
           </span>
-          <span className="mt-2 block text-[1.1rem] text-[#6B6255] sm:text-[1.4rem] lg:text-[1.7551rem]">{t.footer.madeFor}</span>
+          <span className="mt-2 block text-[1.1rem] text-[#6B6255] sm:text-[1.4rem] lg:text-[1.7551rem]">
+            The counter companion for deceased-bank claims in India
+          </span>
         </Link>
         <label className="flex flex-col gap-1 text-base font-semibold lg:justify-self-end" lang="en">
           Page language
