@@ -320,6 +320,8 @@ export type HomeDict = {
     counterShorter: string;
     yourNextSteps: string;
     todayHeading: string;
+    readyToProceed: string;
+    knowAnswerNow: string;
     todayAction: {
       nomineeOrSurvivorship: string;
       underThreshold: string;
@@ -778,6 +780,8 @@ const en: HomeDict = {
     counterShorter: "At the counter now? Shorter version",
     yourNextSteps: "Your next steps",
     todayHeading: "What should you do today?",
+    readyToProceed: "I'm ready to proceed",
+    knowAnswerNow: "I know the answer now",
     todayAction: {
       nomineeOrSurvivorship: "Ask the bank for the deceased-customer claim form, and take the death certificate and your ID.",
       underThreshold: "Ask the bank for its simplified deceased-deposit claim form and confirm the total balance at that bank.",
@@ -1239,6 +1243,8 @@ const hi: HomeDict = {
     counterShorter: "अभी काउंटर पर हैं? छोटा संस्करण",
     yourNextSteps: "आपके अगले कदम",
     todayHeading: "आज आपको क्या करना चाहिए?",
+    readyToProceed: "मैं आगे बढ़ने के लिए तैयार हूँ",
+    knowAnswerNow: "अब मुझे जवाब पता है",
     todayAction: {
       nomineeOrSurvivorship: "बैंक से दिवंगत-ग्राहक दावा फ़ॉर्म माँगें, और मृत्यु प्रमाणपत्र व अपना पहचान पत्र साथ ले जाएँ।",
       underThreshold: "बैंक से उसका सरलीकृत दिवंगत-जमा दावा फ़ॉर्म माँगें और उस बैंक में कुल शेष राशि की पुष्टि करें।",
@@ -1700,6 +1706,8 @@ const kn: HomeDict = {
     counterShorter: "ಈಗ ಕೌಂಟರ್‌ನಲ್ಲಿದ್ದೀರಾ? ಚಿಕ್ಕ ಆವೃತ್ತಿ",
     yourNextSteps: "ನಿಮ್ಮ ಮುಂದಿನ ಹೆಜ್ಜೆಗಳು",
     todayHeading: "ಇಂದು ನೀವು ಏನು ಮಾಡಬೇಕು?",
+    readyToProceed: "ನಾನು ಮುಂದುವರಿಯಲು ಸಿದ್ಧ",
+    knowAnswerNow: "ಈಗ ನನಗೆ ಉತ್ತರ ಗೊತ್ತಿದೆ",
     todayAction: {
       nomineeOrSurvivorship: "ಬ್ಯಾಂಕಿನಿಂದ ದಿವಂಗತ-ಗ್ರಾಹಕ ಹಕ್ಕು ಫಾರ್ಮ್ ಕೇಳಿ, ಮತ್ತು ಮರಣ ಪ್ರಮಾಣಪತ್ರ ಹಾಗೂ ನಿಮ್ಮ ಗುರುತಿನ ಚೀಟಿಯನ್ನು ತೆಗೆದುಕೊಂಡು ಹೋಗಿ.",
       underThreshold: "ಬ್ಯಾಂಕಿನಿಂದ ಅದರ ಸರಳೀಕೃತ ದಿವಂಗತ-ಠೇವಣಿ ಹಕ್ಕು ಫಾರ್ಮ್ ಕೇಳಿ ಮತ್ತು ಆ ಬ್ಯಾಂಕಿನಲ್ಲಿನ ಒಟ್ಟು ಬ್ಯಾಲೆನ್ಸ್ ಅನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",

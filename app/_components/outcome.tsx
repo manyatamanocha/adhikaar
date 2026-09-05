@@ -27,6 +27,7 @@ import { parseLocale, withLang } from "@/lib/i18n";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { PrintButton } from "./print-button";
+import { NextStepButton } from "./next-step-button";
 import { CLAUSES, NOTIFICATION, RULES_VERIFIED_ON, TACTICS_BY_LOCALE, ESCALATION, ESCALATION_CAVEAT_BY_LOCALE } from "@/lib/rbi";
 import { formatDate } from "./bank-panel";
 import { DOCUMENTS, documentText, type DocId } from "@/lib/documents";
@@ -109,7 +110,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
         <div className="shell max-w-[860px] py-10 sm:py-12">
           <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
           <Steps steps={outcome.steps} t={t} />
-          <TodayBox outcome={id} t={t} />
+          <TodayBox outcome={id} t={t} answers={answers} locale={locale} hasDocuments={!!outcome.documents} />
           {/* Promoted out of the (folded) Documents section per advisor review:
               this was the single most useful sentence on the page and it was
               hidden behind a "Show" tap. The full checklist stays folded below
@@ -340,7 +341,19 @@ function Steps({ steps, t }: { steps: string[]; t: VerdictText }) {
   );
 }
 
-function TodayBox({ outcome, t }: { outcome: OutcomeId; t: VerdictText }) {
+function TodayBox({
+  outcome,
+  t,
+  answers,
+  locale,
+  hasDocuments,
+}: {
+  outcome: OutcomeId;
+  t: VerdictText;
+  answers: Answers;
+  locale: Locale;
+  hasDocuments: boolean;
+}) {
   const action =
     outcome === "nominee" || outcome === "survivorship"
       ? t.todayAction.nomineeOrSurvivorship
@@ -351,10 +364,21 @@ function TodayBox({ outcome, t }: { outcome: OutcomeId; t: VerdictText }) {
           : outcome === "out-of-scope"
             ? t.todayAction.outOfScope
             : t.todayAction.default;
+
+  // "unknown-nominee" is the one outcome where the product could not resolve
+  // the claim route -- only what to find out next. The button sends the
+  // reader back into the wizard with the nominee answer cleared, so the
+  // question is asked again once they actually have the fact.
+  const info = outcome === "unknown-nominee";
+  const cta = info
+    ? { href: withLang(`/start${toQuery({ ...answers, nominee: undefined })}`, locale), label: t.knowAnswerNow, type: "information_required" as const }
+    : { href: `${hasDocuments ? "#documents" : "#evidence"}`, label: t.readyToProceed, type: "claim_route" as const };
+
   return (
     <section className="mt-8 rounded-xl border-2 border-saffron bg-[#FFF7E8] p-6">
       <h2 className="display-md font-serif font-bold text-indigo-ink">{t.todayHeading}</h2>
       <p className="body-fluid mt-2 leading-relaxed text-ink">{action}</p>
+      <NextStepButton href={cta.href} label={cta.label} outcomeType={cta.type} />
     </section>
   );
 }

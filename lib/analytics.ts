@@ -81,7 +81,25 @@ export type EventName =
   | "readiness_checked"
   | "bank_selected"
   | "sheet_printed"
-  | "survey_answered";
+  | "survey_answered"
+  /**
+   * The North Star: a terminal page rendered with a concrete "what to do
+   * today" card, in either of the product's two valid actionable states.
+   * `outcome_type` is "claim_route" (a resolved route with concrete next
+   * steps) or "information_required" (the product resolved WHAT to find
+   * out next, even though it could not resolve the claim route itself).
+   * This is the numerator of Actionable Next-Step Rate; the denominator is
+   * `question_answered` step 1 (answering the first decision question).
+   */
+  | "actionable_result_viewed"
+  /**
+   * The stronger downstream signal: did the reader feel ready to act on
+   * what they were just shown, not just view it. Fired when "I'm ready to
+   * proceed" (claim_route) or "I know the answer now" (information_required)
+   * is clicked. Numerator of Next-Step Intent Rate; denominator is
+   * `actionable_result_viewed`.
+   */
+  | "next_step_intent";
 
 export function track(event: EventName, props: Record<string, string | number | boolean> = {}) {
   if (!ready) return;

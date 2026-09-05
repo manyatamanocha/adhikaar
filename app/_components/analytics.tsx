@@ -95,6 +95,15 @@ export function Analytics() {
         outcome: outcome.id,
         good_news: outcome.goodNews,
       });
+      // "unknown-nominee" is the one outcome where the product could not
+      // resolve the claim route itself -- it resolved what to find out
+      // next instead. Every other outcome, however unwelcome the news
+      // (out-of-scope, dispute, already-in-court included), is a resolved
+      // conclusion with a concrete "what to do today" card of its own.
+      track("actionable_result_viewed", {
+        outcome: outcome.id,
+        outcome_type: outcome.id === "unknown-nominee" ? "information_required" : "claim_route",
+      });
       if (sp.bank) track("bank_selected", { bank: sp.bank, outcome: outcome.id });
       if (sp.have) {
         // How many of the required documents they say they hold, and how many
@@ -106,6 +115,15 @@ export function Analytics() {
           outcome: outcome.id,
         });
       }
+      return;
+    }
+
+    if (pathname === "/confirm-details") {
+      // The other genuinely unresolved terminal state: the wizard could not
+      // reach a claim route (a will, a restriction, a dispute flag, or an
+      // unknown bank type/amount still needs confirming), but the page
+      // still resolves a concrete next action -- go find out X.
+      track("actionable_result_viewed", { outcome: "confirm-details", outcome_type: "information_required" });
       return;
     }
 
