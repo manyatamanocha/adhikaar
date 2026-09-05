@@ -218,6 +218,42 @@ export type HomeDict = {
     heading: string;
     mostAsked: string;
   };
+
+  /** /start -- the scenario picker's own static text. Wizard questions live in lib/wizard.ts (its own per-locale QUESTIONS_BY_LOCALE), scenario cards in lib/scenarios.ts (SCENARIOS_BY_LOCALE) -- both separate from this dictionary since they are structured data, not simple strings. */
+  startPage: {
+    eyebrow: string;
+    heading: string;
+    sub: string;
+    somethingElse: string;
+    noneOfThese: string;
+    questionOf: (current: number, total: number) => string;
+    timeEstimate: string;
+    backAQuestion: string;
+    backToStart: string;
+    privacyNote: string;
+    privacyLink: string;
+  };
+
+  /** /confirm-details -- shown when the wizard needs a human review step (a court restriction, a will, a dispute, or an unconfirmed bank type/amount) instead of a clean outcome. */
+  confirmDetailsPage: {
+    headingRestricted: string;
+    headingWill: string;
+    headingDefault: string;
+    sub: string;
+    whatToDoNext: string;
+    stepRestrictedYes: string;
+    stepRestrictedAsk: string;
+    stepWillYes: string;
+    stepWillAsk: string;
+    stepDispute: string;
+    stepBankTypeUnknown: string;
+    stepAmountUnknown: string;
+    reviewAnswers: string;
+    change: string;
+    startAgain: string;
+    disclaimer: string;
+    readDirections: string;
+  };
 };
 
 const en: HomeDict = {
@@ -442,6 +478,40 @@ const en: HomeDict = {
   faqPage: {
     heading: "Frequently asked questions",
     mostAsked: "Most asked",
+  },
+
+  startPage: {
+    eyebrow: "Where should we start?",
+    heading: "Which of these sounds like your situation?",
+    sub: "Pick whichever is closest — you can change any answer as you go.",
+    somethingElse: "Something else?",
+    noneOfThese: "None of these — answer a few short questions instead",
+    questionOf: (current, total) => `Step ${current} of ${total}`,
+    timeEstimate: "This takes about 2–3 minutes. You do not need documents or exact information to begin.",
+    backAQuestion: "Back a question",
+    backToStart: "Back to the start",
+    privacyNote: "No account or document uploads. Answers appear in page links.",
+    privacyLink: "Privacy details",
+  },
+
+  confirmDetailsPage: {
+    headingRestricted: "A court restriction needs to be resolved first.",
+    headingWill: "A will needs a different documentation check.",
+    headingDefault: "We need to confirm a few details first.",
+    sub: "We cannot yet confirm that the simplified checklist applies. This does not mean you must obtain a succession certificate.",
+    whatToDoNext: "What to do next",
+    stepRestrictedYes: "Take the restraining order to your lawyer and the bank. Payment cannot proceed while an applicable restriction remains in force; ask what subsequent court order is needed.",
+    stepRestrictedAsk: "Ask the bank whether it knows of a court order preventing payment.",
+    stepWillYes: "Give the bank a copy of the will and request its written document requirements. Probate or letters of administration may apply; the bank can sometimes act on an undisputed will, subject to applicable law. Get qualified advice.",
+    stepWillAsk: "Check with the family whether a will was left. Do not treat an unknown will status as 'no will'.",
+    stepDispute: "Confirm whether anyone contests the claim. For a known dispute, obtain individual advice; do not assume a standard document checklist resolves inheritance rights.",
+    stepBankTypeUnknown: "Ask the bank whether it is a co-operative bank and request its current deceased-deposit claim policy.",
+    stepAmountUnknown: "Ask for the aggregate payable at this bank, including interest, and its applicable threshold. If the amount equals the threshold, ask the bank to confirm the documentation route in writing.",
+    reviewAnswers: "Review your answers",
+    change: "Change:",
+    startAgain: "Start again with confirmed details",
+    disclaimer: "General information, not legal advice.",
+    readDirections: "Read the RBI directions, paragraphs 7–11.",
   },
 };
 
@@ -668,6 +738,40 @@ const hi: HomeDict = {
     heading: "अक्सर पूछे जाने वाले सवाल",
     mostAsked: "सबसे ज़्यादा पूछा गया",
   },
+
+  startPage: {
+    eyebrow: "हम कहाँ से शुरू करें?",
+    heading: "इनमें से कौन-सी आपकी स्थिति जैसी लगती है?",
+    sub: "जो सबसे क़रीब लगे उसे चुनें — आप कोई भी जवाब बाद में बदल सकते हैं।",
+    somethingElse: "कुछ और?",
+    noneOfThese: "इनमें से कोई नहीं — इसके बजाय कुछ छोटे सवालों के जवाब दें",
+    questionOf: (current, total) => `${total} में से चरण ${current}`,
+    backAQuestion: "एक सवाल पीछे",
+    backToStart: "शुरुआत पर वापस",
+    privacyNote: "कोई खाता या दस्तावेज़ अपलोड नहीं। जवाब पेज के लिंक में दिखते हैं।",
+    privacyLink: "गोपनीयता विवरण",
+    timeEstimate: "इसमें लगभग 2–3 मिनट लगते हैं। शुरू करने के लिए दस्तावेज़ या सटीक जानकारी ज़रूरी नहीं है।",
+  },
+
+  confirmDetailsPage: {
+    headingRestricted: "पहले एक अदालती रोक को सुलझाना ज़रूरी है।",
+    headingWill: "वसीयत के लिए एक अलग दस्तावेज़ जाँच चाहिए।",
+    headingDefault: "हमें पहले कुछ विवरणों की पुष्टि करनी होगी।",
+    sub: "हम अभी यह पुष्टि नहीं कर सकते कि सरल सूची लागू होती है। इसका मतलब यह नहीं कि आपको उत्तराधिकार प्रमाणपत्र लेना ही होगा।",
+    whatToDoNext: "आगे क्या करें",
+    stepRestrictedYes: "रोक-आदेश अपने वकील और बैंक के पास ले जाएँ। जब तक लागू रोक जारी है, भुगतान आगे नहीं बढ़ सकता; पूछें कि आगे कौन-सा अदालती आदेश चाहिए।",
+    stepRestrictedAsk: "बैंक से पूछें कि क्या उसे भुगतान रोकने वाले किसी अदालती आदेश की जानकारी है।",
+    stepWillYes: "बैंक को वसीयत की एक प्रति दें और उसकी लिखित दस्तावेज़ आवश्यकताएँ माँगें। प्रोबेट या प्रशासन-पत्र लागू हो सकते हैं; बैंक कभी-कभी लागू क़ानून के तहत एक अविवादित वसीयत पर काम कर सकता है। योग्य सलाह लें।",
+    stepWillAsk: "परिवार से पूछें कि क्या कोई वसीयत छोड़ी गई थी। अज्ञात वसीयत स्थिति को 'कोई वसीयत नहीं' न मानें।",
+    stepDispute: "पुष्टि करें कि क्या कोई दावे पर विवाद कर रहा है। ज्ञात विवाद के लिए, व्यक्तिगत सलाह लें; यह न मानें कि एक मानक दस्तावेज़ सूची विरासत अधिकारों को सुलझा देती है।",
+    stepBankTypeUnknown: "बैंक से पूछें कि क्या यह एक सहकारी बैंक है और उसकी मौजूदा दिवंगत-जमा दावा नीति माँगें।",
+    stepAmountUnknown: "इस बैंक में देय कुल रकम, ब्याज सहित, और लागू सीमा पूछें। अगर रकम सीमा के बराबर है, तो बैंक से लिखित में दस्तावेज़ी रास्ते की पुष्टि माँगें।",
+    reviewAnswers: "अपने जवाब देखें",
+    change: "बदलें:",
+    startAgain: "पुष्टि किए गए विवरणों के साथ फिर से शुरू करें",
+    disclaimer: "सामान्य जानकारी, क़ानूनी सलाह नहीं।",
+    readDirections: "आरबीआई निर्देश, पैराग्राफ़ 7–11 पढ़ें।",
+  },
 };
 
 const kn: HomeDict = {
@@ -892,6 +996,40 @@ const kn: HomeDict = {
   faqPage: {
     heading: "ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು",
     mostAsked: "ಹೆಚ್ಚು ಕೇಳಲಾದ",
+  },
+
+  startPage: {
+    eyebrow: "ನಾವು ಎಲ್ಲಿಂದ ಪ್ರಾರಂಭಿಸಬೇಕು?",
+    heading: "ಇವುಗಳಲ್ಲಿ ಯಾವುದು ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಯಂತೆ ಕಾಣುತ್ತದೆ?",
+    sub: "ಹತ್ತಿರವಾದದ್ದನ್ನು ಆರಿಸಿ — ನೀವು ಯಾವುದೇ ಉತ್ತರವನ್ನು ನಂತರ ಬದಲಾಯಿಸಬಹುದು.",
+    somethingElse: "ಬೇರೆ ಏನಾದರೂ?",
+    noneOfThese: "ಇವುಗಳಲ್ಲಿ ಯಾವುದೂ ಇಲ್ಲ — ಬದಲಿಗೆ ಕೆಲವು ಸಣ್ಣ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ",
+    questionOf: (current, total) => `${total} ರಲ್ಲಿ ಹಂತ ${current}`,
+    backAQuestion: "ಒಂದು ಪ್ರಶ್ನೆ ಹಿಂದೆ",
+    backToStart: "ಪ್ರಾರಂಭಕ್ಕೆ ಹಿಂತಿರುಗಿ",
+    privacyNote: "ಯಾವುದೇ ಖಾತೆ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಇಲ್ಲ. ಉತ್ತರಗಳು ಪುಟದ ಲಿಂಕ್‌ಗಳಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
+    privacyLink: "ಗೌಪ್ಯತೆ ವಿವರಗಳು",
+    timeEstimate: "ಇದಕ್ಕೆ ಸುಮಾರು 2–3 ನಿಮಿಷಗಳು ಬೇಕಾಗುತ್ತವೆ. ಪ್ರಾರಂಭಿಸಲು ದಾಖಲೆಗಳು ಅಥವಾ ನಿಖರ ಮಾಹಿತಿ ಅಗತ್ಯವಿಲ್ಲ.",
+  },
+
+  confirmDetailsPage: {
+    headingRestricted: "ಮೊದಲು ನ್ಯಾಯಾಲಯದ ನಿರ್ಬಂಧವನ್ನು ಪರಿಹರಿಸಬೇಕು.",
+    headingWill: "ವಿಲ್‌ಗೆ ಬೇರೆ ದಾಖಲೆ ಪರಿಶೀಲನೆ ಬೇಕು.",
+    headingDefault: "ನಾವು ಮೊದಲು ಕೆಲವು ವಿವರಗಳನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಬೇಕು.",
+    sub: "ಸರಳೀಕೃತ ಪಟ್ಟಿ ಅನ್ವಯಿಸುತ್ತದೆ ಎಂದು ನಾವು ಇನ್ನೂ ಖಚಿತಪಡಿಸಲಾಗುವುದಿಲ್ಲ. ಇದರರ್ಥ ನೀವು ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಪಡೆಯಲೇಬೇಕು ಎಂದಲ್ಲ.",
+    whatToDoNext: "ಮುಂದೆ ಏನು ಮಾಡಬೇಕು",
+    stepRestrictedYes: "ತಡೆ-ಆದೇಶವನ್ನು ನಿಮ್ಮ ವಕೀಲರ ಮತ್ತು ಬ್ಯಾಂಕಿನ ಬಳಿ ತೆಗೆದುಕೊಂಡು ಹೋಗಿ. ಅನ್ವಯಿಸುವ ನಿರ್ಬಂಧ ಜಾರಿಯಲ್ಲಿರುವವರೆಗೆ ಪಾವತಿ ಮುಂದುವರಿಯಲು ಸಾಧ್ಯವಿಲ್ಲ; ಮುಂದೆ ಯಾವ ನ್ಯಾಯಾಲಯದ ಆದೇಶ ಬೇಕು ಎಂದು ಕೇಳಿ.",
+    stepRestrictedAsk: "ಪಾವತಿಯನ್ನು ತಡೆಯುವ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶದ ಬಗ್ಗೆ ಬ್ಯಾಂಕಿಗೆ ತಿಳಿದಿದೆಯೇ ಎಂದು ಕೇಳಿ.",
+    stepWillYes: "ಬ್ಯಾಂಕಿಗೆ ವಿಲ್‌ನ ಪ್ರತಿಯನ್ನು ನೀಡಿ ಮತ್ತು ಅದರ ಲಿಖಿತ ದಾಖಲೆ ಅಗತ್ಯತೆಗಳನ್ನು ಕೇಳಿ. ಪ್ರೊಬೇಟ್ ಅಥವಾ ಆಡಳಿತ ಪತ್ರಗಳು ಅನ್ವಯಿಸಬಹುದು; ಅನ್ವಯಿಸುವ ಕಾನೂನಿಗೆ ಒಳಪಟ್ಟು ಬ್ಯಾಂಕ್ ಕೆಲವೊಮ್ಮೆ ವಿವಾದವಿಲ್ಲದ ವಿಲ್ ಮೇಲೆ ಕಾರ್ಯನಿರ್ವಹಿಸಬಹುದು. ಅರ್ಹ ಸಲಹೆ ಪಡೆಯಿರಿ.",
+    stepWillAsk: "ವಿಲ್ ಬಿಟ್ಟಿತ್ತೇ ಎಂದು ಕುಟುಂಬದೊಂದಿಗೆ ಪರಿಶೀಲಿಸಿ. ಗೊತ್ತಿಲ್ಲದ ವಿಲ್ ಸ್ಥಿತಿಯನ್ನು 'ವಿಲ್ ಇಲ್ಲ' ಎಂದು ಪರಿಗಣಿಸಬೇಡಿ.",
+    stepDispute: "ಯಾರಾದರೂ ಹಕ್ಕನ್ನು ವಿವಾದಿಸುತ್ತಿದ್ದಾರೆಯೇ ಎಂದು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ. ತಿಳಿದಿರುವ ವಿವಾದಕ್ಕೆ, ವೈಯಕ್ತಿಕ ಸಲಹೆ ಪಡೆಯಿರಿ; ಪ್ರಮಾಣಿತ ದಾಖಲೆ ಪಟ್ಟಿ ಉತ್ತರಾಧಿಕಾರ ಹಕ್ಕುಗಳನ್ನು ಪರಿಹರಿಸುತ್ತದೆ ಎಂದು ಭಾವಿಸಬೇಡಿ.",
+    stepBankTypeUnknown: "ಇದು ಸಹಕಾರಿ ಬ್ಯಾಂಕೇ ಎಂದು ಬ್ಯಾಂಕನ್ನು ಕೇಳಿ ಮತ್ತು ಅದರ ಪ್ರಸ್ತುತ ದಿವಂಗತ-ಠೇವಣಿ ಹಕ್ಕು ನೀತಿಯನ್ನು ಕೇಳಿ.",
+    stepAmountUnknown: "ಈ ಬ್ಯಾಂಕಿನಲ್ಲಿ ಬಡ್ಡಿ ಸೇರಿದಂತೆ ಒಟ್ಟು ಪಾವತಿಸಬೇಕಾದ ಮೊತ್ತ ಮತ್ತು ಅನ್ವಯಿಸುವ ಮಿತಿಯನ್ನು ಕೇಳಿ. ಮೊತ್ತ ಮಿತಿಗೆ ಸಮನಾಗಿದ್ದರೆ, ದಾಖಲೆ ಮಾರ್ಗವನ್ನು ಲಿಖಿತವಾಗಿ ಖಚಿತಪಡಿಸಲು ಬ್ಯಾಂಕನ್ನು ಕೇಳಿ.",
+    reviewAnswers: "ನಿಮ್ಮ ಉತ್ತರಗಳನ್ನು ಪರಿಶೀಲಿಸಿ",
+    change: "ಬದಲಾಯಿಸಿ:",
+    startAgain: "ಖಚಿತಪಡಿಸಿದ ವಿವರಗಳೊಂದಿಗೆ ಮತ್ತೆ ಪ್ರಾರಂಭಿಸಿ",
+    disclaimer: "ಸಾಮಾನ್ಯ ಮಾಹಿತಿ, ಕಾನೂನು ಸಲಹೆ ಅಲ್ಲ.",
+    readDirections: "ಆರ್‌ಬಿಐ ನಿರ್ದೇಶನಗಳು, ಪ್ಯಾರಾಗ್ರಾಫ್ 7–11 ಓದಿ.",
   },
 };
 

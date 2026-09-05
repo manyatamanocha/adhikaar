@@ -105,6 +105,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
         <div className="shell max-w-[860px] py-10 sm:py-12">
           <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} />
           <Steps steps={outcome.steps} />
+          <TodayBox outcome={id} />
           {/* Promoted out of the (folded) Documents section per advisor review:
               this was the single most useful sentence on the page and it was
               hidden behind a "Show" tap. The full checklist stays folded below
@@ -264,6 +265,25 @@ function Steps({ steps }: { steps: string[] }) {
         ))}
       </ol>
     </Section>
+  );
+}
+
+function TodayBox({ outcome }: { outcome: OutcomeId }) {
+  const action =
+    outcome === "nominee" || outcome === "survivorship"
+      ? "Ask the bank for the deceased-customer claim form, and take the death certificate and your ID."
+      : outcome === "under-threshold"
+        ? "Ask the bank for its simplified deceased-deposit claim form and confirm the total balance at that bank."
+        : outcome === "unknown-nominee"
+          ? "Ask the bank to confirm in writing whether a nominee or survivorship clause is recorded."
+          : outcome === "out-of-scope"
+            ? "Contact the institution that holds this asset and ask for its deceased-customer claim checklist."
+            : "Ask the bank for the written claim checklist, its applicable threshold and the documents it will accept.";
+  return (
+    <section className="mt-8 rounded-xl border-2 border-saffron bg-[#FFF7E8] p-6">
+      <h2 className="display-md font-serif font-bold text-indigo-ink">What should you do today?</h2>
+      <p className="body-fluid mt-2 leading-relaxed text-ink">{action}</p>
+    </section>
   );
 }
 

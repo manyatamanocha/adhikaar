@@ -9,6 +9,11 @@
  *   · There is no client state to lose on a bad connection, and no JavaScript
  *     needed to answer a question on a mid-range Android phone.
  *   · Nothing about the family is stored, because there is nowhere to store it.
+ *
+ * Fully localised 5 Sep 2026: question content lives in
+ * lib/wizard.ts's QUESTIONS_BY_LOCALE, scenario cards in
+ * lib/scenarios.ts's SCENARIOS_BY_LOCALE, and this page's own static text
+ * in lib/i18n-home.ts's HomeDict.startPage.
  */
 
 import Link from "next/link";
@@ -16,8 +21,9 @@ import { redirect } from "next/navigation";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { OUTCOMES } from "@/lib/outcomes";
-import { SCENARIOS } from "@/lib/scenarios";
+import { SCENARIOS_BY_LOCALE, MORE_SCENARIOS_BY_LOCALE } from "@/lib/scenarios";
 import { parseLocale, withLang, type Locale } from "@/lib/i18n";
+import { HOME_T, type HomeDict } from "@/lib/i18n-home";
 import {
   parseAnswers,
   answerQuestion,
@@ -41,6 +47,7 @@ export default async function Start({
 }) {
   const sp = await searchParams;
   const locale = parseLocale(sp.lang);
+  const t = HOME_T[locale].startPage;
   const answers = parseAnswers(sp);
 
   // The recognition front door: shown only on a genuinely fresh /start (no
@@ -50,10 +57,10 @@ export default async function Start({
   // asks about first.
   const isFresh = Object.values(answers).every((v) => v === undefined);
   if (isFresh && sp.classic !== "1") {
-    return <ScenarioPicker locale={locale} />;
+    return <ScenarioPicker locale={locale} t={t} />;
   }
 
-  const step = resolve(answers);
+  const step = resolve(answers, locale);
   if (step.kind === "review") redirect(withLang("/confirm-details" + toQuery(step.carry), locale));
 
   // A verdict is a page of its own, at its own URL. The wizard never renders one.
@@ -70,7 +77,8 @@ export default async function Start({
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
-          <Progress current={question.number} />
+          <Progress current={question.number} questionOf={t.questionOf} />
+          <p className="mt-3 text-[1rem] font-semibold text-ink-soft">{t.timeEstimate}</p>
 
           <h1 className="display-lg mt-6 font-serif font-bold text-indigo-ink">
             {question.prompt}
@@ -102,15 +110,15 @@ export default async function Start({
               className="-my-2.5 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
             >
               <span aria-hidden="true">&larr;</span>
-              {back ? "Back a question" : "Back to the start"}
+              {back ? t.backAQuestion : t.backToStart}
             </Link>
             {/* Precise, because it has to be. The answers are not stored and
                 nothing here identifies anyone — but we do count which branch
                 of the law people land on, and saying "sent nowhere" would be
                 a lie on the one page that cannot afford one. */}
             <p className="text-[0.9375rem] text-ink-faint">
-              No account or document uploads. Answers appear in page links.
-              <Link href={withLang("/privacy", locale)} className="ml-1 underline">Privacy details</Link>
+              {t.privacyNote}
+              <Link href={withLang("/privacy", locale)} className="ml-1 underline">{t.privacyLink}</Link>
             </p>
           </div>
         </div>
@@ -129,7 +137,8 @@ export default async function Start({
  * parsing "What are you claiming?" first. Every card is a real URL into
  * the same wizard/outcome machinery; nothing here is a shortcut around it.
  */
-function ScenarioPicker({ locale }: { locale: Locale }) {
+function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"] }) {
+  const scenarios = SCENARIOS_BY_LOCALE[locale];
   return (
     <>
       <RecoverNav />
@@ -137,17 +146,20 @@ function ScenarioPicker({ locale }: { locale: Locale }) {
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
           <p className="text-[1.375rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
-            Where should we start?
+            {t.eyebrow}
           </p>
           <h1 className="display-lg mt-2.5 font-serif font-bold text-indigo-ink">
-            Which of these sounds like your situation?
+            {t.heading}
           </h1>
           <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">
-            Pick whichever is closest — you can change any answer as you go.
+            {t.sub}
+          </p>
+          <p className="mt-3 text-[1.05rem] font-semibold text-indigo-ink">
+            {t.timeEstimate}
           </p>
 
           <ul className="mt-7 space-y-3">
-            {SCENARIOS.map((s) => (
+            {scenarios.map((s) => (
               <li key={s.label}>
                 <Link
                   href={withLang(s.href, locale)}
@@ -175,11 +187,32 @@ function ScenarioPicker({ locale }: { locale: Locale }) {
           </ul>
 
           <div className="mt-8 border-t border-rule-faint pt-5">
+            <details>
+              <summary className="cursor-pointer text-[1rem] font-bold text-indigo underline underline-offset-2">
+                {t.somethingElse}
+              </summary>
+              <ul className="mt-4 space-y-3">
+                {MORE_SCENARIOS_BY_LOCALE[locale].map((s) => (
+                  <li key={s.label}>
+                    <Link href={withLang(s.href, locale)} className="group flex items-start gap-4 rounded-xl border border-rule bg-white p-4 transition-colors hover:border-indigo">
+                      <span className="flex-1">
+                        <span className="block text-[1.15rem] font-bold text-indigo-ink">{s.label}</span>
+                        {s.detail && <span className="mt-1 block text-[0.98rem] leading-relaxed text-ink-soft">{s.detail}</span>}
+                      </span>
+                      <span aria-hidden="true" className="text-lg font-bold text-saffron-ink">→</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          </div>
+
+          <div className="mt-5">
             <Link
               href={withLang("/start?classic=1", locale)}
               className="-my-2.5 inline-block py-2.5 text-[1rem] font-bold text-indigo underline underline-offset-2"
             >
-              None of these — answer a few short questions instead
+              {t.noneOfThese}
             </Link>
           </div>
         </div>
@@ -190,11 +223,17 @@ function ScenarioPicker({ locale }: { locale: Locale }) {
   );
 }
 
-function Progress({ current }: { current: number }) {
+function Progress({
+  current,
+  questionOf,
+}: {
+  current: number;
+  questionOf: (current: number, total: number) => string;
+}) {
   return (
     <div>
       <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
-        Question {current} of {TOTAL_QUESTIONS}
+        {questionOf(current, TOTAL_QUESTIONS)}
       </p>
       <ol className="mt-2.5 flex gap-1.5" aria-hidden="true">
         {Array.from({ length: TOTAL_QUESTIONS }, (_, i) => (
@@ -206,9 +245,7 @@ function Progress({ current }: { current: number }) {
           />
         ))}
       </ol>
-      <p className="sr-only">
-        Question {current} of {TOTAL_QUESTIONS}. Some answers finish sooner.
-      </p>
+      <p className="sr-only">{questionOf(current, TOTAL_QUESTIONS)}</p>
     </div>
   );
 }

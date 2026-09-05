@@ -133,15 +133,15 @@ function StatsOverlap() {
             Step 1
           </p>
           <p className="mt-2 font-serif text-[2rem] leading-tight font-bold text-[#16233F]">
-            Check your deposits in UDGAM
+            Find the deposit through UDGAM
           </p>
           <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
             UDGAM means Unclaimed Deposits–Gateway to Access Information.
-            It is the RBI&apos;s portal for searching unclaimed deposits across multiple banks in one place.
-            It helps you find out whether money may be waiting in your family&apos;s name.
+            It is the RBI&apos;s portal for searching unclaimed deposits across multiple banks.
+            UDGAM helps you find the deposit; Adhikaar helps you understand how to claim it.
           </p>
           <p className="mt-3 inline-flex items-center gap-2 text-[1.35rem] font-bold text-[#E2653B]">
-            Search UDGAM
+            Find it on UDGAM
             <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </p>
         </a>
@@ -152,12 +152,12 @@ function StatsOverlap() {
             Step 2
           </p>
           <p className="mt-2 font-serif text-[2.4rem] leading-tight font-bold text-[#16233F]">
-            Use Adhikaar
+            Understand the claim with Adhikaar
           </p>
           <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
-            Answer a few simple questions about your situation.
+            Answer a few simple questions about your claim.
             <br />
-            We match it to the exact RBI rule that applies to you.
+            We show the conditions, documents and next step that apply.
           </p>
           <Link
             href={withLang("/start", locale)}

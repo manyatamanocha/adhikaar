@@ -100,8 +100,8 @@ export function SaathiWidget() {
           <div className="flex items-center gap-3 bg-[#16233F] px-4 py-3.5">
             <SaathiAvatar className="h-9 w-9 shrink-0" />
             <div className="min-w-0">
-              <p className="text-[1.0625rem] font-bold text-white">Saathi</p>
-              <p className="truncate text-[0.75rem] text-white/70">Adhikaar&apos;s assistant</p>
+              <p className="text-[1.5rem] font-bold text-white">Saathi</p>
+              <p className="truncate text-[1.05rem] text-white/70">Adhikaar&apos;s assistant</p>
             </div>
             <button
               type="button"
@@ -174,7 +174,7 @@ export function SaathiWidget() {
             }}
             className="border-t border-[#EFE7D8] p-3"
           >
-            <p className="mb-2 text-[0.6875rem] leading-snug text-[#6B6255]">
+            <p className="mb-2 text-[0.95rem] leading-snug text-[#6B6255]">
               Not legal advice. Adhikaar does not store this chat, but your messages are sent to
               Groq (the AI service that powers Saathi) to generate a reply.
             </p>
