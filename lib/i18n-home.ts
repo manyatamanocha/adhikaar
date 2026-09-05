@@ -254,6 +254,191 @@ export type HomeDict = {
     disclaimer: string;
     readDirections: string;
   };
+  verdictPage: {
+    generalGuidanceLabel: string;
+    checkSituationFirst: string;
+    askedCheckerHeading: string;
+    askedCheckerBody: string;
+    askedCheckerCta: string;
+    whenRouteApplies: string;
+    printNote: string;
+    printButton: string;
+    deadlineHeading: (days: number) => string;
+    deadlineBefore: (paraFifteen: string, quote: string) => string;
+    deadlineDateLabel: string;
+    deadlineClear: string;
+    deadlineKeptLocal: string;
+    deadlineDayOfTotal: (day: number, total: number) => string;
+    deadlineDayUp: (day: number, total: number) => string;
+    deadlineWindowClosed: (dateLabel: string) => string;
+    deadlineWindowEnds: (dateLabel: string) => string;
+    deadlineWhatNow: string;
+    deadlineComplaintText: (para15: string, para33: string) => string;
+    deadlineOmbudsman: (waitDays: number, scheme: string) => string;
+    deadlineOmbudsmanFree: string;
+    deadlineExpectDispute: string;
+    bankPanelHeading: (bankShort: string) => string;
+    bankPanelSub: (bankShort: string, dateLabel: string) => string;
+    bankPanelStaleHeading: string;
+    bankPanelStaleBody: string;
+    bankPanelConflictHeading: (bankShort: string) => string;
+    bankPanelThresholdLabel: (bankShort: string) => string;
+    bankPanelSuretyLabel: string;
+    bankPanelSuretyNotRequired: string;
+    bankPanelSuretyRequired: string;
+    bankPanelTurnaroundLabel: string;
+    bankPanelFormsLabel: string;
+    bankPanelPageLink: string;
+    bankPanelFormLink: string;
+    bankPanelPolicyLink: string;
+    bankPanelOnlineLink: string;
+    bankPanelNoPolicyHeading: (bankShort: string) => string;
+    bankPanelNoPolicyBody: (bankShort: string) => string;
+    bankPanelDifferentBank: string;
+    bankPanelWholeTable: string;
+    bankPanelFoundOutdated: string;
+    bankPanelTellUs: string;
+    bankPanelNotVerified: string;
+    bankPickerHeading: string;
+    bankPickerBody: string;
+    bankPickerAnotherBank: string;
+    bankPickerSeeWhatWeHave: string;
+    counterShorter: string;
+    yourNextSteps: string;
+    todayHeading: string;
+    todayAction: {
+      nomineeOrSurvivorship: string;
+      underThreshold: string;
+      unknownNominee: string;
+      outOfScope: string;
+      default: string;
+    };
+    documentsTitle: (n: number) => string;
+    documentsNote: string;
+    documentsLede: string;
+    seeFullChecklist: string;
+    whereFrom: string;
+    cost: string;
+    howLong: string;
+    noteLabel: string;
+    readinessNeed: (n: number) => string;
+    readinessNoLongWait: string;
+    readinessStartTodayLongest: (names: string) => string;
+    readinessHaveAll: (n: number) => string;
+    readinessTakeToBranch: string;
+    readinessHaveOf: (have: number, total: number) => string;
+    readinessStillToGet: (n: number) => string;
+    readinessStartToday: (name: string) => string;
+    readinessLongestWait: string;
+    readinessLastOne: string;
+    readinessOtherOneWaits: string;
+    readinessOthersWait: (n: number) => string;
+    readinessIsLastNoQueue: (name: string) => string;
+    readinessNothingHasQueue: (name: string) => string;
+    evidenceTitle: string;
+    evidenceNote: string;
+    evidenceLede: string;
+    paragraphLabel: (para: string) => string;
+    sourceLabel: (title: string, para: string, date: string) => string;
+    inSummaryLabel: string;
+    fromLabel: string;
+    issuedLabel: string;
+    tacticsTitle: string;
+    tacticsNote: string;
+    conditionsForRoute: string;
+    otherImportantNotes: string;
+    refusedHeading: string;
+    readComplaintEligibility: string;
+    fullRouteCta: string;
+    sourceLineBrand: string;
+    sourceLineBody: (number: string, ref: string, issued: string) => string;
+    exclusionNote: string;
+    answerAgain: string;
+    foundIncorrect: string;
+    show: string;
+    hide: string;
+    moreDetailTitle: string;
+    moreDetailNote: string;
+    numberWords: string[];
+    counterModeLabel: string;
+    seeFullPageInstead: string;
+    whatToSay: string;
+    whatDocToShow: string;
+    whatBankMayAsk: string;
+    whatToDoIfRefuse: string;
+    noFixedListGood: string;
+    noFixedListHard: string;
+    counterFooter: string;
+  };
+  privacyPage: {
+    heading: string;
+    updated: string;
+    linkSectionHeading: string;
+    linkSectionBody: string;
+    deviceSectionHeading: string;
+    deviceSectionBody: string;
+    analyticsSectionHeading: string;
+    analyticsSectionBody: string;
+    contactSectionHeading: string;
+    contactSectionBody: string;
+    chatNote: string;
+    questionsSectionHeading: string;
+    contactAdhikaar: string;
+    questionsSectionBody: string;
+  };
+  bankRefusedPage: {
+    heading: string;
+    sub: string;
+    fourSteps: string;
+    step1Title: string;
+    step1Body: string;
+    step2Title: string;
+    step2Body: string;
+    step3Title: string;
+    step4Title: string;
+    step4Body: (scheme: string) => string;
+    escalationHeading: string;
+    complaintHeading: string;
+    complaintSub: string;
+    checkSituationInstead: string;
+  };
+  otherAssetsPage: {
+    heading: string;
+    sub: string;
+    pointsNotAdvises: string;
+    pointsNotAdvisesBody: string;
+    railsHeading: string;
+    whoHolds: string;
+    routeCalled: string;
+    findingOutHeading: string;
+    findingOutBody: string;
+    linksChecked: (date: string) => string;
+    backToQuestions: string;
+  };
+  askedForPage: {
+    heading: string;
+    sub: string;
+    tickHeading: string;
+    tickedRemove: string;
+    tickedSelect: string;
+    comparingAgainst: string;
+    confirmRouteFirst: string;
+    changeAnswers: string;
+    answerQuestions: string;
+    notGradingHeading: string;
+    aboveThresholdBody: string;
+    incompleteBody: string;
+    whatRbiSaysHeading: string;
+    notInListHeading: (count: string) => string;
+    notInListLede: string;
+    notInListTag: string;
+    inListHeading: (count: string) => string;
+    inListLede: string;
+    inListTag: string;
+    printFooterNote: string;
+    footerCompared: (title: string, number: string, issued: string) => string;
+    countWord: (n: number) => string;
+  };
 };
 
 const en: HomeDict = {
@@ -512,6 +697,194 @@ const en: HomeDict = {
     startAgain: "Start again with confirmed details",
     disclaimer: "General information, not legal advice.",
     readDirections: "Read the RBI directions, paragraphs 7–11.",
+  },
+  verdictPage: {
+    generalGuidanceLabel: "General guidance — your eligibility has not been checked.",
+    checkSituationFirst: "Check your situation first.",
+    askedCheckerHeading: "Were you asked for something that is not on this list?",
+    askedCheckerBody: "Tick what the branch actually demanded — a surety, a family tree, an affidavit, witnesses — and we will show you which of them the RBI prescribes for your situation and which it does not, with the paragraph number for each.",
+    askedCheckerCta: "Check what you were asked for",
+    whenRouteApplies: "When this route applies, a succession certificate is not required.",
+    printNote: "Take the printed page to the branch. It carries the rule and its paragraph number.",
+    printButton: "Print this page",
+    deadlineHeading: (days) => `The bank has ${days} days`,
+    deadlineBefore: (paraFifteen, quote) => `Para ${paraFifteen} gives the bank ${quote}. The clock starts when the bank holds a complete set — which is why the date that matters is the date on your acknowledgement, not the day you first walked in.`,
+    deadlineDateLabel: "Date on your acknowledgement",
+    deadlineClear: "Clear",
+    deadlineKeptLocal: "Kept in this browser only. It is never sent anywhere, it is not visible to us, and it will be gone if you clear your browsing data.",
+    deadlineDayOfTotal: (day, total) => `Day ${day} of ${total}`,
+    deadlineDayUp: (day, total) => `Day ${day} — the ${total} days are up`,
+    deadlineWindowClosed: (dateLabel) => `The window closed on ${dateLabel}.`,
+    deadlineWindowEnds: (dateLabel) => `The 15 days end on ${dateLabel}.`,
+    deadlineWhatNow: "What you can do now",
+    deadlineComplaintText: (para15, para33) => `Put the complaint to the branch's Grievance Redressal Officer in writing. Quote para ${para15}, give the date of your acknowledgement, and ask for the settlement and for compensation under para ${para33} — interest at Bank Rate plus 4% per annum where the delay is attributable to the bank, and ₹5,000 for each day of delay on a locker or articles in safe custody.`,
+    deadlineOmbudsman: (waitDays, scheme) => `If ${waitDays} days pass after that without a resolution, ${scheme} is free to use at`,
+    deadlineOmbudsmanFree: "It is free and it is real, and it is not a guarantee.",
+    deadlineExpectDispute: "Expect the bank to argue about when the clock started. Your dated acknowledgement is the answer to that.",
+    bankPanelHeading: (bankShort) => `What ${bankShort} itself publishes`,
+    bankPanelSub: (bankShort, dateLabel) => `Read from ${bankShort}'s own website, not from us. Checked ${dateLabel}.`,
+    bankPanelStaleHeading: "This was checked over six months ago",
+    bankPanelStaleBody: "This policy may have changed. Confirm with the bank before relying on it.",
+    bankPanelConflictHeading: (bankShort) => `A documented gap between ${bankShort}'s policy and its branch practice`,
+    bankPanelThresholdLabel: (bankShort) => `${bankShort}'s own threshold`,
+    bankPanelSuretyLabel: "Third-party surety below it",
+    bankPanelSuretyNotRequired: "Says it is not to be insisted on",
+    bankPanelSuretyRequired: "Says one is required",
+    bankPanelTurnaroundLabel: "Stated turnaround",
+    bankPanelFormsLabel: "Claim forms it names",
+    bankPanelPageLink: "Its deceased-claim page",
+    bankPanelFormLink: "Its claim form",
+    bankPanelPolicyLink: "Its published policy",
+    bankPanelOnlineLink: "Lodge the claim online",
+    bankPanelNoPolicyHeading: (bankShort) => `We could not find ${bankShort}'s published policy`,
+    bankPanelNoPolicyBody: (bankShort) => `From 31 March 2026 a bank is required to publish its deceased-claim policy and document checklist. We looked and did not find ${bankShort}'s. That absence is itself worth raising — ask the branch, in writing, for the board-approved policy and the checklist.`,
+    bankPanelDifferentBank: "Different bank?",
+    bankPanelWholeTable: "the whole table",
+    bankPanelFoundOutdated: "Found an outdated bank policy or incorrect information?",
+    bankPanelTellUs: "Tell us",
+    bankPanelNotVerified: "Not verified — ask your bank",
+    bankPickerHeading: "Which bank is the account with?",
+    bankPickerBody: "The answer above is the same at every commercial bank — that is what the RBI's Directions do. What changes is the evidence: we will add your bank's own published words to this page, so the officer is reading their employer, not us.",
+    bankPickerAnotherBank: "Another bank? The RBI's rule above applies to it just the same. We have only compiled eight so far —",
+    bankPickerSeeWhatWeHave: "see what we have and how it was checked",
+    counterShorter: "At the counter now? Shorter version",
+    yourNextSteps: "Your next steps",
+    todayHeading: "What should you do today?",
+    todayAction: {
+      nomineeOrSurvivorship: "Ask the bank for the deceased-customer claim form, and take the death certificate and your ID.",
+      underThreshold: "Ask the bank for its simplified deceased-deposit claim form and confirm the total balance at that bank.",
+      unknownNominee: "Ask the bank to confirm in writing whether a nominee or survivorship clause is recorded.",
+      outOfScope: "Contact the institution that holds this asset and ask for its deceased-customer claim checklist.",
+      default: "Ask the bank for the written claim checklist, its applicable threshold and the documents it will accept.",
+    },
+    documentsTitle: (n) => `The ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n} documents the RBI names`,
+    documentsNote: "What to bring, what each one costs and how long it takes. Tick the ones you already have.",
+    documentsLede: "Cost and time below are realistic, not best-case. Nothing else on this list is a court document.",
+    seeFullChecklist: "See the full checklist and tick what you have",
+    whereFrom: "Where from",
+    cost: "Cost",
+    howLong: "How long",
+    noteLabel: "Note.",
+    readinessNeed: (n) => `You'll need ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n} documents for this claim.`,
+    readinessNoLongWait: "None of them has a long wait — tick off what you already have below.",
+    readinessStartTodayLongest: (names) => `Start today: ${names} — it takes the longest of anything on this list, and everything else can be done while you wait for it.`,
+    readinessHaveAll: (n) => `You have all ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n}.`,
+    readinessTakeToBranch: "Take them to the branch together and ask for written acknowledgement of the claim on the day you hand them over. The bank has fifteen days from a complete claim.",
+    readinessHaveOf: (have, total) => `You have ${have} of ${total}.`,
+    readinessStillToGet: (n) => {
+      const word = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven"][n] ?? String(n);
+      return `${word} still to get.`;
+    },
+    readinessStartToday: (name) => `Start today: ${name}`,
+    readinessLongestWait: " — it has the longest wait of anything you still need",
+    readinessLastOne: ", and it is the last one.",
+    readinessOtherOneWaits: ", and the other one can be done while you wait for it.",
+    readinessOthersWait: (n) => `, and the other ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n} can be done while you wait for it.`,
+    readinessIsLastNoQueue: (name) => `${name} is the last one, and it has no queue in front of it.`,
+    readinessNothingHasQueue: (name) => `Nothing still on your list has a queue in front of it — ${name} and the rest are same-day or already in your hands.`,
+    evidenceTitle: "The rule, in the RBI's own words",
+    evidenceNote: "The paragraphs to show the bank, quoted exactly, each one linked to the notification.",
+    evidenceLede: "Every paragraph number below is in the notification, and the link opens it.",
+    paragraphLabel: (para) => `Paragraph ${para}`,
+    sourceLabel: (title, para, date) => `Source: ${title}, 2025, paragraph ${para} · Verified: ${date}`,
+    inSummaryLabel: "In summary:",
+    fromLabel: "From",
+    issuedLabel: "issued",
+    tacticsTitle: "Four things to do at the branch",
+    tacticsNote: "Procedural, not legal. Each one closes a specific way a claim stalls.",
+    conditionsForRoute: "Conditions for this route",
+    otherImportantNotes: "Other important notes",
+    refusedHeading: "If the bank refuses anyway",
+    readComplaintEligibility: "Read the RBI's current complaint eligibility and time limits.",
+    fullRouteCta: "The full route, plus a written complaint you can fill in",
+    sourceLineBrand: "Adhikaar — an independent public-information tool.",
+    sourceLineBody: (number, ref, issued) => `Not a government website and not affiliated with the Reserve Bank of India or any bank. Rules quoted from ${number} (${ref}), issued ${issued}, in force from 31 March 2026. Information, not legal advice.`,
+    exclusionNote: "Nothing here applies to the Public Provident Fund, the Senior Citizens' Savings Scheme, Mahila Samman Savings Certificate or Sukanya Samriddhi. Paragraph 6(b) places those outside these Directions.",
+    answerAgain: "Answer the questions again",
+    foundIncorrect: "Found incorrect information? Tell us",
+    show: "Show",
+    hide: "Hide",
+    moreDetailTitle: "More detail",
+    moreDetailNote: "The RBI's exact wording, your bank's own policy, procedural tips, the deadline tracker and the escalation route — useful, but not what you need to do first.",
+    numberWords: ["zero", "one", "two", "three", "four", "five", "six", "seven"],
+    counterModeLabel: "Counter mode",
+    seeFullPageInstead: "See the full page instead",
+    whatToSay: "What to say",
+    whatDocToShow: "What document to show",
+    whatBankMayAsk: "What the bank may legally ask for",
+    whatToDoIfRefuse: "What to do if they refuse",
+    noFixedListGood: "No fixed document list applies to this situation — see the full page for what to ask the branch.",
+    noFixedListHard: "There is no closed list here. See the full page for what may genuinely be required and why.",
+    counterFooter: "Adhikaar — an independent public-information tool, not affiliated with the RBI or any bank. Information, not legal advice.",
+  },
+  privacyPage: {
+    heading: "Privacy",
+    updated: "Claim guide · Updated 5 September 2026",
+    linkSectionHeading: "What is in a guide link?",
+    linkSectionBody: "Your selections, such as nominee status, amount category, selected bank and checklist ticks, can be included in the URL. They are not account balances or account numbers. The server receives that URL to render the page; browser history and hosting logs may retain it. Share links only with people you trust.",
+    deviceSectionHeading: "What stays on your device?",
+    deviceSectionBody: "The optional deadline tracker saves its date in your browser's local storage. Clear the tracker or the site's browser data to remove it. Printing and downloading a guide create copies under your control; Adhikaar cannot delete copies you have shared.",
+    analyticsSectionHeading: "Usage analytics",
+    analyticsSectionBody: "When configured, Mixpanel receives basic events such as a question being answered, the outcome reached, a checklist interaction or a print action. Analytics is configured without persistent browser identifiers, analytics cookies, automatic page views or session recording. It is not a promise that no data reaches a server: network providers can process technical information when handling requests.",
+    contactSectionHeading: "Contact and external services",
+    contactSectionBody: "If you email us, your email provider and ours process the message and address. Do not send passwords, OTPs, Aadhaar/PAN numbers, bank credentials or personal documents. RBI UDGAM, bank websites and other external services have their own privacy practices; this guide does not search their records or submit claims for you.",
+    chatNote: "This notice describes the claim guide. Any separate chat service must explain its own data handling before you send information; do not enter sensitive information in chat.",
+    questionsSectionHeading: "Questions",
+    contactAdhikaar: "Contact Adhikaar",
+    questionsSectionBody: "about privacy or a message you sent us. Hosting, email and external providers may retain technical records under their own policies; we do not promise instant deletion from those systems.",
+  },
+  bankRefusedPage: {
+    heading: "The bank refused. Here is the route that follows.",
+    sub: "Four steps, in order, and a written complaint you can fill in and hand over. Escalation is real and it is free — it is not a guarantee, and this page says so plainly rather than promising more than the route delivers.",
+    fourSteps: "The four steps",
+    step1Title: "Ask for the demand in writing",
+    step1Body: "Ask the officer to state, on paper, exactly which document they require and which rule they rely on. Many demands that would not survive being written down are dropped the moment you ask this.",
+    step2Title: "Submit a written complaint to the branch",
+    step2Body: "Address it to the branch's Grievance Redressal Officer, quoting the paragraph number that applies to your claim. Keep a copy and get it acknowledged with a date — or send it by registered post and keep the receipt.",
+    step3Title: "Check the bank's response",
+    step4Title: "Escalate through the RBI's Ombudsman route",
+    step4Body: (scheme) => `Use the RBI complaint portal if eligible under the ${scheme}. Check its current time limits and exclusions, including matters already before a court or tribunal. Filing a complaint is free and does not guarantee a favourable decision.`,
+    escalationHeading: "Escalation is available — it is not a guarantee",
+    complaintHeading: "A written complaint you can use",
+    complaintSub: "Download the text file and edit it, or print it and fill in the bracketed fields by hand. Every blank is left blank on purpose — we don't know your bank, your account number or the document that was actually demanded, and guessing at any of those would make this less useful, not more.",
+    checkSituationInstead: "Check your claim situation instead",
+  },
+  otherAssetsPage: {
+    heading: "Everything else you will have to deal with",
+    sub: "Adhikaar covers bank deposits, lockers and safe custody, and nothing else. The rest of an estate runs on separate rails, each with its own regulator and its own form. This page tells you which door to knock on.",
+    pointsNotAdvises: "This page points. It does not advise.",
+    pointsNotAdvisesBody: "We verified the bank rules line by line against the RBI's own notification. We have not done that on these rails, so you will find no verdict and no checklist here — only the authority, the name of the route, and a link. Anything more would be a guess dressed up as an answer.",
+    railsHeading: "Six other rails",
+    whoHolds: "Who holds it",
+    routeCalled: "What the route is called",
+    findingOutHeading: "Finding out what exists",
+    findingOutBody: "Both of these are the government's own. They help you find an account or a policy. What to do once you have found one is a different problem — which is the one Adhikaar exists for.",
+    linksChecked: (date) => `Links checked ${date}. Naming an authority is not a recommendation, and none of these bodies is connected with Adhikaar.`,
+    backToQuestions: "Back to the bank deposit questions",
+  },
+  askedForPage: {
+    heading: "What were you asked for?",
+    sub: "Tick everything the branch told you to bring. We will show you which of them the RBI actually prescribes for your situation, and which it does not — with the paragraph number for each.",
+    tickHeading: "Tick what the branch demanded",
+    tickedRemove: "Ticked. Select to remove.",
+    tickedSelect: "Select to tick.",
+    comparingAgainst: "Comparing against the list for",
+    confirmRouteFirst: "Confirm the claim route first, including any will, court restriction, dispute and applicable bank threshold. Until then, this page cannot judge the bank's document requests for your situation.",
+    changeAnswers: "Change your answers",
+    answerQuestions: "Answer the questions",
+    notGradingHeading: "We are not going to grade this list",
+    aboveThresholdBody: "At or above the threshold, para 10(b) allows the bank to require a succession certificate or equivalent, or a legal heir certificate, or an affidavit sworn before an official. There is no closed list to compare your demands against, so calling any of them an overreach would be wrong — and would send you to argue a case you would lose.",
+    incompleteBody: "Your eligibility checks are incomplete or need individual review. Confirm the details in the claim guide before comparing the bank's demands against a checklist.",
+    whatRbiSaysHeading: "What the RBI's list says about each one",
+    notInListHeading: (count) => `${count} not in the RBI's list for your situation`,
+    notInListLede: "This does not make the demand illegal. It means the RBI's own Directions do not prescribe it here — which is a reasonable thing to raise, in writing, and ask the officer to name the rule they rely on.",
+    notInListTag: "Not in the list",
+    inListHeading: (count) => `${count} the RBI does prescribe`,
+    inListLede: "These are legitimate. Asking for them is the bank following the rule, not overreaching.",
+    inListTag: "In the list",
+    printFooterNote: "Takes the paragraph numbers with it, so the officer can check each one.",
+    footerCompared: (title, number, issued) => `Compared against ${title} · ${number}, issued ${issued}. Information, not legal advice. Your ticks appear in the page URL, and nothing here identifies you — we count only how many items were checked, never which ones.`,
+    countWord: (n) => n === 1 ? "One thing" : `${["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven"][n] ?? n} things`,
   },
 };
 
@@ -772,6 +1145,194 @@ const hi: HomeDict = {
     disclaimer: "सामान्य जानकारी, क़ानूनी सलाह नहीं।",
     readDirections: "आरबीआई निर्देश, पैराग्राफ़ 7–11 पढ़ें।",
   },
+  verdictPage: {
+    generalGuidanceLabel: "सामान्य मार्गदर्शन — आपकी पात्रता की जाँच अभी नहीं हुई है।",
+    checkSituationFirst: "पहले अपनी स्थिति जाँचें।",
+    askedCheckerHeading: "क्या आपसे कुछ ऐसा माँगा गया जो इस सूची में नहीं है?",
+    askedCheckerBody: "शाखा ने वाक़ई क्या-क्या माँगा टिक करें — ज़मानत, परिवार-वृक्ष, शपथ-पत्र, गवाह — और हम दिखाएँगे कि इनमें से RBI आपकी स्थिति के लिए क्या तय करता है और क्या नहीं, हर एक के पैराग्राफ नंबर सहित।",
+    askedCheckerCta: "आपसे क्या माँगा गया, जाँचें",
+    whenRouteApplies: "जहाँ यह रास्ता लागू होता है, वहाँ उत्तराधिकार प्रमाणपत्र ज़रूरी नहीं है।",
+    printNote: "छपा हुआ पन्ना शाखा में ले जाएँ। इसमें नियम और उसका पैराग्राफ नंबर दोनों हैं।",
+    printButton: "यह पन्ना छापें",
+    deadlineHeading: (days) => `बैंक के पास ${days} दिन हैं`,
+    deadlineBefore: (paraFifteen, quote) => `पैरा ${paraFifteen} बैंक को ${quote} देता है। घड़ी तभी शुरू होती है जब बैंक के पास पूरा सेट हो — इसीलिए ज़रूरी तारीख़ आपकी पावती की तारीख़ है, न कि जिस दिन आप पहली बार गए थे।`,
+    deadlineDateLabel: "आपकी पावती की तारीख़",
+    deadlineClear: "हटाएँ",
+    deadlineKeptLocal: "यह सिर्फ़ इस ब्राउज़र में रखी जाती है। यह कहीं नहीं भेजी जाती, हमें दिखाई नहीं देती, और आपके ब्राउज़िंग डेटा साफ़ करने पर खो जाएगी।",
+    deadlineDayOfTotal: (day, total) => `दिन ${day} में से ${total}`,
+    deadlineDayUp: (day, total) => `दिन ${day} — ${total} दिन पूरे हो गए हैं`,
+    deadlineWindowClosed: (dateLabel) => `समय-सीमा ${dateLabel} को समाप्त हो गई।`,
+    deadlineWindowEnds: (dateLabel) => `15 दिन ${dateLabel} को समाप्त होते हैं।`,
+    deadlineWhatNow: "अभी आप क्या कर सकते हैं",
+    deadlineComplaintText: (para15, para33) => `शाखा के शिकायत निवारण अधिकारी को लिखित शिकायत दें। पैरा ${para15} का हवाला दें, अपनी पावती की तारीख़ बताएँ, और भुगतान के साथ पैरा ${para33} के तहत मुआवज़ा माँगें — जहाँ देरी बैंक की वजह से है वहाँ बैंक दर + 4% प्रति वर्ष ब्याज, और लॉकर या सुरक्षित अभिरक्षा में देरी के हर दिन के लिए ₹5,000।`,
+    deadlineOmbudsman: (waitDays, scheme) => `अगर उसके बाद ${waitDays} दिन बिना समाधान के बीत जाएँ, तो ${scheme} मुफ़्त इस्तेमाल के लिए उपलब्ध है`,
+    deadlineOmbudsmanFree: "यह मुफ़्त और वास्तविक है, लेकिन गारंटी नहीं है।",
+    deadlineExpectDispute: "उम्मीद रखें कि बैंक घड़ी कब शुरू हुई इस पर बहस करेगा। आपकी तारीख़ वाली पावती इसी का जवाब है।",
+    bankPanelHeading: (bankShort) => `${bankShort} खुद क्या प्रकाशित करता है`,
+    bankPanelSub: (bankShort, dateLabel) => `${bankShort} की अपनी वेबसाइट से पढ़ा गया, हमसे नहीं। जाँचा गया ${dateLabel}.`,
+    bankPanelStaleHeading: "यह छह महीने से ज़्यादा पहले जाँचा गया था",
+    bankPanelStaleBody: "यह नीति बदल गई हो सकती है। इस पर भरोसा करने से पहले बैंक से पुष्टि करें।",
+    bankPanelConflictHeading: (bankShort) => `${bankShort} की नीति और उसकी शाखा व्यवहार के बीच एक दर्ज अंतर`,
+    bankPanelThresholdLabel: (bankShort) => `${bankShort} की अपनी सीमा`,
+    bankPanelSuretyLabel: "उससे नीचे तीसरे पक्ष की ज़मानत",
+    bankPanelSuretyNotRequired: "कहता है कि इस पर ज़ोर नहीं दिया जाना चाहिए",
+    bankPanelSuretyRequired: "कहता है कि एक चाहिए",
+    bankPanelTurnaroundLabel: "बताया गया समय",
+    bankPanelFormsLabel: "जिन दावा फ़ॉर्मों का नाम लेता है",
+    bankPanelPageLink: "इसका दिवंगत-दावा पन्ना",
+    bankPanelFormLink: "इसका दावा फ़ॉर्म",
+    bankPanelPolicyLink: "इसकी प्रकाशित नीति",
+    bankPanelOnlineLink: "ऑनलाइन दावा दर्ज करें",
+    bankPanelNoPolicyHeading: (bankShort) => `हमें ${bankShort} की प्रकाशित नीति नहीं मिली`,
+    bankPanelNoPolicyBody: (bankShort) => `31 मार्च 2026 से हर बैंक को अपनी दिवंगत-दावा नीति और दस्तावेज़ सूची प्रकाशित करनी ज़रूरी है। हमने खोजा और ${bankShort} की नहीं मिली। यह कमी भी ज़िक्र लायक है — शाखा से लिखित में बोर्ड-अनुमोदित नीति और सूची माँगें।`,
+    bankPanelDifferentBank: "अलग बैंक?",
+    bankPanelWholeTable: "पूरी तालिका",
+    bankPanelFoundOutdated: "कोई पुरानी बैंक नीति या ग़लत जानकारी मिली?",
+    bankPanelTellUs: "हमें बताएँ",
+    bankPanelNotVerified: "सत्यापित नहीं — अपने बैंक से पूछें",
+    bankPickerHeading: "खाता किस बैंक में है?",
+    bankPickerBody: "ऊपर दिया जवाब हर वाणिज्यिक बैंक में एक जैसा है — यही RBI के निर्देश करते हैं। जो बदलता है वह है सबूत: हम आपके बैंक के अपने प्रकाशित शब्द इस पन्ने में जोड़ेंगे, ताकि अधिकारी हमें नहीं, अपने नियोक्ता को पढ़ रहा हो।",
+    bankPickerAnotherBank: "कोई अलग बैंक? ऊपर का RBI नियम उस पर भी वैसे ही लागू होता है। हमने अभी तक सिर्फ़ आठ जोड़े हैं —",
+    bankPickerSeeWhatWeHave: "देखें हमारे पास क्या है और कैसे जाँचा गया",
+    counterShorter: "अभी काउंटर पर हैं? छोटा संस्करण",
+    yourNextSteps: "आपके अगले कदम",
+    todayHeading: "आज आपको क्या करना चाहिए?",
+    todayAction: {
+      nomineeOrSurvivorship: "बैंक से दिवंगत-ग्राहक दावा फ़ॉर्म माँगें, और मृत्यु प्रमाणपत्र व अपना पहचान पत्र साथ ले जाएँ।",
+      underThreshold: "बैंक से उसका सरलीकृत दिवंगत-जमा दावा फ़ॉर्म माँगें और उस बैंक में कुल शेष राशि की पुष्टि करें।",
+      unknownNominee: "बैंक से लिखित में पुष्टि माँगें कि क्या कोई नामांकित व्यक्ति या उत्तरजीविता शर्त दर्ज है।",
+      outOfScope: "इस संपत्ति को रखने वाली संस्था से संपर्क करें और उसकी दिवंगत-ग्राहक दावा सूची माँगें।",
+      default: "बैंक से लिखित दावा सूची, उसकी लागू सीमा और वे कौन-से दस्तावेज़ स्वीकार करेंगे, माँगें।",
+    },
+    documentsTitle: (n) => `RBI द्वारा बताए गए ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} दस्तावेज़`,
+    documentsNote: "क्या लाना है, हर एक की लागत क्या है और कितना समय लगता है। जो आपके पास पहले से हैं उन्हें टिक करें।",
+    documentsLede: "नीचे लागत और समय व्यावहारिक हैं, सबसे-अच्छी-स्थिति वाले नहीं। इस सूची में और कुछ भी अदालती दस्तावेज़ नहीं है।",
+    seeFullChecklist: "पूरी सूची देखें और जो आपके पास है उसे टिक करें",
+    whereFrom: "कहाँ से मिलेगा",
+    cost: "लागत",
+    howLong: "कितना समय",
+    noteLabel: "नोट।",
+    readinessNeed: (n) => `इस दावे के लिए आपको ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} दस्तावेज़ चाहिए होंगे।`,
+    readinessNoLongWait: "इनमें से किसी में लंबा इंतज़ार नहीं है — नीचे जो आपके पास पहले से है उसे टिक करें।",
+    readinessStartTodayLongest: (names) => `आज शुरू करें: ${names} — इस सूची में सबसे ज़्यादा समय यही लेता है, और बाक़ी सब इसका इंतज़ार करते हुए किया जा सकता है।`,
+    readinessHaveAll: (n) => `आपके पास सभी ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} हैं।`,
+    readinessTakeToBranch: "इन्हें साथ लेकर शाखा जाएँ और जिस दिन जमा करें उसी दिन दावे की लिखित पावती माँगें। पूरे दावे के बाद बैंक के पास पंद्रह दिन हैं।",
+    readinessHaveOf: (have, total) => `आपके पास ${total} में से ${have} हैं।`,
+    readinessStillToGet: (n) => {
+      const word = ["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? String(n);
+      return `अभी ${word} लेने बाक़ी हैं।`;
+    },
+    readinessStartToday: (name) => `आज शुरू करें: ${name}`,
+    readinessLongestWait: " — अभी आपको जो भी चाहिए, उनमें सबसे लंबा इंतज़ार इसी में है",
+    readinessLastOne: ", और यही आख़िरी है।",
+    readinessOtherOneWaits: ", और दूसरा एक इसका इंतज़ार करते हुए किया जा सकता है।",
+    readinessOthersWait: (n) => `, और बाक़ी ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} इसका इंतज़ार करते हुए किए जा सकते हैं।`,
+    readinessIsLastNoQueue: (name) => `${name} आख़िरी है, और इसके आगे कोई इंतज़ार नहीं है।`,
+    readinessNothingHasQueue: (name) => `आपकी सूची में अब कुछ भी ऐसा नहीं जिसमें इंतज़ार हो — ${name} और बाक़ी सब उसी दिन मिल जाते हैं या पहले से आपके पास हैं।`,
+    evidenceTitle: "नियम, RBI के अपने शब्दों में",
+    evidenceNote: "बैंक को दिखाने वाले पैराग्राफ, ठीक वैसे ही उद्धृत जैसे हैं, हर एक अधिसूचना से जुड़ा हुआ।",
+    evidenceLede: "नीचे हर पैराग्राफ नंबर अधिसूचना में है, और लिंक उसे खोलता है।",
+    paragraphLabel: (para) => `पैराग्राफ ${para}`,
+    sourceLabel: (title, para, date) => `स्रोत: ${title}, 2025, पैराग्राफ ${para} · सत्यापित: ${date}`,
+    inSummaryLabel: "सार में:",
+    fromLabel: "स्रोत",
+    issuedLabel: "जारी",
+    tacticsTitle: "शाखा में करने योग्य चार बातें",
+    tacticsNote: "प्रक्रियागत, क़ानूनी नहीं। हर एक दावे के अटकने का एक ख़ास तरीक़ा बंद करता है।",
+    conditionsForRoute: "इस रास्ते की शर्तें",
+    otherImportantNotes: "अन्य महत्वपूर्ण बातें",
+    refusedHeading: "अगर बैंक फिर भी मना करे",
+    readComplaintEligibility: "RBI की मौजूदा शिकायत पात्रता और समय-सीमा पढ़ें।",
+    fullRouteCta: "पूरा रास्ता, साथ में भरने के लिए एक लिखित शिकायत",
+    sourceLineBrand: "अधिकार — एक स्वतंत्र सार्वजनिक-जानकारी उपकरण।",
+    sourceLineBody: (number, ref, issued) => `यह कोई सरकारी वेबसाइट नहीं है और भारतीय रिज़र्व बैंक या किसी भी बैंक से संबद्ध नहीं है। नियम ${number} (${ref}) से उद्धृत, जारी ${issued}, 31 मार्च 2026 से लागू। जानकारी, क़ानूनी सलाह नहीं।`,
+    exclusionNote: "यहाँ कुछ भी पब्लिक प्रॉविडेंट फंड, वरिष्ठ नागरिक बचत योजना, महिला सम्मान बचत प्रमाणपत्र या सुकन्या समृद्धि पर लागू नहीं होता। पैराग्राफ 6(b) इन्हें इन निर्देशों के दायरे से बाहर रखता है।",
+    answerAgain: "सवालों के जवाब फिर से दें",
+    foundIncorrect: "कोई ग़लत जानकारी मिली? हमें बताएँ",
+    show: "दिखाएँ",
+    hide: "छिपाएँ",
+    numberWords: ["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"],
+    moreDetailTitle: "और विवरण",
+    moreDetailNote: "बैंक को दिखाने वाला सबूत, बैंक का अपना पन्ना, आगे की कार्रवाई का रास्ता और बाक़ी शर्तें — सब यहीं हैं, बस मोड़ी हुई हैं ताकि पन्ना अभी क्या करना है, उस पर खुले।",
+    counterModeLabel: "काउंटर मोड",
+    seeFullPageInstead: "इसके बजाय पूरा पन्ना देखें",
+    whatToSay: "क्या कहना है",
+    whatDocToShow: "कौन-सा दस्तावेज़ दिखाना है",
+    whatBankMayAsk: "बैंक क़ानूनी रूप से क्या माँग सकता है",
+    whatToDoIfRefuse: "अगर वे मना करें तो क्या करें",
+    noFixedListGood: "इस स्थिति पर कोई तय दस्तावेज़ सूची लागू नहीं होती — शाखा से क्या पूछें, इसके लिए पूरा पन्ना देखें।",
+    noFixedListHard: "यहाँ कोई बंद सूची नहीं है। वाक़ई क्या ज़रूरी हो सकता है और क्यों, इसके लिए पूरा पन्ना देखें।",
+    counterFooter: "अधिकार — एक स्वतंत्र सार्वजनिक-जानकारी उपकरण, RBI या किसी बैंक से संबद्ध नहीं। जानकारी, क़ानूनी सलाह नहीं।",
+  },
+  privacyPage: {
+    heading: "गोपनीयता",
+    updated: "क्लेम गाइड · अपडेट किया गया 5 सितंबर 2026",
+    linkSectionHeading: "गाइड लिंक में क्या होता है?",
+    linkSectionBody: "आपके चुनाव, जैसे नामांकित स्थिति, राशि श्रेणी, चुना गया बैंक और सूची की टिक, URL में शामिल हो सकते हैं। ये खाते की शेष राशि या खाता नंबर नहीं हैं। पन्ना दिखाने के लिए सर्वर उस URL को प्राप्त करता है; ब्राउज़र इतिहास और होस्टिंग लॉग इसे रख सकते हैं। लिंक सिर्फ़ उन्हीं लोगों के साथ साझा करें जिन पर आप भरोसा करते हैं।",
+    deviceSectionHeading: "आपके डिवाइस पर क्या रहता है?",
+    deviceSectionBody: "वैकल्पिक डेडलाइन ट्रैकर अपनी तारीख़ आपके ब्राउज़र के लोकल स्टोरेज में सहेजता है। इसे हटाने के लिए ट्रैकर या साइट का ब्राउज़र डेटा साफ़ करें। गाइड छापने और डाउनलोड करने से आपके नियंत्रण में प्रतियाँ बनती हैं; आपने साझा की गई प्रतियों को अधिकार मिटा नहीं सकता।",
+    analyticsSectionHeading: "उपयोग विश्लेषण",
+    analyticsSectionBody: "कॉन्फ़िगर होने पर, Mixpanel को कुछ बुनियादी घटनाएँ मिलती हैं जैसे किसी सवाल का जवाब देना, पहुँचा गया नतीजा, सूची से जुड़ी कार्रवाई या प्रिंट करना। विश्लेषण स्थायी ब्राउज़र पहचानकर्ताओं, विश्लेषण कुकीज़, स्वचालित पेज-व्यू या सेशन रिकॉर्डिंग के बिना कॉन्फ़िगर किया गया है। यह वादा नहीं कि कोई डेटा सर्वर तक नहीं पहुँचता: अनुरोध संभालते समय नेटवर्क प्रदाता तकनीकी जानकारी संसाधित कर सकते हैं।",
+    contactSectionHeading: "संपर्क और बाहरी सेवाएँ",
+    contactSectionBody: "अगर आप हमें ईमेल करते हैं, तो आपका और हमारा ईमेल प्रदाता संदेश और पता संसाधित करता है। पासवर्ड, OTP, आधार/पैन नंबर, बैंक क्रेडेंशियल या व्यक्तिगत दस्तावेज़ न भेजें। RBI UDGAM, बैंक वेबसाइट और अन्य बाहरी सेवाओं की अपनी गोपनीयता प्रथाएँ हैं; यह गाइड उनके रिकॉर्ड नहीं खोजती या आपकी ओर से दावा दर्ज नहीं करती।",
+    chatNote: "यह सूचना क्लेम गाइड के बारे में है। कोई भी अलग चैट सेवा जानकारी भेजने से पहले अपनी डेटा हैंडलिंग समझाए; चैट में संवेदनशील जानकारी न डालें।",
+    questionsSectionHeading: "सवाल",
+    contactAdhikaar: "अधिकार से संपर्क करें",
+    questionsSectionBody: "गोपनीयता या आपके भेजे किसी संदेश के बारे में। होस्टिंग, ईमेल और बाहरी प्रदाता अपनी नीतियों के तहत तकनीकी रिकॉर्ड रख सकते हैं; हम उन प्रणालियों से तुरंत हटाने का वादा नहीं करते।",
+  },
+  bankRefusedPage: {
+    heading: "बैंक ने मना कर दिया। यह रहा आगे का रास्ता।",
+    sub: "चार कदम, क्रम में, और एक लिखित शिकायत जिसे आप भरकर सौंप सकते हैं। आगे की कार्रवाई वास्तविक और मुफ़्त है — यह गारंटी नहीं है, और यह पन्ना उतना ही वादा करता है जितना यह रास्ता वाक़ई देता है, ज़्यादा नहीं।",
+    fourSteps: "चार कदम",
+    step1Title: "माँग लिखित में देने को कहें",
+    step1Body: "अधिकारी से कहें कि वे कागज़ पर बिल्कुल बताएँ कि उन्हें कौन-सा दस्तावेज़ चाहिए और वे किस नियम पर भरोसा कर रहे हैं। कई माँगें, जो लिखित में टिकतीं नहीं, आपके यह पूछते ही छोड़ दी जाती हैं।",
+    step2Title: "शाखा को लिखित शिकायत दें",
+    step2Body: "इसे शाखा के शिकायत निवारण अधिकारी को संबोधित करें, अपने दावे पर लागू पैराग्राफ नंबर का हवाला देते हुए। एक प्रति रखें और उसे तारीख़ सहित स्वीकृत करवाएँ — या रजिस्टर्ड डाक से भेजें और रसीद रखें।",
+    step3Title: "बैंक के जवाब की जाँच करें",
+    step4Title: "RBI के लोकपाल रास्ते से आगे बढ़ें",
+    step4Body: (scheme) => `अगर ${scheme} के तहत पात्र हों, तो RBI शिकायत पोर्टल का उपयोग करें। इसकी मौजूदा समय-सीमा और अपवाद जाँचें, जिसमें वे मामले भी शामिल हैं जो पहले से किसी अदालत या न्यायाधिकरण के सामने हैं। शिकायत दर्ज करना मुफ़्त है और अनुकूल फ़ैसले की गारंटी नहीं देता।`,
+    escalationHeading: "आगे की कार्रवाई उपलब्ध है — यह गारंटी नहीं है",
+    complaintHeading: "इस्तेमाल के लिए एक लिखित शिकायत",
+    complaintSub: "टेक्स्ट फ़ाइल डाउनलोड करके संपादित करें, या छापकर कोष्ठक वाले खानों को हाथ से भरें। हर खाली जगह जानबूझकर खाली छोड़ी गई है — हमें आपका बैंक, आपका खाता नंबर या असल में माँगा गया दस्तावेज़ पता नहीं, और इनमें से किसी का अनुमान लगाना इसे कम, ज़्यादा नहीं, उपयोगी बनाएगा।",
+    checkSituationInstead: "इसके बजाय अपनी दावे की स्थिति जाँचें",
+  },
+  otherAssetsPage: {
+    heading: "बाक़ी सब कुछ जिससे आपको निपटना होगा",
+    sub: "अधिकार बैंक जमा, लॉकर और सुरक्षित अभिरक्षा को कवर करता है, और कुछ नहीं। संपत्ति का बाक़ी हिस्सा अलग रास्तों पर चलता है, हर एक का अपना नियामक और अपना फ़ॉर्म है। यह पन्ना बताता है कि किस दरवाज़े पर दस्तक दें।",
+    pointsNotAdvises: "यह पन्ना दिशा बताता है। यह सलाह नहीं देता।",
+    pointsNotAdvisesBody: "हमने बैंक नियमों को RBI की अपनी अधिसूचना के विरुद्ध पंक्ति दर पंक्ति जाँचा। इन रास्तों पर हमने वह नहीं किया, इसलिए यहाँ कोई फ़ैसला और कोई सूची नहीं मिलेगी — सिर्फ़ प्राधिकरण, रास्ते का नाम, और एक लिंक। इससे ज़्यादा कुछ भी जवाब की तरह सजाया गया अनुमान होगा।",
+    railsHeading: "छह अन्य रास्ते",
+    whoHolds: "इसे कौन रखता है",
+    routeCalled: "रास्ते का नाम क्या है",
+    findingOutHeading: "यह पता लगाना कि क्या मौजूद है",
+    findingOutBody: "ये दोनों ही सरकार के अपने हैं। ये आपको खाता या पॉलिसी ढूँढने में मदद करते हैं। मिलने के बाद क्या करना है, यह अलग समस्या है — जिसके लिए अधिकार बना है।",
+    linksChecked: (date) => `लिंक ${date} को जाँचे गए। किसी प्राधिकरण का नाम लेना सिफ़ारिश नहीं है, और इनमें से कोई भी संस्था अधिकार से जुड़ी नहीं है।`,
+    backToQuestions: "बैंक जमा वाले सवालों पर वापस जाएँ",
+  },
+  askedForPage: {
+    heading: "आपसे क्या माँगा गया था?",
+    sub: "शाखा ने आपको जो कुछ लाने को कहा, उसे टिक करें। हम दिखाएँगे कि इनमें से RBI आपकी स्थिति के लिए वाक़ई क्या तय करता है, और क्या नहीं — हर एक के पैराग्राफ नंबर सहित।",
+    tickHeading: "शाखा ने क्या माँगा, टिक करें",
+    tickedRemove: "टिक किया गया। हटाने के लिए चुनें।",
+    tickedSelect: "टिक करने के लिए चुनें।",
+    comparingAgainst: "इसकी सूची से तुलना कर रहे हैं",
+    confirmRouteFirst: "पहले दावे का रास्ता तय करें, जिसमें कोई वसीयत, न्यायालयीन रोक, विवाद और लागू बैंक सीमा शामिल है। तब तक, यह पन्ना आपकी स्थिति के लिए बैंक की दस्तावेज़ माँगों का आकलन नहीं कर सकता।",
+    changeAnswers: "अपने जवाब बदलें",
+    answerQuestions: "सवालों के जवाब दें",
+    notGradingHeading: "हम इस सूची को आँकने नहीं जा रहे",
+    aboveThresholdBody: "सीमा पर या उससे ऊपर, पैरा 10(b) बैंक को उत्तराधिकार प्रमाणपत्र या समकक्ष, या क़ानूनी उत्तराधिकारी प्रमाणपत्र, या किसी अधिकारी के सामने ली गई शपथ माँगने की अनुमति देता है। आपकी माँगों की तुलना करने के लिए कोई बंद सूची नहीं है, इसलिए इनमें से किसी को भी ज़्यादती कहना ग़लत होगा — और आपको एक ऐसा मामला लड़ने भेजेगा जिसे आप हार जाएँगे।",
+    incompleteBody: "आपकी पात्रता जाँच अधूरी है या अलग समीक्षा चाहती है। बैंक की माँगों की सूची से तुलना करने से पहले क्लेम गाइड में विवरण की पुष्टि करें।",
+    whatRbiSaysHeading: "RBI की सूची हर एक के बारे में क्या कहती है",
+    notInListHeading: (count) => `${count} आपकी स्थिति के लिए RBI की सूची में नहीं`,
+    notInListLede: "इससे माँग ग़ैर-क़ानूनी नहीं बन जाती। इसका मतलब है कि RBI के अपने निर्देश इसे यहाँ तय नहीं करते — जो लिखित में उठाने और अधिकारी से यह नाम बताने को कहने लायक बात है कि वे किस नियम पर भरोसा कर रहे हैं।",
+    notInListTag: "सूची में नहीं",
+    inListHeading: (count) => `${count} जो RBI वाक़ई तय करता है`,
+    inListLede: "ये वैध हैं। इन्हें माँगना बैंक का नियम मानना है, ज़्यादती नहीं।",
+    inListTag: "सूची में",
+    printFooterNote: "पैराग्राफ नंबर भी साथ ले जाता है, ताकि अधिकारी हर एक जाँच सके।",
+    footerCompared: (title, number, issued) => `${title} · ${number} से तुलना की गई, जारी ${issued}। जानकारी, क़ानूनी सलाह नहीं। आपकी टिक पेज URL में दिखती हैं, और यहाँ कुछ भी आपकी पहचान नहीं बताता — हम सिर्फ़ यह गिनते हैं कि कितनी चीज़ें जाँची गईं, कौन-सी नहीं।`,
+    countWord: (n) => n === 1 ? "एक चीज़" : `${["", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात", "आठ", "नौ", "दस", "ग्यारह"][n] ?? n} चीज़ें`,
+  },
 };
 
 const kn: HomeDict = {
@@ -1030,6 +1591,194 @@ const kn: HomeDict = {
     startAgain: "ಖಚಿತಪಡಿಸಿದ ವಿವರಗಳೊಂದಿಗೆ ಮತ್ತೆ ಪ್ರಾರಂಭಿಸಿ",
     disclaimer: "ಸಾಮಾನ್ಯ ಮಾಹಿತಿ, ಕಾನೂನು ಸಲಹೆ ಅಲ್ಲ.",
     readDirections: "ಆರ್‌ಬಿಐ ನಿರ್ದೇಶನಗಳು, ಪ್ಯಾರಾಗ್ರಾಫ್ 7–11 ಓದಿ.",
+  },
+  verdictPage: {
+    generalGuidanceLabel: "ಸಾಮಾನ್ಯ ಮಾರ್ಗದರ್ಶನ — ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ಇನ್ನೂ ಪರಿಶೀಲಿಸಲಾಗಿಲ್ಲ.",
+    checkSituationFirst: "ಮೊದಲು ನಿಮ್ಮ ಸ್ಥಿತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ.",
+    askedCheckerHeading: "ಈ ಪಟ್ಟಿಯಲ್ಲಿಲ್ಲದ ಏನನ್ನಾದರೂ ನಿಮ್ಮಿಂದ ಕೇಳಲಾಗಿತ್ತೇ?",
+    askedCheckerBody: "ಶಾಖೆ ನಿಜವಾಗಿಯೂ ಏನು ಕೇಳಿತು ಎಂದು ಟಿಕ್ ಮಾಡಿ — ಜಾಮೀನು, ಕುಟುಂಬ ವೃಕ್ಷ, ಅಫಿಡವಿಟ್, ಸಾಕ್ಷಿಗಳು — ಮತ್ತು ಇವುಗಳಲ್ಲಿ RBI ನಿಮ್ಮ ಸ್ಥಿತಿಗೆ ಯಾವುದನ್ನು ನಿಗದಿಪಡಿಸುತ್ತದೆ ಮತ್ತು ಯಾವುದನ್ನು ಇಲ್ಲ ಎಂದು ನಾವು ತೋರಿಸುತ್ತೇವೆ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ.",
+    askedCheckerCta: "ನಿಮ್ಮಿಂದ ಏನು ಕೇಳಲಾಗಿತ್ತು ಎಂದು ಪರಿಶೀಲಿಸಿ",
+    whenRouteApplies: "ಈ ಮಾರ್ಗ ಅನ್ವಯಿಸುವಲ್ಲಿ, ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಅಗತ್ಯವಿಲ್ಲ.",
+    printNote: "ಮುದ್ರಿತ ಪುಟವನ್ನು ಶಾಖೆಗೆ ತೆಗೆದುಕೊಂಡು ಹೋಗಿ. ಇದು ನಿಯಮ ಮತ್ತು ಅದರ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯನ್ನು ಹೊಂದಿದೆ.",
+    printButton: "ಈ ಪುಟವನ್ನು ಮುದ್ರಿಸಿ",
+    deadlineHeading: (days) => `ಬ್ಯಾಂಕಿಗೆ ${days} ದಿನಗಳಿವೆ`,
+    deadlineBefore: (paraFifteen, quote) => `ಪ್ಯಾರಾ ${paraFifteen} ಬ್ಯಾಂಕಿಗೆ ${quote} ನೀಡುತ್ತದೆ. ಬ್ಯಾಂಕಿನ ಬಳಿ ಪೂರ್ಣ ಸೆಟ್ ಇದ್ದಾಗ ಮಾತ್ರ ಗಡಿಯಾರ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ — ಅದಕ್ಕಾಗಿಯೇ ಮುಖ್ಯವಾದ ದಿನಾಂಕ ನಿಮ್ಮ ಸ್ವೀಕೃತಿಯ ದಿನಾಂಕ, ನೀವು ಮೊದಲು ಹೋದ ದಿನವಲ್ಲ.`,
+    deadlineDateLabel: "ನಿಮ್ಮ ಸ್ವೀಕೃತಿಯ ಮೇಲಿನ ದಿನಾಂಕ",
+    deadlineClear: "ತೆರವುಗೊಳಿಸಿ",
+    deadlineKeptLocal: "ಇದನ್ನು ಈ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಮಾತ್ರ ಇಡಲಾಗಿದೆ. ಇದನ್ನು ಎಲ್ಲಿಗೂ ಕಳುಹಿಸಲಾಗುವುದಿಲ್ಲ, ನಮಗೆ ಕಾಣಿಸುವುದಿಲ್ಲ, ಮತ್ತು ನಿಮ್ಮ ಬ್ರೌಸಿಂಗ್ ಡೇಟಾ ತೆರವುಗೊಳಿಸಿದರೆ ಇದು ಹೋಗುತ್ತದೆ.",
+    deadlineDayOfTotal: (day, total) => `ದಿನ ${day} ರಲ್ಲಿ ${total}`,
+    deadlineDayUp: (day, total) => `ದಿನ ${day} — ${total} ದಿನಗಳು ಮುಗಿದಿವೆ`,
+    deadlineWindowClosed: (dateLabel) => `ಗಡುವು ${dateLabel} ರಂದು ಮುಗಿಯಿತು.`,
+    deadlineWindowEnds: (dateLabel) => `15 ದಿನಗಳು ${dateLabel} ರಂದು ಮುಗಿಯುತ್ತವೆ.`,
+    deadlineWhatNow: "ಈಗ ನೀವು ಏನು ಮಾಡಬಹುದು",
+    deadlineComplaintText: (para15, para33) => `ಶಾಖೆಯ ಕುಂದುಕೊರತೆ ಪರಿಹಾರ ಅಧಿಕಾರಿಗೆ ಲಿಖಿತ ದೂರು ನೀಡಿ. ಪ್ಯಾರಾ ${para15} ಉಲ್ಲೇಖಿಸಿ, ನಿಮ್ಮ ಸ್ವೀಕೃತಿಯ ದಿನಾಂಕ ನೀಡಿ, ಮತ್ತು ಇತ್ಯರ್ಥ ಹಾಗೂ ಪ್ಯಾರಾ ${para33} ಅಡಿಯಲ್ಲಿ ಪರಿಹಾರ ಕೇಳಿ — ವಿಳಂಬ ಬ್ಯಾಂಕಿನ ಕಾರಣದಿಂದಾಗಿದ್ದರೆ ಬ್ಯಾಂಕ್ ದರ + ವಾರ್ಷಿಕ 4% ಬಡ್ಡಿ, ಮತ್ತು ಲಾಕರ್ ಅಥವಾ ಸುರಕ್ಷಿತ ಸಂರಕ್ಷಣೆಯ ವಿಳಂಬದ ಪ್ರತಿ ದಿನಕ್ಕೆ ₹5,000.`,
+    deadlineOmbudsman: (waitDays, scheme) => `ಅದರ ನಂತರ ${waitDays} ದಿನಗಳು ಪರಿಹಾರವಿಲ್ಲದೆ ಕಳೆದರೆ, ${scheme} ಉಚಿತವಾಗಿ ಬಳಸಲು ಲಭ್ಯವಿದೆ`,
+    deadlineOmbudsmanFree: "ಇದು ಉಚಿತ ಮತ್ತು ನಿಜ, ಆದರೆ ಖಾತರಿಯಲ್ಲ.",
+    deadlineExpectDispute: "ಗಡಿಯಾರ ಯಾವಾಗ ಪ್ರಾರಂಭವಾಯಿತು ಎಂದು ಬ್ಯಾಂಕ್ ವಾದಿಸುತ್ತದೆ ಎಂದು ನಿರೀಕ್ಷಿಸಿ. ನಿಮ್ಮ ದಿನಾಂಕವಿರುವ ಸ್ವೀಕೃತಿ ಇದಕ್ಕೆ ಉತ್ತರ.",
+    bankPanelHeading: (bankShort) => `${bankShort} ಸ್ವತಃ ಏನು ಪ್ರಕಟಿಸುತ್ತದೆ`,
+    bankPanelSub: (bankShort, dateLabel) => `${bankShort} ಯ ಸ್ವಂತ ವೆಬ್‌ಸೈಟ್‌ನಿಂದ ಓದಲಾಗಿದೆ, ನಮ್ಮಿಂದಲ್ಲ. ಪರಿಶೀಲಿಸಲಾಗಿದೆ ${dateLabel}.`,
+    bankPanelStaleHeading: "ಇದನ್ನು ಆರು ತಿಂಗಳಿಗಿಂತ ಹೆಚ್ಚು ಹಿಂದೆ ಪರಿಶೀಲಿಸಲಾಗಿತ್ತು",
+    bankPanelStaleBody: "ಈ ನೀತಿ ಬದಲಾಗಿರಬಹುದು. ಇದನ್ನು ಅವಲಂಬಿಸುವ ಮೊದಲು ಬ್ಯಾಂಕಿನೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
+    bankPanelConflictHeading: (bankShort) => `${bankShort} ಯ ನೀತಿ ಮತ್ತು ಅದರ ಶಾಖಾ ಆಚರಣೆಯ ನಡುವಿನ ದಾಖಲಿತ ಅಂತರ`,
+    bankPanelThresholdLabel: (bankShort) => `${bankShort} ಯ ಸ್ವಂತ ಮಿತಿ`,
+    bankPanelSuretyLabel: "ಅದಕ್ಕಿಂತ ಕೆಳಗೆ ಮೂರನೇ ವ್ಯಕ್ತಿ ಜಾಮೀನು",
+    bankPanelSuretyNotRequired: "ಇದನ್ನು ಒತ್ತಾಯಿಸಬಾರದು ಎಂದು ಹೇಳುತ್ತದೆ",
+    bankPanelSuretyRequired: "ಒಂದು ಅಗತ್ಯವಿದೆ ಎಂದು ಹೇಳುತ್ತದೆ",
+    bankPanelTurnaroundLabel: "ಹೇಳಲಾದ ಸಮಯ",
+    bankPanelFormsLabel: "ಇದು ಹೆಸರಿಸುವ ಹಕ್ಕು ಫಾರ್ಮ್‌ಗಳು",
+    bankPanelPageLink: "ಅದರ ದಿವಂಗತ-ಹಕ್ಕು ಪುಟ",
+    bankPanelFormLink: "ಅದರ ಹಕ್ಕು ಫಾರ್ಮ್",
+    bankPanelPolicyLink: "ಅದರ ಪ್ರಕಟಿತ ನೀತಿ",
+    bankPanelOnlineLink: "ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಹಕ್ಕು ಸಲ್ಲಿಸಿ",
+    bankPanelNoPolicyHeading: (bankShort) => `${bankShort} ಯ ಪ್ರಕಟಿತ ನೀತಿ ನಮಗೆ ಸಿಗಲಿಲ್ಲ`,
+    bankPanelNoPolicyBody: (bankShort) => `31 ಮಾರ್ಚ್ 2026 ರಿಂದ ಪ್ರತಿ ಬ್ಯಾಂಕ್ ತನ್ನ ದಿವಂಗತ-ಹಕ್ಕು ನೀತಿ ಮತ್ತು ದಾಖಲೆ ಪಟ್ಟಿಯನ್ನು ಪ್ರಕಟಿಸಬೇಕು. ನಾವು ಹುಡುಕಿದೆವು ಮತ್ತು ${bankShort} ಯದನ್ನು ಕಂಡುಕೊಳ್ಳಲಿಲ್ಲ. ಆ ಕೊರತೆಯೂ ಪ್ರಸ್ತಾಪಿಸಲು ಯೋಗ್ಯ — ಶಾಖೆಗೆ ಲಿಖಿತವಾಗಿ ಮಂಡಳಿ-ಅನುಮೋದಿತ ನೀತಿ ಮತ್ತು ಪಟ್ಟಿಯನ್ನು ಕೇಳಿ.`,
+    bankPanelDifferentBank: "ಬೇರೆ ಬ್ಯಾಂಕ್?",
+    bankPanelWholeTable: "ಪೂರ್ಣ ಕೋಷ್ಟಕ",
+    bankPanelFoundOutdated: "ಹಳೆಯ ಬ್ಯಾಂಕ್ ನೀತಿ ಅಥವಾ ತಪ್ಪಾದ ಮಾಹಿತಿ ಕಂಡುಬಂದಿದೆಯೇ?",
+    bankPanelTellUs: "ನಮಗೆ ತಿಳಿಸಿ",
+    bankPanelNotVerified: "ಪರಿಶೀಲಿಸಲಾಗಿಲ್ಲ — ನಿಮ್ಮ ಬ್ಯಾಂಕನ್ನು ಕೇಳಿ",
+    bankPickerHeading: "ಖಾತೆ ಯಾವ ಬ್ಯಾಂಕಿನಲ್ಲಿದೆ?",
+    bankPickerBody: "ಮೇಲಿನ ಉತ್ತರ ಪ್ರತಿ ವಾಣಿಜ್ಯ ಬ್ಯಾಂಕಿನಲ್ಲೂ ಒಂದೇ — ಇದೇ RBI ಯ ನಿರ್ದೇಶನಗಳು ಮಾಡುತ್ತವೆ. ಬದಲಾಗುವುದು ಸಾಕ್ಷ್ಯ: ನಾವು ನಿಮ್ಮ ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಪ್ರಕಟಿತ ಪದಗಳನ್ನು ಈ ಪುಟಕ್ಕೆ ಸೇರಿಸುತ್ತೇವೆ, ಇದರಿಂದ ಅಧಿಕಾರಿ ನಮ್ಮನ್ನಲ್ಲ, ತಮ್ಮ ಉದ್ಯೋಗದಾತರನ್ನು ಓದುತ್ತಿದ್ದಾರೆ.",
+    bankPickerAnotherBank: "ಬೇರೆ ಬ್ಯಾಂಕ್? ಮೇಲಿನ RBI ನಿಯಮ ಅದಕ್ಕೂ ಅದೇ ರೀತಿ ಅನ್ವಯಿಸುತ್ತದೆ. ನಾವು ಇದುವರೆಗೆ ಎಂಟನ್ನು ಮಾತ್ರ ಸಂಗ್ರಹಿಸಿದ್ದೇವೆ —",
+    bankPickerSeeWhatWeHave: "ನಮ್ಮ ಬಳಿ ಏನಿದೆ ಮತ್ತು ಅದನ್ನು ಹೇಗೆ ಪರಿಶೀಲಿಸಲಾಗಿದೆ ಎಂದು ನೋಡಿ",
+    counterShorter: "ಈಗ ಕೌಂಟರ್‌ನಲ್ಲಿದ್ದೀರಾ? ಚಿಕ್ಕ ಆವೃತ್ತಿ",
+    yourNextSteps: "ನಿಮ್ಮ ಮುಂದಿನ ಹೆಜ್ಜೆಗಳು",
+    todayHeading: "ಇಂದು ನೀವು ಏನು ಮಾಡಬೇಕು?",
+    todayAction: {
+      nomineeOrSurvivorship: "ಬ್ಯಾಂಕಿನಿಂದ ದಿವಂಗತ-ಗ್ರಾಹಕ ಹಕ್ಕು ಫಾರ್ಮ್ ಕೇಳಿ, ಮತ್ತು ಮರಣ ಪ್ರಮಾಣಪತ್ರ ಹಾಗೂ ನಿಮ್ಮ ಗುರುತಿನ ಚೀಟಿಯನ್ನು ತೆಗೆದುಕೊಂಡು ಹೋಗಿ.",
+      underThreshold: "ಬ್ಯಾಂಕಿನಿಂದ ಅದರ ಸರಳೀಕೃತ ದಿವಂಗತ-ಠೇವಣಿ ಹಕ್ಕು ಫಾರ್ಮ್ ಕೇಳಿ ಮತ್ತು ಆ ಬ್ಯಾಂಕಿನಲ್ಲಿನ ಒಟ್ಟು ಬ್ಯಾಲೆನ್ಸ್ ಅನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
+      unknownNominee: "ನಾಮನಿರ್ದೇಶಿತರು ಅಥವಾ ಉತ್ತರಜೀವಿತ್ವ ಷರತ್ತು ದಾಖಲಾಗಿದೆಯೇ ಎಂದು ಲಿಖಿತವಾಗಿ ಖಚಿತಪಡಿಸಲು ಬ್ಯಾಂಕಿಗೆ ಕೇಳಿ.",
+      outOfScope: "ಈ ಆಸ್ತಿಯನ್ನು ಹೊಂದಿರುವ ಸಂಸ್ಥೆಯನ್ನು ಸಂಪರ್ಕಿಸಿ ಮತ್ತು ಅದರ ದಿವಂಗತ-ಗ್ರಾಹಕ ಹಕ್ಕು ಪಟ್ಟಿಯನ್ನು ಕೇಳಿ.",
+      default: "ಬ್ಯಾಂಕಿನಿಂದ ಲಿಖಿತ ಹಕ್ಕು ಪಟ್ಟಿ, ಅದರ ಅನ್ವಯವಾಗುವ ಮಿತಿ ಮತ್ತು ಅದು ಸ್ವೀಕರಿಸುವ ದಾಖಲೆಗಳನ್ನು ಕೇಳಿ.",
+    },
+    documentsTitle: (n) => `RBI ಹೆಸರಿಸುವ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ದಾಖಲೆಗಳು`,
+    documentsNote: "ಏನನ್ನು ತರಬೇಕು, ಪ್ರತಿಯೊಂದರ ವೆಚ್ಚ ಎಷ್ಟು ಮತ್ತು ಎಷ್ಟು ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ. ನಿಮ್ಮ ಬಳಿ ಈಗಾಗಲೇ ಇರುವುದನ್ನು ಟಿಕ್ ಮಾಡಿ.",
+    documentsLede: "ಕೆಳಗಿನ ವೆಚ್ಚ ಮತ್ತು ಸಮಯ ವಾಸ್ತವಿಕ, ಅತ್ಯುತ್ತಮ-ಸ್ಥಿತಿಯದ್ದಲ್ಲ. ಈ ಪಟ್ಟಿಯಲ್ಲಿ ಬೇರೆ ಯಾವುದೂ ನ್ಯಾಯಾಲಯದ ದಾಖಲೆಯಲ್ಲ.",
+    seeFullChecklist: "ಪೂರ್ಣ ಪಟ್ಟಿಯನ್ನು ನೋಡಿ ಮತ್ತು ನಿಮ್ಮ ಬಳಿ ಇರುವುದನ್ನು ಟಿಕ್ ಮಾಡಿ",
+    whereFrom: "ಎಲ್ಲಿಂದ ಸಿಗುತ್ತದೆ",
+    cost: "ವೆಚ್ಚ",
+    howLong: "ಎಷ್ಟು ಸಮಯ",
+    noteLabel: "ಸೂಚನೆ.",
+    readinessNeed: (n) => `ಈ ಹಕ್ಕಿಗಾಗಿ ನಿಮಗೆ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ.`,
+    readinessNoLongWait: "ಇವುಗಳಲ್ಲಿ ಯಾವುದಕ್ಕೂ ದೀರ್ಘ ಕಾಯುವಿಕೆ ಇಲ್ಲ — ಕೆಳಗೆ ನಿಮ್ಮ ಬಳಿ ಈಗಾಗಲೇ ಇರುವುದನ್ನು ಟಿಕ್ ಮಾಡಿ.",
+    readinessStartTodayLongest: (names) => `ಇಂದೇ ಪ್ರಾರಂಭಿಸಿ: ${names} — ಈ ಪಟ್ಟಿಯಲ್ಲಿ ಇದು ಅತಿ ಹೆಚ್ಚು ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ, ಮತ್ತು ಇದಕ್ಕಾಗಿ ಕಾಯುತ್ತಿರುವಾಗ ಉಳಿದೆಲ್ಲವನ್ನೂ ಮಾಡಬಹುದು.`,
+    readinessHaveAll: (n) => `ನಿಮ್ಮ ಬಳಿ ಎಲ್ಲಾ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ಇವೆ.`,
+    readinessTakeToBranch: "ಇವುಗಳನ್ನು ಒಟ್ಟಿಗೆ ಶಾಖೆಗೆ ತೆಗೆದುಕೊಂಡು ಹೋಗಿ ಮತ್ತು ಒಪ್ಪಿಸಿದ ದಿನವೇ ಹಕ್ಕಿನ ಲಿಖಿತ ಸ್ವೀಕೃತಿ ಕೇಳಿ. ಪೂರ್ಣ ಹಕ್ಕಿನ ನಂತರ ಬ್ಯಾಂಕಿಗೆ ಹದಿನೈದು ದಿನಗಳಿವೆ.",
+    readinessHaveOf: (have, total) => `ನಿಮ್ಮ ಬಳಿ ${total} ರಲ್ಲಿ ${have} ಇವೆ.`,
+    readinessStillToGet: (n) => {
+      const word = ["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? String(n);
+      return `ಇನ್ನೂ ${word} ಪಡೆಯಬೇಕಾಗಿದೆ.`;
+    },
+    readinessStartToday: (name) => `ಇಂದೇ ಪ್ರಾರಂಭಿಸಿ: ${name}`,
+    readinessLongestWait: " — ನಿಮಗೆ ಇನ್ನೂ ಬೇಕಾದವುಗಳಲ್ಲಿ ಇದಕ್ಕೆ ಅತಿ ಹೆಚ್ಚು ಕಾಯುವಿಕೆ ಇದೆ",
+    readinessLastOne: ", ಮತ್ತು ಇದೇ ಕೊನೆಯದು.",
+    readinessOtherOneWaits: ", ಮತ್ತು ಇನ್ನೊಂದನ್ನು ಇದಕ್ಕಾಗಿ ಕಾಯುತ್ತಿರುವಾಗ ಮಾಡಬಹುದು.",
+    readinessOthersWait: (n) => `, ಮತ್ತು ಉಳಿದ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ಅನ್ನು ಇದಕ್ಕಾಗಿ ಕಾಯುತ್ತಿರುವಾಗ ಮಾಡಬಹುದು.`,
+    readinessIsLastNoQueue: (name) => `${name} ಕೊನೆಯದು, ಮತ್ತು ಇದರ ಮುಂದೆ ಯಾವುದೇ ಸಾಲು ಇಲ್ಲ.`,
+    readinessNothingHasQueue: (name) => `ನಿಮ್ಮ ಪಟ್ಟಿಯಲ್ಲಿ ಇನ್ನು ಯಾವುದಕ್ಕೂ ಮುಂದೆ ಸಾಲು ಇಲ್ಲ — ${name} ಮತ್ತು ಉಳಿದವು ಅದೇ ದಿನ ಸಿಗುತ್ತವೆ ಅಥವಾ ಈಗಾಗಲೇ ನಿಮ್ಮ ಬಳಿ ಇವೆ.`,
+    evidenceTitle: "ನಿಯಮ, RBI ಯ ಸ್ವಂತ ಪದಗಳಲ್ಲಿ",
+    evidenceNote: "ಬ್ಯಾಂಕಿಗೆ ತೋರಿಸಬೇಕಾದ ಪ್ಯಾರಾಗ್ರಾಫ್‌ಗಳು, ಇರುವಂತೆಯೇ ಉಲ್ಲೇಖಿಸಲಾಗಿದೆ, ಪ್ರತಿಯೊಂದೂ ಅಧಿಸೂಚನೆಗೆ ಜೋಡಿಸಲಾಗಿದೆ.",
+    evidenceLede: "ಕೆಳಗಿನ ಪ್ರತಿ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆ ಅಧಿಸೂಚನೆಯಲ್ಲಿದೆ, ಮತ್ತು ಲಿಂಕ್ ಅದನ್ನು ತೆರೆಯುತ್ತದೆ.",
+    paragraphLabel: (para) => `ಪ್ಯಾರಾಗ್ರಾಫ್ ${para}`,
+    sourceLabel: (title, para, date) => `ಮೂಲ: ${title}, 2025, ಪ್ಯಾರಾಗ್ರಾಫ್ ${para} · ಪರಿಶೀಲಿಸಲಾಗಿದೆ: ${date}`,
+    inSummaryLabel: "ಸಾರಾಂಶದಲ್ಲಿ:",
+    fromLabel: "ಮೂಲ",
+    issuedLabel: "ಬಿಡುಗಡೆ",
+    tacticsTitle: "ಶಾಖೆಯಲ್ಲಿ ಮಾಡಬೇಕಾದ ನಾಲ್ಕು ವಿಷಯಗಳು",
+    tacticsNote: "ಕಾರ್ಯವಿಧಾನಾತ್ಮಕ, ಕಾನೂನು ಅಲ್ಲ. ಪ್ರತಿಯೊಂದೂ ಹಕ್ಕು ಸ್ಥಗಿತಗೊಳ್ಳುವ ನಿರ್ದಿಷ್ಟ ವಿಧಾನವನ್ನು ಮುಚ್ಚುತ್ತದೆ.",
+    conditionsForRoute: "ಈ ಮಾರ್ಗದ ಷರತ್ತುಗಳು",
+    otherImportantNotes: "ಇತರ ಪ್ರಮುಖ ಟಿಪ್ಪಣಿಗಳು",
+    refusedHeading: "ಬ್ಯಾಂಕ್ ಆದರೂ ನಿರಾಕರಿಸಿದರೆ",
+    readComplaintEligibility: "RBI ಯ ಪ್ರಸ್ತುತ ದೂರು ಅರ್ಹತೆ ಮತ್ತು ಸಮಯ ಮಿತಿಗಳನ್ನು ಓದಿ.",
+    fullRouteCta: "ಪೂರ್ಣ ಮಾರ್ಗ, ಜೊತೆಗೆ ಭರ್ತಿ ಮಾಡಬಹುದಾದ ಲಿಖಿತ ದೂರು",
+    sourceLineBrand: "ಅಧಿಕಾರ್ — ಒಂದು ಸ್ವತಂತ್ರ ಸಾರ್ವಜನಿಕ-ಮಾಹಿತಿ ಸಾಧನ.",
+    sourceLineBody: (number, ref, issued) => `ಇದು ಸರ್ಕಾರಿ ವೆಬ್‌ಸೈಟ್ ಅಲ್ಲ ಮತ್ತು ಭಾರತೀಯ ರಿಸರ್ವ್ ಬ್ಯಾಂಕ್ ಅಥವಾ ಯಾವುದೇ ಬ್ಯಾಂಕಿನೊಂದಿಗೆ ಸಂಬಂಧ ಹೊಂದಿಲ್ಲ. ನಿಯಮಗಳು ${number} (${ref}) ನಿಂದ ಉಲ್ಲೇಖಿಸಲಾಗಿದೆ, ಬಿಡುಗಡೆ ${issued}, 31 ಮಾರ್ಚ್ 2026 ರಿಂದ ಜಾರಿಯಲ್ಲಿದೆ. ಮಾಹಿತಿ, ಕಾನೂನು ಸಲಹೆ ಅಲ್ಲ.`,
+    exclusionNote: "ಇಲ್ಲಿ ಯಾವುದೂ ಸಾರ್ವಜನಿಕ ಭವಿಷ್ಯ ನಿಧಿ, ಹಿರಿಯ ನಾಗರಿಕರ ಉಳಿತಾಯ ಯೋಜನೆ, ಮಹಿಳಾ ಸಮ್ಮಾನ್ ಉಳಿತಾಯ ಪ್ರಮಾಣಪತ್ರ ಅಥವಾ ಸುಕನ್ಯಾ ಸಮೃದ್ಧಿಗೆ ಅನ್ವಯಿಸುವುದಿಲ್ಲ. ಪ್ಯಾರಾಗ್ರಾಫ್ 6(b) ಇವುಗಳನ್ನು ಈ ನಿರ್ದೇಶನಗಳ ವ್ಯಾಪ್ತಿಯಿಂದ ಹೊರಗಿಡುತ್ತದೆ.",
+    answerAgain: "ಪ್ರಶ್ನೆಗಳಿಗೆ ಮತ್ತೆ ಉತ್ತರಿಸಿ",
+    foundIncorrect: "ತಪ್ಪಾದ ಮಾಹಿತಿ ಕಂಡುಬಂದಿದೆಯೇ? ನಮಗೆ ತಿಳಿಸಿ",
+    show: "ತೋರಿಸಿ",
+    hide: "ಮರೆಮಾಡಿ",
+    numberWords: ["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"],
+    moreDetailTitle: "ಹೆಚ್ಚಿನ ವಿವರ",
+    moreDetailNote: "ಬ್ಯಾಂಕಿಗೆ ತೋರಿಸಬೇಕಾದ ಸಾಕ್ಷ್ಯ, ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಪುಟ, ಮುಂದುವರಿಕೆ ಮಾರ್ಗ ಮತ್ತು ಇತರ ಷರತ್ತುಗಳು — ಎಲ್ಲವೂ ಇನ್ನೂ ಇಲ್ಲಿವೆ, ಈಗ ಏನು ಮಾಡಬೇಕು ಎಂಬುದರ ಮೇಲೆ ಪುಟ ತೆರೆಯುವಂತೆ ಮಡಚಲಾಗಿದೆ.",
+    counterModeLabel: "ಕೌಂಟರ್ ಮೋಡ್",
+    seeFullPageInstead: "ಬದಲಿಗೆ ಪೂರ್ಣ ಪುಟವನ್ನು ನೋಡಿ",
+    whatToSay: "ಏನು ಹೇಳಬೇಕು",
+    whatDocToShow: "ಯಾವ ದಾಖಲೆ ತೋರಿಸಬೇಕು",
+    whatBankMayAsk: "ಬ್ಯಾಂಕ್ ಕಾನೂನುಬದ್ಧವಾಗಿ ಏನು ಕೇಳಬಹುದು",
+    whatToDoIfRefuse: "ಅವರು ನಿರಾಕರಿಸಿದರೆ ಏನು ಮಾಡಬೇಕು",
+    noFixedListGood: "ಈ ಸ್ಥಿತಿಗೆ ಯಾವುದೇ ನಿಗದಿತ ದಾಖಲೆ ಪಟ್ಟಿ ಅನ್ವಯಿಸುವುದಿಲ್ಲ — ಶಾಖೆಗೆ ಏನು ಕೇಳಬೇಕು ಎಂಬುದಕ್ಕೆ ಪೂರ್ಣ ಪುಟವನ್ನು ನೋಡಿ.",
+    noFixedListHard: "ಇಲ್ಲಿ ಯಾವುದೇ ಮುಚ್ಚಿದ ಪಟ್ಟಿ ಇಲ್ಲ. ನಿಜವಾಗಿಯೂ ಏನು ಬೇಕಾಗಬಹುದು ಮತ್ತು ಏಕೆ ಎಂಬುದಕ್ಕೆ ಪೂರ್ಣ ಪುಟವನ್ನು ನೋಡಿ.",
+    counterFooter: "ಅಧಿಕಾರ್ — ಒಂದು ಸ್ವತಂತ್ರ ಸಾರ್ವಜನಿಕ-ಮಾಹಿತಿ ಸಾಧನ, RBI ಅಥವಾ ಯಾವುದೇ ಬ್ಯಾಂಕಿನೊಂದಿಗೆ ಸಂಬಂಧ ಹೊಂದಿಲ್ಲ. ಮಾಹಿತಿ, ಕಾನೂನು ಸಲಹೆ ಅಲ್ಲ.",
+  },
+  privacyPage: {
+    heading: "ಗೌಪ್ಯತೆ",
+    updated: "ಕ್ಲೇಮ್ ಗೈಡ್ · ನವೀಕರಿಸಲಾಗಿದೆ 5 ಸೆಪ್ಟೆಂಬರ್ 2026",
+    linkSectionHeading: "ಗೈಡ್ ಲಿಂಕ್‌ನಲ್ಲಿ ಏನಿದೆ?",
+    linkSectionBody: "ನಾಮನಿರ್ದೇಶಿತ ಸ್ಥಿತಿ, ಮೊತ್ತ ವರ್ಗ, ಆಯ್ಕೆ ಮಾಡಿದ ಬ್ಯಾಂಕ್ ಮತ್ತು ಪಟ್ಟಿಯ ಟಿಕ್‌ಗಳಂತಹ ನಿಮ್ಮ ಆಯ್ಕೆಗಳು URL ನಲ್ಲಿ ಸೇರಿಸಲ್ಪಡಬಹುದು. ಅವು ಖಾತೆ ಬ್ಯಾಲೆನ್ಸ್ ಅಥವಾ ಖಾತೆ ಸಂಖ್ಯೆಗಳಲ್ಲ. ಪುಟವನ್ನು ರೆಂಡರ್ ಮಾಡಲು ಸರ್ವರ್ ಆ URL ಅನ್ನು ಸ್ವೀಕರಿಸುತ್ತದೆ; ಬ್ರೌಸರ್ ಇತಿಹಾಸ ಮತ್ತು ಹೋಸ್ಟಿಂಗ್ ಲಾಗ್‌ಗಳು ಅದನ್ನು ಉಳಿಸಿಕೊಳ್ಳಬಹುದು. ನೀವು ನಂಬುವ ಜನರೊಂದಿಗೆ ಮಾತ್ರ ಲಿಂಕ್‌ಗಳನ್ನು ಹಂಚಿಕೊಳ್ಳಿ.",
+    deviceSectionHeading: "ನಿಮ್ಮ ಸಾಧನದಲ್ಲಿ ಏನು ಉಳಿಯುತ್ತದೆ?",
+    deviceSectionBody: "ಐಚ್ಛಿಕ ಗಡುವು ಟ್ರ್ಯಾಕರ್ ತನ್ನ ದಿನಾಂಕವನ್ನು ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನ ಲೋಕಲ್ ಸ್ಟೋರೇಜ್‌ನಲ್ಲಿ ಉಳಿಸುತ್ತದೆ. ಇದನ್ನು ತೆಗೆದುಹಾಕಲು ಟ್ರ್ಯಾಕರ್ ಅಥವಾ ಸೈಟಿನ ಬ್ರೌಸರ್ ಡೇಟಾ ತೆರವುಗೊಳಿಸಿ. ಗೈಡ್ ಅನ್ನು ಮುದ್ರಿಸುವುದು ಮತ್ತು ಡೌನ್‌ಲೋಡ್ ಮಾಡುವುದು ನಿಮ್ಮ ನಿಯಂತ್ರಣದಲ್ಲಿ ಪ್ರತಿಗಳನ್ನು ರಚಿಸುತ್ತದೆ; ನೀವು ಹಂಚಿಕೊಂಡ ಪ್ರತಿಗಳನ್ನು ಅಧಿಕಾರ್ ಅಳಿಸಲಾಗುವುದಿಲ್ಲ.",
+    analyticsSectionHeading: "ಬಳಕೆಯ ವಿಶ್ಲೇಷಣೆ",
+    analyticsSectionBody: "ಕಾನ್ಫಿಗರ್ ಮಾಡಿದಾಗ, ಪ್ರಶ್ನೆಗೆ ಉತ್ತರಿಸುವುದು, ತಲುಪಿದ ಫಲಿತಾಂಶ, ಪಟ್ಟಿಯ ಕ್ರಿಯೆ ಅಥವಾ ಮುದ್ರಣ ಕ್ರಿಯೆಯಂತಹ ಮೂಲಭೂತ ಘಟನೆಗಳನ್ನು Mixpanel ಸ್ವೀಕರಿಸುತ್ತದೆ. ಶಾಶ್ವತ ಬ್ರೌಸರ್ ಗುರುತಿಸುವಿಕೆಗಳು, ವಿಶ್ಲೇಷಣೆ ಕುಕೀಗಳು, ಸ್ವಯಂಚಾಲಿತ ಪುಟ-ವೀಕ್ಷಣೆಗಳು ಅಥವಾ ಸೆಷನ್ ರೆಕಾರ್ಡಿಂಗ್ ಇಲ್ಲದೆ ವಿಶ್ಲೇಷಣೆಯನ್ನು ಕಾನ್ಫಿಗರ್ ಮಾಡಲಾಗಿದೆ. ಯಾವುದೇ ಡೇಟಾ ಸರ್ವರ್‌ಗೆ ತಲುಪುವುದಿಲ್ಲ ಎಂಬ ಭರವಸೆ ಇದಲ್ಲ: ವಿನಂತಿಗಳನ್ನು ನಿರ್ವಹಿಸುವಾಗ ನೆಟ್‌ವರ್ಕ್ ಪೂರೈಕೆದಾರರು ತಾಂತ್ರಿಕ ಮಾಹಿತಿಯನ್ನು ಸಂಸ್ಕರಿಸಬಹುದು.",
+    contactSectionHeading: "ಸಂಪರ್ಕ ಮತ್ತು ಬಾಹ್ಯ ಸೇವೆಗಳು",
+    contactSectionBody: "ನೀವು ನಮಗೆ ಇಮೇಲ್ ಮಾಡಿದರೆ, ನಿಮ್ಮ ಮತ್ತು ನಮ್ಮ ಇಮೇಲ್ ಪೂರೈಕೆದಾರರು ಸಂದೇಶ ಮತ್ತು ವಿಳಾಸವನ್ನು ಸಂಸ್ಕರಿಸುತ್ತಾರೆ. ಪಾಸ್‌ವರ್ಡ್‌ಗಳು, OTP ಗಳು, ಆಧಾರ್/ಪ್ಯಾನ್ ಸಂಖ್ಯೆಗಳು, ಬ್ಯಾಂಕ್ ರುಜುವಾತುಗಳು ಅಥವಾ ವೈಯಕ್ತಿಕ ದಾಖಲೆಗಳನ್ನು ಕಳುಹಿಸಬೇಡಿ. RBI UDGAM, ಬ್ಯಾಂಕ್ ವೆಬ್‌ಸೈಟ್‌ಗಳು ಮತ್ತು ಇತರ ಬಾಹ್ಯ ಸೇವೆಗಳು ತಮ್ಮದೇ ಗೌಪ್ಯತಾ ಅಭ್ಯಾಸಗಳನ್ನು ಹೊಂದಿವೆ; ಈ ಗೈಡ್ ಅವರ ದಾಖಲೆಗಳನ್ನು ಹುಡುಕುವುದಿಲ್ಲ ಅಥವಾ ನಿಮ್ಮ ಪರವಾಗಿ ಹಕ್ಕುಗಳನ್ನು ಸಲ್ಲಿಸುವುದಿಲ್ಲ.",
+    chatNote: "ಈ ಸೂಚನೆ ಕ್ಲೇಮ್ ಗೈಡ್ ಬಗ್ಗೆ ವಿವರಿಸುತ್ತದೆ. ಯಾವುದೇ ಪ್ರತ್ಯೇಕ ಚಾಟ್ ಸೇವೆ ಮಾಹಿತಿ ಕಳುಹಿಸುವ ಮೊದಲು ತನ್ನದೇ ಡೇಟಾ ನಿರ್ವಹಣೆಯನ್ನು ವಿವರಿಸಬೇಕು; ಚಾಟ್‌ನಲ್ಲಿ ಸೂಕ್ಷ್ಮ ಮಾಹಿತಿಯನ್ನು ನಮೂದಿಸಬೇಡಿ.",
+    questionsSectionHeading: "ಪ್ರಶ್ನೆಗಳು",
+    contactAdhikaar: "ಅಧಿಕಾರ್ ಅನ್ನು ಸಂಪರ್ಕಿಸಿ",
+    questionsSectionBody: "ಗೌಪ್ಯತೆ ಅಥವಾ ನೀವು ಕಳುಹಿಸಿದ ಸಂದೇಶದ ಬಗ್ಗೆ. ಹೋಸ್ಟಿಂಗ್, ಇಮೇಲ್ ಮತ್ತು ಬಾಹ್ಯ ಪೂರೈಕೆದಾರರು ತಮ್ಮದೇ ನೀತಿಗಳ ಅಡಿಯಲ್ಲಿ ತಾಂತ್ರಿಕ ದಾಖಲೆಗಳನ್ನು ಉಳಿಸಿಕೊಳ್ಳಬಹುದು; ಆ ವ್ಯವಸ್ಥೆಗಳಿಂದ ತಕ್ಷಣದ ಅಳಿಸುವಿಕೆಯ ಭರವಸೆ ನಾವು ನೀಡುವುದಿಲ್ಲ.",
+  },
+  bankRefusedPage: {
+    heading: "ಬ್ಯಾಂಕ್ ನಿರಾಕರಿಸಿತು. ಮುಂದಿನ ಮಾರ್ಗ ಇಲ್ಲಿದೆ.",
+    sub: "ಕ್ರಮವಾಗಿ ನಾಲ್ಕು ಹಂತಗಳು, ಮತ್ತು ನೀವು ಭರ್ತಿ ಮಾಡಿ ಒಪ್ಪಿಸಬಹುದಾದ ಲಿಖಿತ ದೂರು. ಮುಂದುವರಿಕೆ ನಿಜ ಮತ್ತು ಉಚಿತ — ಇದು ಖಾತರಿಯಲ್ಲ, ಮತ್ತು ಈ ಪುಟ ಮಾರ್ಗ ನೀಡುವುದಕ್ಕಿಂತ ಹೆಚ್ಚು ಭರವಸೆ ನೀಡದೆ ಇದನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಹೇಳುತ್ತದೆ.",
+    fourSteps: "ನಾಲ್ಕು ಹಂತಗಳು",
+    step1Title: "ಬೇಡಿಕೆಯನ್ನು ಲಿಖಿತವಾಗಿ ಕೇಳಿ",
+    step1Body: "ಅವರಿಗೆ ಯಾವ ದಾಖಲೆ ಬೇಕು ಮತ್ತು ಯಾವ ನಿಯಮದ ಆಧಾರದಲ್ಲಿ ಎಂದು ಕಾಗದದ ಮೇಲೆ ನಿಖರವಾಗಿ ಬರೆಯಲು ಅಧಿಕಾರಿಯನ್ನು ಕೇಳಿ. ಲಿಖಿತವಾಗಿ ಬರೆದರೆ ಉಳಿಯದ ಅನೇಕ ಬೇಡಿಕೆಗಳನ್ನು ನೀವು ಇದನ್ನು ಕೇಳಿದ ಕ್ಷಣವೇ ಕೈಬಿಡಲಾಗುತ್ತದೆ.",
+    step2Title: "ಶಾಖೆಗೆ ಲಿಖಿತ ದೂರು ಸಲ್ಲಿಸಿ",
+    step2Body: "ಅದನ್ನು ಶಾಖೆಯ ಕುಂದುಕೊರತೆ ಪರಿಹಾರ ಅಧಿಕಾರಿಗೆ ವಿಳಾಸ ಮಾಡಿ, ನಿಮ್ಮ ಹಕ್ಕಿಗೆ ಅನ್ವಯಿಸುವ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯನ್ನು ಉಲ್ಲೇಖಿಸಿ. ಒಂದು ಪ್ರತಿ ಇಟ್ಟುಕೊಳ್ಳಿ ಮತ್ತು ದಿನಾಂಕದೊಂದಿಗೆ ಸ್ವೀಕೃತಿ ಪಡೆಯಿರಿ — ಅಥವಾ ನೋಂದಾಯಿತ ಅಂಚೆಯ ಮೂಲಕ ಕಳುಹಿಸಿ ಮತ್ತು ರಸೀದಿ ಇಟ್ಟುಕೊಳ್ಳಿ.",
+    step3Title: "ಬ್ಯಾಂಕಿನ ಪ್ರತಿಕ್ರಿಯೆಯನ್ನು ಪರಿಶೀಲಿಸಿ",
+    step4Title: "RBI ಯ ಒಂಬುಡ್ಸ್‌ಮನ್ ಮಾರ್ಗದ ಮೂಲಕ ಮುಂದುವರಿಸಿ",
+    step4Body: (scheme) => `${scheme} ಅಡಿಯಲ್ಲಿ ಅರ್ಹರಾಗಿದ್ದರೆ RBI ದೂರು ಪೋರ್ಟಲ್ ಬಳಸಿ. ಈಗಾಗಲೇ ನ್ಯಾಯಾಲಯ ಅಥವಾ ನ್ಯಾಯಮಂಡಳಿಯ ಮುಂದೆ ಇರುವ ವಿಷಯಗಳು ಸೇರಿದಂತೆ, ಅದರ ಪ್ರಸ್ತುತ ಸಮಯ ಮಿತಿಗಳು ಮತ್ತು ಹೊರಗಿಡುವಿಕೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ. ದೂರು ಸಲ್ಲಿಸುವುದು ಉಚಿತ ಮತ್ತು ಅನುಕೂಲಕರ ತೀರ್ಪಿನ ಖಾತರಿ ನೀಡುವುದಿಲ್ಲ.`,
+    escalationHeading: "ಮುಂದುವರಿಕೆ ಲಭ್ಯವಿದೆ — ಇದು ಖಾತರಿಯಲ್ಲ",
+    complaintHeading: "ಬಳಸಬಹುದಾದ ಲಿಖಿತ ದೂರು",
+    complaintSub: "ಟೆಕ್ಸ್ಟ್ ಫೈಲ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ ಸಂಪಾದಿಸಿ, ಅಥವಾ ಮುದ್ರಿಸಿ ಆವರಣದಲ್ಲಿರುವ ಕ್ಷೇತ್ರಗಳನ್ನು ಕೈಯಿಂದ ಭರ್ತಿ ಮಾಡಿ. ಪ್ರತಿ ಖಾಲಿ ಜಾಗವನ್ನು ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ಖಾಲಿ ಬಿಡಲಾಗಿದೆ — ನಿಮ್ಮ ಬ್ಯಾಂಕ್, ನಿಮ್ಮ ಖಾತೆ ಸಂಖ್ಯೆ ಅಥವಾ ನಿಜವಾಗಿ ಕೇಳಿದ ದಾಖಲೆ ನಮಗೆ ತಿಳಿದಿಲ್ಲ, ಮತ್ತು ಇವುಗಳಲ್ಲಿ ಯಾವುದನ್ನಾದರೂ ಊಹಿಸುವುದು ಇದನ್ನು ಕಡಿಮೆ, ಹೆಚ್ಚು ಅಲ್ಲ, ಉಪಯುಕ್ತವಾಗಿಸುತ್ತದೆ.",
+    checkSituationInstead: "ಬದಲಿಗೆ ನಿಮ್ಮ ಹಕ್ಕಿನ ಸ್ಥಿತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ",
+  },
+  otherAssetsPage: {
+    heading: "ನೀವು ವ್ಯವಹರಿಸಬೇಕಾದ ಉಳಿದೆಲ್ಲವೂ",
+    sub: "ಅಧಿಕಾರ್ ಬ್ಯಾಂಕ್ ಠೇವಣಿಗಳು, ಲಾಕರ್‌ಗಳು ಮತ್ತು ಸುರಕ್ಷಿತ ಸಂರಕ್ಷಣೆಯನ್ನು ಒಳಗೊಳ್ಳುತ್ತದೆ, ಇನ್ನೇನೂ ಅಲ್ಲ. ಆಸ್ತಿಯ ಉಳಿದ ಭಾಗ ಪ್ರತ್ಯೇಕ ಮಾರ್ಗಗಳಲ್ಲಿ ಚಲಿಸುತ್ತದೆ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ತನ್ನದೇ ನಿಯಂತ್ರಕ ಮತ್ತು ತನ್ನದೇ ಫಾರ್ಮ್ ಇದೆ. ಈ ಪುಟ ಯಾವ ಬಾಗಿಲನ್ನು ತಟ್ಟಬೇಕೆಂದು ಹೇಳುತ್ತದೆ.",
+    pointsNotAdvises: "ಈ ಪುಟ ದಿಕ್ಕು ತೋರಿಸುತ್ತದೆ. ಇದು ಸಲಹೆ ನೀಡುವುದಿಲ್ಲ.",
+    pointsNotAdvisesBody: "ನಾವು ಬ್ಯಾಂಕ್ ನಿಯಮಗಳನ್ನು RBI ಯ ಸ್ವಂತ ಅಧಿಸೂಚನೆಯ ವಿರುದ್ಧ ಸಾಲಿನಿಂದ ಸಾಲಿಗೆ ಪರಿಶೀಲಿಸಿದ್ದೇವೆ. ಈ ಮಾರ್ಗಗಳಲ್ಲಿ ನಾವು ಅದನ್ನು ಮಾಡಿಲ್ಲ, ಆದ್ದರಿಂದ ಇಲ್ಲಿ ಯಾವುದೇ ತೀರ್ಪು ಮತ್ತು ಯಾವುದೇ ಪಟ್ಟಿ ಸಿಗುವುದಿಲ್ಲ — ಕೇವಲ ಪ್ರಾಧಿಕಾರ, ಮಾರ್ಗದ ಹೆಸರು, ಮತ್ತು ಒಂದು ಲಿಂಕ್. ಇದಕ್ಕಿಂತ ಹೆಚ್ಚಿನದು ಉತ್ತರದ ವೇಷದಲ್ಲಿನ ಊಹೆಯಾಗುತ್ತದೆ.",
+    railsHeading: "ಇತರ ಆರು ಮಾರ್ಗಗಳು",
+    whoHolds: "ಇದನ್ನು ಯಾರು ಹಿಡಿದಿದ್ದಾರೆ",
+    routeCalled: "ಮಾರ್ಗವನ್ನು ಏನೆಂದು ಕರೆಯಲಾಗುತ್ತದೆ",
+    findingOutHeading: "ಏನಿದೆ ಎಂದು ಕಂಡುಹಿಡಿಯುವುದು",
+    findingOutBody: "ಇವೆರಡೂ ಸರ್ಕಾರದ ಸ್ವಂತವೇ. ಇವು ಖಾತೆ ಅಥವಾ ಪಾಲಿಸಿಯನ್ನು ಹುಡುಕಲು ಸಹಾಯ ಮಾಡುತ್ತವೆ. ಒಂದನ್ನು ಕಂಡುಕೊಂಡ ನಂತರ ಏನು ಮಾಡಬೇಕು ಎಂಬುದು ಬೇರೆ ಸಮಸ್ಯೆ — ಅದಕ್ಕಾಗಿಯೇ ಅಧಿಕಾರ್ ಇರುವುದು.",
+    linksChecked: (date) => `ಲಿಂಕ್‌ಗಳನ್ನು ${date} ರಂದು ಪರಿಶೀಲಿಸಲಾಗಿದೆ. ಪ್ರಾಧಿಕಾರವನ್ನು ಹೆಸರಿಸುವುದು ಶಿಫಾರಸು ಅಲ್ಲ, ಮತ್ತು ಈ ಸಂಸ್ಥೆಗಳಲ್ಲಿ ಯಾವುದೂ ಅಧಿಕಾರ್‌ನೊಂದಿಗೆ ಸಂಪರ್ಕ ಹೊಂದಿಲ್ಲ.`,
+    backToQuestions: "ಬ್ಯಾಂಕ್ ಠೇವಣಿ ಪ್ರಶ್ನೆಗಳಿಗೆ ಹಿಂತಿರುಗಿ",
+  },
+  askedForPage: {
+    heading: "ನಿಮ್ಮಿಂದ ಏನು ಕೇಳಲಾಗಿತ್ತು?",
+    sub: "ಶಾಖೆ ನಿಮಗೆ ತರಲು ಹೇಳಿದ ಎಲ್ಲವನ್ನೂ ಟಿಕ್ ಮಾಡಿ. ಇವುಗಳಲ್ಲಿ RBI ನಿಮ್ಮ ಸ್ಥಿತಿಗೆ ನಿಜವಾಗಿ ಯಾವುದನ್ನು ನಿಗದಿಪಡಿಸುತ್ತದೆ ಮತ್ತು ಯಾವುದನ್ನು ಇಲ್ಲ ಎಂದು ನಾವು ತೋರಿಸುತ್ತೇವೆ — ಪ್ರತಿಯೊಂದಕ್ಕೂ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ.",
+    tickHeading: "ಶಾಖೆ ಏನು ಕೇಳಿತು ಎಂದು ಟಿಕ್ ಮಾಡಿ",
+    tickedRemove: "ಟಿಕ್ ಮಾಡಲಾಗಿದೆ. ತೆಗೆದುಹಾಕಲು ಆಯ್ಕೆಮಾಡಿ.",
+    tickedSelect: "ಟಿಕ್ ಮಾಡಲು ಆಯ್ಕೆಮಾಡಿ.",
+    comparingAgainst: "ಇದರ ಪಟ್ಟಿಯೊಂದಿಗೆ ಹೋಲಿಸಲಾಗುತ್ತಿದೆ",
+    confirmRouteFirst: "ಮೊದಲು ಹಕ್ಕಿನ ಮಾರ್ಗವನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ, ಯಾವುದೇ ಉಯಿಲು, ನ್ಯಾಯಾಲಯದ ನಿರ್ಬಂಧ, ವಿವಾದ ಮತ್ತು ಅನ್ವಯವಾಗುವ ಬ್ಯಾಂಕ್ ಮಿತಿ ಸೇರಿ. ಅಲ್ಲಿಯವರೆಗೆ, ಈ ಪುಟ ನಿಮ್ಮ ಸ್ಥಿತಿಗೆ ಬ್ಯಾಂಕಿನ ದಾಖಲೆ ಬೇಡಿಕೆಗಳನ್ನು ನಿರ್ಣಯಿಸಲಾಗುವುದಿಲ್ಲ.",
+    changeAnswers: "ನಿಮ್ಮ ಉತ್ತರಗಳನ್ನು ಬದಲಾಯಿಸಿ",
+    answerQuestions: "ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ",
+    notGradingHeading: "ನಾವು ಈ ಪಟ್ಟಿಯನ್ನು ಗ್ರೇಡ್ ಮಾಡುವುದಿಲ್ಲ",
+    aboveThresholdBody: "ಮಿತಿಯಲ್ಲಿ ಅಥವಾ ಅದಕ್ಕಿಂತ ಮೇಲೆ, ಪ್ಯಾರಾ 10(b) ಬ್ಯಾಂಕಿಗೆ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಅಥವಾ ಸಮಾನ, ಅಥವಾ ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರ ಪ್ರಮಾಣಪತ್ರ, ಅಥವಾ ಅಧಿಕಾರಿಯ ಮುಂದೆ ಪ್ರಮಾಣ ಮಾಡಿದ ಅಫಿಡವಿಟ್ ಕೇಳಲು ಅನುಮತಿಸುತ್ತದೆ. ನಿಮ್ಮ ಬೇಡಿಕೆಗಳನ್ನು ಹೋಲಿಸಲು ಯಾವುದೇ ಮುಚ್ಚಿದ ಪಟ್ಟಿ ಇಲ್ಲ, ಆದ್ದರಿಂದ ಅವುಗಳಲ್ಲಿ ಯಾವುದನ್ನಾದರೂ ಅತಿರೇಕ ಎಂದು ಕರೆಯುವುದು ತಪ್ಪಾಗುತ್ತದೆ — ಮತ್ತು ನೀವು ಸೋಲುವ ಪ್ರಕರಣವನ್ನು ವಾದಿಸಲು ಕಳುಹಿಸುತ್ತದೆ.",
+    incompleteBody: "ನಿಮ್ಮ ಅರ್ಹತಾ ಪರಿಶೀಲನೆಗಳು ಅಪೂರ್ಣವಾಗಿವೆ ಅಥವಾ ಪ್ರತ್ಯೇಕ ಪರಿಶೀಲನೆ ಅಗತ್ಯವಿದೆ. ಬ್ಯಾಂಕಿನ ಬೇಡಿಕೆಗಳನ್ನು ಪಟ್ಟಿಯೊಂದಿಗೆ ಹೋಲಿಸುವ ಮೊದಲು ಕ್ಲೇಮ್ ಗೈಡ್‌ನಲ್ಲಿ ವಿವರಗಳನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
+    whatRbiSaysHeading: "RBI ಯ ಪಟ್ಟಿ ಪ್ರತಿಯೊಂದರ ಬಗ್ಗೆ ಏನು ಹೇಳುತ್ತದೆ",
+    notInListHeading: (count) => `${count} ನಿಮ್ಮ ಸ್ಥಿತಿಗೆ RBI ಯ ಪಟ್ಟಿಯಲ್ಲಿ ಇಲ್ಲ`,
+    notInListLede: "ಇದರಿಂದ ಬೇಡಿಕೆ ಅಕ್ರಮವಾಗುವುದಿಲ್ಲ. ಇದರರ್ಥ RBI ಯ ಸ್ವಂತ ನಿರ್ದೇಶನಗಳು ಇದನ್ನು ಇಲ್ಲಿ ನಿಗದಿಪಡಿಸುವುದಿಲ್ಲ — ಇದನ್ನು ಲಿಖಿತವಾಗಿ ಎತ್ತುವುದು ಮತ್ತು ಅವರು ಯಾವ ನಿಯಮದ ಆಧಾರದಲ್ಲಿ ಎಂದು ಹೆಸರಿಸಲು ಅಧಿಕಾರಿಯನ್ನು ಕೇಳುವುದು ಸಮಂಜಸ.",
+    notInListTag: "ಪಟ್ಟಿಯಲ್ಲಿ ಇಲ್ಲ",
+    inListHeading: (count) => `${count} RBI ನಿಜವಾಗಿ ನಿಗದಿಪಡಿಸುತ್ತದೆ`,
+    inListLede: "ಇವು ಕಾನೂನುಬದ್ಧ. ಇವುಗಳನ್ನು ಕೇಳುವುದು ಬ್ಯಾಂಕ್ ನಿಯಮವನ್ನು ಅನುಸರಿಸುವುದು, ಅತಿರೇಕವಲ್ಲ.",
+    inListTag: "ಪಟ್ಟಿಯಲ್ಲಿ",
+    printFooterNote: "ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಗಳನ್ನೂ ಜೊತೆಗೆ ತೆಗೆದುಕೊಂಡು ಹೋಗುತ್ತದೆ, ಇದರಿಂದ ಅಧಿಕಾರಿ ಪ್ರತಿಯೊಂದನ್ನೂ ಪರಿಶೀಲಿಸಬಹುದು.",
+    footerCompared: (title, number, issued) => `${title} · ${number} ನೊಂದಿಗೆ ಹೋಲಿಸಲಾಗಿದೆ, ಬಿಡುಗಡೆ ${issued}. ಮಾಹಿತಿ, ಕಾನೂನು ಸಲಹೆ ಅಲ್ಲ. ನಿಮ್ಮ ಟಿಕ್‌ಗಳು ಪುಟದ URL ನಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ, ಮತ್ತು ಇಲ್ಲಿ ಯಾವುದೂ ನಿಮ್ಮನ್ನು ಗುರುತಿಸುವುದಿಲ್ಲ — ನಾವು ಎಷ್ಟು ವಸ್ತುಗಳನ್ನು ಪರಿಶೀಲಿಸಲಾಗಿದೆ ಎಂದು ಮಾತ್ರ ಎಣಿಸುತ್ತೇವೆ, ಯಾವುದನ್ನೂ ಅಲ್ಲ.`,
+    countWord: (n) => n === 1 ? "ಒಂದು ವಸ್ತು" : `${["", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು", "ಎಂಟು", "ಒಂಬತ್ತು", "ಹತ್ತು", "ಹನ್ನೊಂದು"][n] ?? n} ವಸ್ತುಗಳು`,
   },
 };
 

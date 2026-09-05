@@ -2,6 +2,8 @@
 
 import { useSyncExternalStore } from "react";
 import { CLAUSES, ESCALATION } from "@/lib/rbi";
+import { HOME_T } from "@/lib/i18n-home";
+import type { Locale } from "@/lib/i18n";
 
 /**
  * The 15-day clock.
@@ -64,7 +66,8 @@ function subscribe(notify: () => void) {
   };
 }
 
-export function DeadlineTracker() {
+export function DeadlineTracker({ locale }: { locale: Locale }) {
+  const t = HOME_T[locale].verdictPage;
   const date = useSyncExternalStore(subscribe, read, () => "");
   const save = write;
 
@@ -73,14 +76,10 @@ export function DeadlineTracker() {
   return (
     <section className="mt-10 rounded-xl border-2 border-indigo bg-mist-deep p-6">
       <h2 className="display-lg font-serif font-bold text-indigo-ink">
-        The bank has {WINDOW_DAYS} days
+        {t.deadlineHeading(WINDOW_DAYS)}
       </h2>
       <p className="body-fluid mt-2.5 max-w-[68ch] leading-relaxed text-ink-soft">
-        Para {CLAUSES.fifteenDays.para} gives the bank{" "}
-        <q className="font-serif">{CLAUSES.fifteenDays.text}</q>. The clock
-        starts when the bank holds a <strong>complete</strong> set — which is
-        why the date that matters is the date on your acknowledgement, not the
-        day you first walked in.
+        {t.deadlineBefore(CLAUSES.fifteenDays.para, CLAUSES.fifteenDays.text)}
       </p>
 
       <div className="mt-5">
@@ -88,7 +87,7 @@ export function DeadlineTracker() {
           htmlFor="ack-date"
           className="block text-[1rem] font-bold text-indigo-ink"
         >
-          Date on your acknowledgement
+          {t.deadlineDateLabel}
         </label>
         <div className="mt-2 flex flex-wrap items-center gap-3">
           <input
@@ -104,13 +103,12 @@ export function DeadlineTracker() {
               onClick={() => save("")}
               className="text-[1rem] font-bold text-link underline underline-offset-2"
             >
-              Clear
+              {t.deadlineClear}
             </button>
           )}
         </div>
         <p className="mt-2 text-[0.9375rem] text-ink-faint">
-          Kept in this browser only. It is never sent anywhere, it is not
-          visible to us, and it will be gone if you clear your browsing data.
+          {t.deadlineKeptLocal}
         </p>
       </div>
 
@@ -118,19 +116,19 @@ export function DeadlineTracker() {
         <div className="mt-6 border-t border-rule pt-5">
           <p className="display-md font-serif font-bold text-indigo-ink">
             {progress.days > WINDOW_DAYS
-              ? `Day ${progress.days} — the ${WINDOW_DAYS} days are up`
-              : `Day ${progress.days} of ${WINDOW_DAYS}`}
+              ? t.deadlineDayUp(progress.days, WINDOW_DAYS)
+              : t.deadlineDayOfTotal(progress.days, WINDOW_DAYS)}
           </p>
           <p className="body-fluid mt-1 text-ink-soft">
             {progress.days > WINDOW_DAYS
-              ? `The window closed on ${progress.dueLabel}.`
-              : `The ${WINDOW_DAYS} days end on ${progress.dueLabel}.`}
+              ? t.deadlineWindowClosed(progress.dueLabel)
+              : t.deadlineWindowEnds(progress.dueLabel)}
           </p>
 
           <div
             className="mt-3 h-2.5 w-full overflow-hidden rounded-pill bg-rule"
             role="img"
-            aria-label={`Day ${progress.days} of ${WINDOW_DAYS}`}
+            aria-label={t.deadlineDayOfTotal(progress.days, WINDOW_DAYS)}
           >
             <div
               className={`h-full rounded-pill ${
@@ -145,20 +143,13 @@ export function DeadlineTracker() {
           {progress.days > WINDOW_DAYS && (
             <div className="hardbox mt-5">
               <h3 className="display-md font-serif font-bold text-maroon">
-                What you can do now
+                {t.deadlineWhatNow}
               </h3>
               <p className="body-fluid mt-2 text-ink">
-                Put the complaint to the branch&apos;s Grievance Redressal
-                Officer in writing. Quote para {CLAUSES.fifteenDays.para}, give
-                the date of your acknowledgement, and ask for the settlement and
-                for compensation under para {CLAUSES.delayCompensation.para} —
-                interest at Bank Rate plus 4% per annum where the delay is
-                attributable to the bank, and ₹5,000 for each day of delay on a
-                locker or articles in safe custody.
+                {t.deadlineComplaintText(CLAUSES.fifteenDays.para, CLAUSES.delayCompensation.para)}
               </p>
               <p className="body-fluid mt-2 text-ink">
-                If {ESCALATION.waitDays} days pass after that without a
-                resolution, {ESCALATION.scheme} is free to use at{" "}
+                {t.deadlineOmbudsman(ESCALATION.waitDays, ESCALATION.scheme)}{" "}
                 <a
                   href={ESCALATION.portal}
                   target="_blank"
@@ -167,11 +158,10 @@ export function DeadlineTracker() {
                 >
                   {ESCALATION.portal}
                 </a>
-                . It is free and it is real, and it is not a guarantee.
+                . {t.deadlineOmbudsmanFree}
               </p>
               <p className="mt-2 text-[1rem] text-ink-soft">
-                Expect the bank to argue about when the clock started. Your
-                dated acknowledgement is the answer to that.
+                {t.deadlineExpectDispute}
               </p>
             </div>
           )}

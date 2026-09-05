@@ -98,7 +98,7 @@ export function ArticleQuote({
   cite: string;
 }) {
   return (
-    <blockquote className="body-fluid border-l-4 border-saffron pl-4 font-serif leading-[1.6] text-ink">
+    <blockquote className="body-fluid border-l-2 border-rule pl-4 font-serif leading-[1.6] text-ink">
       &ldquo;{children}&rdquo;
       <footer className="mt-2 font-sans text-[0.9375rem] not-italic text-ink-soft">
         — {cite}

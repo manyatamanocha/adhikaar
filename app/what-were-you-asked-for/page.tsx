@@ -11,23 +11,32 @@
  *
  * The ticks live in the URL like everything else, so it works with JavaScript
  * off, Back undoes a tick, and the finished comparison can be sent to a sibling.
+ *
+ * Fully localised 5 Sep 2026: this page's own prose lives in
+ * lib/i18n-home.ts's HomeDict.askedForPage; document names/descriptions come
+ * from lib/documents.ts's documentText(); the situation label and each
+ * comparison's reason line come from lib/asked.ts's locale-aware judge()
+ * and SITUATION_LABEL_BY_LOCALE.
  */
 
 import Link from "next/link";
-import { parseLocale, withLang } from "@/lib/i18n";
+import { parseLocale, withLang, type Locale } from "@/lib/i18n";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { PrintButton } from "../_components/print-button";
-import { DOCUMENTS, ASKABLE, type DocId } from "@/lib/documents";
+import { documentText, ASKABLE, type DocId } from "@/lib/documents";
 import { NOTIFICATION } from "@/lib/rbi";
 import { parseAnswers, toQuery } from "@/lib/wizard";
+import { HOME_T, type HomeDict } from "@/lib/i18n-home";
 import {
   judge,
   parseAsked,
   situationFrom,
   toggle,
-  SITUATION_LABEL,
+  SITUATION_LABEL_BY_LOCALE,
 } from "@/lib/asked";
+
+type AskedText = HomeDict["askedForPage"];
 
 export const metadata = {
   title: "What were you asked for? — Adhikaar",
@@ -42,10 +51,11 @@ export default async function Page({
 }) {
   const sp = await searchParams;
   const locale = parseLocale(sp.lang);
+  const t = HOME_T[locale].askedForPage;
   const answers = parseAnswers(sp);
   const asked = parseAsked(sp.asked);
   const situation = situationFrom(answers);
-  const results = judge(situation, asked);
+  const results = judge(situation, asked, locale);
 
   const hrefFor = (id: DocId) => {
     const next = toggle(asked, id);
@@ -59,30 +69,29 @@ export default async function Page({
     <>
       <RecoverNav />
 
-      <main className="flex-1">
+      <main className="flex-1" lang={locale}>
         <section className="bg-indigo">
           <div className="shell max-w-[860px] py-10 sm:py-12">
             <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-white">
-              What were you asked for?
+              {t.heading}
             </h1>
             <p className="lede-fluid mt-4 max-w-[60ch] text-white/90">
-              Tick everything the branch told you to bring. We will show you
-              which of them the RBI actually prescribes for your situation, and
-              which it does not — with the paragraph number for each.
+              {t.sub}
             </p>
           </div>
         </section>
 
         <div className="shell max-w-[860px] py-10">
-          <Situation situation={situation} answers={answers} locale={locale} />
+          <Situation situation={situation} answers={answers} locale={locale} t={t} />
 
           <section className="mt-8">
             <h2 className="display-lg font-serif font-bold text-indigo-ink">
-              Tick what the branch demanded
+              {t.tickHeading}
             </h2>
             <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
               {ASKABLE.map((id) => {
                 const on = asked.includes(id);
+                const doc = documentText(id, locale);
                 return (
                   <li key={id}>
                     <Link
@@ -108,16 +117,16 @@ export default async function Page({
                       </span>
                       <span className="flex-1">
                         <span className="block text-[1.0625rem] font-bold text-indigo-ink">
-                          {DOCUMENTS[id].name}
+                          {doc.name}
                         </span>
-                        {DOCUMENTS[id].official && (
+                        {doc.official && (
                           <span className="mt-0.5 block text-[0.875rem] text-ink-faint">
-                            {DOCUMENTS[id].official}
+                            {doc.official}
                           </span>
                         )}
                       </span>
                       <span className="sr-only">
-                        {on ? "Ticked. Select to remove." : "Select to tick."}
+                        {on ? t.tickedRemove : t.tickedSelect}
                       </span>
                     </Link>
                   </li>
@@ -127,23 +136,18 @@ export default async function Page({
           </section>
 
           {asked.length > 0 && (
-            <Results results={results} situation={situation} />
+            <Results results={results} situation={situation} locale={locale} t={t} />
           )}
 
           <p className="mt-10 border-t border-rule pt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
-            Compared against{" "}
             <a
               href={NOTIFICATION.url}
               target="_blank"
               rel="noreferrer"
               className="font-bold text-link underline underline-offset-2"
             >
-              {NOTIFICATION.title}
-            </a>{" "}
-            · {NOTIFICATION.number}, issued {NOTIFICATION.issued}. Information,
-            not legal advice. Your ticks appear in the page URL, and nothing here
-            identifies you — we count only how many items were checked, never
-            which ones.
+              {t.footerCompared(NOTIFICATION.title, NOTIFICATION.number, NOTIFICATION.issued)}
+            </a>
           </p>
         </div>
       </main>
@@ -159,10 +163,12 @@ function Situation({
   situation,
   answers,
   locale,
+  t,
 }: {
   situation: ReturnType<typeof situationFrom>;
   answers: ReturnType<typeof parseAnswers>;
-  locale: ReturnType<typeof parseLocale>;
+  locale: Locale;
+  t: AskedText;
 }) {
   const known = situation !== "unknown";
 
@@ -175,16 +181,14 @@ function Situation({
       }
     >
       <p className="text-[0.875rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
-        Comparing against the list for
+        {t.comparingAgainst}
       </p>
       <p className="display-md mt-1.5 font-serif font-bold text-indigo-ink">
-        {SITUATION_LABEL[situation]}
+        {SITUATION_LABEL_BY_LOCALE[locale][situation]}
       </p>
       {!known && (
         <p className="body-fluid mt-2 text-ink">
-          Confirm the claim route first, including any will, court restriction,
-          dispute and applicable bank threshold. Until then, this page cannot
-          judge the bank&apos;s document requests for your situation.
+          {t.confirmRouteFirst}
         </p>
       )}
       <p className="mt-3 text-[1rem]" data-print="hide">
@@ -194,7 +198,7 @@ function Situation({
           // thumb-sized hit area without moving anything.
           className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
         >
-          {known ? "Change your answers" : "Answer the questions"}
+          {known ? t.changeAnswers : t.answerQuestions}
         </Link>
       </p>
     </div>
@@ -206,9 +210,13 @@ function Situation({
 function Results({
   results,
   situation,
+  locale,
+  t,
 }: {
   results: ReturnType<typeof judge>;
   situation: ReturnType<typeof situationFrom>;
+  locale: Locale;
+  t: AskedText;
 }) {
   // No comparison can honestly be run above the threshold, or before we know
   // whether there was a nominee. Say why rather than showing a wrong split.
@@ -216,13 +224,11 @@ function Results({
     return (
       <section className="mt-10">
         <h2 className="display-lg font-serif font-bold text-indigo-ink">
-          We are not going to grade this list
+          {t.notGradingHeading}
         </h2>
         <div className="hardbox mt-4">
           <p className="body-fluid text-ink">
-            {situation === "above-threshold"
-              ? "At or above the threshold, para 10(b) allows the bank to require a succession certificate or equivalent, or a legal heir certificate, or an affidavit sworn before an official. There is no closed list to compare your demands against, so calling any of them an overreach would be wrong — and would send you to argue a case you would lose."
-              : "Your eligibility checks are incomplete or need individual review. Confirm the details in the claim guide before comparing the bank's demands against a checklist."}
+            {situation === "above-threshold" ? t.aboveThresholdBody : t.incompleteBody}
           </p>
         </div>
       </section>
@@ -235,24 +241,28 @@ function Results({
   return (
     <section className="mt-10">
       <h2 className="display-lg font-serif font-bold text-indigo-ink">
-        What the RBI&apos;s list says about each one
+        {t.whatRbiSaysHeading}
       </h2>
 
       {not.length > 0 && (
         <Group
-          heading={`${count(not.length)} not in the RBI's list for your situation`}
-          lede="This does not make the demand illegal. It means the RBI's own Directions do not prescribe it here — which is a reasonable thing to raise, in writing, and ask the officer to name the rule they rely on."
+          heading={t.notInListHeading(t.countWord(not.length))}
+          lede={t.notInListLede}
           tone="hard"
+          tag={t.notInListTag}
           items={not}
+          locale={locale}
         />
       )}
 
       {prescribed.length > 0 && (
         <Group
-          heading={`${count(prescribed.length)} the RBI does prescribe`}
-          lede="These are legitimate. Asking for them is the bank following the rule, not overreaching."
+          heading={t.inListHeading(t.countWord(prescribed.length))}
+          lede={t.inListLede}
           tone="ok"
+          tag={t.inListTag}
           items={prescribed}
+          locale={locale}
         />
       )}
 
@@ -264,9 +274,9 @@ function Results({
         data-print="hide"
         className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-rule pt-6"
       >
-        <PrintButton />
+        <PrintButton label={HOME_T[locale].verdictPage.printButton} />
         <p className="text-[0.9375rem] text-ink-soft">
-          Takes the paragraph numbers with it, so the officer can check each one.
+          {t.printFooterNote}
         </p>
       </div>
     </section>
@@ -277,12 +287,16 @@ function Group({
   heading,
   lede,
   tone,
+  tag,
   items,
+  locale,
 }: {
   heading: string;
   lede: string;
   tone: "hard" | "ok";
+  tag: string;
   items: NonNullable<ReturnType<typeof judge>>;
+  locale: Locale;
 }) {
   return (
     <div className="mt-7">
@@ -296,7 +310,9 @@ function Group({
       <p className="body-fluid mt-1.5 max-w-[68ch] text-ink-soft">{lede}</p>
 
       <ul className="mt-4 space-y-3">
-        {items.map((r) => (
+        {items.map((r) => {
+          const doc = documentText(r.id, locale);
+          return (
           <li
             key={r.id}
             className={`rounded-xl border-2 bg-white p-5 ${
@@ -305,7 +321,7 @@ function Group({
           >
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
               <h4 className="display-md font-serif font-bold text-indigo-ink">
-                {DOCUMENTS[r.id].name}
+                {doc.name}
               </h4>
               <span
                 className={`rounded-md px-2 py-0.5 text-[0.8125rem] font-bold uppercase tracking-[0.06em] ${
@@ -314,7 +330,7 @@ function Group({
                     : "bg-accent-green text-white"
                 }`}
               >
-                {tone === "hard" ? "Not in the list" : "In the list"}
+                {tag}
               </span>
             </div>
             <p className="body-fluid mt-2 leading-relaxed text-ink">
@@ -322,17 +338,13 @@ function Group({
             </p>
             {tone === "hard" && (
               <p className="mt-2 text-[1rem] text-ink-soft">
-                {DOCUMENTS[r.id].what} Cost {DOCUMENTS[r.id].cost.toLowerCase()},{" "}
-                {DOCUMENTS[r.id].time.toLowerCase()}.
+                {doc.what} {HOME_T[locale].verdictPage.cost}: {doc.cost}. {HOME_T[locale].verdictPage.howLong}: {doc.time}.
               </p>
             )}
           </li>
-        ))}
+          );
+        })}
       </ul>
     </div>
   );
-}
-
-function count(n: number) {
-  return n === 1 ? "One thing" : `${["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven"][n] ?? n} things`;
 }

@@ -20,6 +20,7 @@ import {
   SIMPLIFIED_PROCEDURE,
   type DocId,
 } from "./documents";
+import type { Locale } from "./i18n";
 
 export type OutcomeId =
   | "nominee"

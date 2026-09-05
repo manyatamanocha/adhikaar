@@ -13,37 +13,40 @@
 
 import Link from "next/link";
 import { BANKS, getBank, isStale, type Bank } from "@/lib/banks";
+import type { HomeDict } from "@/lib/i18n-home";
+
+type VerdictText = HomeDict["verdictPage"];
 
 export function BankPanel({
   bankId,
   hrefFor,
+  t,
 }: {
   bankId?: string;
   /** Builds the URL for this same page with a given bank selected. */
   hrefFor: (id: string) => string;
+  t: VerdictText;
 }) {
   const bank = bankId ? getBank(bankId) : undefined;
 
-  if (!bank) return <BankPicker hrefFor={hrefFor} />;
+  if (!bank) return <BankPicker hrefFor={hrefFor} t={t} />;
 
   return (
     <section className="mt-10">
       <h2 className="display-lg font-serif font-bold text-indigo-ink">
-        What {bank.short} itself publishes
+        {t.bankPanelHeading(bank.short)}
       </h2>
       <p className="body-fluid mt-2.5 max-w-[68ch] text-ink-soft">
-        Read from {bank.short}&apos;s own website, not from us. Checked{" "}
-        {formatDate(bank.verifiedOn)}.
+        {t.bankPanelSub(bank.short, formatDate(bank.verifiedOn))}
       </p>
 
       {isStale(bank.verifiedOn) && (
         <div className="hardbox mt-4">
           <h3 className="display-md font-serif font-bold text-maroon">
-            This was checked over six months ago
+            {t.bankPanelStaleHeading}
           </h3>
           <p className="body-fluid mt-2 text-ink">
-            This policy may have changed. Confirm with the bank before relying
-            on it.
+            {t.bankPanelStaleBody}
           </p>
         </div>
       )}
@@ -51,8 +54,7 @@ export function BankPanel({
       {bank.practiceConflict && (
         <div className="hardbox mt-4">
           <h3 className="display-md font-serif font-bold text-maroon">
-            A documented gap between {bank.short}&apos;s policy and its
-            branch practice
+            {t.bankPanelConflictHeading(bank.short)}
           </h3>
           <p className="body-fluid mt-2 text-ink">{bank.practiceConflict}</p>
         </div>
@@ -60,7 +62,7 @@ export function BankPanel({
 
       <div className="mt-5 rounded-xl border-2 border-indigo bg-white p-6">
         {bank.suretyQuote && (
-          <blockquote className="body-fluid border-l-4 border-saffron pl-4 font-serif leading-[1.6] text-ink">
+          <blockquote className="body-fluid border-l-2 border-rule pl-4 font-serif leading-[1.6] text-ink">
             &ldquo;{bank.suretyQuote}&rdquo;
             <footer className="mt-2 font-sans text-[0.9375rem] not-italic text-ink-soft">
               — {bank.name}
@@ -70,23 +72,26 @@ export function BankPanel({
 
         <dl className="mt-5 grid gap-x-6 gap-y-4 sm:grid-cols-2">
           <BankField
-            label={`${bank.short}'s own threshold`}
+            label={t.bankPanelThresholdLabel(bank.short)}
             value={bank.thresholdLabel}
+            t={t}
           />
           <BankField
-            label="Third-party surety below it"
+            label={t.bankPanelSuretyLabel}
             value={
               bank.noSuretyBelowThreshold === null
                 ? null
                 : bank.noSuretyBelowThreshold
-                  ? "Says it is not to be insisted on"
-                  : "Says one is required"
+                  ? t.bankPanelSuretyNotRequired
+                  : t.bankPanelSuretyRequired
             }
+            t={t}
           />
-          <BankField label="Stated turnaround" value={bank.turnaround} />
+          <BankField label={t.bankPanelTurnaroundLabel} value={bank.turnaround} t={t} />
           <BankField
-            label="Claim forms it names"
+            label={t.bankPanelFormsLabel}
             value={bank.claimFormNames?.join(" · ") ?? null}
+            t={t}
           />
         </dl>
 
@@ -104,29 +109,26 @@ export function BankPanel({
         )}
 
         <ul className="mt-5 flex flex-wrap gap-x-5 gap-y-2 border-t border-rule-faint pt-4 text-[1rem]">
-          <BankLink label="Its deceased-claim page" url={bank.pageUrl} />
-          <BankLink label="Its claim form" url={bank.claimFormUrl} />
-          <BankLink label="Its published policy" url={bank.policyUrl} />
-          <BankLink label="Lodge the claim online" url={bank.onlineClaimUrl} />
+          <BankLink label={t.bankPanelPageLink} url={bank.pageUrl} />
+          <BankLink label={t.bankPanelFormLink} url={bank.claimFormUrl} />
+          <BankLink label={t.bankPanelPolicyLink} url={bank.policyUrl} />
+          <BankLink label={t.bankPanelOnlineLink} url={bank.onlineClaimUrl} />
         </ul>
       </div>
 
       {bank.policyPublished === "unverified" && (
         <div className="hardbox mt-4">
           <h3 className="display-md font-serif font-bold text-maroon">
-            We could not find {bank.short}&apos;s published policy
+            {t.bankPanelNoPolicyHeading(bank.short)}
           </h3>
           <p className="body-fluid mt-2 text-ink">
-            From 31 March 2026 a bank is required to publish its deceased-claim
-            policy and document checklist. We looked and did not find{" "}
-            {bank.short}&apos;s. That absence is itself worth raising — ask the
-            branch, in writing, for the board-approved policy and the checklist.
+            {t.bankPanelNoPolicyBody(bank.short)}
           </p>
         </div>
       )}
 
       <p data-print="hide" className="mt-4 text-[1rem] text-ink-soft">
-        Different bank?{" "}
+        {t.bankPanelDifferentBank}{" "}
         {BANKS.filter((b) => b.id !== bank.id).map((b, i, arr) => (
           <span key={b.id}>
             <Link
@@ -143,17 +145,17 @@ export function BankPanel({
           href="/banks"
           className="font-bold text-link underline underline-offset-2"
         >
-          the whole table
+          {t.bankPanelWholeTable}
         </Link>
       </p>
 
       <p data-print="hide" className="mt-2 text-[0.9375rem] text-ink-faint">
-        Found an outdated bank policy or incorrect information?{" "}
+        {t.bankPanelFoundOutdated}{" "}
         <Link
           href="/contact"
           className="font-bold text-link underline underline-offset-2"
         >
-          Tell us
+          {t.bankPanelTellUs}
         </Link>
         .
       </p>
@@ -163,20 +165,17 @@ export function BankPanel({
 
 /* ------------------------------------------------------------------ */
 
-function BankPicker({ hrefFor }: { hrefFor: (id: string) => string }) {
+function BankPicker({ hrefFor, t }: { hrefFor: (id: string) => string; t: VerdictText }) {
   return (
     <section
       data-print="hide"
       className="mt-10 rounded-xl border-2 border-indigo bg-mist-deep p-6"
     >
       <h2 className="display-md font-serif font-bold text-indigo-ink">
-        Which bank is the account with?
+        {t.bankPickerHeading}
       </h2>
       <p className="body-fluid mt-2 max-w-[68ch] leading-relaxed text-ink-soft">
-        The answer above is the same at every commercial bank — that is what the
-        RBI&apos;s Directions do. What changes is the evidence: we will add your
-        bank&apos;s own published words to this page, so the officer is reading
-        their employer, not us.
+        {t.bankPickerBody}
       </p>
 
       <ul className="mt-4 flex flex-wrap gap-2.5">
@@ -193,13 +192,12 @@ function BankPicker({ hrefFor }: { hrefFor: (id: string) => string }) {
       </ul>
 
       <p className="mt-4 text-[1rem] text-ink-soft">
-        Another bank? The RBI&apos;s rule above applies to it just the same. We
-        have only compiled four so far —{" "}
+        {t.bankPickerAnotherBank}{" "}
         <Link
           href="/banks"
           className="font-bold text-link underline underline-offset-2"
         >
-          see what we have and how it was checked
+          {t.bankPickerSeeWhatWeHave}
         </Link>
         .
       </p>
@@ -210,7 +208,7 @@ function BankPicker({ hrefFor }: { hrefFor: (id: string) => string }) {
 /* ------------------------------------------------------------------ */
 
 /** A null renders as an honest gap, never as a plausible-looking figure. */
-function BankField({ label, value }: { label: string; value: string | null }) {
+function BankField({ label, value, t }: { label: string; value: string | null; t: VerdictText }) {
   return (
     <div>
       <dt className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
@@ -221,7 +219,7 @@ function BankField({ label, value }: { label: string; value: string | null }) {
           value ? "mt-0.5 text-ink" : "mt-0.5 italic text-maroon"
         }
       >
-        {value ?? "Not verified — ask your bank"}
+        {value ?? t.bankPanelNotVerified}
       </dd>
     </div>
   );

@@ -27,10 +27,10 @@ import { parseLocale, withLang } from "@/lib/i18n";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { PrintButton } from "./print-button";
-import { CLAUSES, NOTIFICATION, RULES_VERIFIED_ON, TACTICS, ESCALATION } from "@/lib/rbi";
+import { CLAUSES, NOTIFICATION, RULES_VERIFIED_ON, TACTICS_BY_LOCALE, ESCALATION, ESCALATION_CAVEAT_BY_LOCALE } from "@/lib/rbi";
 import { formatDate } from "./bank-panel";
-import { DOCUMENTS, type DocId } from "@/lib/documents";
-import { OUTCOMES, type OutcomeId } from "@/lib/outcomes";
+import { DOCUMENTS, documentText, type DocId } from "@/lib/documents";
+import { OUTCOMES, outcomeText, type OutcomeId, type Outcome } from "@/lib/outcomes";
 import { parseHave, readiness, toggleHave } from "@/lib/readiness";
 import { parseAnswers, resolve, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
@@ -38,13 +38,17 @@ import { DeadlineTracker } from "./deadline-tracker";
 import { BeliefSurvey } from "./belief-survey";
 import { CounterMode } from "./counter-mode";
 import { COUNTER_SCRIPT } from "@/lib/counter";
+import { HOME_T, type HomeDict } from "@/lib/i18n-home";
+import type { Locale } from "@/lib/i18n";
 
 type Params = Record<string, string | string[] | undefined>;
+type VerdictText = HomeDict["verdictPage"];
 
 export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
-  const outcome = OUTCOMES[id];
   const answers = parseAnswers(sp);
   const locale = parseLocale(sp.lang);
+  const outcome = outcomeText(id, locale);
+  const t = HOME_T[locale].verdictPage;
   const hasAnswers = Object.values(answers).some(Boolean);
   if (hasAnswers && id !== "already-in-court") {
     const route = resolve(answers);
@@ -99,26 +103,26 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
       <RecoverNav />
 
       <main className="flex-1">
-        {!hasAnswers && <div className="shell max-w-[860px] py-5"><p className="body-fluid"><strong>General guidance — your eligibility has not been checked.</strong> <Link href={withLang("/start", locale)} className="text-link underline">Check your situation first.</Link></p></div>}
-        <Verdict id={id} answers={answers} bankId={bankId} locale={locale} />
+        {!hasAnswers && <div className="shell max-w-[860px] py-5"><p className="body-fluid"><strong>{t.generalGuidanceLabel}</strong> <Link href={withLang("/start", locale)} className="text-link underline">{t.checkSituationFirst}</Link></p></div>}
+        <Verdict id={id} answers={answers} bankId={bankId} locale={locale} outcome={outcome} t={t} />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
-          <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} />
-          <Steps steps={outcome.steps} />
-          <TodayBox outcome={id} />
+          <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
+          <Steps steps={outcome.steps} t={t} />
+          <TodayBox outcome={id} t={t} />
           {/* Promoted out of the (folded) Documents section per advisor review:
               this was the single most useful sentence on the page and it was
               hidden behind a "Show" tap. The full checklist stays folded below
               — this is only the one-line summary and the "start today" call. */}
           {outcome.documents && (
             <div className="mt-8">
-              <ReadinessBox ids={outcome.documents} have={have} />
+              <ReadinessBox ids={outcome.documents} have={have} t={t} locale={locale} />
               <a
                 href="#documents"
                 data-print="hide"
                 className="mt-2 inline-block text-[0.9375rem] font-bold text-link underline underline-offset-2"
               >
-                See the full checklist and tick what you have
+                {t.seeFullChecklist}
               </a>
             </div>
           )}
@@ -127,19 +131,48 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               ids={outcome.documents}
               have={have}
               hrefFor={haveHrefFor}
+              t={t}
+              locale={locale}
             />
           )}
-          {hasAnswers && id !== "out-of-scope" && <AskedChecker answers={answers} locale={locale} />}
-          <Evidence clauses={outcome.clauses} />
-          {id !== "out-of-scope" && (
-            <BankPanel bankId={bankId} hrefFor={hrefFor} />
-          )}
-          {outcome.documents && <Tactics />}
-          {outcome.tracker && <DeadlineTracker />}
-          <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} />
-          <Escalation locale={locale} />
-          <SourceLine locale={locale} />
-          {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} />}
+
+          {/* The core path ends here: answer, steps, checklist. Repeating
+              Print/Counter-mode right after the checklist — not just once,
+              up in the header, before the reader has seen what to bring —
+              gives an explicit "you're done, do this now" moment before
+              anything else on the page competes for attention. Everything
+              below is reference material for later (the counter, an
+              appeal, a bank comparison), not part of what to do right now. */}
+          <DoneBand id={id} answers={answers} bankId={bankId} outcome={outcome} t={t} locale={locale} />
+
+          <details className="group mt-10 border-t-2 border-rule pt-6">
+            <summary className="-my-2 flex cursor-pointer list-none items-center gap-2 py-2 [&::-webkit-details-marker]:hidden">
+              <span className="display-lg font-serif font-bold text-indigo-ink">
+                {t.moreDetailTitle}
+              </span>
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-[0.875rem] font-bold uppercase tracking-[0.08em] text-saffron-ink"
+              >
+                <span className="group-open:hidden">{t.show}</span>
+                <span className="hidden group-open:inline">{t.hide}</span>
+              </span>
+            </summary>
+            <p className="body-fluid mt-2 max-w-[68ch] text-ink-soft">{t.moreDetailNote}</p>
+            <div className="mt-2">
+              {hasAnswers && id !== "out-of-scope" && <AskedChecker answers={answers} locale={locale} t={t} />}
+              <Evidence clauses={outcome.clauses} t={t} />
+              {id !== "out-of-scope" && (
+                <BankPanel bankId={bankId} hrefFor={hrefFor} t={t} />
+              )}
+              {outcome.documents && <Tactics locale={locale} t={t} />}
+              {outcome.tracker && <DeadlineTracker locale={locale} />}
+              <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
+              <Escalation locale={locale} t={t} />
+              <SourceLine locale={locale} t={t} />
+              {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} />}
+            </div>
+          </details>
         </div>
       </main>
 
@@ -155,26 +188,23 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
  * because that is the moment the reader thinks "but the branch asked me for
  * three other things as well."
  */
-function AskedChecker({ answers, locale }: { answers: Answers; locale: ReturnType<typeof parseLocale> }) {
+function AskedChecker({ answers, locale, t }: { answers: Answers; locale: ReturnType<typeof parseLocale>; t: VerdictText }) {
   return (
     <section
       data-print="hide"
       className="mt-10 rounded-xl border-2 border-saffron bg-white p-6"
     >
       <h2 className="display-md font-serif font-bold text-indigo-ink">
-        Were you asked for something that is not on this list?
+        {t.askedCheckerHeading}
       </h2>
       <p className="body-fluid mt-2 max-w-[68ch] leading-relaxed text-ink-soft">
-        Tick what the branch actually demanded — a surety, a family tree, an
-        affidavit, witnesses — and we will show you which of them the RBI
-        prescribes for your situation and which it does not, with the paragraph
-        number for each.
+        {t.askedCheckerBody}
       </p>
       <Link
         href={withLang(`/what-were-you-asked-for${toQuery(answers)}`, locale)}
         className="mt-4 inline-flex items-center gap-2 rounded-pill bg-indigo px-6 py-3 text-[1.0625rem] font-bold text-white transition-colors hover:bg-indigo-lift"
       >
-        Check what you were asked for
+        {t.askedCheckerCta}
         <span aria-hidden="true">&rarr;</span>
       </Link>
     </section>
@@ -188,14 +218,16 @@ function Verdict({
   answers,
   bankId,
   locale,
+  outcome,
+  t,
 }: {
   id: OutcomeId;
   answers: Answers;
   bankId?: string;
   locale: ReturnType<typeof parseLocale>;
+  outcome: Outcome;
+  t: VerdictText;
 }) {
-  const outcome = OUTCOMES[id];
-
   // Good news is indigo, hard news is maroon on blush — but the sentence itself
   // is the carrier. "You should not be asked for a succession certificate" and
   // "A succession certificate may genuinely be required here" say which this is
@@ -210,7 +242,7 @@ function Verdict({
             good ? "text-white" : "text-indigo-ink"
           }`}
         >
-          {outcome.goodNews && !Object.values(answers).some(Boolean) ? "When this route applies, a succession certificate is not required." : outcome.verdict}
+          {outcome.goodNews && !Object.values(answers).some(Boolean) ? t.whenRouteApplies : outcome.verdict}
         </h1>
 
         <p
@@ -225,7 +257,7 @@ function Verdict({
           data-print="hide"
           className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
         >
-          <PrintButton />
+          <PrintButton label={t.printButton} />
           {Object.values(answers).some(Boolean) && id in COUNTER_SCRIPT && (
             <Link
               href={withLang(counterHref(outcome.path, answers, bankId), locale)}
@@ -235,13 +267,12 @@ function Verdict({
                   : "border-indigo text-indigo-ink hover:bg-indigo/8"
               }`}
             >
-              At the counter now? Shorter version
+              {t.counterShorter}
               <span aria-hidden="true">&rarr;</span>
             </Link>
           )}
           <p className={`text-[0.9375rem] ${good ? "text-white/70" : "text-ink-soft"}`}>
-            Take the printed page to the branch. It carries the rule and its
-            paragraph number.
+            {t.printNote}
           </p>
         </div>
       </div>
@@ -249,11 +280,52 @@ function Verdict({
   );
 }
 
+/**
+ * The end of the core path -- answer, steps, checklist, then this. Same
+ * Print/Counter-mode controls as the header (`Verdict`), repeated here on
+ * purpose: the header pair fires before the reader has seen what to bring,
+ * so it can't be the "you're done" moment. This one can.
+ */
+function DoneBand({
+  id,
+  answers,
+  bankId,
+  locale,
+  outcome,
+  t,
+}: {
+  id: OutcomeId;
+  answers: Answers;
+  bankId?: string;
+  locale: ReturnType<typeof parseLocale>;
+  outcome: Outcome;
+  t: VerdictText;
+}) {
+  return (
+    <div
+      data-print="hide"
+      className="actionbox mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
+    >
+      <PrintButton label={t.printButton} />
+      {Object.values(answers).some(Boolean) && id in COUNTER_SCRIPT && (
+        <Link
+          href={withLang(counterHref(outcome.path, answers, bankId), locale)}
+          className="inline-flex items-center gap-2 rounded-pill border-2 border-indigo px-6 py-3 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-indigo/8"
+        >
+          {t.counterShorter}
+          <span aria-hidden="true">&rarr;</span>
+        </Link>
+      )}
+      <p className="text-[0.9375rem] text-ink-soft">{t.printNote}</p>
+    </div>
+  );
+}
+
 /* ------------------------------------------------------------------ 2 */
 
-function Steps({ steps }: { steps: string[] }) {
+function Steps({ steps, t }: { steps: string[]; t: VerdictText }) {
   return (
-    <Section id="steps" title="Your next steps">
+    <Section id="steps" title={t.yourNextSteps}>
       <ol className="mt-5 space-y-4">
         {steps.map((step, i) => (
           <li key={i} className="flex gap-4">
@@ -268,20 +340,20 @@ function Steps({ steps }: { steps: string[] }) {
   );
 }
 
-function TodayBox({ outcome }: { outcome: OutcomeId }) {
+function TodayBox({ outcome, t }: { outcome: OutcomeId; t: VerdictText }) {
   const action =
     outcome === "nominee" || outcome === "survivorship"
-      ? "Ask the bank for the deceased-customer claim form, and take the death certificate and your ID."
+      ? t.todayAction.nomineeOrSurvivorship
       : outcome === "under-threshold"
-        ? "Ask the bank for its simplified deceased-deposit claim form and confirm the total balance at that bank."
+        ? t.todayAction.underThreshold
         : outcome === "unknown-nominee"
-          ? "Ask the bank to confirm in writing whether a nominee or survivorship clause is recorded."
+          ? t.todayAction.unknownNominee
           : outcome === "out-of-scope"
-            ? "Contact the institution that holds this asset and ask for its deceased-customer claim checklist."
-            : "Ask the bank for the written claim checklist, its applicable threshold and the documents it will accept.";
+            ? t.todayAction.outOfScope
+            : t.todayAction.default;
   return (
     <section className="mt-8 rounded-xl border-2 border-saffron bg-[#FFF7E8] p-6">
-      <h2 className="display-md font-serif font-bold text-indigo-ink">What should you do today?</h2>
+      <h2 className="display-md font-serif font-bold text-indigo-ink">{t.todayHeading}</h2>
       <p className="body-fluid mt-2 leading-relaxed text-ink">{action}</p>
     </section>
   );
@@ -293,21 +365,25 @@ function Documents({
   ids,
   have,
   hrefFor,
+  t,
+  locale,
 }: {
   ids: DocId[];
   have: DocId[];
   hrefFor: (id: DocId) => string;
+  t: VerdictText;
+  locale: Locale;
 }) {
   return (
     <Section
       id="documents"
-      title={`The ${numberWord(ids.length)} documents the RBI names`}
-      note={`What to bring, what each one costs and how long it takes. Tick the ones you already have.`}
-      lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document."
+      title={t.documentsTitle(ids.length)}
+      note={t.documentsNote}
+      lede={t.documentsLede}
     >
       <ul className="mt-5 divide-y divide-rule-faint border-y border-rule-faint">
         {ids.map((id) => {
-          const doc = DOCUMENTS[id];
+          const doc = documentText(id, locale);
           const on = have.includes(id);
           return (
             <li key={id} className="py-5">
@@ -362,16 +438,16 @@ function Documents({
                 </p>
 
                 <dl className="mt-3 grid gap-x-6 gap-y-2 text-[1rem] sm:grid-cols-3">
-                  <Field label="Where from" value={doc.from} />
-                  <Field label="Cost" value={doc.cost} />
-                  <Field label="How long" value={doc.time} />
+                  <Field label={t.whereFrom} value={doc.from} />
+                  <Field label={t.cost} value={doc.cost} />
+                  <Field label={t.howLong} value={doc.time} />
                 </dl>
 
                 {doc.note && (
                   /* Labelled, not colour-barred. A maroon rule alone carries no
                      meaning on the black-and-white sheet this page becomes. */
                   <p className="mt-3 text-[1rem] leading-relaxed text-ink">
-                    <strong className="font-bold text-maroon">Note. </strong>
+                    <strong className="font-bold text-maroon">{t.noteLabel} </strong>
                     {doc.note}
                   </p>
                 )}
@@ -398,7 +474,7 @@ function Documents({
  * the next document actually has a wait. Saying it about a same-day form would
  * be inventing urgency, and this product does not do that.
  */
-function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
+function ReadinessBox({ ids, have, t, locale }: { ids: DocId[]; have: DocId[]; t: VerdictText; locale: Locale }) {
   const r = readiness(ids, have);
 
   if (r.untouched) {
@@ -406,20 +482,14 @@ function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
     if (longest.length === 0) {
       return (
         <p className="actionbox mt-5 body-fluid">
-          <strong className="font-bold">
-            You&apos;ll need {numberWord(r.total)} documents for this claim.
-          </strong>{" "}
-          None of them has a long wait — tick off what you already have below.
+          <strong className="font-bold">{t.readinessNeed(r.total)}</strong>{" "}
+          {t.readinessNoLongWait}
         </p>
       );
     }
     return (
       <p className="actionbox mt-5 body-fluid">
-        <strong className="font-bold">Start today: </strong>
-        {longest.map((id) => DOCUMENTS[id].name).join(", ")}
-        {" — "}
-        it takes the longest of anything on this list, and everything else can
-        be done while you wait for it.
+        {t.readinessStartTodayLongest(longest.map((id) => documentText(id, locale).name).join(", "))}
       </p>
     );
   }
@@ -427,52 +497,37 @@ function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
   if (r.complete) {
     return (
       <p className="actionbox mt-5 body-fluid">
-        <strong className="font-bold">
-          You have all {numberWord(r.total)}.{" "}
-        </strong>
-        Take them to the branch together and ask for written acknowledgement of
-        the claim on the day you hand them over. The bank has fifteen days from
-        a complete claim.
+        <strong className="font-bold">{t.readinessHaveAll(r.total)} </strong>
+        {t.readinessTakeToBranch}
       </p>
     );
   }
 
-  const next = DOCUMENTS[r.startToday!];
+  const next = documentText(r.startToday!, locale);
   const others = r.missing.length - 1;
 
   return (
     <div className="actionbox mt-5 body-fluid">
       <p>
-        <strong className="font-bold">
-          You have {r.haveCount} of {r.total}.
-        </strong>{" "}
-        {sentenceCase(numberWord(r.missing.length))} still to get.
+        <strong className="font-bold">{t.readinessHaveOf(r.haveCount, r.total)}</strong>{" "}
+        {t.readinessStillToGet(r.missing.length)}
       </p>
 
       {next.leadDays > 0 ? (
         <p className="mt-2">
-          <strong className="font-bold">Start today: {next.name}</strong> — it
-          has the longest wait of anything you still need
+          <strong className="font-bold">{t.readinessStartToday(next.name)}</strong>
+          {t.readinessLongestWait}
           {others === 0
-            ? ", and it is the last one."
+            ? t.readinessLastOne
             : others === 1
-              ? ", and the other one can be done while you wait for it."
-              : `, and the other ${numberWord(others)} can be done while you wait for it.`}
+              ? t.readinessOtherOneWaits
+              : t.readinessOthersWait(others)}
         </p>
       ) : (
         <p className="mt-2">
-          {others === 0 ? (
-            <>
-              <strong className="font-bold">{next.name}</strong> is the last
-              one, and it has no queue in front of it.
-            </>
-          ) : (
-            <>
-              Nothing still on your list has a queue in front of it —{" "}
-              <strong className="font-bold">{next.name}</strong> and the rest
-              are same-day or already in your hands.
-            </>
-          )}
+          {others === 0
+            ? t.readinessIsLastNoQueue(next.name)
+            : t.readinessNothingHasQueue(next.name)}
         </p>
       )}
     </div>
@@ -497,14 +552,12 @@ function Field({ label, value }: { label: string; value: string }) {
 
 /* ------------------------------------------------------------------ 4 */
 
-function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
+function Evidence({ clauses, t }: { clauses: (keyof typeof CLAUSES)[]; t: VerdictText }) {
   return (
     <Section
       id="evidence"
-      fold
-      title="The rule, in the RBI's own words"
-      note="The paragraphs to show the bank, quoted exactly, each one linked to the notification."
-      lede="Every paragraph number below is in the notification, and the link opens it."
+      title={t.evidenceTitle}
+      lede={t.evidenceLede}
     >
       <ul className="mt-5 space-y-5">
         {clauses.map((key) => {
@@ -516,7 +569,7 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
             >
               <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                 <span className="rounded-md bg-indigo px-2.5 py-1 text-[0.875rem] font-bold uppercase tracking-[0.06em] text-white">
-                  Paragraph {clause.para}
+                  {t.paragraphLabel(clause.para)}
                 </span>
                 <span className="text-[1rem] font-bold text-indigo-ink">
                   {clause.label}
@@ -524,18 +577,17 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
               </div>
 
               <p className="mt-2 text-[0.875rem] text-ink-faint">
-                Source: {NOTIFICATION.title.split(" (")[0]}, 2025, paragraph{" "}
-                {clause.para} · Verified: {formatDate(RULES_VERIFIED_ON)}
+                {t.sourceLabel(NOTIFICATION.title.split(" (")[0], clause.para, formatDate(RULES_VERIFIED_ON))}
               </p>
 
               {clause.verbatim ? (
-                <blockquote className="body-fluid mt-3.5 border-l-4 border-saffron pl-4 font-serif leading-[1.6] text-ink">
+                <blockquote className="body-fluid mt-3.5 border-l-2 border-rule pl-4 font-serif leading-[1.6] text-ink">
                   &ldquo;{clause.text}&rdquo;
                 </blockquote>
               ) : (
                 /* NOT verbatim — must never appear inside quotation marks. */
                 <p className="body-fluid mt-3.5 leading-relaxed text-ink">
-                  <span className="font-bold text-ink-soft">In summary: </span>
+                  <span className="font-bold text-ink-soft">{t.inSummaryLabel} </span>
                   {clause.text}
                 </p>
               )}
@@ -545,7 +597,7 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
       </ul>
 
       <p className="mt-4 text-[1rem] text-ink-soft">
-        From{" "}
+        {t.fromLabel}{" "}
         <a
           href={NOTIFICATION.url}
           target="_blank"
@@ -554,7 +606,7 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
         >
           {NOTIFICATION.title}
         </a>{" "}
-        · {NOTIFICATION.number} · issued {NOTIFICATION.issued}.
+        · {NOTIFICATION.number} · {t.issuedLabel} {NOTIFICATION.issued}.
       </p>
     </Section>
   );
@@ -562,16 +614,15 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
 
 /* ------------------------------------------------------------------ 5 */
 
-function Tactics() {
+function Tactics({ locale, t }: { locale: Locale; t: VerdictText }) {
   return (
     <Section
       id="tactics"
-      fold
-      title="Four things to do at the branch"
-      note="Procedural, not legal. Each one closes a specific way a claim stalls."
+      title={t.tacticsTitle}
+      lede={t.tacticsNote}
     >
       <ol className="mt-5 grid gap-4 sm:grid-cols-2">
-        {TACTICS.map((tactic, i) => (
+        {TACTICS_BY_LOCALE[locale].map((tactic, i) => (
           <li
             key={tactic.title}
             className="rounded-xl border border-rule bg-mist p-5"
@@ -594,10 +645,10 @@ function Tactics() {
 
 /* ------------------------------------------------------------------ 6 */
 
-function Caveats({ caveats, id = "caveats" }: { caveats: (typeof OUTCOMES)[OutcomeId]["caveats"]; id?: string }) {
+function Caveats({ caveats, id = "caveats", t }: { caveats: (typeof OUTCOMES)[OutcomeId]["caveats"]; id?: string; t: VerdictText }) {
   if (!caveats.length) return null;
   return (
-    <Section id={id} title={id === "eligibility" ? "Conditions for this route" : "Other important notes"}>
+    <Section id={id} title={id === "eligibility" ? t.conditionsForRoute : t.otherImportantNotes}>
       <ul className="mt-5 space-y-4">
         {caveats.map((caveat) => (
           <li
@@ -627,20 +678,20 @@ function Caveats({ caveats, id = "caveats" }: { caveats: (typeof OUTCOMES)[Outco
 
 /* ------------------------------------------------------------------ */
 
-function Escalation({ locale }: { locale: ReturnType<typeof parseLocale> }) {
+function Escalation({ locale, t }: { locale: ReturnType<typeof parseLocale>; t: VerdictText }) {
   return (
     <section
       data-print="hide"
       className="mt-12 rounded-xl border-2 border-indigo bg-mist-deep p-6"
     >
       <h2 className="display-md font-serif font-bold text-indigo-ink">
-        If the bank refuses anyway
+        {t.refusedHeading}
       </h2>
       <p className="body-fluid mt-2 max-w-[68ch] leading-relaxed text-ink">
-        {ESCALATION.caveat}
+        {ESCALATION_CAVEAT_BY_LOCALE[locale]}
       </p>
       <p className="mt-3 max-w-[68ch] text-[1rem] leading-relaxed text-ink-soft">
-        <a href={ESCALATION.faq} target="_blank" rel="noreferrer" className="underline">Read the RBI&apos;s current complaint eligibility and time limits.</a>
+        <a href={ESCALATION.faq} target="_blank" rel="noreferrer" className="underline">{t.readComplaintEligibility}</a>
       </p>
       <p className="mt-3 text-[1rem] text-ink-soft">
         <a
@@ -657,45 +708,40 @@ function Escalation({ locale }: { locale: ReturnType<typeof parseLocale> }) {
         href={withLang("/bank-refused", locale)}
         className="mt-4 inline-flex items-center gap-2 text-[0.9375rem] font-bold text-link underline underline-offset-2"
       >
-        The full route, plus a written complaint you can fill in
+        {t.fullRouteCta}
         <span aria-hidden="true">&rarr;</span>
       </Link>
     </section>
   );
 }
 
-function SourceLine({ locale }: { locale: ReturnType<typeof parseLocale> }) {
+function SourceLine({ locale, t }: { locale: ReturnType<typeof parseLocale>; t: VerdictText }) {
   return (
     <div className="mt-10 border-t border-rule pt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
       <p>
         <strong className="font-bold text-ink">
-          Adhikaar — an independent public-information tool.
+          {t.sourceLineBrand}
         </strong>{" "}
-        Not a government website and not affiliated with the Reserve Bank of
-        India or any bank. Rules quoted from {NOTIFICATION.number} ({NOTIFICATION.ref}),
-        issued {NOTIFICATION.issued}, in force from 31 March 2026. Information,
-        not legal advice.
+        {t.sourceLineBody(NOTIFICATION.number, NOTIFICATION.ref, NOTIFICATION.issued)}
       </p>
       {/* The site footer carries this too, but the footer does not print — and
           paragraph 6(b) has to be on the sheet that reaches the counter. */}
       <p className="mt-2">
-        Nothing here applies to the Public Provident Fund, the Senior
-        Citizens&apos; Savings Scheme, Mahila Samman Savings Certificate or
-        Sukanya Samriddhi. Paragraph 6(b) places those outside these Directions.
+        {t.exclusionNote}
       </p>
       <p className="mt-2" data-print="hide">
         <Link
           href={withLang("/start", locale)}
           className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
         >
-          Answer the questions again
+          {t.answerAgain}
         </Link>
         {" · "}
         <Link
           href={withLang("/contact", locale)}
           className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
         >
-          Found incorrect information? Tell us
+          {t.foundIncorrect}
         </Link>
       </p>
     </div>
@@ -731,6 +777,7 @@ function Section({
   fold,
   note,
   children,
+  showHide,
 }: {
   id?: string;
   title: string;
@@ -739,7 +786,10 @@ function Section({
   /** A word on what is inside, shown on the closed heading. */
   note?: string;
   children: React.ReactNode;
+  showHide?: { show: string; hide: string };
 }) {
+  const show = showHide?.show ?? "Show";
+  const hide = showHide?.hide ?? "Hide";
   if (fold) {
     return (
       <details id={id} className="group mt-8 border-t border-rule pt-6 first:mt-0">
@@ -764,8 +814,8 @@ function Section({
             aria-hidden="true"
             className="mt-2 shrink-0 text-[0.875rem] font-bold uppercase tracking-[0.08em] text-saffron-ink"
           >
-            <span className="group-open:hidden">Show</span>
-            <span className="hidden group-open:inline">Hide</span>
+            <span className="group-open:hidden">{show}</span>
+            <span className="hidden group-open:inline">{hide}</span>
           </span>
         </summary>
         <div className="mt-4">
@@ -798,13 +848,3 @@ function counterHref(path: string, answers: Answers, bankId?: string) {
   return `${path}?${q.toString()}`;
 }
 
-/** numberWord() at the head of a sentence. */
-function sentenceCase(s: string) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
-function numberWord(n: number) {
-  return (
-    ["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? String(n)
-  );
-}

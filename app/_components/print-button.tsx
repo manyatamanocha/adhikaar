@@ -8,7 +8,7 @@
  * `button` rule in the print stylesheet, and the page loses nothing if the
  * JavaScript never arrives.
  */
-export function PrintButton() {
+export function PrintButton({ label = "Print this page" }: { label?: string }) {
   return (
     <button
       type="button"
@@ -16,7 +16,7 @@ export function PrintButton() {
       className="inline-flex items-center gap-2 rounded-pill bg-saffron px-6 py-3 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-[#ab6314]"
     >
       <PrinterIcon />
-      Print this page
+      {label}
     </button>
   );
 }

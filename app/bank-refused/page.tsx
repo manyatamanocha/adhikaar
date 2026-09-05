@@ -8,6 +8,9 @@
  * Same source data as Escalation() in outcome.tsx -- ESCALATION and
  * TACTICS from lib/rbi.ts -- laid out as its own numbered route instead of
  * a paragraph, plus the downloadable complaint letter the advisor asked for.
+ *
+ * Fully localised 5 Sep 2026: this page's own prose lives in
+ * lib/i18n-home.ts's HomeDict.bankRefusedPage.
  */
 
 import Link from "next/link";
@@ -16,7 +19,8 @@ import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { ComplaintLetter } from "../_components/complaint-letter";
 import { PrintButton } from "../_components/print-button";
-import { ESCALATION } from "@/lib/rbi";
+import { ESCALATION, ESCALATION_CAVEAT_BY_LOCALE } from "@/lib/rbi";
+import { HOME_T } from "@/lib/i18n-home";
 
 export const metadata = {
   title: "The bank refused — what to do next — Adhikaar",
@@ -24,45 +28,30 @@ export const metadata = {
     "A written demand, a complaint to the branch Grievance Redressal Officer, 30 days, then the RBI's Ombudsman route — with a downloadable complaint letter and an honest note that escalation is not a guarantee.",
 };
 
-const STEPS = [
-  {
-    title: "Ask for the demand in writing",
-    body:
-      "Ask the officer to state, on paper, exactly which document they require and which rule they rely on. Many demands that would not survive being written down are dropped the moment you ask this.",
-  },
-  {
-    title: "Submit a written complaint to the branch",
-    body:
-      "Address it to the branch's Grievance Redressal Officer, quoting the paragraph number that applies to your claim. Keep a copy and get it acknowledged with a date — or send it by registered post and keep the receipt.",
-  },
-  {
-    title: "Check the bank's response",
-    body:
-      ESCALATION.caveat,
-  },
-  {
-    title: "Escalate through the RBI's Ombudsman route",
-    body: `Use the RBI complaint portal if eligible under the ${ESCALATION.scheme}. Check its current time limits and exclusions, including matters already before a court or tribunal. Filing a complaint is free and does not guarantee a favourable decision.`,
-  },
-];
-
 export default async function BankRefusedPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const locale = parseLocale((await searchParams).lang);
+  const t = HOME_T[locale].bankRefusedPage;
+  const printLabel = HOME_T[locale].verdictPage.printButton;
+
+  const STEPS = [
+    { title: t.step1Title, body: t.step1Body },
+    { title: t.step2Title, body: t.step2Body },
+    { title: t.step3Title, body: ESCALATION_CAVEAT_BY_LOCALE[locale] },
+    { title: t.step4Title, body: t.step4Body(ESCALATION.scheme) },
+  ];
+
   return (
     <>
       <RecoverNav />
 
-      <main className="flex-1">
+      <main className="flex-1" lang={locale}>
         <section className="bg-blush border-b-4 border-maroon">
           <div className="shell max-w-[860px] py-10 sm:py-14">
             <h1 className="display-xl font-serif font-bold tracking-[-0.015em] text-indigo-ink">
-              The bank refused. Here is the route that follows.
+              {t.heading}
             </h1>
             <p className="lede-fluid mt-5 max-w-[62ch] text-ink">
-              Four steps, in order, and a written complaint you can fill in
-              and hand over. Escalation is real and it is free — it is not a
-              guarantee, and this page says so plainly rather than promising
-              more than the route delivers.
+              {t.sub}
             </p>
           </div>
         </section>
@@ -70,7 +59,7 @@ export default async function BankRefusedPage({ searchParams }: { searchParams: 
         <div className="shell max-w-[860px] py-10 sm:py-12">
           <section>
             <h2 className="display-lg font-serif font-bold text-indigo-ink">
-              The four steps
+              {t.fourSteps}
             </h2>
             <ol className="mt-5 space-y-6">
               {STEPS.map((step, i) => (
@@ -94,10 +83,10 @@ export default async function BankRefusedPage({ searchParams }: { searchParams: 
           <section className="mt-10 border-t border-rule pt-6">
             <div className="hardbox">
               <h3 className="display-md font-serif font-bold text-maroon">
-                Escalation is available — it is not a guarantee
+                {t.escalationHeading}
               </h3>
               <p className="body-fluid mt-2 leading-relaxed text-ink">
-                {ESCALATION.caveat}
+                {ESCALATION_CAVEAT_BY_LOCALE[locale]}
               </p>
               <p className="mt-3 text-[1rem] text-ink-soft" data-print="hide">
                 <a
@@ -115,13 +104,10 @@ export default async function BankRefusedPage({ searchParams }: { searchParams: 
 
           <section className="mt-12 border-t border-rule pt-6">
             <h2 className="display-lg font-serif font-bold text-indigo-ink">
-              A written complaint you can use
+              {t.complaintHeading}
             </h2>
             <p className="body-fluid mt-2.5 max-w-[68ch] text-ink-soft">
-              Download the text file and edit it, or print it and fill in the bracketed fields by hand. Every blank
-              is left blank on purpose — we don&apos;t know your bank, your
-              account number or the document that was actually demanded, and
-              guessing at any of those would make this less useful, not more.
+              {t.complaintSub}
             </p>
             <div className="mt-5">
               <ComplaintLetter />
@@ -130,12 +116,12 @@ export default async function BankRefusedPage({ searchParams }: { searchParams: 
 
           <section className="mt-12 border-t border-rule pt-6" data-print="hide">
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-              <PrintButton />
+              <PrintButton label={printLabel} />
               <Link
                 href={withLang("/start", locale)}
                 className="text-[0.9375rem] font-bold text-link underline underline-offset-2"
               >
-                Check your claim situation instead
+                {t.checkSituationInstead}
               </Link>
             </div>
           </section>
