@@ -20,7 +20,7 @@ export function RecoverFooter() {
   return (
     <footer
       data-print="hide"
-      className="mt-auto border-t border-[#EFE7D8] bg-white py-10 text-[1.2rem] text-[#6B6255]"
+      className="mt-auto border-t border-[#EFE7D8] bg-[#F1E7D6] pb-10 pt-16 text-[1.2rem] text-[#6B6255]"
     >
       <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <div className="flex flex-col items-start gap-4 pb-6">

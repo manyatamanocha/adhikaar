@@ -168,6 +168,50 @@ export type HomeDict = {
     nameBody: string;
     cta: string;
   };
+
+  /**
+   * /banks — structural text only. Bank names, thresholds, quotes and notes
+   * stay English everywhere: they are read verbatim from each bank's own
+   * published page, and a translated quote stops being a quote a branch
+   * officer will accept — same rule as the RBI's own statutory text.
+   */
+  banksPage: {
+    eyebrow: string;
+    heading: string;
+    sub: string;
+    cta: string;
+    everyCellStrong: string;
+    everyCellBody: string;
+    emptyRowHeading: string;
+    emptyRowBefore: string;
+    emptyRowAfter: string;
+    pageOnlyAfter: string;
+    swipeHint: string;
+    thBank: string;
+    thThreshold: string;
+    thSurety: string;
+    thPolicy: string;
+    thForm: string;
+    thChecked: string;
+    suretyNotRequired: string;
+    suretyRequired: string;
+    policyNothingFound: string;
+    policyDocument: string;
+    policyPageOnly: string;
+    formLink: string;
+    confirmStale: string;
+    whatEachSaysHeading: string;
+    gapLabel: string;
+    readFullArticle: (short: string) => string;
+    linkPage: string;
+    linkForm: string;
+    linkPolicy: string;
+    linkOnline: string;
+    footerReadFrom: string;
+    footerInfoNote: string;
+    findClaim: string;
+    tellUs: string;
+  };
 };
 
 const en: HomeDict = {
@@ -345,6 +389,48 @@ const en: HomeDict = {
     nameBody:
       "Adhikaar means right, entitlement, in Hindi and Urdu. The claim isn't that the money is yours — it's that you're entitled to be told the correct rule before spending money and months on a document you may not need.",
     cta: "Read the full RBI-cited guide",
+  },
+
+  banksPage: {
+    eyebrow: "Bank-by-bank",
+    heading: "The rule is the same everywhere. The practice is not.",
+    sub: "The RBI sets a floor and every bank builds its own practice on top. This is what each bank publishes about deceased claims, read from their own pages — including where they publish nothing at all.",
+    cta: "Start your claim journey today",
+    everyCellStrong: "Every cell is read or blank.",
+    everyCellBody:
+      "Nothing here is inferred. Where a bank has not published a figure we leave it empty and say so, rather than filling it with the RBI floor and letting you believe it is that bank's own number. A checked row is worth more than a guessed one.",
+    emptyRowHeading: "An empty row is itself a finding",
+    emptyRowBefore:
+      "Since 31 March 2026 a bank has been required to publish its board-approved deceased-claim policy and its document checklist. We could not find one for",
+    emptyRowAfter:
+      ". If you are claiming there, ask the branch in writing for the board-approved policy and the checklist.",
+    pageOnlyAfter:
+      "publish a deceased-claim page with real detail on it, but we did not find the board-approved policy document itself. A page is not the same thing as the policy the rule asks for, so the table says which one we actually found.",
+    swipeHint: "Swipe the table sideways for the rest of the columns. The bank names stay put.",
+    thBank: "Bank",
+    thThreshold: "Its own threshold",
+    thSurety: "Third-party surety below it",
+    thPolicy: "Policy published",
+    thForm: "Form to download",
+    thChecked: "Checked",
+    suretyNotRequired: "Not to be insisted on",
+    suretyRequired: "Required",
+    policyNothingFound: "Nothing found",
+    policyDocument: "Policy document",
+    policyPageOnly: "A claims page, no policy document",
+    formLink: "Its form",
+    confirmStale: "Confirm before relying on this",
+    whatEachSaysHeading: "What each one actually says",
+    gapLabel: "Documented gap between policy and practice:",
+    readFullArticle: (short) => `Read the full article on ${short}`,
+    linkPage: "Its deceased-claim page",
+    linkForm: "Its claim form",
+    linkPolicy: "Its published policy",
+    linkOnline: "Lodge online",
+    footerReadFrom: "Read from each bank's own published pages on the dates shown. The rule they are all working from is",
+    footerInfoNote: "Information, not legal advice. A bank may have changed its page since we checked — the date is there so you can tell.",
+    findClaim: "Find out what applies to your claim",
+    tellUs: "Found an outdated bank policy? Tell us",
   },
 };
 
@@ -524,6 +610,48 @@ const hi: HomeDict = {
       "अधिकार का अर्थ है हक़, स्वत्व। दावा यह नहीं कि पैसा आपका ही है — दावा यह है कि पैसे और महीनों को उस दस्तावेज़ पर ख़र्च करने से पहले आपको सही नियम बताया जाना चाहिए, जिसकी शायद ज़रूरत ही न हो।",
     cta: "पूरी आरबीआई-उद्धृत गाइड पढ़ें",
   },
+
+  banksPage: {
+    eyebrow: "बैंक के अनुसार",
+    heading: "नियम हर जगह एक जैसा है। व्यवहार नहीं।",
+    sub: "आरबीआई एक न्यूनतम सीमा तय करता है, और हर बैंक उस पर अपनी प्रक्रिया बनाता है। यह वही है जो हर बैंक दिवंगत दावों के बारे में अपने पन्नों पर प्रकाशित करता है — जिसमें वे मामले भी शामिल हैं जहाँ वे कुछ भी प्रकाशित नहीं करते।",
+    cta: "आज ही अपना दावा शुरू करें",
+    everyCellStrong: "हर सेल या तो पढ़ी गई है या ख़ाली है।",
+    everyCellBody:
+      "यहाँ कुछ भी अनुमान से नहीं भरा गया। जहाँ किसी बैंक ने कोई आँकड़ा प्रकाशित नहीं किया, वहाँ हमने उसे ख़ाली छोड़ा और यह बताया, बजाय इसके कि आरबीआई की सीमा भरकर आपको यह विश्वास दिलाएँ कि यह उसी बैंक का अपना आँकड़ा है। एक जाँची गई पंक्ति एक अनुमानित पंक्ति से बेहतर है।",
+    emptyRowHeading: "एक ख़ाली पंक्ति भी अपने आप में एक निष्कर्ष है",
+    emptyRowBefore:
+      "31 मार्च 2026 से हर बैंक के लिए अपनी बोर्ड-अनुमोदित दिवंगत-दावा नीति और दस्तावेज़ सूची प्रकाशित करना ज़रूरी है। हमें इसके लिए कोई नीति नहीं मिली:",
+    emptyRowAfter:
+      "। अगर आप वहाँ दावा कर रहे हैं, तो शाखा से लिखित में बोर्ड-अनुमोदित नीति और सूची माँगें।",
+    pageOnlyAfter:
+      "दिवंगत-दावे के बारे में एक असली जानकारी वाला पन्ना प्रकाशित करते हैं, पर हमें बोर्ड-अनुमोदित नीति दस्तावेज़ नहीं मिला। एक पन्ना उस नीति के बराबर नहीं है जो नियम माँगता है, इसलिए यह तालिका बताती है कि हमें असल में क्या मिला।",
+    swipeHint: "बाक़ी कॉलम देखने के लिए तालिका को बग़ल में सरकाएँ। बैंक के नाम अपनी जगह रहते हैं।",
+    thBank: "बैंक",
+    thThreshold: "उसकी अपनी सीमा",
+    thSurety: "सीमा से नीचे तीसरे पक्ष की ज़मानत",
+    thPolicy: "नीति प्रकाशित",
+    thForm: "फ़ॉर्म डाउनलोड करें",
+    thChecked: "जाँचा गया",
+    suretyNotRequired: "ज़ोर नहीं दिया जाना",
+    suretyRequired: "ज़रूरी",
+    policyNothingFound: "कुछ नहीं मिला",
+    policyDocument: "नीति दस्तावेज़",
+    policyPageOnly: "एक जानकारी पन्ना, कोई नीति दस्तावेज़ नहीं",
+    formLink: "इसका फ़ॉर्म",
+    confirmStale: "इस पर भरोसा करने से पहले पुष्टि करें",
+    whatEachSaysHeading: "हर बैंक असल में क्या कहता है",
+    gapLabel: "नीति और व्यवहार के बीच दर्ज अंतर:",
+    readFullArticle: (short) => `${short} पर पूरा लेख पढ़ें`,
+    linkPage: "इसका दिवंगत-दावा पन्ना",
+    linkForm: "इसका दावा फ़ॉर्म",
+    linkPolicy: "इसकी प्रकाशित नीति",
+    linkOnline: "ऑनलाइन दर्ज करें",
+    footerReadFrom: "हर बैंक के अपने प्रकाशित पन्नों से, दी गई तारीख़ों पर पढ़ा गया। जिस नियम पर सब काम कर रहे हैं वह है",
+    footerInfoNote: "जानकारी, क़ानूनी सलाह नहीं। हमारे जाँचने के बाद बैंक ने अपना पन्ना बदला हो सकता है — इसलिए तारीख़ दी गई है ताकि आप जान सकें।",
+    findClaim: "जानें आपके दावे पर क्या लागू होता है",
+    tellUs: "पुरानी बैंक नीति मिली? हमें बताएँ",
+  },
 };
 
 const kn: HomeDict = {
@@ -701,6 +829,48 @@ const kn: HomeDict = {
     nameBody:
       "ಅಧಿಕಾರ್ ಎಂದರೆ ಹಕ್ಕು, ಸ್ವತ್ವ. ಹಣ ನಿಮ್ಮದೇ ಎಂಬುದು ಹಕ್ಕುದಾವೆಯಲ್ಲ — ಅಗತ್ಯವಿಲ್ಲದಿರಬಹುದಾದ ದಾಖಲೆಗಾಗಿ ಹಣ ಮತ್ತು ತಿಂಗಳುಗಳನ್ನು ಖರ್ಚು ಮಾಡುವ ಮೊದಲು ಸರಿಯಾದ ನಿಯಮವನ್ನು ನಿಮಗೆ ತಿಳಿಸಬೇಕು ಎಂಬುದೇ ಹಕ್ಕುದಾವೆ.",
     cta: "ಪೂರ್ಣ ಆರ್‌ಬಿಐ-ಉಲ್ಲೇಖಿತ ಮಾರ್ಗದರ್ಶಿ ಓದಿ",
+  },
+
+  banksPage: {
+    eyebrow: "ಬ್ಯಾಂಕ್-ವಾರು",
+    heading: "ನಿಯಮ ಎಲ್ಲೆಡೆ ಒಂದೇ. ಆಚರಣೆ ಅಲ್ಲ.",
+    sub: "ಆರ್‌ಬಿಐ ಒಂದು ಕನಿಷ್ಠ ಮಿತಿಯನ್ನು ನಿಗದಿಪಡಿಸುತ್ತದೆ, ಮತ್ತು ಪ್ರತಿ ಬ್ಯಾಂಕ್ ಅದರ ಮೇಲೆ ತನ್ನದೇ ಆದ ಆಚರಣೆಯನ್ನು ನಿರ್ಮಿಸುತ್ತದೆ. ಇದು ಪ್ರತಿ ಬ್ಯಾಂಕ್ ದಿವಂಗತ ಹಕ್ಕುಗಳ ಬಗ್ಗೆ ತಮ್ಮ ಸ್ವಂತ ಪುಟಗಳಲ್ಲಿ ಪ್ರಕಟಿಸುವುದು — ಏನನ್ನೂ ಪ್ರಕಟಿಸದಿರುವ ಸಂದರ್ಭಗಳನ್ನೂ ಒಳಗೊಂಡಂತೆ.",
+    cta: "ಇಂದೇ ನಿಮ್ಮ ಹಕ್ಕು ಪ್ರಾರಂಭಿಸಿ",
+    everyCellStrong: "ಪ್ರತಿ ಸೆಲ್ ಒಂದೋ ಓದಲಾಗಿದೆ ಅಥವಾ ಖಾಲಿ ಇದೆ.",
+    everyCellBody:
+      "ಇಲ್ಲಿ ಏನೂ ಊಹಿಸಿ ತುಂಬಿಲ್ಲ. ಒಂದು ಬ್ಯಾಂಕ್ ಒಂದು ಅಂಕಿ ಪ್ರಕಟಿಸದಿದ್ದಲ್ಲಿ, ಅದನ್ನು ಖಾಲಿ ಬಿಟ್ಟು ಹಾಗೆಂದು ಹೇಳುತ್ತೇವೆ, ಆರ್‌ಬಿಐ ಮಿತಿಯನ್ನು ತುಂಬಿ ಅದು ಆ ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಸಂಖ್ಯೆ ಎಂದು ನಿಮಗೆ ನಂಬಿಸುವ ಬದಲು. ಒಂದು ಪರಿಶೀಲಿಸಿದ ಸಾಲು ಊಹಿಸಿದ ಹಲವು ಸಾಲುಗಳಿಗಿಂತ ಉತ್ತಮ.",
+    emptyRowHeading: "ಖಾಲಿ ಸಾಲು ಕೂಡ ಒಂದು ಸಂಶೋಧನೆಯೇ",
+    emptyRowBefore:
+      "31 ಮಾರ್ಚ್ 2026 ರಿಂದ ಪ್ರತಿ ಬ್ಯಾಂಕ್ ತನ್ನ ಬೋರ್ಡ್-ಅನುಮೋದಿತ ದಿವಂಗತ-ಹಕ್ಕು ನೀತಿ ಮತ್ತು ದಾಖಲೆ ಪಟ್ಟಿಯನ್ನು ಪ್ರಕಟಿಸಬೇಕು. ಇವರಿಗೆ ನಮಗೆ ಅದು ಸಿಗಲಿಲ್ಲ:",
+    emptyRowAfter:
+      ". ನೀವು ಅಲ್ಲಿ ಹಕ್ಕು ಸಲ್ಲಿಸುತ್ತಿದ್ದರೆ, ಬೋರ್ಡ್-ಅನುಮೋದಿತ ನೀತಿ ಮತ್ತು ಪಟ್ಟಿಯನ್ನು ಶಾಖೆಯಿಂದ ಲಿಖಿತವಾಗಿ ಕೇಳಿ.",
+    pageOnlyAfter:
+      "ದಿವಂಗತ-ಹಕ್ಕಿನ ಬಗ್ಗೆ ನಿಜವಾದ ವಿವರವಿರುವ ಪುಟವನ್ನು ಪ್ರಕಟಿಸುತ್ತಾರೆ, ಆದರೆ ನಮಗೆ ಬೋರ್ಡ್-ಅನುಮೋದಿತ ನೀತಿ ದಾಖಲೆ ಸಿಗಲಿಲ್ಲ. ಒಂದು ಪುಟ ಎಂದರೆ ನಿಯಮ ಕೇಳುವ ನೀತಿಯಲ್ಲ, ಆದ್ದರಿಂದ ಈ ಕೋಷ್ಟಕ ನಮಗೆ ನಿಜವಾಗಿ ಸಿಕ್ಕಿದ್ದನ್ನು ಹೇಳುತ್ತದೆ.",
+    swipeHint: "ಉಳಿದ ಕಾಲಂಗಳಿಗಾಗಿ ಕೋಷ್ಟಕವನ್ನು ಪಕ್ಕಕ್ಕೆ ಸರಿಸಿ. ಬ್ಯಾಂಕ್ ಹೆಸರುಗಳು ಸ್ಥಿರವಾಗಿರುತ್ತವೆ.",
+    thBank: "ಬ್ಯಾಂಕ್",
+    thThreshold: "ಅದರ ಸ್ವಂತ ಮಿತಿ",
+    thSurety: "ಮಿತಿಗಿಂತ ಕೆಳಗೆ ಮೂರನೇ ವ್ಯಕ್ತಿಯ ಜಾಮೀನು",
+    thPolicy: "ನೀತಿ ಪ್ರಕಟಿಸಲಾಗಿದೆ",
+    thForm: "ಫಾರ್ಮ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ",
+    thChecked: "ಪರಿಶೀಲಿಸಲಾಗಿದೆ",
+    suretyNotRequired: "ಒತ್ತಾಯಿಸಬಾರದು",
+    suretyRequired: "ಅಗತ್ಯವಿದೆ",
+    policyNothingFound: "ಏನೂ ಸಿಗಲಿಲ್ಲ",
+    policyDocument: "ನೀತಿ ದಾಖಲೆ",
+    policyPageOnly: "ಒಂದು ಮಾಹಿತಿ ಪುಟ, ನೀತಿ ದಾಖಲೆ ಇಲ್ಲ",
+    formLink: "ಇದರ ಫಾರ್ಮ್",
+    confirmStale: "ಇದನ್ನು ನಂಬುವ ಮೊದಲು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ",
+    whatEachSaysHeading: "ಪ್ರತಿ ಬ್ಯಾಂಕ್ ನಿಜವಾಗಿ ಏನು ಹೇಳುತ್ತದೆ",
+    gapLabel: "ನೀತಿ ಮತ್ತು ಆಚರಣೆಯ ನಡುವಿನ ದಾಖಲಿತ ಅಂತರ:",
+    readFullArticle: (short) => `${short} ಕುರಿತು ಪೂರ್ಣ ಲೇಖನ ಓದಿ`,
+    linkPage: "ಇದರ ದಿವಂಗತ-ಹಕ್ಕು ಪುಟ",
+    linkForm: "ಇದರ ಹಕ್ಕು ಫಾರ್ಮ್",
+    linkPolicy: "ಇದರ ಪ್ರಕಟಿತ ನೀತಿ",
+    linkOnline: "ಆನ್‌ಲೈನ್‌ನಲ್ಲಿ ಸಲ್ಲಿಸಿ",
+    footerReadFrom: "ತೋರಿಸಿದ ದಿನಾಂಕಗಳಂದು ಪ್ರತಿ ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಪ್ರಕಟಿತ ಪುಟಗಳಿಂದ ಓದಲಾಗಿದೆ. ಎಲ್ಲರೂ ಕೆಲಸ ಮಾಡುತ್ತಿರುವ ನಿಯಮ ಇದು",
+    footerInfoNote: "ಮಾಹಿತಿ, ಕಾನೂನು ಸಲಹೆ ಅಲ್ಲ. ನಾವು ಪರಿಶೀಲಿಸಿದ ನಂತರ ಬ್ಯಾಂಕ್ ತನ್ನ ಪುಟವನ್ನು ಬದಲಾಯಿಸಿರಬಹುದು — ಆದ್ದರಿಂದ ನಿಮಗೆ ತಿಳಿಯಲು ದಿನಾಂಕ ನೀಡಲಾಗಿದೆ.",
+    findClaim: "ನಿಮ್ಮ ಹಕ್ಕಿಗೆ ಏನು ಅನ್ವಯಿಸುತ್ತದೆ ಎಂದು ತಿಳಿಯಿರಿ",
+    tellUs: "ಹಳೆಯ ಬ್ಯಾಂಕ್ ನೀತಿ ಕಂಡುಬಂದಿದೆಯೇ? ನಮಗೆ ತಿಳಿಸಿ",
   },
 };
 

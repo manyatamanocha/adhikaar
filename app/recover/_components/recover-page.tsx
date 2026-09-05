@@ -9,13 +9,7 @@ import { Reveal } from "./reveal";
 import { HomeI18nProvider, useHomeT } from "./home-i18n";
 import { parseLocale } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
-import {
-  ArrowRightIcon,
-  BankIcon,
-  SearchIcon,
-  CheckIcon,
-  BookIcon,
-} from "./icons";
+import { ArrowRightIcon } from "./icons";
 
 /**
  * The homepage ("/") -- rebuilt again 5 Sep 2026 against a user-supplied
@@ -54,8 +48,6 @@ export function RecoverPage() {
         <RecoverNav />
         <Hero />
         <StatsOverlap />
-        <UdgamBand />
-        <FindGrid />
         <RecoverFooter />
       </div>
     </HomeI18nProvider>
@@ -126,132 +118,70 @@ function Hero() {
 
 function StatsOverlap() {
   return (
-    <div className="relative mx-auto mt-4 max-w-[1920px] px-5 sm:px-8">
-      <Reveal className="grid grid-cols-1 divide-y divide-[#EFE7D8] rounded-xl bg-white shadow-[0_8px_24px_rgba(22,35,63,0.1)] sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-        <Link href="/start" className="group p-6 transition-colors hover:bg-[#FBF7EF] sm:p-7">
-          <p className="font-serif text-[2.125rem] font-bold text-[#16233F]">
-            Start your claim journey today
+    <div id="find" className="relative mx-auto mt-4 scroll-mt-16 max-w-[1920px] px-5 sm:px-8">
+      <Reveal className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <a
+          href="https://udgam.rbi.org.in"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group mx-auto flex aspect-square w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+        >
+          <p className="text-[1.4rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
+            Step 1
           </p>
-          <p className="mt-1 text-[1rem] leading-snug text-[#6B6255]">
-            What can Adhikaar help find? Bank deposits, fixed deposits
+          <p className="mt-2 font-serif text-[2rem] leading-tight font-bold text-[#16233F]">
+            Check your deposits in UDGAM
           </p>
-          <p className="mt-2 inline-flex items-center gap-1.5 text-[1rem] font-bold text-[#E2653B]">
-            Begin your claim
-            <ArrowRightIcon className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
+          <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
+            UDGAM means Unclaimed Deposits–Gateway to Access Information.
+            It is the RBI&apos;s portal for searching unclaimed deposits across multiple banks in one place.
+            It helps you find out whether money may be waiting in your family&apos;s name.
+          </p>
+          <p className="mt-3 inline-flex items-center gap-2 text-[1.35rem] font-bold text-[#E2653B]">
+            Search UDGAM
+            <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </p>
+        </a>
+        <div
+          className="group mx-auto flex aspect-square w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+        >
+          <p className="text-[1.68rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
+            Step 2
+          </p>
+          <p className="mt-2 font-serif text-[2.4rem] leading-tight font-bold text-[#16233F]">
+            Use Adhikaar
+          </p>
+          <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
+            Answer a few simple questions about your situation.
+            <br />
+            We match it to the exact RBI rule that applies to you.
+          </p>
+          <Link
+            href="/start"
+            className="mt-5 inline-flex w-fit items-center gap-2 rounded bg-[#E2653B] px-5 py-3 text-[1.15rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
+          >
+            Let&apos;s start your claim journey today
+            <ArrowRightIcon className="h-4 w-4" />
+          </Link>
+        </div>
+        <Link
+          href="/start"
+          className="group mx-auto flex aspect-square w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+        >
+          <p className="text-[1.4rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
+            Step 3
+          </p>
+          <p className="mt-2 font-serif text-[2rem] leading-tight font-bold text-[#16233F]">
+            Claim your money from the bank
+          </p>
+          <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
+            Get a clear checklist of the documents you actually need.
+            <br />
+            No sign-in, and nothing about your family is stored.
           </p>
         </Link>
-        <div className="p-6 sm:p-7">
-          <a
-            href="https://udgam.rbi.org.in"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-serif text-[2.125rem] font-bold text-[#16233F] underline decoration-[#E2653B]/40 decoration-2 underline-offset-4 hover:text-[#E2653B]"
-          >
-            Search UDGAM
-          </a>
-          <p className="mt-1 text-[1rem] leading-snug text-[#6B6255]">
-            The RBI&apos;s own portal for finding unclaimed deposits across multiple banks in one place
-          </p>
-        </div>
-        <div className="p-6 sm:p-7">
-          <p className="font-serif text-[2.125rem] font-bold text-[#16233F]">
-            No cost to use Adhikaar — no login
-          </p>
-        </div>
       </Reveal>
     </div>
-  );
-}
-
-
-/* ------------------------------------------------------------ UDGAM BAND */
-
-function UdgamBand() {
-  const { t } = useHomeT();
-  const UDGAM_STEPS = [
-    { icon: SearchIcon, label: t.udgam.search, sub: "UDGAM" },
-    { icon: BookIcon, label: t.udgam.understand, sub: "Adhikaar" },
-    { icon: CheckIcon, label: t.udgam.claim, sub: "Adhikaar" },
-  ];
-  return (
-    <section id="sources" className="scroll-mt-16 bg-[#F1E7D6] py-14">
-      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
-        <Reveal className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center lg:gap-16">
-          <div>
-            <p className="text-[1rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
-              {t.udgam.eyebrow}
-            </p>
-            <p className="mt-2 max-w-[52ch] text-[1.1875rem] leading-relaxed text-[#5B5344]">
-              {t.udgam.body}
-            </p>
-            <a
-              href="https://udgam.rbi.org.in"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-3 inline-block text-[1.125rem] font-bold text-[#16233F] underline decoration-[#E2653B] decoration-2 underline-offset-4"
-            >
-              {t.udgam.link}
-            </a>
-          </div>
-
-          <div className="flex items-center justify-between gap-2 sm:justify-center sm:gap-8">
-            {UDGAM_STEPS.map((s, i) => (
-              <div key={s.label} className="flex items-center gap-2 sm:gap-8">
-                <div className="flex flex-col items-center gap-2 text-center">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full border-2 border-[#16233F] text-[#16233F]">
-                    <s.icon className="h-4.5 w-4.5" />
-                  </span>
-                  <span className="text-[1rem] font-bold text-[#16233F]">
-                    {s.label}
-                    <span className="block text-[0.875rem] font-normal text-[#6B6255]">
-                      {s.sub}
-                    </span>
-                  </span>
-                </div>
-                {i < UDGAM_STEPS.length - 1 && (
-                  <span aria-hidden="true" className="h-px w-6 bg-[#C9BFA6] sm:w-10" />
-                )}
-              </div>
-            ))}
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/* ------------------------------------------------------------ FIND GRID */
-
-function FindGrid() {
-  const { t } = useHomeT();
-  const FIND_ITEMS = [
-    { icon: BankIcon, label: t.find.bank },
-    { icon: BankIcon, label: t.find.fixed },
-  ];
-  return (
-    <section id="find" className="scroll-mt-16 bg-[#FAF5EC] py-16">
-      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
-        <Reveal className="text-center">
-          <h2 className="font-serif text-[2.25rem] font-bold tracking-[-0.01em] text-[#16233F]">
-            {t.find.heading}
-          </h2>
-        </Reveal>
-
-        <Reveal
-          delay={80}
-          className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:grid-cols-7"
-        >
-          {FIND_ITEMS.map((it) => (
-            <div key={it.label} className="flex flex-col items-center gap-2.5 text-center">
-              <span className="flex h-12 w-12 items-center justify-center rounded-full bg-[#FBE4D8] text-[#E2653B]">
-                <it.icon className="h-5 w-5" />
-              </span>
-              <span className="text-[1rem] font-bold text-[#16233F]">{it.label}</span>
-            </div>
-          ))}
-        </Reveal>
-      </div>
-    </section>
   );
 }
 

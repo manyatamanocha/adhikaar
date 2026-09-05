@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { LeafMark } from "./brand";
 import { ChevronDownIcon } from "./icons";
 import { LOCALES, LOCALE_LABEL, LOCALE_SHORT, withLang } from "@/lib/i18n";
@@ -23,9 +23,24 @@ export function RecoverNav() {
   const [langOpen, setLangOpen] = useState(false);
   const { t, locale } = useHomeT();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const linkClass = (active: boolean) =>
     `transition-colors hover:text-[#F0B892] ${active ? "text-[#F0B892] underline decoration-2 underline-offset-8" : ""}`;
+
+  // The switcher stays on the current page (not always "/") and keeps every
+  // other query param (e.g. a selected bank on a verdict page) -- only the
+  // `lang` value changes.
+  const hrefForLocale = (l: (typeof LOCALES)[number]) => {
+    const q = new URLSearchParams(searchParams.toString());
+    if (l === "en") {
+      q.delete("lang");
+    } else {
+      q.set("lang", l);
+    }
+    const s = q.toString();
+    return s ? `${pathname}?${s}` : pathname;
+  };
 
   return (
     <header data-print="hide" className="bg-[#FAF5EC] text-[#16233F]">
@@ -66,7 +81,7 @@ export function RecoverNav() {
                 {LOCALES.map((l) => (
                   <Link
                     key={l}
-                    href={withLang("/", l)}
+                    href={hrefForLocale(l)}
                     role="menuitem"
                     onClick={() => setLangOpen(false)}
                     aria-current={l === locale ? "true" : undefined}
@@ -93,13 +108,13 @@ export function RecoverNav() {
         <a href="#find" className="transition-colors hover:text-[#F0B892]">
           {t.nav.find}
         </a>
-        <Link href="/banks" className={linkClass(pathname === "/banks")}>
+        <Link href={withLang("/banks", locale)} className={linkClass(pathname === "/banks")}>
           {t.nav.policy}
         </Link>
-        <Link href="/faq" className={linkClass(pathname === "/faq")}>
+        <Link href={withLang("/faq", locale)} className={linkClass(pathname === "/faq")}>
           {t.nav.faq}
         </Link>
-        <Link href="/contact" className={linkClass(pathname === "/contact")}>
+        <Link href={withLang("/contact", locale)} className={linkClass(pathname === "/contact")}>
           {t.nav.contact}
         </Link>
       </nav>
