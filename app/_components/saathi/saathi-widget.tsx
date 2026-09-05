@@ -40,15 +40,23 @@ const EMAIL = "adhikaarapka@gmail.com";
  * https://) falls back to a plain anchor.
  */
 function renderMessage(content: string): ReactNode[] {
-  const pattern = /\[([^\]]+)\]\((\/[^\s)]+)\)|(?<![\w/])(\/[a-z][a-z0-9-]*(?:\/[a-z0-9-]*)*)/g;
+  // Three shapes the model actually produces, in priority order:
+  // 1. `[label](/path)` -- normal markdown link.
+  // 2. `[/path]()` -- Groq sometimes puts the path as the visible text and
+  //    leaves the parens empty instead of writing it as a proper markdown
+  //    link. Without this case it fell through to plain text -- literal
+  //    "[/dispute]()" printed in the chat bubble, unclickable and ugly.
+  // 3. A bare `/path` with no markdown at all.
+  const pattern =
+    /\[([^\]]+)\]\((\/[^\s)]+)\)|\[(\/[a-z][a-z0-9-/]*)\]\(\)|(?<![\w/])(\/[a-z][a-z0-9-]*(?:\/[a-z0-9-]*)*)/g;
   const nodes: ReactNode[] = [];
   let last = 0;
   let match: RegExpExecArray | null;
   let key = 0;
   while ((match = pattern.exec(content))) {
     if (match.index > last) nodes.push(content.slice(last, match.index));
-    const [, label, mdHref, barePath] = match;
-    const href = mdHref ?? barePath;
+    const [, label, mdHref, emptyParensPath, barePath] = match;
+    const href = mdHref ?? emptyParensPath ?? barePath;
     nodes.push(
       <Link key={key++} href={href} className="font-bold underline underline-offset-2">
         {label ?? href}
