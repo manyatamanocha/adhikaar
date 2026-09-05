@@ -48,6 +48,20 @@ export type HomeDict = {
     rowPfSub: string;
   };
 
+  stepsCards: {
+    step1Label: string;
+    step1Title: string;
+    step1Body: string;
+    step1Cta: string;
+    step2Label: string;
+    step2Title: string;
+    step2Body: string;
+    step2Cta: string;
+    step3Label: string;
+    step3Title: string;
+    step3Body: string;
+  };
+
   stats: { daysFigure: string; banks: string; days: string; free: string };
 
   timeline: {
@@ -477,6 +491,20 @@ const en: HomeDict = {
     rowInsuranceSub: "Life, general",
     rowPf: "Provident Fund",
     rowPfSub: "EPF, PPF balances",
+  },
+
+  stepsCards: {
+    step1Label: "Step 1",
+    step1Title: "Find the deposit through UDGAM",
+    step1Body: "UDGAM means Unclaimed Deposits–Gateway to Access Information. It is the RBI's portal for searching unclaimed deposits across multiple banks. UDGAM helps you find the deposit; Adhikaar helps you understand how to claim it.",
+    step1Cta: "Find it on UDGAM",
+    step2Label: "Step 2",
+    step2Title: "Understand the claim with Adhikaar",
+    step2Body: "Answer a few simple questions about your claim.\nWe show the conditions, documents and next step that apply.",
+    step2Cta: "Let's start your claim journey today",
+    step3Label: "Step 3",
+    step3Title: "Claim your money from the bank",
+    step3Body: "Get a clear checklist of the documents you actually need.\nNo sign-in or document uploads. Read our privacy details before sharing a guide link.",
   },
 
   stats: {
@@ -926,6 +954,20 @@ const hi: HomeDict = {
     rowPfSub: "ईपीएफ़, पीपीएफ़ शेष राशि",
   },
 
+  stepsCards: {
+    step1Label: "चरण 1",
+    step1Title: "UDGAM के ज़रिए जमा राशि ढूँढें",
+    step1Body: "UDGAM का मतलब है Unclaimed Deposits–Gateway to Access Information। यह RBI का पोर्टल है, जो कई बैंकों में लावारिस जमा राशि खोजने के लिए है। UDGAM आपको जमा राशि ढूँढने में मदद करता है; अधिकार आपको यह समझने में मदद करता है कि उसे कैसे क्लेम करें।",
+    step1Cta: "इसे UDGAM पर ढूँढें",
+    step2Label: "चरण 2",
+    step2Title: "अधिकार के साथ दावे को समझें",
+    step2Body: "अपने दावे के बारे में कुछ सरल सवालों के जवाब दें।\nहम लागू होने वाली शर्तें, दस्तावेज़ और अगला कदम दिखाते हैं।",
+    step2Cta: "आज ही अपनी दावे की यात्रा शुरू करें",
+    step3Label: "चरण 3",
+    step3Title: "बैंक से अपना पैसा पाएँ",
+    step3Body: "आपको वाक़ई जिन दस्तावेज़ों की ज़रूरत है, उनकी स्पष्ट सूची पाएँ।\nकोई साइन-इन या दस्तावेज़ अपलोड नहीं। गाइड लिंक साझा करने से पहले हमारी गोपनीयता जानकारी पढ़ें।",
+  },
+
   stats: {
     daysFigure: "15 दिन",
     banks: "लॉन्च पर तुलना किए गए बैंक — एसबीआई, पीएनबी, एचडीएफ़सी, आईसीआईसीआई",
@@ -1371,6 +1413,20 @@ const kn: HomeDict = {
     rowInsuranceSub: "ಜೀವ, ಸಾಮಾನ್ಯ",
     rowPf: "ಭವಿಷ್ಯ ನಿಧಿ",
     rowPfSub: "ಇಪಿಎಫ್, ಪಿಪಿಎಫ್ ಬಾಕಿ",
+  },
+
+  stepsCards: {
+    step1Label: "ಹಂತ 1",
+    step1Title: "UDGAM ಮೂಲಕ ಠೇವಣಿಯನ್ನು ಹುಡುಕಿ",
+    step1Body: "UDGAM ಎಂದರೆ Unclaimed Deposits–Gateway to Access Information. ಇದು ಅನೇಕ ಬ್ಯಾಂಕುಗಳಾದ್ಯಂತ ಹಕ್ಕು ಪಡೆಯದ ಠೇವಣಿಗಳನ್ನು ಹುಡುಕಲು RBI ಯ ಪೋರ್ಟಲ್. UDGAM ನಿಮಗೆ ಠೇವಣಿ ಹುಡುಕಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ; ಅಧಿಕಾರ್ ಅದನ್ನು ಹೇಗೆ ಪಡೆಯುವುದು ಎಂದು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
+    step1Cta: "ಇದನ್ನು UDGAM ನಲ್ಲಿ ಹುಡುಕಿ",
+    step2Label: "ಹಂತ 2",
+    step2Title: "ಅಧಿಕಾರ್‌ನೊಂದಿಗೆ ಹಕ್ಕನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಿ",
+    step2Body: "ನಿಮ್ಮ ಹಕ್ಕಿನ ಬಗ್ಗೆ ಕೆಲವು ಸರಳ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ.\nಅನ್ವಯಿಸುವ ಷರತ್ತುಗಳು, ದಾಖಲೆಗಳು ಮತ್ತು ಮುಂದಿನ ಹೆಜ್ಜೆಯನ್ನು ನಾವು ತೋರಿಸುತ್ತೇವೆ.",
+    step2Cta: "ಇಂದೇ ನಿಮ್ಮ ಹಕ್ಕಿನ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
+    step3Label: "ಹಂತ 3",
+    step3Title: "ಬ್ಯಾಂಕಿನಿಂದ ನಿಮ್ಮ ಹಣ ಪಡೆಯಿರಿ",
+    step3Body: "ನಿಮಗೆ ನಿಜವಾಗಿಯೂ ಬೇಕಾದ ದಾಖಲೆಗಳ ಸ್ಪಷ್ಟ ಪಟ್ಟಿಯನ್ನು ಪಡೆಯಿರಿ.\nಯಾವುದೇ ಸೈನ್-ಇನ್ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಇಲ್ಲ. ಗೈಡ್ ಲಿಂಕ್ ಹಂಚಿಕೊಳ್ಳುವ ಮೊದಲು ನಮ್ಮ ಗೌಪ್ಯತೆ ವಿವರಗಳನ್ನು ಓದಿ.",
   },
 
   stats: {

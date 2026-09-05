@@ -119,9 +119,10 @@ function Hero() {
 /* ------------------------------------------------------------ STATS BAR */
 
 function StatsOverlap() {
-  const { locale } = useHomeT();
+  const { t, locale } = useHomeT();
+  const s = t.stepsCards;
   return (
-    <div id="find" lang="en" className="relative mx-auto mt-4 scroll-mt-16 max-w-[1920px] px-5 sm:px-8">
+    <div id="find" className="relative mx-auto mt-4 scroll-mt-16 max-w-[1920px] px-5 sm:px-8">
       <Reveal className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <a
           href="https://udgam.rbi.org.in"
@@ -130,18 +131,16 @@ function StatsOverlap() {
           className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
           <p className="text-[1.4rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
-            Step 1
+            {s.step1Label}
           </p>
           <p className="mt-2 font-serif text-[2rem] leading-tight font-bold text-[#16233F]">
-            Find the deposit through UDGAM
+            {s.step1Title}
           </p>
           <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
-            UDGAM means Unclaimed Deposits–Gateway to Access Information.
-            It is the RBI&apos;s portal for searching unclaimed deposits across multiple banks.
-            UDGAM helps you find the deposit; Adhikaar helps you understand how to claim it.
+            {s.step1Body}
           </p>
           <p className="mt-3 inline-flex items-center gap-2 text-[1.35rem] font-bold text-[#E2653B]">
-            Find it on UDGAM
+            {s.step1Cta}
             <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </p>
         </a>
@@ -149,21 +148,21 @@ function StatsOverlap() {
           className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
           <p className="text-[1.68rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
-            Step 2
+            {s.step2Label}
           </p>
           <p className="mt-2 font-serif text-[2.4rem] leading-tight font-bold text-[#16233F]">
-            Understand the claim with Adhikaar
+            {s.step2Title}
           </p>
           <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
-            Answer a few simple questions about your claim.
-            <br />
-            We show the conditions, documents and next step that apply.
+            {s.step2Body.split("\n").map((line, i) => (
+              <span key={i} className="block">{line}</span>
+            ))}
           </p>
           <Link
             href={withLang("/start", locale)}
             className="mt-5 inline-flex w-fit items-center gap-2 rounded bg-[#E2653B] px-5 py-3 text-[1.15rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
           >
-            Let&apos;s start your claim journey today
+            {s.step2Cta}
             <ArrowRightIcon className="h-4 w-4" />
           </Link>
         </div>
@@ -172,15 +171,15 @@ function StatsOverlap() {
           className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
           <p className="text-[1.4rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
-            Step 3
+            {s.step3Label}
           </p>
           <p className="mt-2 font-serif text-[2rem] leading-tight font-bold text-[#16233F]">
-            Claim your money from the bank
+            {s.step3Title}
           </p>
           <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
-            Get a clear checklist of the documents you actually need.
-            <br />
-            No sign-in or document uploads. Read our privacy details before sharing a guide link.
+            {s.step3Body.split("\n").map((line, i) => (
+              <span key={i} className="block">{line}</span>
+            ))}
           </p>
         </Link>
       </Reveal>
