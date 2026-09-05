@@ -26,7 +26,21 @@ export type Answers = Partial<{
 export type Option = { value: string; label: string; detail?: string; unsure?: boolean };
 export type Question = { id: QuestionId; number: number; prompt: string; help: string; options: Option[] };
 
-export const QUESTION_ORDER: QuestionId[] = ["claiming", "court", "nominee", "will", "heirs", "bankType", "amount"];
+/**
+ * Reordered 6 Sep 2026 night, per direct request after live-testing showed
+ * real friction: every scenario-card entry ("There was a nominee", "no
+ * nominee, or not sure") landed on the unrelated court-restriction question
+ * immediately after the user had just told the site their situation via the
+ * card they clicked. Moved nominee ahead of court -- NOT all the way to
+ * "right before bank/amount" as an earlier advisor review literally
+ * suggested, which analysis (recorded in the vault's checkpoint note) showed
+ * would be a real safety regression: para 8(ii) requires no restraining
+ * court order even for a NOMINEE payment, and nominee/survivorship
+ * short-circuit straight to an outcome in resolve() below. Court is still
+ * asked -- and still gates every outcome -- immediately after nominee,
+ * before any done() call; only its position in the ask order moved.
+ */
+export const QUESTION_ORDER: QuestionId[] = ["claiming", "nominee", "court", "will", "heirs", "bankType", "amount"];
 export const TOTAL_QUESTIONS = QUESTION_ORDER.length;
 
 const unknownEn: Option = { value: "unknown", label: "I don't know yet", unsure: true };
@@ -44,12 +58,12 @@ const en: Record<QuestionId, Question> = {
     ],
   },
   court: {
-    id: "court", number: 2, prompt: "Is there a court order stopping the bank from paying?",
+    id: "court", number: 3, prompt: "Is there a court order stopping the bank from paying?",
     help: "A court order stopping payment is different from simply having a court case. If you are unsure, ask the bank whether it knows of such an order.",
     options: [{ value: "no", label: "No such court order is known" }, { value: "yes", label: "Yes, a court order is stopping payment" }, unknownEn],
   },
   nominee: {
-    id: "nominee", number: 3, prompt: "Was someone named in the bank records to receive the money?",
+    id: "nominee", number: 2, prompt: "Was someone named in the bank records to receive the money?",
     help: "This person is called a nominee. Check the bank's records. For a joint account, a surviving holder may qualify under an 'either or survivor' instruction.",
     options: [
       { value: "yes", label: "Yes, there is a registered nominee", detail: "The sole account holder, or all joint depositors, have died." },
@@ -94,12 +108,12 @@ const hi: Record<QuestionId, Question> = {
     ],
   },
   court: {
-    id: "court", number: 2, prompt: "क्या कोई अदालती आदेश बैंक को भुगतान करने से रोक रहा है?",
+    id: "court", number: 3, prompt: "क्या कोई अदालती आदेश बैंक को भुगतान करने से रोक रहा है?",
     help: "भुगतान रोकने वाला अदालती आदेश होना केवल अदालती मामला होने से अलग है। अगर आपको यक़ीन न हो, तो बैंक से पूछें कि क्या उसे ऐसे किसी आदेश की जानकारी है।",
     options: [{ value: "no", label: "ऐसा कोई अदालती आदेश ज्ञात नहीं है" }, { value: "yes", label: "हाँ, एक अदालती आदेश भुगतान रोक रहा है" }, unknownHi],
   },
   nominee: {
-    id: "nominee", number: 3, prompt: "क्या बैंक के रिकॉर्ड में पैसा पाने के लिए किसी का नाम दर्ज था?",
+    id: "nominee", number: 2, prompt: "क्या बैंक के रिकॉर्ड में पैसा पाने के लिए किसी का नाम दर्ज था?",
     help: "इस व्यक्ति को नामांकित व्यक्ति (नॉमिनी) कहा जाता है। बैंक के रिकॉर्ड जाँचें। संयुक्त खाते में, जीवित धारक 'either or survivor' निर्देश के तहत पात्र हो सकता है।",
     options: [
       { value: "yes", label: "हाँ, एक पंजीकृत नामांकित व्यक्ति है", detail: "एकल खाताधारक, या सभी संयुक्त जमाकर्ता, गुज़र चुके हैं।" },
@@ -144,12 +158,12 @@ const kn: Record<QuestionId, Question> = {
     ],
   },
   court: {
-    id: "court", number: 2, prompt: "ಬ್ಯಾಂಕ್ ಪಾವತಿಸದಂತೆ ತಡೆಯುವ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶವಿದೆಯೇ?",
+    id: "court", number: 3, prompt: "ಬ್ಯಾಂಕ್ ಪಾವತಿಸದಂತೆ ತಡೆಯುವ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶವಿದೆಯೇ?",
     help: "ಪಾವತಿಯನ್ನು ತಡೆಯುವ ನ್ಯಾಯಾಲಯದ ಆದೇಶ ಇರುವುದು, ಕೇವಲ ನ್ಯಾಯಾಲಯದ ಪ್ರಕರಣ ಇರುವುದಕ್ಕಿಂತ ಬೇರೆ. ಖಚಿತವಿಲ್ಲದಿದ್ದರೆ, ಅಂತಹ ಆದೇಶದ ಬಗ್ಗೆ ಬ್ಯಾಂಕಿಗೆ ಗೊತ್ತಿದೆಯೇ ಎಂದು ಕೇಳಿ.",
     options: [{ value: "no", label: "ಅಂತಹ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶ ತಿಳಿದಿಲ್ಲ" }, { value: "yes", label: "ಹೌದು, ಒಂದು ನ್ಯಾಯಾಲಯದ ಆದೇಶ ಪಾವತಿಯನ್ನು ತಡೆಯುತ್ತಿದೆ" }, unknownKn],
   },
   nominee: {
-    id: "nominee", number: 3, prompt: "ಹಣ ಪಡೆಯಲು ಬ್ಯಾಂಕಿನ ದಾಖಲೆಗಳಲ್ಲಿ ಯಾರಾದರೂ ಹೆಸರಿಸಲ್ಪಟ್ಟಿದ್ದರೇ?",
+    id: "nominee", number: 2, prompt: "ಹಣ ಪಡೆಯಲು ಬ್ಯಾಂಕಿನ ದಾಖಲೆಗಳಲ್ಲಿ ಯಾರಾದರೂ ಹೆಸರಿಸಲ್ಪಟ್ಟಿದ್ದರೇ?",
     help: "ಈ ವ್ಯಕ್ತಿಯನ್ನು ನಾಮನಿರ್ದೇಶಿತರು ಎಂದು ಕರೆಯಲಾಗುತ್ತದೆ. ಬ್ಯಾಂಕಿನ ದಾಖಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ. ಜಂಟಿ ಖಾತೆಯಲ್ಲಿ, ಜೀವಂತ ಇರುವ ಧಾರಕರು 'either or survivor' ಸೂಚನೆಯಡಿ ಅರ್ಹರಾಗಬಹುದು.",
     options: [
       { value: "yes", label: "ಹೌದು, ನೋಂದಾಯಿತ ನಾಮನಿರ್ದೇಶಿತರು ಇದ್ದಾರೆ", detail: "ಏಕೈಕ ಖಾತೆದಾರರು, ಅಥವಾ ಎಲ್ಲಾ ಜಂಟಿ ಠೇವಣಿದಾರರು, ಮರಣ ಹೊಂದಿದ್ದಾರೆ." },
@@ -225,13 +239,16 @@ export function resolve(a: Answers, locale: Locale = "en"): Resolution {
   const done = (outcome: OutcomeId): Resolution => ({ kind: "outcome", outcome, carry: a });
   if (!a.claiming) return ask("claiming");
   if (a.claiming !== "deposit") return done("out-of-scope");
-  if (!a.court) return ask("court");
-  if (a.court !== "no") return review();
   if (!a.nominee) return ask("nominee");
   if (a.nominee === "unknown") return done("unknown-nominee");
   // A known dispute needs individual review, not a blanket statement that a
   // valid nominee must obtain succession documents.
   if (a.heirs === "dispute" && a.nominee !== "no") return review();
+  // Court still gates every outcome below, asked right after nominee is
+  // known rather than before it -- see QUESTION_ORDER's comment for why
+  // this can't move any further down without becoming unsafe.
+  if (!a.court) return ask("court");
+  if (a.court !== "no") return review();
   if (a.nominee === "yes") return done("nominee");
   if (a.nominee === "survivorship") return done("survivorship");
   if (!a.will) return ask("will");
