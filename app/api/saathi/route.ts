@@ -45,6 +45,31 @@ const MODEL = "openai/gpt-oss-120b";
 const MAX_HISTORY = 12;
 const MAX_MESSAGE_LENGTH = 1200;
 
+/**
+ * Simple in-memory sliding-window rate limit, keyed by IP. This is a free
+ * Groq key behind a public chat widget -- one heavy user (or a bot) could
+ * exhaust the whole app's daily quota for everyone else, so a limit here
+ * matters even though it's not a security boundary. In-memory means it
+ * resets on redeploy and doesn't share state across serverless instances --
+ * good enough for this MVP's traffic; move to a shared store (Redis/Upstash)
+ * before relying on it under real load.
+ */
+const RATE_LIMIT = 12;
+const RATE_WINDOW_MS = 5 * 60 * 1000;
+const hits = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
+  if (timestamps.length >= RATE_LIMIT) {
+    hits.set(ip, timestamps);
+    return true;
+  }
+  timestamps.push(now);
+  hits.set(ip, timestamps);
+  return false;
+}
+
 const KNOWLEDGE = FAQS.map((f) => {
   const link = f.link ? ` [Link: ${f.link.label} -> ${f.link.href}]` : "";
   return `Q: ${f.q}\nA: ${f.a}${link}`;
@@ -77,6 +102,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: "Saathi is not configured yet. Set GROQ_API_KEY." },
       { status: 503 },
+    );
+  }
+
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
+  if (isRateLimited(ip)) {
+    return NextResponse.json(
+      { error: "Too many messages -- please wait a few minutes and try again." },
+      { status: 429 },
     );
   }
 

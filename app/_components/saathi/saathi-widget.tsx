@@ -96,7 +96,7 @@ export function SaathiWidget() {
       className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3"
     >
       {open && (
-        <div className="flex h-[28rem] w-[22rem] max-w-[calc(100vw-2.5rem)] flex-col overflow-hidden rounded-2xl border border-[#EFE7D8] bg-white shadow-[0_20px_50px_rgba(22,35,63,0.25)]">
+        <div className="flex h-[42rem] w-[28rem] max-w-[calc(100vw-2.5rem)] max-h-[calc(100vh-8rem)] flex-col overflow-hidden rounded-2xl border border-[#EFE7D8] bg-white shadow-[0_20px_50px_rgba(22,35,63,0.25)]">
           <div className="flex items-center gap-3 bg-[#16233F] px-4 py-3.5">
             <SaathiAvatar className="h-9 w-9 shrink-0" />
             <div className="min-w-0">
