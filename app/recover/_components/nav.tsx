@@ -9,7 +9,7 @@ import { useHomeT } from "./home-i18n";
 
 /** Shared, responsive navigation. Native select supports keyboard and touch. */
 export function RecoverNav() {
-  return <Suspense fallback={<header data-print="hide" className="bg-[#FAF5EC] p-5"><Link href="/" className="font-serif text-3xl font-bold">Adhikaar</Link><nav aria-label="Quick links" className="mt-4 flex flex-wrap gap-6"><Link href="/banks">Bank policies</Link><Link href="/faq">FAQs</Link><Link href="/contact">Contact</Link></nav></header>}><Navigation /></Suspense>;
+  return <Suspense fallback={<header data-print="hide" className="bg-[#FAF5EC] p-5"><Link href="/" className="font-serif text-3xl font-bold">Adhikaar</Link><nav aria-label="Quick links" className="mt-4 flex flex-wrap gap-6"><Link href="/start">Claim Guide</Link><Link href="/banks">Bank policies</Link><Link href="/faq">FAQs</Link><Link href="/contact">Contact</Link></nav></header>}><Navigation /></Suspense>;
 }
 
 function Navigation() {
@@ -25,6 +25,7 @@ function Navigation() {
   };
   const links = [
     { href: "/", label: t.nav.home },
+    { href: "/start", label: "Claim Guide" },
     { href: "/banks", label: locale === "hi" ? "बैंक की नीतियाँ" : locale === "kn" ? "ಬ್ಯಾಂಕ್ ನೀತಿಗಳು" : "Bank policies" },
     { href: "/faq", label: t.nav.faq },
     { href: "/contact", label: t.nav.contact },

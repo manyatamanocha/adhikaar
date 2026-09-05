@@ -136,7 +136,7 @@ function ScenarioPicker({ locale }: { locale: Locale }) {
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
-          <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
+          <p className="text-[1.375rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
             Where should we start?
           </p>
           <h1 className="display-lg mt-2.5 font-serif font-bold text-indigo-ink">
