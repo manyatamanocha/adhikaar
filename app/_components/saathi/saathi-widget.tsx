@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import Link from "next/link";
 import { SaathiAvatar } from "./avatar";
 
 /**
@@ -27,6 +28,37 @@ type ChatMessage = { role: "user" | "assistant"; content: string };
 // shared constants file existed yet for two call sites.
 const PHONE = "+91 98765 43210";
 const EMAIL = "adhikaarapka@gmail.com";
+
+/**
+ * Saathi answers with plain text, but the model reliably drops in either
+ * markdown links (`[label](/start)`) or a bare internal path (`/start`) --
+ * it was told to end answers with the most relevant page. Rendered as
+ * `{content}` alone those are just inert text, which is exactly what a
+ * tester ran into: told to "click /start" with nothing clickable. This
+ * turns both forms into real links -- internal paths use next/link so
+ * navigation stays client-side, anything else (mailto:, tel:, external
+ * https://) falls back to a plain anchor.
+ */
+function renderMessage(content: string): ReactNode[] {
+  const pattern = /\[([^\]]+)\]\((\/[^\s)]+)\)|(?<![\w/])(\/[a-z][a-z0-9-]*(?:\/[a-z0-9-]*)*)/g;
+  const nodes: ReactNode[] = [];
+  let last = 0;
+  let match: RegExpExecArray | null;
+  let key = 0;
+  while ((match = pattern.exec(content))) {
+    if (match.index > last) nodes.push(content.slice(last, match.index));
+    const [, label, mdHref, barePath] = match;
+    const href = mdHref ?? barePath;
+    nodes.push(
+      <Link key={key++} href={href} className="font-bold underline underline-offset-2">
+        {label ?? href}
+      </Link>,
+    );
+    last = match.index + match[0].length;
+  }
+  if (last < content.length) nodes.push(content.slice(last));
+  return nodes;
+}
 
 const GREETING: ChatMessage = {
   role: "assistant",
@@ -93,7 +125,7 @@ export function SaathiWidget() {
     <div
       ref={containerRef}
       data-print="hide"
-      className="fixed bottom-5 right-5 z-50 flex flex-col items-end gap-3"
+      className="fixed bottom-3 right-3 z-50 flex flex-col items-end gap-3 sm:bottom-5 sm:right-5"
     >
       {open && (
         <div className="flex h-[42rem] w-[28rem] max-w-[calc(100vw-2.5rem)] max-h-[calc(100vh-8rem)] flex-col overflow-hidden rounded-2xl border border-[#EFE7D8] bg-white shadow-[0_20px_50px_rgba(22,35,63,0.25)]">
@@ -152,7 +184,17 @@ export function SaathiWidget() {
                     : "bg-[#FAF5EC] text-[#16233F]"
                 }`}
               >
-                {m.content}
+                {m.role === "assistant" ? (
+                  <span
+                    onClick={(e) => {
+                      if ((e.target as HTMLElement).closest("a")) setOpen(false);
+                    }}
+                  >
+                    {renderMessage(m.content)}
+                  </span>
+                ) : (
+                  m.content
+                )}
               </div>
             ))}
             {sending && (
@@ -201,12 +243,12 @@ export function SaathiWidget() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close Saathi" : "Open Saathi, Adhikaar's assistant"}
-        className="group flex cursor-pointer items-center gap-4 rounded-full bg-white py-3 pl-3 pr-7 shadow-[0_16px_40px_rgba(22,35,63,0.28)] transition-transform hover:-translate-y-1"
+        className="group flex cursor-pointer items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 shadow-[0_10px_24px_rgba(22,35,63,0.28)] transition-transform hover:-translate-y-1 sm:gap-4 sm:py-3 sm:pl-3 sm:pr-7 sm:shadow-[0_16px_40px_rgba(22,35,63,0.28)]"
       >
-        <span className="relative flex h-[8.25rem] w-[8.25rem] shrink-0 items-center justify-center">
-          <SaathiAvatar className="h-[8.25rem] w-[8.25rem] animate-[saathi-bob_3.4s_ease-in-out_infinite]" />
+        <span className="relative flex h-11 w-11 shrink-0 items-center justify-center sm:h-[8.25rem] sm:w-[8.25rem]">
+          <SaathiAvatar className="h-11 w-11 animate-[saathi-bob_3.4s_ease-in-out_infinite] sm:h-[8.25rem] sm:w-[8.25rem]" />
         </span>
-        <span className="text-[1.375rem] font-bold text-[#16233F]">
+        <span className="text-[0.9375rem] font-bold text-[#16233F] sm:text-[1.375rem]">
           {open ? "Close" : "Ask Saathi"}
         </span>
       </button>
