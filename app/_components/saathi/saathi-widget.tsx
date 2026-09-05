@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SaathiAvatar } from "./avatar";
 
 /**
@@ -81,6 +82,7 @@ const GREETING: ChatMessage = {
 };
 
 export function SaathiWidget() {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([GREETING]);
   const [input, setInput] = useState("");
@@ -134,6 +136,11 @@ export function SaathiWidget() {
       setSending(false);
     }
   }
+
+  // The metrics dashboard is an internal tool, not part of the public
+  // product Saathi assists with -- and it must not leak site chrome to a
+  // page that is otherwise deliberately unlinked and unbranded.
+  if (pathname?.startsWith("/admin")) return null;
 
   return (
     <div

@@ -296,6 +296,8 @@ export type HomeDict = {
     bankPanelStaleHeading: string;
     bankPanelStaleBody: string;
     bankPanelConflictHeading: (bankShort: string) => string;
+    bankGapHeading: (bankShort: string) => string;
+    bankGapSeeDetail: string;
     bankPanelThresholdLabel: (bankShort: string) => string;
     bankPanelSuretyLabel: string;
     bankPanelSuretyNotRequired: string;
@@ -756,6 +758,8 @@ const en: HomeDict = {
     bankPanelStaleHeading: "This was checked over six months ago",
     bankPanelStaleBody: "This policy may have changed. Confirm with the bank before relying on it.",
     bankPanelConflictHeading: (bankShort) => `A documented gap between ${bankShort}'s policy and its branch practice`,
+    bankGapHeading: (bankShort) => `${bankShort} may ask for more than the RBI rule requires`,
+    bankGapSeeDetail: "Full details below, under “More detail.”",
     bankPanelThresholdLabel: (bankShort) => `${bankShort}'s own threshold`,
     bankPanelSuretyLabel: "Third-party surety below it",
     bankPanelSuretyNotRequired: "Says it is not to be insisted on",
@@ -1219,6 +1223,8 @@ const hi: HomeDict = {
     bankPanelStaleHeading: "यह छह महीने से ज़्यादा पहले जाँचा गया था",
     bankPanelStaleBody: "यह नीति बदल गई हो सकती है। इस पर भरोसा करने से पहले बैंक से पुष्टि करें।",
     bankPanelConflictHeading: (bankShort) => `${bankShort} की नीति और उसकी शाखा व्यवहार के बीच एक दर्ज अंतर`,
+    bankGapHeading: (bankShort) => `${bankShort} RBI के नियम से ज़्यादा मांग सकता है`,
+    bankGapSeeDetail: "पूरी जानकारी नीचे “और विवरण” में।",
     bankPanelThresholdLabel: (bankShort) => `${bankShort} की अपनी सीमा`,
     bankPanelSuretyLabel: "उससे नीचे तीसरे पक्ष की ज़मानत",
     bankPanelSuretyNotRequired: "कहता है कि इस पर ज़ोर नहीं दिया जाना चाहिए",
@@ -1682,6 +1688,8 @@ const kn: HomeDict = {
     bankPanelStaleHeading: "ಇದನ್ನು ಆರು ತಿಂಗಳಿಗಿಂತ ಹೆಚ್ಚು ಹಿಂದೆ ಪರಿಶೀಲಿಸಲಾಗಿತ್ತು",
     bankPanelStaleBody: "ಈ ನೀತಿ ಬದಲಾಗಿರಬಹುದು. ಇದನ್ನು ಅವಲಂಬಿಸುವ ಮೊದಲು ಬ್ಯಾಂಕಿನೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
     bankPanelConflictHeading: (bankShort) => `${bankShort} ಯ ನೀತಿ ಮತ್ತು ಅದರ ಶಾಖಾ ಆಚರಣೆಯ ನಡುವಿನ ದಾಖಲಿತ ಅಂತರ`,
+    bankGapHeading: (bankShort) => `${bankShort} RBI ನಿಯಮಕ್ಕಿಂತ ಹೆಚ್ಚಿನದನ್ನು ಕೇಳಬಹುದು`,
+    bankGapSeeDetail: "ಪೂರ್ಣ ವಿವರ ಕೆಳಗೆ “ಹೆಚ್ಚಿನ ವಿವರ”ದಲ್ಲಿ.",
     bankPanelThresholdLabel: (bankShort) => `${bankShort} ಯ ಸ್ವಂತ ಮಿತಿ`,
     bankPanelSuretyLabel: "ಅದಕ್ಕಿಂತ ಕೆಳಗೆ ಮೂರನೇ ವ್ಯಕ್ತಿ ಜಾಮೀನು",
     bankPanelSuretyNotRequired: "ಇದನ್ನು ಒತ್ತಾಯಿಸಬಾರದು ಎಂದು ಹೇಳುತ್ತದೆ",

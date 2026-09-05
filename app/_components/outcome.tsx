@@ -35,6 +35,7 @@ import { OUTCOMES, outcomeText, type OutcomeId, type Outcome } from "@/lib/outco
 import { parseHave, readiness, toggleHave } from "@/lib/readiness";
 import { parseAnswers, resolve, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
+import { getBank, policyGapNotes } from "@/lib/banks";
 import { DeadlineTracker } from "./deadline-tracker";
 import { BeliefSurvey } from "./belief-survey";
 import { CounterMode } from "./counter-mode";
@@ -108,6 +109,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
         <Verdict id={id} answers={answers} bankId={bankId} locale={locale} outcome={outcome} t={t} />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
+          <BankGapAlert bankId={bankId} t={t} />
           <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
           <Steps steps={outcome.steps} t={t} />
           <TodayBox outcome={id} t={t} answers={answers} locale={locale} hasDocuments={!!outcome.documents} />
@@ -212,7 +214,36 @@ function AskedChecker({ answers, locale, t }: { answers: Answers; locale: Return
   );
 }
 
-/* ------------------------------------------------------------------ 1 */
+/**
+ * The gap warning that used to live only inside the folded "More detail"
+ * bank panel. For a bank whose own published practice asks for more than
+ * the RBI rule requires (Canara's ₹5 lakh surety line, Kotak's ₹10 lakh
+ * succession-document line, Axis's pre-2025 indemnity thresholds), that
+ * fact is the single most consequential thing on the page for that
+ * claimant — it belongs above the fold, not behind a tap. Silent when the
+ * picked bank has no such gap, so most readers never see this box.
+ */
+function BankGapAlert({ bankId, t }: { bankId?: string; t: VerdictText }) {
+  const bank = bankId ? getBank(bankId) : undefined;
+  if (!bank) return null;
+  const gaps = policyGapNotes(bank);
+  if (gaps.length === 0) return null;
+  return (
+    <div className="hardbox mb-8">
+      <h2 className="display-md font-serif font-bold text-maroon">
+        {t.bankGapHeading(bank.short)}
+      </h2>
+      <ul className="mt-2 space-y-2">
+        {gaps.map((note) => (
+          <li key={note} className="body-fluid leading-relaxed text-ink">
+            {note}
+          </li>
+        ))}
+      </ul>
+      <p className="mt-3 text-[0.9375rem] font-bold text-ink-soft">{t.bankGapSeeDetail}</p>
+    </div>
+  );
+}
 
 function Verdict({
   id,

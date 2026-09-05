@@ -354,6 +354,17 @@ export function getBank(id: string): Bank | undefined {
 }
 
 /**
+ * The gap-flagged notes for a bank — the ones marked 🔴 in `notes` above,
+ * meaning this bank's own published practice asks for more than the RBI
+ * rule requires. Used to surface the gap above the fold on the verdict
+ * page, not just inside the folded bank panel — a claimant picking a bank
+ * with a real gap should see it before they need to expand anything.
+ */
+export function policyGapNotes(bank: Bank): string[] {
+  return bank.notes.filter((n) => n.startsWith("🔴"));
+}
+
+/**
  * The threshold that applies to a claimant, and how confident we are.
  * Falls back to the RBI floor for the bank TYPE, clearly labelled as the floor
  * rather than as that bank's own figure.
