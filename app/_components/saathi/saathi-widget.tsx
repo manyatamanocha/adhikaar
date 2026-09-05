@@ -39,24 +39,30 @@ const EMAIL = "adhikaarapka@gmail.com";
  * navigation stays client-side, anything else (mailto:, tel:, external
  * https://) falls back to a plain anchor.
  */
-function renderMessage(content: string): ReactNode[] {
-  // Three shapes the model actually produces, in priority order:
+function renderMessage(rawContent: string): ReactNode[] {
+  // Groq occasionally slips in zero-width characters right next to a link
+  // (seen right before "/guide") -- invisible in the rendered text but
+  // enough to break every pattern below, since none of them expect a
+  // stray character between `[` and `/`. Strip them before matching.
+  const content = rawContent.replace(/[​-‍﻿]/g, "");
+
+  // Four shapes the model actually produces, most-specific first so the
+  // right one wins when more than one could match the same position:
   // 1. `[label](/path)` -- normal markdown link.
-  // 2. `[/path]()` -- Groq sometimes puts the path as the visible text and
-  //    leaves the parens empty instead of writing it as a proper markdown
-  //    link. Without this case it fell through to plain text -- literal
-  //    "[/dispute]()" printed in the chat bubble, unclickable and ugly.
-  // 3. A bare `/path` with no markdown at all.
+  // 2. `[/path]()` -- the path as visible text, parens left empty instead
+  //    of a proper markdown link ("[/dispute]()" printed literally).
+  // 3. `[/path]` -- same idea, no parens at all ("[/guide]" printed literally).
+  // 4. A bare `/path` with no markdown at all.
   const pattern =
-    /\[([^\]]+)\]\((\/[^\s)]+)\)|\[(\/[a-z][a-z0-9-/]*)\]\(\)|(?<![\w/])(\/[a-z][a-z0-9-]*(?:\/[a-z0-9-]*)*)/g;
+    /\[([^\]]+)\]\((\/[^\s)]+)\)|\[(\/[a-z][a-z0-9-/]*)\]\(\)|\[(\/[a-z][a-z0-9-/]*)\]|(?<![\w/])(\/[a-z][a-z0-9-]*(?:\/[a-z0-9-]*)*)/g;
   const nodes: ReactNode[] = [];
   let last = 0;
   let match: RegExpExecArray | null;
   let key = 0;
   while ((match = pattern.exec(content))) {
     if (match.index > last) nodes.push(content.slice(last, match.index));
-    const [, label, mdHref, emptyParensPath, barePath] = match;
-    const href = mdHref ?? emptyParensPath ?? barePath;
+    const [, label, mdHref, emptyParensPath, noParensPath, barePath] = match;
+    const href = mdHref ?? emptyParensPath ?? noParensPath ?? barePath;
     nodes.push(
       <Link key={key++} href={href} className="font-bold underline underline-offset-2">
         {label ?? href}
