@@ -24,16 +24,16 @@
  */
 
 import { DOCUMENTS, NOMINEE_PROCEDURE, SIMPLIFIED_PROCEDURE, type DocId } from "./documents";
-import type { Answers } from "./wizard";
+import { resolve, type Answers } from "./wizard";
 
 export type Situation = "nominee" | "simplified" | "above-threshold" | "unknown";
 
 export function situationFrom(a: Answers): Situation {
-  if (a.nominee === "yes" || a.nominee === "survivorship") return "nominee";
-  if (a.nominee === "no") {
-    if (a.amount === "over") return "above-threshold";
-    return "simplified";
-  }
+  const step = resolve(a);
+  if (step.kind !== "outcome") return "unknown";
+  if (step.outcome === "nominee" || step.outcome === "survivorship") return "nominee";
+  if (step.outcome === "under-threshold") return "simplified";
+  if (step.outcome === "over-threshold") return "above-threshold";
   return "unknown";
 }
 
@@ -41,7 +41,7 @@ export const SITUATION_LABEL: Record<Situation, string> = {
   nominee: "A nominee or surviving joint holder is on record",
   simplified: "No nominee, and the total is below the threshold",
   "above-threshold": "No nominee, and the total is at or above the threshold",
-  unknown: "We don't know yet whether a nominee was registered",
+  unknown: "Your claim route has not been confirmed yet",
 };
 
 /** The documents that apply to this claim. Nothing else is in the list. */

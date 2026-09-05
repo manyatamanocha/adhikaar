@@ -60,7 +60,7 @@ export type Outcome = {
 const DISPUTE_CAVEAT: Caveat = {
   title: "If the heirs disagree, this changes",
   body:
-    "Everything on this page assumes the family is not in dispute. Where there are contesting claims among the legal heirs, para 11(b) says the bank requires a probate, letter of administration, succession certificate or court order. That overrides the rest of this page.",
+    "For a claim without a nominee or survivorship clause, a contesting claim changes the documentation route under paragraph 11(b). A valid nominee's payment route and the heirs' ultimate inheritance rights are different questions. For a disputed nominee claim, get individual advice rather than assuming either route applies automatically.",
   weight: "hard",
 };
 
@@ -125,14 +125,14 @@ export const OUTCOMES: Record<OutcomeId, Outcome> = {
   "unknown-nominee": {
     id: "unknown-nominee",
     path: "/unknown-nominee",
-    verdict: "Ask the bank one question first. It decides everything else.",
+    verdict: "First, ask the bank to confirm the nominee or survivorship details.",
     summary:
-      "Most families do not know whether a nominee was registered — and it is the single fact that changes the answer. The bank can see it in the account-opening records.",
+      "The bank can check the account-opening records. This is an important starting point, but payment also depends on the applicable conditions, including any court restriction.",
     goodNews: false,
     steps: [
       "Ask the branch, in writing: was a nominee registered on this account? Ask for the answer in writing too.",
-      "If a nominee was registered — no succession certificate is required, whatever the amount.",
-      "If no nominee was registered — the answer depends on the total amount, and on whether the heirs agree.",
+      "For payment to a valid nominee, the bank checks identity, death and any court restriction. On a joint account, the nominee's right arises after all depositors have died.",
+      "If there is no nominee or applicable survivorship clause, check will status, disputes, court restrictions, bank type and the total including interest before choosing a checklist.",
     ],
     clauses: ["nomineeNoDocuments", "simplifiedPurpose"],
     documents: null,
@@ -145,7 +145,7 @@ export const OUTCOMES: Record<OutcomeId, Outcome> = {
     path: "/no-nominee/under-threshold",
     verdict: "You should not be asked for a succession certificate.",
     summary:
-      "There was no nominee, but the total is below the threshold and the heirs agree. The RBI does not merely discourage a succession certificate here — it requires the bank to settle on a fixed list of six documents, and a succession certificate is not one of them.",
+      "If there is no nominee or survivorship clause, no will, no contesting claim and no restraining court order, the below-threshold route uses the documents in paragraph 10(a). A succession certificate is not on that list. Confirm the aggregate, including interest, and the bank's applicable threshold.",
     goodNews: true,
     steps: [
       "Ask the branch for the simplified-procedure claim form — the RBI calls it Annex I-B.",
@@ -164,6 +164,11 @@ export const OUTCOMES: Record<OutcomeId, Outcome> = {
     documents: SIMPLIFIED_PROCEDURE,
     caveats: [
       {
+        title: "No will or restraining court order",
+        body: "This simplified no-nominee checklist assumes no will was left and no court order restricts payment. A will, dispute or court restriction needs a separate check before you rely on this route.",
+        weight: "hard",
+      },
+      {
         title: "The threshold is the total, not one account",
         body:
           "Para 10(a) applies where the aggregate amount payable, including accrued interest, is less than the threshold limit. Several accounts at the same bank are added together against one limit. Accounts at different banks are separate claims with separate limits.",
@@ -179,15 +184,15 @@ export const OUTCOMES: Record<OutcomeId, Outcome> = {
   "over-threshold": {
     id: "over-threshold",
     path: "/no-nominee/over-threshold",
-    verdict: "A succession certificate may genuinely be required here.",
+    verdict: "A larger claim has more than one documentation route.",
     summary:
-      "There was no nominee and the total is at or above the threshold. This is the situation the simplified procedure does not cover, and courts have upheld banks that asked for a succession certificate in it. We are not going to tell you otherwise.",
+      "Where there is no nominee or survivorship clause, no will, no dispute and no restraining order, paragraph 10(b) provides alternatives for claims above the threshold. A succession certificate is one route, not automatically the only route. Ask the bank for its written requirements.",
     goodNews: false,
     steps: [
       "Check the total carefully. The threshold applies to the aggregate at one bank — accounts at different banks are separate claims, each with its own limit, and each may fall below it.",
-      "Check your bank's own threshold. The RBI sets a floor of ₹15 lakh for commercial banks, and a bank may set it higher. Some do.",
+      "Check the bank's own threshold: the RBI floor is ₹5 lakh for co-operative banks and ₹15 lakh for other banks. A bank may set a higher limit.",
       "Ask the branch whether it will accept a legal heir certificate or an affidavit sworn before an official instead — para 10(b) mentions both.",
-      "If a succession certificate is genuinely needed, expect a court petition, notice to every heir, a newspaper advertisement, and hearings. Four to seven months if nobody objects.",
+      "If court documents are needed, consult a qualified lawyer about the applicable procedure, cost and timing. Do not assume a fixed completion time.",
     ],
     clauses: ["aboveThreshold", "threshold"],
     documents: null,
@@ -232,7 +237,7 @@ export const OUTCOMES: Record<OutcomeId, Outcome> = {
     steps: [
       "Read the clauses below and take them to whoever is advising you.",
       "Ask one question: given these Directions, does the bank still require a succession certificate in our case?",
-      "The answer turns on three things — whether a nominee was registered, whether the aggregate at that bank is below the threshold, and whether the heirs are in dispute.",
+      "Ask your lawyer to consider nomination or survivorship, any will or court restriction, disputes between heirs, and the bank's applicable threshold and aggregate payable.",
     ],
     clauses: [
       "implementation",
@@ -259,9 +264,10 @@ export const OUTCOMES: Record<OutcomeId, Outcome> = {
     path: "/out-of-scope",
     verdict: "This is outside what we cover.",
     summary:
-      "We only cover bank deposit accounts, lockers and safe custody, claimed by an adult heir or nominee. Your situation falls outside that, and giving you a bank-deposit answer would be wrong.",
+      "This MVP guides adults claiming a deceased adult's bank deposits. Lockers, safe custody, pensions, government savings schemes and other assets need separate procedures. Do not use the deposit checklist for them.",
     goodNews: false,
     steps: [
+      "For a locker or articles in safe custody, ask the bank for its deceased-hirer access and inventory procedure under paragraphs 16–26 of the RBI directions.",
       "Government or family pension: the deceased's own department or treasury office, under the relevant state or central pension rules.",
       "Provident fund: EPFO. Insurance: the insurer, or Bima Bharosa at IRDAI. Mutual funds: the AMC or its registrar. Shares and dividends: the company's registrar, or IEPF.",
       "Where a claimant is a minor, or a guardian is acting on their behalf, take advice before signing anything.",

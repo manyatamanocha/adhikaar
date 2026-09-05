@@ -22,7 +22,7 @@ export function ContactPage() {
 
   return (
     <HomeI18nProvider value={{ t, locale }}>
-      <div className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
+      <div lang={locale} className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
         <RecoverNav />
         <Body />
         <RecoverFooter />
@@ -42,24 +42,24 @@ function Body() {
       <p className="mt-2 text-[1.5rem] text-[#5B5344]">{t.contact.sub}</p>
 
       <div className="mt-10 divide-y divide-[#EFE7D8] rounded-2xl bg-white shadow-[0_20px_50px_rgba(22,35,63,0.12)]">
-        <div className="flex items-center justify-between gap-4 p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-5 sm:p-8">
           <span className="text-[1.125rem] font-bold uppercase tracking-[0.08em] text-[#6B6255]">
             {t.contact.phoneLabel}
           </span>
           <a
             href={`tel:${PHONE.replace(/\s+/g, "")}`}
-            className="text-[1.75rem] font-bold text-[#16233F] hover:text-[#E2653B]"
+            className="max-w-full break-words text-[1.4rem] font-bold text-[#16233F] hover:text-[#E2653B] sm:text-[1.75rem]"
           >
             {PHONE}
           </a>
         </div>
-        <div className="flex items-center justify-between gap-4 p-8">
+        <div className="flex flex-wrap items-center justify-between gap-4 p-5 sm:p-8">
           <span className="text-[1.125rem] font-bold uppercase tracking-[0.08em] text-[#6B6255]">
             {t.contact.emailLabel}
           </span>
           <a
             href={`mailto:${EMAIL}`}
-            className="text-[1.75rem] font-bold text-[#16233F] hover:text-[#E2653B]"
+            className="max-w-full break-all text-[1.4rem] font-bold text-[#16233F] hover:text-[#E2653B] sm:text-[1.75rem]"
           >
             {EMAIL}
           </a>

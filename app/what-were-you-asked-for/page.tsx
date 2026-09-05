@@ -14,6 +14,7 @@
  */
 
 import Link from "next/link";
+import { parseLocale, withLang } from "@/lib/i18n";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { PrintButton } from "../_components/print-button";
@@ -40,6 +41,7 @@ export default async function Page({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
+  const locale = parseLocale(sp.lang);
   const answers = parseAnswers(sp);
   const asked = parseAsked(sp.asked);
   const situation = situationFrom(answers);
@@ -50,7 +52,7 @@ export default async function Page({
     const q = new URLSearchParams(toQuery(answers).replace(/^\?/, ""));
     if (next.length) q.set("asked", next.join(","));
     const s = q.toString();
-    return `/what-were-you-asked-for${s ? `?${s}` : ""}`;
+    return withLang(`/what-were-you-asked-for${s ? `?${s}` : ""}`, locale);
   };
 
   return (
@@ -72,7 +74,7 @@ export default async function Page({
         </section>
 
         <div className="shell max-w-[860px] py-10">
-          <Situation situation={situation} answers={answers} />
+          <Situation situation={situation} answers={answers} locale={locale} />
 
           <section className="mt-8">
             <h2 className="display-lg font-serif font-bold text-indigo-ink">
@@ -139,7 +141,7 @@ export default async function Page({
               {NOTIFICATION.title}
             </a>{" "}
             · {NOTIFICATION.number}, issued {NOTIFICATION.issued}. Information,
-            not legal advice. What you tick is not stored, and nothing here
+            not legal advice. Your ticks appear in the page URL, and nothing here
             identifies you — we count only how many items were checked, never
             which ones.
           </p>
@@ -156,9 +158,11 @@ export default async function Page({
 function Situation({
   situation,
   answers,
+  locale,
 }: {
   situation: ReturnType<typeof situationFrom>;
   answers: ReturnType<typeof parseAnswers>;
+  locale: ReturnType<typeof parseLocale>;
 }) {
   const known = situation !== "unknown";
 
@@ -178,14 +182,14 @@ function Situation({
       </p>
       {!known && (
         <p className="body-fluid mt-2 text-ink">
-          Which documents the RBI prescribes depends entirely on whether a
-          nominee was registered and on the total amount. Answer those two
-          questions first and this comparison becomes exact.
+          Confirm the claim route first, including any will, court restriction,
+          dispute and applicable bank threshold. Until then, this page cannot
+          judge the bank&apos;s document requests for your situation.
         </p>
       )}
       <p className="mt-3 text-[1rem]" data-print="hide">
         <Link
-          href={`/start${toQuery(answers)}`}
+          href={withLang(`/start${toQuery(answers)}`, locale)}
           // Standalone control, not an inline link in a sentence — it gets a
           // thumb-sized hit area without moving anything.
           className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
@@ -218,7 +222,7 @@ function Results({
           <p className="body-fluid text-ink">
             {situation === "above-threshold"
               ? "At or above the threshold, para 10(b) allows the bank to require a succession certificate or equivalent, or a legal heir certificate, or an affidavit sworn before an official. There is no closed list to compare your demands against, so calling any of them an overreach would be wrong — and would send you to argue a case you would lose."
-              : "Until we know whether a nominee was registered, there is no single list to compare against — para 9 and para 10(a) prescribe different things. Guessing would be worse than saying so."}
+              : "Your eligibility checks are incomplete or need individual review. Confirm the details in the claim guide before comparing the bank's demands against a checklist."}
           </p>
         </div>
       </section>

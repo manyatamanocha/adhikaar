@@ -2,9 +2,9 @@ import { Suspense } from "react";
 import { RecoverPage } from "./recover/_components/recover-page";
 
 export const metadata = {
-  title: "Adhikaar — money left behind shouldn't stay lost",
+  title: "Adhikaar — bank-deposit claim guidance for families",
   description:
-    "Adhikaar helps families find and claim financial assets left behind by a loved one, with one simple, guided process.",
+    "Understand the steps and documents for claiming a deceased family member's bank deposits. Independent guidance, with a printable checklist and official sources.",
 };
 
 /**

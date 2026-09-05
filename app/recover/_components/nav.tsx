@@ -1,123 +1,61 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { LeafMark } from "./brand";
-import { ChevronDownIcon } from "./icons";
-import { LOCALES, LOCALE_LABEL, LOCALE_SHORT, withLang } from "@/lib/i18n";
+import { LOCALES, LOCALE_LABEL, withLang } from "@/lib/i18n";
 import { useHomeT } from "./home-i18n";
 
-/**
- * Rebuilt 5 Sep 2026 against a user-supplied reference image: leaf mark +
- * tagline, a four-item nav, a working language switcher (wired to the
- * site's existing ?lang= locale mechanism in lib/i18n.ts -- English,
- * Hindi and Kannada; see that file's note that the Hindi/Kannada strings
- * are unchecked by a native speaker), and a "Start a Search" button. The
- * reference's own RBI-seal badge and tricolour flag are NOT reproduced
- * anywhere on this homepage -- excluded per the standing rule (no state
- * emblem, no ministry mark, no tricolour), and reconfirmed directly when
- * this reference was brought back.
- */
+/** Shared, responsive navigation. Native select supports keyboard and touch. */
 export function RecoverNav() {
-  const [langOpen, setLangOpen] = useState(false);
+  return <Suspense fallback={<header data-print="hide" className="bg-[#FAF5EC] p-5"><Link href="/" className="font-serif text-3xl font-bold">Adhikaar</Link><nav aria-label="Quick links" className="mt-4 flex flex-wrap gap-6"><Link href="/#find">Find</Link><Link href="/banks">Bank policies</Link><Link href="/faq">FAQs</Link><Link href="/contact">Contact</Link></nav></header>}><Navigation /></Suspense>;
+}
+
+function Navigation() {
   const { t, locale } = useHomeT();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-
-  const linkClass = (active: boolean) =>
-    `transition-colors hover:text-[#F0B892] ${active ? "text-[#F0B892] underline decoration-2 underline-offset-8" : ""}`;
-
-  // The switcher stays on the current page (not always "/") and keeps every
-  // other query param (e.g. a selected bank on a verdict page) -- only the
-  // `lang` value changes.
-  const hrefForLocale = (l: (typeof LOCALES)[number]) => {
-    const q = new URLSearchParams(searchParams.toString());
-    if (l === "en") {
-      q.delete("lang");
-    } else {
-      q.set("lang", l);
-    }
-    const s = q.toString();
-    return s ? `${pathname}?${s}` : pathname;
+  const router = useRouter();
+  const translated = ["/", "/guide", "/faq", "/banks", "/contact"].includes(pathname);
+  const langNotice = {
+    en: "The detailed claim guide is currently in English. Your language choice is kept for translated pages.",
+    hi: "विस्तृत दावा मार्गदर्शिका अभी अंग्रेज़ी में है। अनुवादित पृष्ठों के लिए आपकी भाषा का चयन बना रहेगा।",
+    kn: "ವಿವರವಾದ ಕ್ಲೈಮ್ ಮಾರ್ಗದರ್ಶಿ ಪ್ರಸ್ತುತ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿದೆ. ಅನುವಾದಿತ ಪುಟಗಳಿಗೆ ನಿಮ್ಮ ಭಾಷೆಯ ಆಯ್ಕೆ ಉಳಿಯುತ್ತದೆ.",
   };
-
+  const links = [
+    { href: "/", label: t.nav.home },
+    { href: "/#find", label: t.nav.find },
+    { href: "/banks", label: locale === "hi" ? "बैंक की नीतियाँ" : locale === "kn" ? "ಬ್ಯಾಂಕ್ ನೀತಿಗಳು" : "Bank policies" },
+    { href: "/faq", label: t.nav.faq },
+    { href: "/contact", label: t.nav.contact },
+  ];
   return (
-    <header data-print="hide" className="bg-[#FAF5EC] text-[#16233F]">
-      <div className="mx-auto grid max-w-[1920px] grid-cols-[1fr_auto_1fr] items-center gap-6 px-5 py-4 sm:px-8">
-        <div />
-
-        <Link href={withLang("/", locale)} className="flex flex-col items-start gap-2">
-          <span className="flex items-center gap-7">
-            <LeafMark className="h-[7.49rem] w-[7.49rem]" />
-            <span className="font-serif text-[5.62rem] font-bold">Adhikaar</span>
+    <header data-print="hide" className="bg-[#FAF5EC] text-[#16233F]" lang={locale}>
+      <div className="mx-auto flex max-w-[1920px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+        <div aria-hidden="true" className="hidden lg:block" />
+        <Link href={withLang("/", locale)} className="min-w-0">
+          <span className="flex items-center gap-3 sm:gap-5">
+            <LeafMark className="h-12 w-12 shrink-0 sm:h-20 sm:w-20 lg:h-[7.49rem] lg:w-[7.49rem]" />
+            <span className="font-serif text-[2.5rem] font-bold leading-tight sm:text-[4rem] lg:text-[5.62rem]">Adhikaar</span>
           </span>
-          <span className="text-[1.7551rem] text-[#6B6255]">
-            The counter companion for deceased-bank claims in India
-          </span>
+          <span className="mt-2 block text-[1.1rem] text-[#6B6255] sm:text-[1.4rem] lg:text-[1.7551rem]">{t.footer.madeFor}</span>
         </Link>
-
-        <div className="flex items-center justify-end gap-6">
-          <div className="relative hidden sm:block">
-            <button
-              type="button"
-              onClick={() => setLangOpen((v) => !v)}
-              aria-expanded={langOpen}
-              aria-haspopup="menu"
-              className={`flex cursor-pointer items-center gap-[0.5833rem] rounded-full border px-[1.4583rem] py-[0.7292rem] text-[1.4583rem] font-bold transition-colors ${
-                langOpen
-                  ? "border-[#E2653B] bg-[#FBE4D8] text-[#E2653B]"
-                  : "border-[#E3D8C4] bg-white text-[#4A4335] hover:border-[#E2653B] hover:bg-[#FBE4D8] hover:text-[#E2653B]"
-              }`}
-            >
-              {LOCALE_SHORT[locale]}
-              <ChevronDownIcon className={`h-[1.4583rem] w-[1.4583rem] transition-transform ${langOpen ? "rotate-180" : ""}`} />
-            </button>
-            {langOpen && (
-              <div
-                role="menu"
-                className="absolute right-0 top-full mt-2 w-max overflow-hidden rounded-lg border border-[#EFE7D8] bg-white py-1 shadow-[0_8px_24px_rgba(22,35,63,0.14)]"
-              >
-                {LOCALES.map((l) => (
-                  <Link
-                    key={l}
-                    href={hrefForLocale(l)}
-                    role="menuitem"
-                    onClick={() => setLangOpen(false)}
-                    aria-current={l === locale ? "true" : undefined}
-                    className={`block px-[1.4583rem] py-[0.875rem] text-[1.4583rem] whitespace-nowrap hover:bg-[#FAF5EC] ${
-                      l === locale ? "font-bold text-[#E2653B]" : "text-[#16233F]"
-                    }`}
-                  >
-                    {LOCALE_LABEL[l]}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        <label className="flex flex-col gap-1 text-base font-semibold lg:justify-self-end" lang="en">
+          Page language
+          <select aria-label="Page language" value={locale}
+            onChange={event => router.push(withLang(pathname + (searchParams.size ? "?" + searchParams.toString() : ""), event.target.value as typeof locale))}
+            className="min-h-11 rounded-lg border border-[#E3D8C4] bg-white px-3 py-2 text-lg">
+            {LOCALES.map(l => <option key={l} value={l}>{LOCALE_LABEL[l]}</option>)}
+          </select>
+        </label>
       </div>
-
-      <nav
-        aria-label="Quick links"
-        className="flex w-full flex-wrap items-center justify-center gap-x-28 gap-y-4 bg-[#16233F] px-5 py-6 text-[1.9688rem] font-bold text-white sm:px-8"
-      >
-        <Link href={withLang("/", locale)} className={linkClass(pathname === "/")}>
-          {t.nav.home}
-        </Link>
-        <a href="#find" className="transition-colors hover:text-[#F0B892]">
-          {t.nav.find}
-        </a>
-        <Link href={withLang("/banks", locale)} className={linkClass(pathname === "/banks")}>
-          {t.nav.policy}
-        </Link>
-        <Link href={withLang("/faq", locale)} className={linkClass(pathname === "/faq")}>
-          {t.nav.faq}
-        </Link>
-        <Link href={withLang("/contact", locale)} className={linkClass(pathname === "/contact")}>
-          {t.nav.contact}
-        </Link>
+      <nav aria-label="Quick links" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 bg-[#16233F] px-5 py-4 text-lg font-bold text-white sm:gap-x-12 sm:text-2xl lg:text-[1.9688rem]">
+        {links.map(link => <Link key={link.href} href={withLang(link.href, locale)}
+          aria-current={pathname === link.href ? "page" : undefined}
+          className="inline-flex min-h-11 items-center hover:text-[#F0B892] aria-[current=page]:underline">{link.label}</Link>)}
       </nav>
+      {!translated && locale !== "en" && <p className="border-b border-rule bg-white px-5 py-3 text-base leading-relaxed">{langNotice[locale]}</p>}
     </header>
   );
 }

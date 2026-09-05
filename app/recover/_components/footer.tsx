@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Suspense } from "react";
 import { LeafMark } from "./brand";
 import { withLang } from "@/lib/i18n";
 import { useHomeT } from "./home-i18n";
@@ -16,9 +17,13 @@ import { useHomeT } from "./home-i18n";
  * handed across a bank counter, and the footer does not belong on it.
  */
 export function RecoverFooter() {
+  return <Suspense fallback={<footer data-print="hide" className="bg-[#F1E7D6] p-5"><Link href="/privacy" className="underline">Privacy</Link></footer>}><FooterContent /></Suspense>;
+}
+
+function FooterContent() {
   const { t, locale } = useHomeT();
   return (
-    <footer
+    <footer lang={locale}
       data-print="hide"
       className="mt-auto border-t border-[#EFE7D8] bg-[#F1E7D6] pb-10 pt-16 text-[1.2rem] text-[#6B6255]"
     >
@@ -37,11 +42,12 @@ export function RecoverFooter() {
         </div>
         <div className="border-t border-[#EFE7D8] pt-5">
           <section aria-labelledby="footer-terms">
-            <h2 id="footer-terms" className="font-semibold text-[#16233F]">Terms &amp; Conditions</h2>
-            <p className="mt-2 leading-relaxed lg:overflow-x-auto lg:whitespace-nowrap" tabIndex={0}>
+            <h2 id="footer-terms" className="font-semibold text-[#16233F]">Terms &amp; Conditions — disclaimer</h2>
+            <p className="mt-2 leading-relaxed">
               {t.footer.disclaimer}
             </p>
           </section>
+          <Link href={withLang("/privacy", locale)} className="mt-4 inline-flex min-h-11 items-center underline underline-offset-4">Privacy</Link>
         </div>
       </div>
     </footer>

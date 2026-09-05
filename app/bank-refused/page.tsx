@@ -11,6 +11,7 @@
  */
 
 import Link from "next/link";
+import { parseLocale, withLang } from "@/lib/i18n";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { ComplaintLetter } from "../_components/complaint-letter";
@@ -35,17 +36,18 @@ const STEPS = [
       "Address it to the branch's Grievance Redressal Officer, quoting the paragraph number that applies to your claim. Keep a copy and get it acknowledged with a date — or send it by registered post and keep the receipt.",
   },
   {
-    title: `Wait ${ESCALATION.waitDays} days`,
+    title: "Check the bank's response",
     body:
-      "Give the branch the full 30 days to respond before escalating. This is the same 30 days the Ombudsman scheme itself expects you to have given the bank first.",
+      ESCALATION.caveat,
   },
   {
     title: "Escalate through the RBI's Ombudsman route",
-    body: `If there is still no resolution after ${ESCALATION.waitDays} days, take the complaint to the ${ESCALATION.scheme}. It is free to use.`,
+    body: `Use the RBI complaint portal if eligible under the ${ESCALATION.scheme}. Check its current time limits and exclusions, including matters already before a court or tribunal. Filing a complaint is free and does not guarantee a favourable decision.`,
   },
 ];
 
-export default function BankRefusedPage() {
+export default async function BankRefusedPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const locale = parseLocale((await searchParams).lang);
   return (
     <>
       <RecoverNav />
@@ -116,7 +118,7 @@ export default function BankRefusedPage() {
               A written complaint you can use
             </h2>
             <p className="body-fluid mt-2.5 max-w-[68ch] text-ink-soft">
-              Fill in the bracketed fields by hand or on screen. Every blank
+              Download the text file and edit it, or print it and fill in the bracketed fields by hand. Every blank
               is left blank on purpose — we don&apos;t know your bank, your
               account number or the document that was actually demanded, and
               guessing at any of those would make this less useful, not more.
@@ -130,10 +132,10 @@ export default function BankRefusedPage() {
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
               <PrintButton />
               <Link
-                href="/start"
+                href={withLang("/start", locale)}
                 className="text-[0.9375rem] font-bold text-link underline underline-offset-2"
               >
-                Answer the four questions instead
+                Check your claim situation instead
               </Link>
             </div>
           </section>

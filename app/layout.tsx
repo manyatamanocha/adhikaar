@@ -8,6 +8,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "./_components/analytics";
+import { SaathiWidget } from "./_components/saathi/saathi-widget";
 
 const sourceSans = Source_Sans_3({
   variable: "--font-source-sans",
@@ -50,7 +51,7 @@ const notoKannada = Noto_Sans_Kannada({
 export const metadata: Metadata = {
   title: "Adhikaar — you probably do not need a succession certificate",
   description:
-    "The bank asked for a succession certificate. Since 31 March 2026 the RBI's rules say a bank usually must not insist on one for a deposit claim. Answer four questions and print a page quoting the rule and your bank's own policy.",
+    "Independent guidance for a deceased family member's bank deposits. Check the conditions for your claim route, prepare documents and print guidance with official RBI sources.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -82,7 +83,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           never: no emblem, no ministry mark, no tricolour.
 
           STORY: The visitor arrives holding a demand they believe is lawful.
-          They learn the rule changed on 31 March 2026, answer four questions,
+          They check the conditions for their claim, answer a few questions,
           and leave with a printable page carrying the RBI's own sentence and
           their bank's own published policy — to hand across the counter.
 
@@ -107,6 +108,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <Analytics />
         </Suspense>
         {children}
+        <SaathiWidget />
       </body>
     </html>
   );

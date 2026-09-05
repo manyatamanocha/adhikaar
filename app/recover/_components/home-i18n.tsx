@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext } from "react";
-import type { Locale } from "@/lib/i18n";
+import { createContext } from "react";
+import { useSearchParams } from "next/navigation";
+import { parseLocale, type Locale } from "@/lib/i18n";
 import type { HomeDict } from "@/lib/i18n-home";
 import { HOME_T } from "@/lib/i18n-home";
 
@@ -14,6 +15,13 @@ const HomeI18nContext = createContext<{ t: HomeDict; locale: Locale }>({
 
 export const HomeI18nProvider = HomeI18nContext.Provider;
 
+/** Only the locale crosses the server boundary; dictionaries contain functions. */
+export function HomeLocaleProvider({ locale, children }: { locale: Locale; children: React.ReactNode }) {
+  return <HomeI18nProvider value={{ t: HOME_T[locale], locale }}>{children}</HomeI18nProvider>;
+}
+
 export function useHomeT() {
-  return useContext(HomeI18nContext);
+  const params = useSearchParams();
+  const locale = parseLocale(params.get("lang") ?? undefined);
+  return { t: HOME_T[locale], locale };
 }

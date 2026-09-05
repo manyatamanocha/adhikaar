@@ -36,17 +36,17 @@ export const COUNTER_SCRIPT: Partial<Record<OutcomeId, CounterScript>> = {
 
   "under-threshold": {
     say:
-      "There was no nominee, but the total is below the threshold and the heirs agree. Under paragraph 10(a), you are required to settle this claim on a fixed list of six documents — a succession certificate is not one of them, and no third-party surety may be demanded. Please give me the simplified-procedure claim form.",
+      "There is no nominee or survivorship clause, no will, no contesting claim and no known court restriction. The total including interest is below the applicable threshold. Please confirm these conditions and provide the paragraph 10(a) claim form and document list; that list does not include a succession certificate or third-party surety.",
   },
 
   "over-threshold": {
     say:
-      "There was no nominee and the total is at or above the threshold. I understand a succession certificate may genuinely apply here — could you confirm your bank's own threshold, since paragraph 7(h) allows it to be higher than the RBI's ₹15 lakh floor, and whether you will accept a legal heir certificate or affidavit instead, as paragraph 10(b) allows.",
+      "There is no nominee or survivorship clause, will, dispute or court restriction. Please confirm the aggregate payable and your current threshold. The RBI floor is ₹5 lakh for co-operative banks and ₹15 lakh for other banks, but your limit may be higher. If paragraph 10(b) applies, please explain the available documentation alternatives in writing.",
   },
 
   dispute: {
     say:
-      "The legal heirs are not in agreement about this claim. Under paragraph 11(b), I understand a court document — a probate, letter of administration, succession certificate or court order — is required here, whatever the amount or whether a nominee was registered.",
+      "This claim has no nominee or survivorship clause and the legal heirs disagree. Please explain which court document applies under paragraph 11(b). We will seek qualified advice about the dispute rather than rely on the standard deposit checklist.",
   },
 
   "already-in-court": {

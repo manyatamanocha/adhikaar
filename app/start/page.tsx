@@ -17,8 +17,10 @@ import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { OUTCOMES } from "@/lib/outcomes";
 import { SCENARIOS } from "@/lib/scenarios";
+import { parseLocale, withLang, type Locale } from "@/lib/i18n";
 import {
   parseAnswers,
+  answerQuestion,
   previousAnswers,
   resolve,
   toQuery,
@@ -29,7 +31,7 @@ import {
 } from "@/lib/wizard";
 
 export const metadata = {
-  title: "Adhikaar — four questions",
+  title: "Adhikaar — your claim guide",
 };
 
 export default async function Start({
@@ -38,6 +40,7 @@ export default async function Start({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const sp = await searchParams;
+  const locale = parseLocale(sp.lang);
   const answers = parseAnswers(sp);
 
   // The recognition front door: shown only on a genuinely fresh /start (no
@@ -47,14 +50,15 @@ export default async function Start({
   // asks about first.
   const isFresh = Object.values(answers).every((v) => v === undefined);
   if (isFresh && sp.classic !== "1") {
-    return <ScenarioPicker />;
+    return <ScenarioPicker locale={locale} />;
   }
 
   const step = resolve(answers);
+  if (step.kind === "review") redirect(withLang("/confirm-details" + toQuery(step.carry), locale));
 
   // A verdict is a page of its own, at its own URL. The wizard never renders one.
   if (step.kind === "outcome") {
-    redirect(OUTCOMES[step.outcome].path + toQuery(step.carry));
+    redirect(withLang(OUTCOMES[step.outcome].path + toQuery(step.carry), locale));
   }
 
   const { question } = step;
@@ -82,6 +86,7 @@ export default async function Start({
                   question={question}
                   option={option}
                   answers={answers}
+                  locale={locale}
                 />
               </li>
             ))}
@@ -89,7 +94,7 @@ export default async function Start({
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule-faint pt-5">
             <Link
-              href={back ? `/start${toQuery(back)}` : "/"}
+              href={withLang(back ? `/start${toQuery(back)}` : "/", locale)}
               // 23px of link is not a thumb target. The padding is cancelled by
               // the negative margin, so this is a hit-area change, not a
               // layout one -- and Back is the control a confused tester reaches
@@ -104,8 +109,8 @@ export default async function Start({
                 of the law people land on, and saying "sent nowhere" would be
                 a lie on the one page that cannot afford one. */}
             <p className="text-[0.9375rem] text-ink-faint">
-              No sign-in, no cookie, nothing that identifies you. We count
-              anonymous totals only.
+              No account or document uploads. Answers appear in page links.
+              <Link href={withLang("/privacy", locale)} className="ml-1 underline">Privacy details</Link>
             </p>
           </div>
         </div>
@@ -124,7 +129,7 @@ export default async function Start({
  * parsing "What are you claiming?" first. Every card is a real URL into
  * the same wizard/outcome machinery; nothing here is a shortcut around it.
  */
-function ScenarioPicker() {
+function ScenarioPicker({ locale }: { locale: Locale }) {
   return (
     <>
       <RecoverNav />
@@ -145,7 +150,7 @@ function ScenarioPicker() {
             {SCENARIOS.map((s) => (
               <li key={s.label}>
                 <Link
-                  href={s.href}
+                  href={withLang(s.href, locale)}
                   className="group flex items-start gap-4 rounded-xl border-2 border-rule bg-white p-5 transition-all hover:border-indigo hover:shadow-[0_6px_24px_rgba(45,48,121,0.12)]"
                 >
                   <span className="flex-1">
@@ -171,10 +176,10 @@ function ScenarioPicker() {
 
           <div className="mt-8 border-t border-rule-faint pt-5">
             <Link
-              href="/start?classic=1"
+              href={withLang("/start?classic=1", locale)}
               className="-my-2.5 inline-block py-2.5 text-[1rem] font-bold text-indigo underline underline-offset-2"
             >
-              None of these — answer four short questions instead
+              None of these — answer a few short questions instead
             </Link>
           </div>
         </div>
@@ -221,19 +226,21 @@ function AnswerLink({
   question,
   option,
   answers,
+  locale,
 }: {
   question: Question;
   option: Option;
   answers: Answers;
+  locale: Locale;
 }) {
-  const next: Answers = { ...answers, [question.id]: option.value };
+  const next = answerQuestion(answers, question.id, option.value);
   const accent = option.unsure
     ? "border-accent-violet hover:shadow-[0_6px_24px_rgba(91,75,155,0.16)]"
     : "border-rule hover:border-indigo hover:shadow-[0_6px_24px_rgba(45,48,121,0.12)]";
 
   return (
     <Link
-      href={`/start${toQuery(next)}`}
+      href={withLang(`/start${toQuery(next)}`, locale)}
       className={`group flex items-start gap-4 rounded-xl border-2 bg-white p-5 transition-all ${accent}`}
     >
       <span className="flex-1">

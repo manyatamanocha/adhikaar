@@ -35,6 +35,15 @@
         "value": "border-l-4 border-saffron",
         "createdAt": "2026-09-04T22:11:01.542Z",
         "reason": "matches existing blockquote pattern in app/_components/outcome.tsx Evidence section, used site-wide for verbatim RBI quotes"
+      },
+      {
+        "rule": "side-tab",
+        "value": "border-l-4 border-saffron",
+        "files": [
+          "app/_components/article.tsx"
+        ],
+        "createdAt": "2026-09-05T01:04:18.296Z",
+        "reason": "blockquote left-rule is an editorial quote convention, not a decorative card border; pre-existing code, not touched this session"
       }
     ]
   }

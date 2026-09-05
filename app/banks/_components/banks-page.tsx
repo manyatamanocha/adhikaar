@@ -18,7 +18,7 @@ import Link from "next/link";
 import { RecoverNav } from "../../recover/_components/nav";
 import { RecoverFooter } from "../../recover/_components/footer";
 import { HomeI18nProvider } from "../../recover/_components/home-i18n";
-import { parseLocale } from "@/lib/i18n";
+import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
 import { formatDate } from "../../_components/bank-panel";
 import { BANKS, isStale } from "@/lib/banks";
@@ -44,57 +44,46 @@ export function BanksPage() {
         <main className="mx-auto max-w-[1920px] px-5 py-14 sm:px-8">
           <div className="max-w-[900px]">
             <p className="text-[0.9375rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
-              Bank-by-bank
+              {t.banksPage.eyebrow}
             </p>
             <h1 className="mt-2 font-serif text-[2.75rem] font-bold tracking-[-0.01em] text-[#16233F]">
-              The rule is the same everywhere. The practice is not.
+              {t.banksPage.heading}
             </h1>
             <p className="mt-3 max-w-[64ch] text-[1.1875rem] leading-relaxed text-[#5B5344]">
-              The RBI sets a floor and every bank builds its own practice on top.
-              This is what {BANKS.length} banks publish about deceased claims, read
-              from their own pages — including where they publish nothing at all.
+              {t.banksPage.sub}
             </p>
             <Link
               href="/start"
               className="mt-6 inline-flex items-center gap-2.5 rounded bg-[#E2653B] px-7 py-3.5 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
             >
-              Start your claim journey today
+              {t.banksPage.cta}
               <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
 
           <div className="mt-10 rounded-2xl border-2 border-[#16233F] bg-white p-6 text-[1.0625rem] leading-relaxed">
-            <strong className="font-bold">Every cell is read or blank.</strong>{" "}
-            Nothing here is inferred. Where a bank has not published a figure we
-            leave it empty and say so, rather than filling it with the RBI floor
-            and letting you believe it is that bank&apos;s own number. {BANKS.length}{" "}
-            checked rows are worth more than fifteen half-known ones.
+            <strong className="font-bold">{t.banksPage.everyCellStrong}</strong>{" "}
+            {t.banksPage.everyCellBody}
           </div>
 
           {missing.length > 0 && (
             <div className="mt-6 rounded-2xl border-2 border-[#B84E1E] bg-[#FBEAE3] p-6">
               <h2 className="font-serif text-[1.375rem] font-bold text-[#B84E1E]">
-                An empty row is itself a finding
+                {t.banksPage.emptyRowHeading}
               </h2>
               <p className="mt-2 max-w-[70ch] text-[1.0625rem] leading-relaxed text-[#16233F]">
-                Since 31 March 2026 a bank has been required to publish its
-                board-approved deceased-claim policy and its document checklist.
-                We could not find one for{" "}
+                {t.banksPage.emptyRowBefore}{" "}
                 <strong className="font-bold">
                   {missing.map((b) => b.short).join(", ")}
                 </strong>
-                . If you are claiming there, ask the branch in writing for the
-                board-approved policy and the checklist.
+                {t.banksPage.emptyRowAfter}
               </p>
               {pageOnly.length > 0 && (
                 <p className="mt-3 max-w-[70ch] text-[1.0625rem] leading-relaxed text-[#16233F]">
                   <strong className="font-bold">
                     {pageOnly.map((b) => b.short).join(" and ")}
                   </strong>{" "}
-                  publish a deceased-claim page with real detail on it, but we did
-                  not find the board-approved policy document itself. A page is
-                  not the same thing as the policy the rule asks for, so the
-                  table says which one we actually found.
+                  {t.banksPage.pageOnlyAfter}
                 </p>
               )}
             </div>
@@ -107,8 +96,7 @@ export function BanksPage() {
             data-print="hide"
             className="mt-8 text-[0.9375rem] text-[#6B6255] lg:hidden"
           >
-            Swipe the table sideways for the rest of the columns. The bank names
-            stay put.
+            {t.banksPage.swipeHint}
           </p>
 
           {/* Wide content scrolls inside its own box; the page never does. */}
@@ -119,12 +107,12 @@ export function BanksPage() {
               </caption>
               <thead>
                 <tr className="bg-[#16233F] text-white">
-                  <Th stick>Bank</Th>
-                  <Th>Its own threshold</Th>
-                  <Th>Third-party surety below it</Th>
-                  <Th>Policy published</Th>
-                  <Th>Form to download</Th>
-                  <Th>Checked</Th>
+                  <Th stick>{t.banksPage.thBank}</Th>
+                  <Th>{t.banksPage.thThreshold}</Th>
+                  <Th>{t.banksPage.thSurety}</Th>
+                  <Th>{t.banksPage.thPolicy}</Th>
+                  <Th>{t.banksPage.thForm}</Th>
+                  <Th>{t.banksPage.thChecked}</Th>
                 </tr>
               </thead>
               <tbody>
@@ -145,8 +133,8 @@ export function BanksPage() {
                           bank.noSuretyBelowThreshold === null
                             ? null
                             : bank.noSuretyBelowThreshold
-                              ? "Not to be insisted on"
-                              : "Required"
+                              ? t.banksPage.suretyNotRequired
+                              : t.banksPage.suretyRequired
                         }
                       />
                     </Td>
@@ -156,14 +144,16 @@ export function BanksPage() {
                           page as a policy would overstate compliance in the one
                           column whose whole value is that it does not. */}
                       {bank.policyPublished !== "published" ? (
-                        <span className="font-bold text-[#B84E1E]">✗ Nothing found</span>
+                        <span className="font-bold text-[#B84E1E]">
+                          ✗ {t.banksPage.policyNothingFound}
+                        </span>
                       ) : bank.policyUrl ? (
                         <span className="font-semibold text-[#3F7A5D]">
-                          ✓ Policy document
+                          ✓ {t.banksPage.policyDocument}
                         </span>
                       ) : (
                         <span className="font-semibold text-[#16233F]">
-                          ~ A claims page, no policy document
+                          ~ {t.banksPage.policyPageOnly}
                         </span>
                       )}
                     </Td>
@@ -175,7 +165,7 @@ export function BanksPage() {
                           rel="noreferrer"
                           className="-my-2 inline-block py-2 font-bold text-[#16233F] underline decoration-[#E2653B] decoration-2 underline-offset-4"
                         >
-                          Its form
+                          {t.banksPage.formLink}
                         </a>
                       ) : (
                         <Cell value={null} />
@@ -187,7 +177,7 @@ export function BanksPage() {
                       </span>
                       {isStale(bank.verifiedOn) && (
                         <span className="mt-0.5 block text-[0.8125rem] font-bold text-[#B84E1E]">
-                          Confirm before relying on this
+                          {t.banksPage.confirmStale}
                         </span>
                       )}
                     </Td>
@@ -199,7 +189,7 @@ export function BanksPage() {
 
           <section className="mt-14">
             <h2 className="font-serif text-[2rem] font-bold tracking-[-0.01em] text-[#16233F]">
-              What each one actually says
+              {t.banksPage.whatEachSaysHeading}
             </h2>
 
             <ul className="mt-6 space-y-6">
@@ -214,9 +204,7 @@ export function BanksPage() {
 
                   {bank.practiceConflict && (
                     <p className="mt-3 text-[1.0625rem] leading-relaxed text-[#B84E1E]">
-                      <strong className="font-bold">
-                        Documented gap between policy and practice:{" "}
-                      </strong>
+                      <strong className="font-bold">{t.banksPage.gapLabel} </strong>
                       {bank.practiceConflict}
                     </p>
                   )}
@@ -255,16 +243,16 @@ export function BanksPage() {
                             href={`/learn/${article.slug}`}
                             className="-my-2 inline-block py-2 font-bold text-[#16233F] underline decoration-[#E2653B] decoration-2 underline-offset-4"
                           >
-                            Read the full article on {bank.short}
+                            {t.banksPage.readFullArticle(bank.short)}
                           </Link>
                         </li>
                       ) : null;
                     })()}
                     {[
-                      ["Its deceased-claim page", bank.pageUrl],
-                      ["Its claim form", bank.claimFormUrl],
-                      ["Its published policy", bank.policyUrl],
-                      ["Lodge online", bank.onlineClaimUrl],
+                      [t.banksPage.linkPage, bank.pageUrl],
+                      [t.banksPage.linkForm, bank.claimFormUrl],
+                      [t.banksPage.linkPolicy, bank.policyUrl],
+                      [t.banksPage.linkOnline, bank.onlineClaimUrl],
                     ].map(([label, url]) =>
                       url ? (
                         <li key={label}>
@@ -287,8 +275,7 @@ export function BanksPage() {
 
           <div className="mt-12 max-w-[900px] border-t border-[#EFE7D8] pt-6 text-[0.9375rem] leading-relaxed text-[#6B6255]">
             <p>
-              Read from each bank&apos;s own published pages on the dates shown.
-              The rule they are all working from is{" "}
+              {t.banksPage.footerReadFrom}{" "}
               <a
                 href={NOTIFICATION.url}
                 target="_blank"
@@ -297,23 +284,21 @@ export function BanksPage() {
               >
                 {NOTIFICATION.title}
               </a>
-              , {NOTIFICATION.number}. Information, not legal advice. A bank may
-              have changed its page since we checked — the date is there so you
-              can tell.
+              , {NOTIFICATION.number}. {t.banksPage.footerInfoNote}
             </p>
             <p className="mt-2">
               <Link
                 href="/start"
                 className="-my-2 inline-block py-2 font-bold text-[#16233F] underline decoration-[#E2653B] decoration-2 underline-offset-4"
               >
-                Find out what applies to your claim
+                {t.banksPage.findClaim}
               </Link>
               {" · "}
               <Link
-                href="/contact"
+                href={withLang("/contact", locale)}
                 className="-my-2 inline-block py-2 font-bold text-[#16233F] underline decoration-[#E2653B] decoration-2 underline-offset-4"
               >
-                Found an outdated bank policy? Tell us
+                {t.banksPage.tellUs}
               </Link>
             </p>
           </div>

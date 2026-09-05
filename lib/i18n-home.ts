@@ -212,6 +212,12 @@ export type HomeDict = {
     findClaim: string;
     tellUs: string;
   };
+
+  /** /faq -- the question/answer content itself lives in lib/faq.ts (its own per-locale arrays), since it is Adhikaar's own summarised prose, not part of this homepage dictionary. Only the page's own chrome text lives here. */
+  faqPage: {
+    heading: string;
+    mostAsked: string;
+  };
 };
 
 const en: HomeDict = {
@@ -222,10 +228,10 @@ const en: HomeDict = {
     faq: "FAQs",
     about: "About",
     aboutAdhikaar: "About Adhikaar",
-    policy: "Policy",
+    policy: "Bank policies",
     updates: "Updates",
     contact: "Contact",
-    start: "Start a Search",
+    start: "Begin your claim journey today",
   },
   tagline: "What's yours should find its way home.",
   notice: {
@@ -236,10 +242,10 @@ const en: HomeDict = {
   hero: {
     eyebrow: "For families. For what matters.",
     headline: "Money left behind shouldn't stay lost.",
-    sub: "Adhikaar gives families a clear, printable path for claiming\na deceased person's bank deposits—without storing personal information.",
-    start: "Start your claim journey today",
+    sub: "Adhikaar gives families a clear, printable path for claiming\na deceased person's bank deposits—no account or document uploads needed.",
+    start: "Begin your claim journey today",
     seeHow: "See how it works",
-    trustFree: "Free to search",
+    trustFree: "Free to use",
     trustSecure: "Secure",
     trustGuidance: "Step-by-step guidance",
     cardTitle: "What Adhikaar helps you check",
@@ -256,7 +262,7 @@ const en: HomeDict = {
     daysFigure: "15 days",
     banks: "banks compared at launch — SBI, PNB, HDFC, ICICI",
     days: "the RBI's own deadline to settle a claim once filed",
-    free: "cost to use Adhikaar — no login, nothing stored",
+    free: "cost to use Adhikaar — no account or document uploads",
   },
 
   timeline: {
@@ -286,7 +292,7 @@ const en: HomeDict = {
     eyebrow: "Not just find it.",
     heading: "Help you claim it.",
     sub: "Once a possible asset is found, Adhikaar guides you through every next step.",
-    cta: "Start a Search",
+    cta: "Begin your claim journey today",
     cardTitle: "Bank deposit claim",
     exampleTag: "Example",
     illustrative: "Illustrative example",
@@ -340,13 +346,13 @@ const en: HomeDict = {
     q3: "What happens after I find something?",
     a3: "Adhikaar walks you through the documents and steps that institution will ask for, one at a time, so nothing arrives as a surprise at the counter.",
     q4: "Is my information safe?",
-    a4: "Nothing you enter is stored or shared for marketing. There's no account, no login, and no data reaches a server beyond what a page needs to render.",
+    a4: "No account or document uploads are needed. Answers appear in page URLs; the deadline tool uses browser storage. Read the Privacy page for server and analytics details.",
   },
 
   finalCta: {
     heading: "Something may still be waiting for your family.",
     sub: "Start with a simple search. We'll help you understand what comes next.",
-    cta: "Start a Search",
+    cta: "Begin your claim journey today",
     note: "It's free, secure and takes just a few minutes.",
   },
 
@@ -375,7 +381,7 @@ const en: HomeDict = {
       "Adhikaar is a free, guided tool that helps a family understand what a bank can and cannot ask for when claiming a deceased relative's bank deposit.",
     whatHeading: "What it is",
     whatBody:
-      "Three questions, a straight answer, and a printable page carrying the RBI's own words alongside that bank's own published policy — to hand across the counter.",
+      "A few questions, a check of the relevant conditions, and printable guidance carrying the RBI's rules and the bank's published policy.",
     whyHeading: "Why it exists",
     whyBody:
       "Since the RBI's 2025 Directions on the settlement of claims for deceased bank customers, in force from 31 March 2026, a bank usually cannot demand a succession certificate — a civil court process that typically costs around ₹17,000 and takes four to seven months. Almost nobody knows the rule changed. Adhikaar exists so a family can show the bank its own rules, instead of arguing an opinion against it.",
@@ -384,7 +390,7 @@ const en: HomeDict = {
       "Anyone who has already been to a bank about a deceased relative's account and been handed a list of demands — usually an adult legal heir or a registered nominee, often doing this for the first time, often on a phone, often while still grieving.",
     notHeading: "What Adhikaar does not do",
     notBody:
-      "No login, no account, and nothing about your family is stored or sent to a server beyond what a page needs to render. Adhikaar has no backend and cannot search bank records — it quotes and cites, and never asserts a legal position on its own.",
+      "Adhikaar provides bank-deposit claim guidance, not account searches or claim submission. Answers are carried in page URLs. See Privacy for browser storage, server requests and optional analytics.",
     nameHeading: "The name",
     nameBody:
       "Adhikaar means right, entitlement, in Hindi and Urdu. The claim isn't that the money is yours — it's that you're entitled to be told the correct rule before spending money and months on a document you may not need.",
@@ -432,6 +438,11 @@ const en: HomeDict = {
     findClaim: "Find out what applies to your claim",
     tellUs: "Found an outdated bank policy? Tell us",
   },
+
+  faqPage: {
+    heading: "Frequently asked questions",
+    mostAsked: "Most asked",
+  },
 };
 
 const hi: HomeDict = {
@@ -445,7 +456,7 @@ const hi: HomeDict = {
     policy: "नीति",
     updates: "अपडेट",
     contact: "संपर्क करें",
-    start: "खोज शुरू करें",
+    start: "आज ही अपनी दावा यात्रा शुरू करें",
   },
   tagline: "आपकी चीज़ें, उन्हीं तक वापस पहुँचें।",
   notice: {
@@ -456,10 +467,10 @@ const hi: HomeDict = {
   hero: {
     eyebrow: "परिवारों के लिए। ज़रूरी बातों के लिए।",
     headline: "पीछे छूटा पैसा खोया नहीं रहना चाहिए।",
-    sub: "अधिकार परिवारों को किसी अपने की छोड़ी गई वित्तीय संपत्ति ढूँढने और उस पर दावा करने में मदद करता है — एक सरल, मार्गदर्शित प्रक्रिया के ज़रिए।",
-    start: "खोज शुरू करें",
+    sub: "अधिकार दिवंगत परिजन की बैंक जमा पर दावा करने के लिए\nस्पष्ट, छापने योग्य मार्गदर्शन देता है—खाता या दस्तावेज़ अपलोड ज़रूरी नहीं।",
+    start: "आज ही अपनी दावा यात्रा शुरू करें",
     seeHow: "देखें यह कैसे काम करता है",
-    trustFree: "खोजना मुफ़्त है",
+    trustFree: "उपयोग मुफ़्त है",
     trustSecure: "सुरक्षित",
     trustGuidance: "क़दम-दर-क़दम मार्गदर्शन",
     cardTitle: "अधिकार आपको क्या जाँचने में मदद करता है",
@@ -476,7 +487,7 @@ const hi: HomeDict = {
     daysFigure: "15 दिन",
     banks: "लॉन्च पर तुलना किए गए बैंक — एसबीआई, पीएनबी, एचडीएफ़सी, आईसीआईसीआई",
     days: "दावा दर्ज होने के बाद निपटान की आरबीआई की अपनी समय-सीमा",
-    free: "अधिकार इस्तेमाल करने की लागत — कोई लॉगिन नहीं, कुछ भी संग्रहीत नहीं",
+    free: "अधिकार इस्तेमाल करने की लागत — खाता या दस्तावेज़ अपलोड ज़रूरी नहीं",
   },
 
   timeline: {
@@ -506,7 +517,7 @@ const hi: HomeDict = {
     eyebrow: "सिर्फ़ ढूँढना ही नहीं।",
     heading: "दावा करने में भी मदद।",
     sub: "संभावित संपत्ति मिलने के बाद, अधिकार आपको हर अगले क़दम में मार्गदर्शन देता है।",
-    cta: "खोज शुरू करें",
+    cta: "आज ही अपनी दावा यात्रा शुरू करें",
     cardTitle: "बैंक जमा दावा",
     exampleTag: "उदाहरण",
     illustrative: "उदाहरण मात्र",
@@ -560,13 +571,13 @@ const hi: HomeDict = {
     q3: "कुछ मिलने के बाद क्या होता है?",
     a3: "अधिकार आपको उस संस्था द्वारा माँगे जाने वाले दस्तावेज़ों और क़दमों में, एक-एक करके, मार्गदर्शन देता है, ताकि काउंटर पर कुछ भी अचानक सामने न आए।",
     q4: "क्या मेरी जानकारी सुरक्षित है?",
-    a4: "आप जो भी दर्ज करते हैं, वह न तो संग्रहीत होता है, न ही मार्केटिंग के लिए साझा किया जाता है। न कोई खाता, न लॉगिन, और पेज को दिखाने के लिए ज़रूरी जानकारी के अलावा कुछ भी सर्वर तक नहीं पहुँचता।",
+    a4: "उत्तर पृष्ठ के लिंक में रहते हैं और पृष्ठ दिखाने के लिए सर्वर तक जाते हैं। वैकल्पिक समय-सीमा की तारीख़ ब्राउज़र में रहती है। सर्वर और उपयोग विश्लेषण की जानकारी के लिए गोपनीयता पृष्ठ पढ़ें।",
   },
 
   finalCta: {
     heading: "आपके परिवार का कुछ अब भी इंतज़ार कर रहा हो सकता है।",
     sub: "एक सरल खोज से शुरू करें। हम आगे क्या करना है यह समझने में मदद करेंगे।",
-    cta: "खोज शुरू करें",
+    cta: "आज ही अपनी दावा यात्रा शुरू करें",
     note: "यह मुफ़्त, सुरक्षित है और बस कुछ मिनट लेता है।",
   },
 
@@ -652,6 +663,11 @@ const hi: HomeDict = {
     findClaim: "जानें आपके दावे पर क्या लागू होता है",
     tellUs: "पुरानी बैंक नीति मिली? हमें बताएँ",
   },
+
+  faqPage: {
+    heading: "अक्सर पूछे जाने वाले सवाल",
+    mostAsked: "सबसे ज़्यादा पूछा गया",
+  },
 };
 
 const kn: HomeDict = {
@@ -665,7 +681,7 @@ const kn: HomeDict = {
     policy: "ನೀತಿ",
     updates: "ಅಪ್‌ಡೇಟ್‌ಗಳು",
     contact: "ಸಂಪರ್ಕಿಸಿ",
-    start: "ಹುಡುಕಾಟ ಪ್ರಾರಂಭಿಸಿ",
+    start: "ಇಂದೇ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
   },
   tagline: "ನಿಮ್ಮದು ನಿಮ್ಮ ದಾರಿ ಕಂಡುಕೊಳ್ಳಲಿ.",
   notice: {
@@ -676,10 +692,10 @@ const kn: HomeDict = {
   hero: {
     eyebrow: "ಕುಟುಂಬಗಳಿಗಾಗಿ. ಮುಖ್ಯವಾದುದಕ್ಕಾಗಿ.",
     headline: "ಉಳಿದ ಹಣ ಕಳೆದುಹೋಗಬಾರದು.",
-    sub: "ಅಧಿಕಾರ್ ಕುಟುಂಬಗಳಿಗೆ ಪ್ರೀತಿಪಾತ್ರರು ಬಿಟ್ಟುಹೋದ ಹಣಕಾಸಿನ ಆಸ್ತಿಗಳನ್ನು ಹುಡುಕಲು ಮತ್ತು ಪಡೆಯಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ — ಒಂದೇ ಸರಳ, ಮಾರ್ಗದರ್ಶಿತ ಪ್ರಕ್ರಿಯೆಯಲ್ಲಿ.",
-    start: "ಹುಡುಕಾಟ ಪ್ರಾರಂಭಿಸಿ",
+    sub: "ಮೃತ ಕುಟುಂಬ ಸದಸ್ಯರ ಬ್ಯಾಂಕ್ ಠೇವಣಿ ಕ್ಲೈಮ್ ಮಾಡಲು\nಅಧಿಕಾರ್ ಸ್ಪಷ್ಟ, ಮುದ್ರಿಸಬಹುದಾದ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತದೆ—ಖಾತೆ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಬೇಡ.",
+    start: "ಇಂದೇ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
     seeHow: "ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ ನೋಡಿ",
-    trustFree: "ಹುಡುಕುವುದು ಉಚಿತ",
+    trustFree: "ಬಳಕೆ ಉಚಿತ",
     trustSecure: "ಸುರಕ್ಷಿತ",
     trustGuidance: "ಹಂತ ಹಂತದ ಮಾರ್ಗದರ್ಶನ",
     cardTitle: "ಅಧಿಕಾರ್ ನಿಮಗೆ ಏನನ್ನು ಪರಿಶೀಲಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ",
@@ -696,7 +712,7 @@ const kn: HomeDict = {
     daysFigure: "15 ದಿನಗಳು",
     banks: "ಲಾಂಚ್‌ನಲ್ಲಿ ಹೋಲಿಸಲಾದ ಬ್ಯಾಂಕುಗಳು — ಎಸ್‌ಬಿಐ, ಪಿಎನ್‌ಬಿ, ಎಚ್‌ಡಿಎಫ್‌ಸಿ, ಐಸಿಐಸಿಐ",
     days: "ಹಕ್ಕು ಸಲ್ಲಿಸಿದ ನಂತರ ಇತ್ಯರ್ಥಗೊಳಿಸಲು ಆರ್‌ಬಿಐನ ಸ್ವಂತ ಗಡುವು",
-    free: "ಅಧಿಕಾರ್ ಬಳಸಲು ವೆಚ್ಚ — ಲಾಗಿನ್ ಇಲ್ಲ, ಏನೂ ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ",
+    free: "ಅಧಿಕಾರ್ ಬಳಸಲು ವೆಚ್ಚ — ಖಾತೆ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಬೇಡ",
   },
 
   timeline: {
@@ -726,7 +742,7 @@ const kn: HomeDict = {
     eyebrow: "ಕಂಡುಹಿಡಿಯುವುದು ಮಾತ್ರವಲ್ಲ.",
     heading: "ಹಕ್ಕು ಪಡೆಯಲೂ ಸಹಾಯ.",
     sub: "ಸಂಭವನೀಯ ಆಸ್ತಿ ಸಿಕ್ಕ ನಂತರ, ಅಧಿಕಾರ್ ಪ್ರತಿ ಮುಂದಿನ ಹಂತದಲ್ಲೂ ನಿಮಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತದೆ.",
-    cta: "ಹುಡುಕಾಟ ಪ್ರಾರಂಭಿಸಿ",
+    cta: "ಇಂದೇ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
     cardTitle: "ಬ್ಯಾಂಕ್ ಠೇವಣಿ ಹಕ್ಕು",
     exampleTag: "ಉದಾಹರಣೆ",
     illustrative: "ಉದಾಹರಣೆ ಮಾತ್ರ",
@@ -780,13 +796,13 @@ const kn: HomeDict = {
     q3: "ಏನಾದರೂ ಸಿಕ್ಕ ನಂತರ ಏನಾಗುತ್ತದೆ?",
     a3: "ಅಧಿಕಾರ್ ಆ ಸಂಸ್ಥೆ ಕೇಳುವ ದಾಖಲೆಗಳು ಮತ್ತು ಹಂತಗಳ ಮೂಲಕ, ಒಂದೊಂದಾಗಿ ನಿಮಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತದೆ, ಇದರಿಂದ ಕೌಂಟರ್‌ನಲ್ಲಿ ಏನೂ ಅನಿರೀಕ್ಷಿತವಾಗಿ ಬರುವುದಿಲ್ಲ.",
     q4: "ನನ್ನ ಮಾಹಿತಿ ಸುರಕ್ಷಿತವೇ?",
-    a4: "ನೀವು ನಮೂದಿಸುವುದು ಯಾವುದೂ ಸಂಗ್ರಹವಾಗುವುದಿಲ್ಲ ಅಥವಾ ಮಾರ್ಕೆಟಿಂಗ್‌ಗಾಗಿ ಹಂಚಿಕೊಳ್ಳುವುದಿಲ್ಲ. ಖಾತೆ ಇಲ್ಲ, ಲಾಗಿನ್ ಇಲ್ಲ, ಮತ್ತು ಪುಟವನ್ನು ತೋರಿಸಲು ಬೇಕಾದುದನ್ನು ಹೊರತುಪಡಿಸಿ ಏನೂ ಸರ್ವರ್‌ಗೆ ತಲುಪುವುದಿಲ್ಲ.",
+    a4: "ಉತ್ತರಗಳು ಪುಟದ ಲಿಂಕ್‌ನಲ್ಲಿ ಇರುತ್ತವೆ ಮತ್ತು ಪುಟ ತೋರಿಸಲು ಸರ್ವರ್‌ಗೆ ಹೋಗುತ್ತವೆ. ಐಚ್ಛಿಕ ಗಡುವಿನ ದಿನಾಂಕ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಉಳಿಯುತ್ತದೆ. ಸರ್ವರ್ ಮತ್ತು ಬಳಕೆ ವಿಶ್ಲೇಷಣೆಯ ವಿವರಗಳಿಗೆ ಗೌಪ್ಯತೆ ಪುಟ ಓದಿ.",
   },
 
   finalCta: {
     heading: "ನಿಮ್ಮ ಕುಟುಂಬಕ್ಕಾಗಿ ಇನ್ನೂ ಏನೋ ಕಾಯುತ್ತಿರಬಹುದು.",
     sub: "ಸರಳ ಹುಡುಕಾಟದೊಂದಿಗೆ ಪ್ರಾರಂಭಿಸಿ. ಮುಂದೆ ಏನು ಎಂಬುದನ್ನು ಅರ್ಥಮಾಡಿಕೊಳ್ಳಲು ನಾವು ಸಹಾಯ ಮಾಡುತ್ತೇವೆ.",
-    cta: "ಹುಡುಕಾಟ ಪ್ರಾರಂಭಿಸಿ",
+    cta: "ಇಂದೇ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
     note: "ಇದು ಉಚಿತ, ಸುರಕ್ಷಿತ ಮತ್ತು ಕೆಲವೇ ನಿಮಿಷಗಳನ್ನು ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ.",
   },
 
@@ -871,6 +887,11 @@ const kn: HomeDict = {
     footerInfoNote: "ಮಾಹಿತಿ, ಕಾನೂನು ಸಲಹೆ ಅಲ್ಲ. ನಾವು ಪರಿಶೀಲಿಸಿದ ನಂತರ ಬ್ಯಾಂಕ್ ತನ್ನ ಪುಟವನ್ನು ಬದಲಾಯಿಸಿರಬಹುದು — ಆದ್ದರಿಂದ ನಿಮಗೆ ತಿಳಿಯಲು ದಿನಾಂಕ ನೀಡಲಾಗಿದೆ.",
     findClaim: "ನಿಮ್ಮ ಹಕ್ಕಿಗೆ ಏನು ಅನ್ವಯಿಸುತ್ತದೆ ಎಂದು ತಿಳಿಯಿರಿ",
     tellUs: "ಹಳೆಯ ಬ್ಯಾಂಕ್ ನೀತಿ ಕಂಡುಬಂದಿದೆಯೇ? ನಮಗೆ ತಿಳಿಸಿ",
+  },
+
+  faqPage: {
+    heading: "ಪದೇ ಪದೇ ಕೇಳಲಾಗುವ ಪ್ರಶ್ನೆಗಳು",
+    mostAsked: "ಹೆಚ್ಚು ಕೇಳಲಾದ",
   },
 };
 

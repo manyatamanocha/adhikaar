@@ -50,11 +50,12 @@ export function parseLocale(raw: string | string[] | undefined): Locale {
 
 /** Add the locale to an internal href. English is the default and carries none. */
 export function withLang(href: string, lang: Locale): string {
-  if (lang === "en") return href;
-  const [path, query] = href.split("?");
+  const [base, hash] = href.split("#");
+  const [path, query] = base.split("?");
   const q = new URLSearchParams(query ?? "");
-  q.set("lang", lang);
-  return `${path}?${q.toString()}`;
+  if (lang === "en") q.delete("lang");
+  else q.set("lang", lang);
+  return `${path}${q.size ? `?${q}` : ""}${hash !== undefined ? `#${hash}` : ""}`;
 }
 
 type Dict = {
@@ -147,7 +148,7 @@ const en: Dict = {
   heroSub:
     "RBI rules say that in most deposit claims, a bank must not insist on one.",
   trustRules: "Based on RBI Directions",
-  trustNoData: "No data stored",
+  trustNoData: "No document uploads",
   trustCited: "Every claim cited",
   trustFree: "Free to use",
   cta: "Check your options",
@@ -194,7 +195,7 @@ const en: Dict = {
   pathJoint: "It was a joint account",
   pathJointBody: "A survivorship clause works the same way — the same three documents apply.",
   pathNoNominee: "There was no nominee",
-  pathNoNomineeBody: "A fixed list of six documents, below the floor.",
+  pathNoNomineeBody: "Check the bank threshold, will status, disputes and court restrictions before using the simplified checklist.",
   pathUnknown: "I don't know",
   pathUnknownBody: "Most families do not. We will help you find out.",
 
@@ -204,8 +205,8 @@ const en: Dict = {
   assuranceLink: "Read the rule itself",
   tNoSignIn: "No sign-in",
   tNoSignInNote: "No account needed",
-  tNoData: "No data stored",
-  tNoDataNote: "Nothing reaches a server",
+  tNoData: "No document uploads",
+  tNoDataNote: "See Privacy for data handling",
   tPlain: "Plain language",
   tPlainNote: "No unexplained jargon",
   tPrint: "A page to print",
@@ -213,7 +214,7 @@ const en: Dict = {
 
   finalCtaHeading: "Know what applies to your claim.",
   finalCtaSub:
-    "Four questions, about two minutes, and a straight answer with its paragraph number.",
+    "A few questions, the conditions that matter, and guidance with its paragraph number.",
   finalCta: "Check your situation",
 };
 
@@ -227,7 +228,7 @@ const hi: Dict = {
   heroSub:
     "आरबीआई के नियम कहते हैं कि ज़्यादातर जमा दावों में बैंक इसके लिए ज़ोर नहीं दे सकता।",
   trustRules: "आरबीआई निर्देशों पर आधारित",
-  trustNoData: "कोई जानकारी संग्रहीत नहीं",
+  trustNoData: "दस्तावेज़ अपलोड नहीं",
   trustCited: "हर बात का स्रोत दिया गया",
   trustFree: "उपयोग निःशुल्क",
   cta: "अपने विकल्प देखें",
@@ -274,7 +275,7 @@ const hi: Dict = {
   pathJoint: "यह संयुक्त खाता था",
   pathJointBody: "उत्तरजीविता की शर्त पर भी यही नियम लागू होता है — वही तीन दस्तावेज़ चाहिए।",
   pathNoNominee: "कोई नामांकित व्यक्ति नहीं था",
-  pathNoNomineeBody: "सीमा से कम रकम पर छह दस्तावेज़ों की तय सूची।",
+  pathNoNomineeBody: "सरल दस्तावेज़ सूची इस्तेमाल करने से पहले बैंक की सीमा, वसीयत, विवाद और अदालती रोक की जाँच करें।",
   pathUnknown: "मुझे नहीं पता",
   pathUnknownBody: "ज़्यादातर परिवारों को नहीं पता होता। हम पता करने में मदद करेंगे।",
 
@@ -284,8 +285,8 @@ const hi: Dict = {
   assuranceLink: "नियम ख़ुद पढ़ें",
   tNoSignIn: "कोई साइन-इन नहीं",
   tNoSignInNote: "खाता बनाने की ज़रूरत नहीं",
-  tNoData: "कोई जानकारी संग्रहीत नहीं",
-  tNoDataNote: "कुछ भी सर्वर तक नहीं जाता",
+  tNoData: "दस्तावेज़ अपलोड नहीं",
+  tNoDataNote: "जानकारी के उपयोग के लिए गोपनीयता पृष्ठ पढ़ें",
   tPlain: "आसान भाषा",
   tPlainNote: "बिना समझाए कोई क़ानूनी शब्द नहीं",
   tPrint: "छापने लायक़ पन्ना",
@@ -306,7 +307,7 @@ const kn: Dict = {
   heroSub:
     "ಬಹುತೇಕ ಠೇವಣಿ ಕ್ಲೇಮ್‌ಗಳಲ್ಲಿ ಬ್ಯಾಂಕ್ ಇದನ್ನು ಕೇಳುವಂತಿಲ್ಲ ಎಂದು ಆರ್‌ಬಿಐ ನಿಯಮಗಳು ಹೇಳುತ್ತವೆ.",
   trustRules: "ಆರ್‌ಬಿಐ ನಿರ್ದೇಶನಗಳ ಆಧಾರದ ಮೇಲೆ",
-  trustNoData: "ಯಾವುದೇ ಮಾಹಿತಿ ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ",
+  trustNoData: "ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಬೇಡ",
   trustCited: "ಪ್ರತಿ ಮಾತಿಗೂ ಆಧಾರ",
   trustFree: "ಉಚಿತ ಬಳಕೆ",
   cta: "ನಿಮ್ಮ ಆಯ್ಕೆಗಳನ್ನು ನೋಡಿ",
@@ -353,7 +354,7 @@ const kn: Dict = {
   pathJoint: "ಇದು ಜಂಟಿ ಖಾತೆಯಾಗಿತ್ತು",
   pathJointBody: "ಉತ್ತರಜೀವಿತ್ವದ ಷರತ್ತಿಗೂ ಇದೇ ನಿಯಮ — ಅದೇ ಮೂರು ದಾಖಲೆಗಳು ಬೇಕು.",
   pathNoNominee: "ನಾಮನಿರ್ದೇಶಿತರು ಇರಲಿಲ್ಲ",
-  pathNoNomineeBody: "ಮಿತಿಗಿಂತ ಕಡಿಮೆ ಮೊತ್ತಕ್ಕೆ ಆರು ದಾಖಲೆಗಳ ನಿಗದಿತ ಪಟ್ಟಿ.",
+  pathNoNomineeBody: "ಸರಳ ದಾಖಲೆ ಪಟ್ಟಿಯನ್ನು ಬಳಸುವ ಮೊದಲು ಬ್ಯಾಂಕ್ ಮಿತಿ, ವಿಲ್, ವಿವಾದ ಮತ್ತು ನ್ಯಾಯಾಲಯದ ನಿರ್ಬಂಧಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.",
   pathUnknown: "ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
   pathUnknownBody: "ಬಹುತೇಕ ಕುಟುಂಬಗಳಿಗೆ ಗೊತ್ತಿರುವುದಿಲ್ಲ. ತಿಳಿಯಲು ನಾವು ಸಹಾಯ ಮಾಡುತ್ತೇವೆ.",
 
@@ -363,8 +364,8 @@ const kn: Dict = {
   assuranceLink: "ನಿಯಮವನ್ನೇ ಓದಿ",
   tNoSignIn: "ಸೈನ್-ಇನ್ ಬೇಡ",
   tNoSignInNote: "ಖಾತೆ ತೆರೆಯುವ ಅಗತ್ಯವಿಲ್ಲ",
-  tNoData: "ಯಾವುದೇ ಮಾಹಿತಿ ಸಂಗ್ರಹಿಸುವುದಿಲ್ಲ",
-  tNoDataNote: "ಏನೂ ಸರ್ವರ್‌ಗೆ ಹೋಗುವುದಿಲ್ಲ",
+  tNoData: "ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಬೇಡ",
+  tNoDataNote: "ಮಾಹಿತಿ ಬಳಕೆಗಾಗಿ ಗೌಪ್ಯತೆ ಪುಟ ಓದಿ",
   tPlain: "ಸರಳ ಭಾಷೆ",
   tPlainNote: "ವಿವರಿಸದ ಕಾನೂನು ಪದಗಳಿಲ್ಲ",
   tPrint: "ಮುದ್ರಿಸಬಹುದಾದ ಪುಟ",

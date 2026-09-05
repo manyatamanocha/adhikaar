@@ -1,281 +1,143 @@
-/**
- * The wizard.
- *
- * Four questions, at most. The nominee question short-circuits: para 9 resolves
- * nominee and survivorship outright at any amount, so those answers do not need
- * the amount or the dispute question.
- *
- * Design rules this file encodes:
- *   1. The out-of-scope exit fires FIRST. We would rather stop someone than give
- *      a bank-deposit answer to a pension or an insurance claim.
- *   2. "I don't know" is a real answer at every question and routes to the
- *      safest honest reading — never to a dead end.
- *   3. No state lives in a component. Every answer is a URL parameter, so Back
- *      works, a half-finished flow can be sent to a sibling, and nothing about
- *      the family is stored anywhere.
+/** URL-based guidance. Unknown facts never establish eligibility.
+ * Source: RBI deceased-customer directions, paragraphs 7–11.
+ * Answers are sent in page URLs; never put names or account numbers here.
  */
-
 import type { OutcomeId } from "./outcomes";
 
-export type QuestionId = "claiming" | "nominee" | "amount" | "heirs";
-
+export type QuestionId = "claiming" | "court" | "nominee" | "will" | "heirs" | "bankType" | "amount";
 export type Answers = Partial<{
-  claiming: "deposit" | "pension" | "other" | "minor";
+  claiming: "deposit" | "locker" | "pension" | "other" | "minor";
+  court: "yes" | "no" | "unknown";
   nominee: "yes" | "survivorship" | "no" | "unknown";
-  amount: "under" | "over" | "unknown";
+  will: "yes" | "no" | "unknown";
   heirs: "agree" | "dispute" | "unknown";
+  bankType: "commercial" | "cooperative" | "unknown";
+  amount: "under" | "equal" | "over" | "unknown";
 }>;
-
-export type Option = {
-  value: string;
-  label: string;
-  /** One line under the label. Where a term is used, this is where it is glossed. */
-  detail?: string;
-  /** "I don't know" options are marked so the UI can set them apart without demoting them. */
-  unsure?: boolean;
-};
-
-export type Question = {
-  id: QuestionId;
-  /** 1-based, for "Question 2 of 4". */
-  number: number;
-  prompt: string;
-  /** Why we are asking, and anything needed to answer it honestly. */
-  help: string;
-  options: Option[];
-};
-
-export const TOTAL_QUESTIONS = 4;
-
+export type Option = { value: string; label: string; detail?: string; unsure?: boolean };
+export type Question = { id: QuestionId; number: number; prompt: string; help: string; options: Option[] };
+const unknown: Option = { value: "unknown", label: "I don't know yet", unsure: true };
+export const QUESTION_ORDER: QuestionId[] = ["claiming", "court", "nominee", "will", "heirs", "bankType", "amount"];
+export const TOTAL_QUESTIONS = QUESTION_ORDER.length;
 export const QUESTIONS: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming",
-    number: 1,
-    prompt: "What are you claiming?",
-    help: "These Directions cover money held at a bank. If your claim is somewhere else, we will say so rather than give you a bank answer that does not apply.",
+    id: "claiming", number: 1, prompt: "What are you claiming?",
+    help: "This guide covers a deceased adult's bank deposits claimed by an adult. Other assets need different procedures.",
     options: [
-      {
-        value: "deposit",
-        label: "A bank account, a fixed deposit, or a locker",
-        detail:
-          "Savings, current, recurring or fixed deposit held at a bank, or a safe deposit locker or articles in safe custody.",
-      },
-      {
-        value: "pension",
-        label: "A government or family pension",
-        detail:
-          "Pension runs on the department's own rules, not on these Directions.",
-      },
-      {
-        value: "other",
-        label:
-          "Insurance, provident fund, shares, mutual funds, post office savings or property",
-        detail: "Each of these is claimed from a different authority.",
-      },
-      {
-        value: "minor",
-        label:
-          "The person claiming is under 18, or someone is acting as their guardian",
-        detail:
-          "A claim on behalf of a minor needs advice we are not in a position to give.",
-      },
+      { value: "deposit", label: "A bank account or fixed deposit", detail: "Savings, current, recurring or fixed deposits at a bank." },
+      { value: "locker", label: "A bank locker or articles in safe custody", detail: "Locker access and inventory follow a separate process, not this deposit checklist." },
+      { value: "pension", label: "A government or family pension" },
+      { value: "other", label: "Insurance, provident fund, shares, post office savings or property" },
+      { value: "minor", label: "The claimant is under 18, or acting through a guardian" },
     ],
   },
-
+  court: {
+    id: "court", number: 2, prompt: "Is there a court order restricting payment?",
+    help: "A court order preventing payment must be addressed before the bank can settle. Ask the bank if you are unsure; simply having a court case is not the same as a restraining order.",
+    options: [{ value: "no", label: "No known order restricting payment" }, { value: "yes", label: "Yes, payment is restricted by a court order" }, unknown],
+  },
   nominee: {
-    id: "nominee",
-    number: 2,
-    prompt: "Was a nominee registered on the account?",
-    help: "This is the one fact that decides everything else. If you are not sure, say so — it is the commonest answer, and there is something specific you can do about it.",
+    id: "nominee", number: 3, prompt: "Was a nominee registered on the account?",
+    help: "Check the bank's records. On a joint account, payment to a nominee arises only after all depositors have died; a surviving holder may instead qualify under the survivorship clause.",
     options: [
-      {
-        value: "yes",
-        label: "Yes, there is a registered nominee",
-        detail:
-          "Someone was named on the account, in the bank's records, to receive the balance.",
-      },
-      {
-        value: "survivorship",
-        label: "It was a joint account with a survivorship clause",
-        detail:
-          "The account says “either or survivor”, “former or survivor”, or “anyone or survivors”.",
-      },
-      {
-        value: "no",
-        label: "No, there was no nominee",
-      },
-      {
-        value: "unknown",
-        label: "I don't know",
-        detail:
-          "Most families do not. The bank can see it in the account-opening records, and we will show you how to ask.",
-        unsure: true,
-      },
+      { value: "yes", label: "Yes, there is a registered nominee", detail: "The sole account holder, or all joint depositors, have died." },
+      { value: "survivorship", label: "A joint holder survives and there is a survivorship clause", detail: "For example, 'either or survivor', subject to the account mandate." },
+      { value: "no", label: "No nominee or applicable survivorship clause" }, unknown,
     ],
   },
-
-  amount: {
-    id: "amount",
-    number: 3,
-    prompt: "Roughly how much is in the account?",
-    help: "Add together every account the person held at that bank, including interest. Accounts held at a different bank are a separate claim with its own limit.",
-    options: [
-      {
-        value: "under",
-        label: "Less than ₹15 lakh in total",
-        detail:
-          "₹5 lakh if it is a co-operative bank. A bank is allowed to set its limit higher than the RBI's floor, and some have.",
-      },
-      {
-        value: "over",
-        label: "₹15 lakh or more in total",
-        detail:
-          "Check your own bank's limit before settling on this — it may be higher.",
-      },
-      {
-        value: "unknown",
-        label: "I don't know yet",
-        detail:
-          "The bank can tell you the balance. We will show you the route for a claim below the limit, and how to check where the line falls at your bank.",
-        unsure: true,
-      },
-    ],
+  will: {
+    id: "will", number: 4, prompt: "Did the person leave a will?",
+    help: "Without a nominee or survivorship clause, a will changes the documentation route. Do not assume there was no will if you have not checked.",
+    options: [{ value: "no", label: "No will was left" }, { value: "yes", label: "Yes, there is a will" }, unknown],
   },
-
   heirs: {
-    id: "heirs",
-    number: 4,
-    prompt: "Do all the legal heirs agree?",
-    help: "Everything else on this site assumes nobody is contesting the claim. Where the heirs are in dispute, a court document is required — and that overrides every other answer.",
-    options: [
-      {
-        value: "agree",
-        label: "Yes — nobody is contesting the claim",
-      },
-      {
-        value: "dispute",
-        label: "No — there is a disagreement between the heirs",
-      },
-      {
-        value: "unknown",
-        label: "I don't know",
-        detail:
-          "We will show you the route that applies where there is no dispute, and flag plainly what changes if one appears.",
-        unsure: true,
-      },
-    ],
+    id: "heirs", number: 5, prompt: "Do all the legal heirs agree?",
+    help: "The no-nominee simplified route requires no contesting claim. If someone disputes the claim, get advice before relying on a standard checklist.",
+    options: [{ value: "agree", label: "Yes, nobody is contesting the claim" }, { value: "dispute", label: "No, the claim is disputed" }, unknown],
+  },
+  bankType: {
+    id: "bankType", number: 6, prompt: "What type of bank holds the deposits?",
+    help: "The RBI threshold is ₹5 lakh for co-operative banks and ₹15 lakh for other banks. A bank may set a higher limit. Ask the branch to confirm its current policy.",
+    options: [{ value: "commercial", label: "A commercial bank", detail: "For example, SBI, PNB, HDFC Bank or ICICI Bank." }, { value: "cooperative", label: "A co-operative bank" }, unknown],
+  },
+  amount: {
+    id: "amount", number: 7, prompt: "What is the total payable at this bank?",
+    help: "Include all the person's deposits at this bank and accrued interest. Deposits at another bank are assessed separately.",
+    options: [{ value: "under", label: "Below the threshold" }, { value: "equal", label: "Exactly at the threshold" }, { value: "over", label: "Above the threshold" }, unknown],
   },
 };
 
-export const QUESTION_ORDER: QuestionId[] = [
-  "claiming",
-  "nominee",
-  "amount",
-  "heirs",
-];
-
+export function questionFor(id: QuestionId, a: Answers): Question {
+  if (id !== "amount") return QUESTIONS[id];
+  const limit = a.bankType === "cooperative" ? "₹5 lakh" : "₹15 lakh";
+  return { ...QUESTIONS.amount, help: QUESTIONS.amount.help + " A higher published bank limit may change the route.",
+    options: QUESTIONS.amount.options.map(o => o.value === "unknown" ? o : {
+      ...o, label: o.value === "under" ? `Less than ${limit}` : o.value === "equal" ? `Exactly ${limit}` : `More than ${limit}`,
+    }),
+  };
+}
 export type Resolution =
   | { kind: "question"; question: Question }
+  | { kind: "review"; carry: Answers }
   | { kind: "outcome"; outcome: OutcomeId; carry: Answers };
 
-/**
- * Given the answers so far, what comes next — the next question, or a verdict.
- *
- * Deliberately a pure function of the answers. There is no hidden step counter:
- * the URL is the whole state, so an incomplete or hand-edited URL still resolves
- * to the right question rather than to an error.
- */
 export function resolve(a: Answers): Resolution {
-  if (!a.claiming) return { kind: "question", question: QUESTIONS.claiming };
-
-  // Rule 1: stop before answering anything we do not cover.
-  if (a.claiming !== "deposit") {
-    return { kind: "outcome", outcome: "out-of-scope", carry: a };
-  }
-
-  // Para 11(b) overrides EVERYTHING below it, including para 9 — a dispute
-  // answer known this early (e.g. carried in from a scenario-card preset)
-  // must win before the nominee short-circuit ever runs. Without this, a
-  // "yes, nominee" answer after "heirs disagree" silently discarded the
-  // dispute and gave the nominee verdict its cheerful headline instead of
-  // the accurate one — the corrective caveat still showed further down the
-  // /nominee page, but the headline itself was wrong for that person.
-  if (a.heirs === "dispute") {
-    return { kind: "outcome", outcome: "dispute", carry: a };
-  }
-
-  if (!a.nominee) return { kind: "question", question: QUESTIONS.nominee };
-
-  // Para 9 is unconditional — no threshold test, no heir test. Short-circuit.
-  if (a.nominee === "yes") {
-    return { kind: "outcome", outcome: "nominee", carry: a };
-  }
-  if (a.nominee === "survivorship") {
-    return { kind: "outcome", outcome: "survivorship", carry: a };
-  }
-
-  if (!a.amount) return { kind: "question", question: QUESTIONS.amount };
-  if (!a.heirs) return { kind: "question", question: QUESTIONS.heirs };
-  // a.heirs === "dispute" is already handled above, before the nominee
-  // short-circuit — by the time we reach here it can only be "agree" or
-  // "unknown".
-
-  // Nominee unknown: the amount and dispute answers still narrow the second
-  // half of that page, so they are carried through rather than discarded.
-  if (a.nominee === "unknown") {
-    return { kind: "outcome", outcome: "unknown-nominee", carry: a };
-  }
-
-  // "I don't know" on the amount takes the below-threshold route. That page
-  // carries a hard, uncollapsible caveat that the threshold is the aggregate
-  // and that the bank's own limit may be higher — so the reading is honest,
-  // and it does not send anyone toward a court they may not need.
-  if (a.amount === "over") {
-    return { kind: "outcome", outcome: "over-threshold", carry: a };
-  }
-  return { kind: "outcome", outcome: "under-threshold", carry: a };
+  const ask = (id: QuestionId): Resolution => ({ kind: "question", question: questionFor(id, a) });
+  const review = (): Resolution => ({ kind: "review", carry: a });
+  const done = (outcome: OutcomeId): Resolution => ({ kind: "outcome", outcome, carry: a });
+  if (!a.claiming) return ask("claiming");
+  if (a.claiming !== "deposit") return done("out-of-scope");
+  if (!a.court) return ask("court");
+  if (a.court !== "no") return review();
+  if (!a.nominee) return ask("nominee");
+  if (a.nominee === "unknown") return done("unknown-nominee");
+  // A known dispute needs individual review, not a blanket statement that a
+  // valid nominee must obtain succession documents.
+  if (a.heirs === "dispute" && a.nominee !== "no") return review();
+  if (a.nominee === "yes") return done("nominee");
+  if (a.nominee === "survivorship") return done("survivorship");
+  if (!a.will) return ask("will");
+  if (a.will !== "no") return review();
+  if (!a.heirs) return ask("heirs");
+  if (a.heirs === "dispute") return done("dispute");
+  if (a.heirs === "unknown") return review();
+  if (!a.bankType) return ask("bankType");
+  if (a.bankType === "unknown") return review();
+  if (!a.amount) return ask("amount");
+  // Para 10 opens with "less than"; 10(a) says "up to". At equality, confirm.
+  if (a.amount === "unknown" || a.amount === "equal") return review();
+  return done(a.amount === "over" ? "over-threshold" : "under-threshold");
 }
-
-/** Parse a URL query into answers, discarding anything not a known value. */
-export function parseAnswers(
-  sp: Record<string, string | string[] | undefined>,
-): Answers {
-  const one = (k: string) => {
-    const v = sp[k];
-    return Array.isArray(v) ? v[0] : v;
-  };
-  const pick = <T extends string>(k: string, allowed: readonly T[]) => {
-    const v = one(k);
-    return v && (allowed as readonly string[]).includes(v)
-      ? (v as T)
-      : undefined;
-  };
-
-  return {
-    claiming: pick("claiming", ["deposit", "pension", "other", "minor"] as const),
-    nominee: pick("nominee", ["yes", "survivorship", "no", "unknown"] as const),
-    amount: pick("amount", ["under", "over", "unknown"] as const),
-    heirs: pick("heirs", ["agree", "dispute", "unknown"] as const),
-  };
+export function parseAnswers(sp: Record<string, string | string[] | undefined>): Answers {
+  const a: Answers = {};
+  for (const id of QUESTION_ORDER) {
+    const raw = sp[id];
+    const v = Array.isArray(raw) ? raw[0] : raw;
+    if (v && QUESTIONS[id].options.some(o => o.value === v)) Object.assign(a, { [id]: v });
+  }
+  return a;
 }
-
-/** Serialise answers back to a query string, in question order. */
 export function toQuery(a: Answers): string {
   const q = new URLSearchParams();
-  for (const id of QUESTION_ORDER) {
-    const v = a[id];
-    if (v) q.set(id, v);
-  }
-  const s = q.toString();
-  return s ? `?${s}` : "";
+  for (const id of QUESTION_ORDER) if (a[id]) q.set(id, a[id]!);
+  return q.size ? `?${q}` : "";
 }
-
-/** The answers as they were one question earlier — powers the Back link. */
+/** Changing an earlier answer invalidates later facts (especially bank/amount). */
+export function answerQuestion(a: Answers, id: QuestionId, value: string): Answers {
+  // Filling a missing court check must not erase a scenario's known dispute
+  // or nominee. Bank/amount is different: a new bank type invalidates a
+  // previously selected numeric category, including old bookmarked URLs.
+  if (a[id] === undefined && id !== "bankType") return parseAnswers({ ...a, [id]: value });
+  const next: Answers = {};
+  for (const key of QUESTION_ORDER.slice(0, QUESTION_ORDER.indexOf(id))) {
+    if (a[key]) Object.assign(next, { [key]: a[key] });
+  }
+  return parseAnswers({ ...next, [id]: value });
+}
 export function previousAnswers(a: Answers): Answers | null {
-  const answered = QUESTION_ORDER.filter((id) => a[id]);
-  if (answered.length === 0) return null;
-  const dropped = answered[answered.length - 1];
-  const { [dropped]: _removed, ...rest } = a;
-  void _removed;
-  return rest;
+  const answered = QUESTION_ORDER.filter(id => a[id]);
+  if (!answered.length) return null;
+  const previous = { ...a };
+  delete previous[answered[answered.length - 1]];
+  return previous;
 }

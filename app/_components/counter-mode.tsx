@@ -14,6 +14,7 @@
  */
 
 import Link from "next/link";
+import { withLang, type Locale } from "@/lib/i18n";
 import { CLAUSES, ESCALATION } from "@/lib/rbi";
 import { DOCUMENTS } from "@/lib/documents";
 import { OUTCOMES, type OutcomeId } from "@/lib/outcomes";
@@ -24,9 +25,11 @@ import { PrintButton } from "./print-button";
 export function CounterMode({
   id,
   answers,
+  locale,
 }: {
   id: OutcomeId;
   answers: Answers;
+  locale: Locale;
 }) {
   const outcome = OUTCOMES[id];
   const script = COUNTER_SCRIPT[id];
@@ -48,7 +51,7 @@ export function CounterMode({
       <div data-print="hide" className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
         <PrintButton />
         <Link
-          href={`${outcome.path}${toQuery(answers)}`}
+          href={withLang(`${outcome.path}${toQuery(answers)}`, locale)}
           className="text-[0.9375rem] font-bold text-link underline underline-offset-2"
         >
           See the full page instead
@@ -113,13 +116,7 @@ export function CounterMode({
       <Numbered n={script ? 4 : 3} title="What to do if they refuse">
         <div className={good ? "hardbox" : "rounded-xl border-2 border-maroon bg-blush p-5"}>
           <p className="body-fluid leading-relaxed text-ink">
-            Ask for the demand in writing, then complain to the branch&apos;s
-            Grievance Redressal Officer in writing, quoting the paragraph
-            above. Give them {ESCALATION.waitDays} days. After that, the{" "}
-            {ESCALATION.scheme} is free to use — but it is not a guarantee:
-            in 2024-25, 40.78% of complaints the Ombudsman accepted were
-            dismissed on the view that there had been no deficiency in
-            service.
+            {ESCALATION.caveat}
           </p>
           <p className="mt-2 text-[0.9375rem] text-ink-soft" data-print="hide">
             <a
@@ -133,7 +130,7 @@ export function CounterMode({
             · {ESCALATION.email}
           </p>
           <Link
-            href="/bank-refused"
+            href={withLang("/bank-refused", locale)}
             data-print="hide"
             className="mt-2 inline-flex items-center gap-2 text-[0.9375rem] font-bold text-link underline underline-offset-2"
           >

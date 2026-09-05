@@ -64,8 +64,7 @@ import Link from "next/link";
 import { NOTIFICATION, CLAUSES } from "@/lib/rbi";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
-import { HomeI18nProvider } from "../recover/_components/home-i18n";
-import { HOME_T } from "@/lib/i18n-home";
+import { HomeLocaleProvider } from "../recover/_components/home-i18n";
 import { T, parseLocale, withLang, type Locale } from "@/lib/i18n";
 
 // Shared across Numbers, Situations and Trust so the page reads as one
@@ -86,7 +85,7 @@ export default async function Guide({
   const lang = parseLocale((await searchParams).lang);
 
   return (
-    <HomeI18nProvider value={{ t: HOME_T[lang], locale: lang }}>
+    <HomeLocaleProvider locale={lang}>
       <RecoverNav />
 
       <main className="flex-1 bg-paper">
@@ -99,7 +98,7 @@ export default async function Guide({
       </main>
 
       <RecoverFooter />
-    </HomeI18nProvider>
+    </HomeLocaleProvider>
   );
 }
 

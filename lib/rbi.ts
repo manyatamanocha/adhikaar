@@ -175,11 +175,12 @@ export const THRESHOLDS = {
 export const ESCALATION = {
   scheme: "Reserve Bank – Integrated Ombudsman Scheme, 2026 (RB-IOS 2026)",
   portal: "https://cms.rbi.org.in",
-  email: "cpc@rbi.org.in",
-  post: "Centralised Receipt and Processing Centre, 4th Floor, Sector 17, Chandigarh 160017",
+  email: "crpc@rbi.org.in",
+  post: "Centralised Receipt and Processing Centre, Reserve Bank of India, Central Vista, Sector 17, Chandigarh 160017",
+  faq: "https://old.rbi.org.in/commonman/english/scripts/faqs.aspx?id=3407",
   waitDays: 30,
   caveat:
-    "Complain to your bank's Grievance Redressal Officer in writing first, and give them 30 days. This route is free — but it is not a guarantee. In 2024-25, 40.78% of complaints the Ombudsman accepted were dismissed on the view that there was no deficiency in service.",
+    "Complain to the bank in writing first. If its reply is unsatisfactory, or no reply arrives within 30 days (or a longer applicable prescribed period), check eligibility under the RBI Ombudsman scheme. Check current filing deadlines and exclusions in the RBI FAQ. The route is free, but an outcome is not guaranteed.",
 } as const;
 
 /**

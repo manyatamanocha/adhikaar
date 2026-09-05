@@ -1,20 +1,23 @@
 "use client";
 
-import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { RecoverNav } from "../../recover/_components/nav";
 import { RecoverFooter } from "../../recover/_components/footer";
-import { HomeI18nProvider } from "../../recover/_components/home-i18n";
-import { parseLocale } from "@/lib/i18n";
+import { HomeI18nProvider, useHomeT } from "../../recover/_components/home-i18n";
+import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
-import { FAQS, type Faq } from "@/lib/faq";
+import { FAQS_BY_LOCALE, type Faq } from "@/lib/faq";
 
 /**
  * Full FAQ page -- English only for now (content supplied directly, not
  * yet added to lib/i18n-home.ts's three-locale HomeDict; the homepage's
- * own short 4-question Faq() there is unrelated and untouched). First six
- * questions render open, the rest sit under "More questions" collapsed.
+ * own short 4-question Faq() there is unrelated and untouched). All
+ * questions render at once in a uniform two-column grid -- an earlier
+ * version collapsed most of them behind a "More questions" toggle and
+ * laid the rest out with CSS multi-column (`columns-2`), which fills
+ * top-to-bottom per column and left cards visibly misaligned row to row.
+ * A real `grid grid-cols-2` keeps every row's left/right pair aligned.
  *
  * Content is the user's own revised copy (replacing an earlier draft that
  * over-simplified several answers and linked out to seven different
@@ -26,9 +29,6 @@ import { FAQS, type Faq } from "@/lib/faq";
  * use and the analytics that are actually in this codebase.
  */
 
-
-const VISIBLE_COUNT = 6;
-
 export function FaqPage() {
   const searchParams = useSearchParams();
   const locale = parseLocale(searchParams.get("lang") ?? undefined);
@@ -36,65 +36,43 @@ export function FaqPage() {
 
   return (
     <HomeI18nProvider value={{ t, locale }}>
-      <div className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
+      <div lang={locale} className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
         <RecoverNav />
-        <Body />
+        <Body faqs={FAQS_BY_LOCALE[locale]} mostAsked={t.faqPage.mostAsked} heading={t.faqPage.heading} />
         <RecoverFooter />
       </div>
     </HomeI18nProvider>
   );
 }
 
-function Body() {
-  const [showAll, setShowAll] = useState(false);
-  const visible = FAQS.slice(0, VISIBLE_COUNT);
-  const rest = FAQS.slice(VISIBLE_COUNT);
-
+function Body({
+  faqs,
+  heading,
+  mostAsked,
+}: {
+  faqs: Faq[];
+  heading: string;
+  mostAsked: string;
+}) {
   return (
     <main className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8">
       <div className="max-w-[820px]">
         <h1 className="font-serif text-[3.25rem] font-bold tracking-[-0.01em] text-[#16233F]">
-          Frequently asked questions
+          {heading}
         </h1>
-        <p className="mt-2 text-[1.5rem] text-[#5B5344]">
-          Short answers. Each one links to the fuller page if you want more.
-        </p>
       </div>
 
-      <div className="mt-10 columns-1 gap-6 lg:columns-2">
-        {visible.map((f) => (
-          <div key={f.q} className="mb-5 break-inside-avoid">
-            <FaqItem f={f} />
-          </div>
+      <div className="mt-10 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+        {faqs.map((f) => (
+          <FaqItem key={f.q} f={f} mostAsked={mostAsked} />
         ))}
       </div>
-
-      {rest.length > 0 && (
-        <div className="mt-6">
-          {!showAll ? (
-            <button
-              type="button"
-              onClick={() => setShowAll(true)}
-              className="rounded-full border border-[#16233F] px-6 py-3 text-[1.125rem] font-bold text-[#16233F] transition-colors hover:bg-[#16233F] hover:text-white"
-            >
-              More questions ({rest.length})
-            </button>
-          ) : (
-            <div className="mt-6 columns-1 gap-6 lg:columns-2">
-              {rest.map((f) => (
-                <div key={f.q} className="mb-5 break-inside-avoid">
-                  <FaqItem f={f} />
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
     </main>
   );
 }
 
-function FaqItem({ f }: { f: Faq }) {
+function FaqItem({ f, mostAsked }: { f: Faq; mostAsked: string }) {
+  const { locale } = useHomeT();
   return (
     <div
       className={
@@ -104,7 +82,7 @@ function FaqItem({ f }: { f: Faq }) {
     >
       {f.highlight && (
         <span className="mb-2 inline-block rounded-full bg-[#E2653B]/10 px-3 py-1 text-[0.875rem] font-bold uppercase tracking-[0.08em] text-[#E2653B]">
-          Most asked
+          {mostAsked}
         </span>
       )}
       <h2 className="text-[1.375rem] font-bold text-[#16233F]">{f.q}</h2>
@@ -113,7 +91,7 @@ function FaqItem({ f }: { f: Faq }) {
         {f.link && (
           <>
             {" "}
-            <Link href={f.link.href} className="font-bold text-[#E2653B] hover:underline">
+            <Link href={withLang(f.link.href, locale)} className="font-bold text-[#E2653B] hover:underline">
               {f.link.label} &rarr;
             </Link>
           </>

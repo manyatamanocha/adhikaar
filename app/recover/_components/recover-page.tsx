@@ -7,7 +7,7 @@ import { RecoverNav } from "./nav";
 import { RecoverFooter } from "./footer";
 import { Reveal } from "./reveal";
 import { HomeI18nProvider, useHomeT } from "./home-i18n";
-import { parseLocale } from "@/lib/i18n";
+import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
 import { ArrowRightIcon } from "./icons";
 
@@ -43,11 +43,13 @@ export function RecoverPage() {
 
   return (
     <HomeI18nProvider value={{ t, locale }}>
-      <div className="bg-[#FAF5EC] text-[#16233F] antialiased selection:bg-[#E2653B]/20 selection:text-[#16233F]">
+      <div lang={locale} className="bg-[#FAF5EC] text-[#16233F] antialiased selection:bg-[#E2653B]/20 selection:text-[#16233F]">
         <NoticeBar />
         <RecoverNav />
-        <Hero />
-        <StatsOverlap />
+        <main>
+          <Hero />
+          <StatsOverlap />
+        </main>
         <RecoverFooter />
       </div>
     </HomeI18nProvider>
@@ -69,7 +71,7 @@ function NoticeBar() {
 /* ------------------------------------------------------------------ HERO */
 
 function Hero() {
-  const { t } = useHomeT();
+  const { t, locale } = useHomeT();
   return (
     <section className="relative overflow-hidden bg-[#FAF5EC] pb-20 pt-14 sm:pt-16">
       <Image
@@ -86,7 +88,7 @@ function Hero() {
           <p className="text-[1.0625rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
             {t.hero.eyebrow}
           </p>
-          <h1 className="mt-3 whitespace-nowrap font-serif text-[clamp(1.5rem,4.5vw,3.75rem)] font-bold leading-[1.15] tracking-[-0.01em]">
+          <h1 className="mt-3 font-serif text-[clamp(2rem,4.5vw,3.75rem)] font-bold leading-[1.15] tracking-[-0.01em]">
             {t.hero.headline}
           </h1>
           <p className="mt-4 text-[1.5125rem] leading-relaxed sm:text-[1.65rem] text-[#5B5344]">
@@ -99,7 +101,7 @@ function Hero() {
 
           <Reveal delay={80} className="mt-8 flex flex-wrap items-center gap-5">
             <Link
-              href="/start"
+              href={withLang("/start", locale)}
               className="inline-flex items-center gap-3 rounded bg-[#E2653B] px-10 py-5 text-[1.5rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
             >
               {t.hero.start}
@@ -117,14 +119,15 @@ function Hero() {
 /* ------------------------------------------------------------ STATS BAR */
 
 function StatsOverlap() {
+  const { locale } = useHomeT();
   return (
-    <div id="find" className="relative mx-auto mt-4 scroll-mt-16 max-w-[1920px] px-5 sm:px-8">
-      <Reveal className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+    <div id="find" lang="en" className="relative mx-auto mt-4 scroll-mt-16 max-w-[1920px] px-5 sm:px-8">
+      <Reveal className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <a
           href="https://udgam.rbi.org.in"
           target="_blank"
           rel="noopener noreferrer"
-          className="group mx-auto flex aspect-square w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
           <p className="text-[1.4rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
             Step 1
@@ -143,7 +146,7 @@ function StatsOverlap() {
           </p>
         </a>
         <div
-          className="group mx-auto flex aspect-square w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
           <p className="text-[1.68rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
             Step 2
@@ -157,7 +160,7 @@ function StatsOverlap() {
             We match it to the exact RBI rule that applies to you.
           </p>
           <Link
-            href="/start"
+            href={withLang("/start", locale)}
             className="mt-5 inline-flex w-fit items-center gap-2 rounded bg-[#E2653B] px-5 py-3 text-[1.15rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
           >
             Let&apos;s start your claim journey today
@@ -165,8 +168,8 @@ function StatsOverlap() {
           </Link>
         </div>
         <Link
-          href="/start"
-          className="group mx-auto flex aspect-square w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+          href={withLang("/start", locale)}
+          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
           <p className="text-[1.4rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
             Step 3
@@ -177,7 +180,7 @@ function StatsOverlap() {
           <p className="mt-3 text-[1.386rem] leading-snug text-[#6B6255]">
             Get a clear checklist of the documents you actually need.
             <br />
-            No sign-in, and nothing about your family is stored.
+            No sign-in or document uploads. Read our privacy details before sharing a guide link.
           </p>
         </Link>
       </Reveal>

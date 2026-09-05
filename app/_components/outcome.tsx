@@ -22,6 +22,8 @@
  */
 
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { parseLocale, withLang } from "@/lib/i18n";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { PrintButton } from "./print-button";
@@ -30,7 +32,7 @@ import { formatDate } from "./bank-panel";
 import { DOCUMENTS, type DocId } from "@/lib/documents";
 import { OUTCOMES, type OutcomeId } from "@/lib/outcomes";
 import { parseHave, readiness, toggleHave } from "@/lib/readiness";
-import { parseAnswers, toQuery, type Answers } from "@/lib/wizard";
+import { parseAnswers, resolve, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
 import { DeadlineTracker } from "./deadline-tracker";
 import { BeliefSurvey } from "./belief-survey";
@@ -42,17 +44,25 @@ type Params = Record<string, string | string[] | undefined>;
 export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   const outcome = OUTCOMES[id];
   const answers = parseAnswers(sp);
+  const locale = parseLocale(sp.lang);
+  const hasAnswers = Object.values(answers).some(Boolean);
+  if (hasAnswers && id !== "already-in-court") {
+    const route = resolve(answers);
+    if (route.kind === "question") redirect(withLang("/start" + toQuery(answers), locale));
+    if (route.kind === "review") redirect(withLang("/confirm-details" + toQuery(answers), locale));
+    if (route.kind === "outcome" && route.outcome !== id) redirect(withLang(OUTCOMES[route.outcome].path + toQuery(answers), locale));
+  }
   const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
 
   // Counter mode: the same URL, one parameter switched, so it stays a real
   // link. Falls back to the full page for out-of-scope, which has no
   // counter script.
-  if (sp.mode === "counter" && id in COUNTER_SCRIPT) {
+  if (hasAnswers && sp.mode === "counter" && id in COUNTER_SCRIPT) {
     return (
       <>
         <RecoverNav />
         <main className="flex-1">
-          <CounterMode id={id} answers={answers} />
+          <CounterMode id={id} answers={answers} locale={locale} />
         </main>
         <RecoverFooter />
       </>
@@ -70,7 +80,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
     const q = new URLSearchParams(toQuery(answers).replace(/^\?/, ""));
     if (have.length) q.set("have", have.join(","));
     q.set("bank", nextBank);
-    return `${outcome.path}?${q.toString()}`;
+    return withLang(`${outcome.path}?${q.toString()}`, locale);
   };
 
   // Ticking a document is the same navigation trick as picking a bank: one
@@ -81,7 +91,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
     const next = toggleHave(have, id);
     if (next.length) q.set("have", next.join(","));
     const s = q.toString();
-    return `${outcome.path}${s ? `?${s}` : ""}`;
+    return withLang(`${outcome.path}${s ? `?${s}` : ""}`, locale);
   };
 
   return (
@@ -89,12 +99,11 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
       <RecoverNav />
 
       <main className="flex-1">
-        <Verdict id={id} answers={answers} bankId={bankId} />
+        {!hasAnswers && <div className="shell max-w-[860px] py-5"><p className="body-fluid"><strong>General guidance — your eligibility has not been checked.</strong> <Link href={withLang("/start", locale)} className="text-link underline">Check your situation first.</Link></p></div>}
+        <Verdict id={id} answers={answers} bankId={bankId} locale={locale} />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
-          {/* Asked here, under the verdict, because the belief it measures is
-              the one they walked in with. */}
-          {outcome.goodNews && <BeliefSurvey outcome={id} />}
+          <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} />
           <Steps steps={outcome.steps} />
           {/* Promoted out of the (folded) Documents section per advisor review:
               this was the single most useful sentence on the page and it was
@@ -119,16 +128,17 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               hrefFor={haveHrefFor}
             />
           )}
-          {id !== "out-of-scope" && <AskedChecker answers={answers} />}
+          {hasAnswers && id !== "out-of-scope" && <AskedChecker answers={answers} locale={locale} />}
           <Evidence clauses={outcome.clauses} />
           {id !== "out-of-scope" && (
             <BankPanel bankId={bankId} hrefFor={hrefFor} />
           )}
           {outcome.documents && <Tactics />}
           {outcome.tracker && <DeadlineTracker />}
-          <Caveats caveats={outcome.caveats} />
-          <Escalation />
-          <SourceLine />
+          <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} />
+          <Escalation locale={locale} />
+          <SourceLine locale={locale} />
+          {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} />}
         </div>
       </main>
 
@@ -144,7 +154,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
  * because that is the moment the reader thinks "but the branch asked me for
  * three other things as well."
  */
-function AskedChecker({ answers }: { answers: Answers }) {
+function AskedChecker({ answers, locale }: { answers: Answers; locale: ReturnType<typeof parseLocale> }) {
   return (
     <section
       data-print="hide"
@@ -160,7 +170,7 @@ function AskedChecker({ answers }: { answers: Answers }) {
         number for each.
       </p>
       <Link
-        href={`/what-were-you-asked-for${toQuery(answers)}`}
+        href={withLang(`/what-were-you-asked-for${toQuery(answers)}`, locale)}
         className="mt-4 inline-flex items-center gap-2 rounded-pill bg-indigo px-6 py-3 text-[1.0625rem] font-bold text-white transition-colors hover:bg-indigo-lift"
       >
         Check what you were asked for
@@ -176,10 +186,12 @@ function Verdict({
   id,
   answers,
   bankId,
+  locale,
 }: {
   id: OutcomeId;
   answers: Answers;
   bankId?: string;
+  locale: ReturnType<typeof parseLocale>;
 }) {
   const outcome = OUTCOMES[id];
 
@@ -197,7 +209,7 @@ function Verdict({
             good ? "text-white" : "text-indigo-ink"
           }`}
         >
-          {outcome.verdict}
+          {outcome.goodNews && !Object.values(answers).some(Boolean) ? "When this route applies, a succession certificate is not required." : outcome.verdict}
         </h1>
 
         <p
@@ -213,9 +225,9 @@ function Verdict({
           className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
         >
           <PrintButton />
-          {id in COUNTER_SCRIPT && (
+          {Object.values(answers).some(Boolean) && id in COUNTER_SCRIPT && (
             <Link
-              href={counterHref(outcome.path, answers, bankId)}
+              href={withLang(counterHref(outcome.path, answers, bankId), locale)}
               className={`inline-flex items-center gap-2 rounded-pill border-2 px-6 py-3 text-[1.0625rem] font-bold transition-colors ${
                 good
                   ? "border-white/40 text-white hover:bg-white/10"
@@ -269,7 +281,6 @@ function Documents({
   return (
     <Section
       id="documents"
-      fold
       title={`The ${numberWord(ids.length)} documents the RBI names`}
       note={`What to bring, what each one costs and how long it takes. Tick the ones you already have.`}
       lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document."
@@ -563,9 +574,10 @@ function Tactics() {
 
 /* ------------------------------------------------------------------ 6 */
 
-function Caveats({ caveats }: { caveats: (typeof OUTCOMES)[OutcomeId]["caveats"] }) {
+function Caveats({ caveats, id = "caveats" }: { caveats: (typeof OUTCOMES)[OutcomeId]["caveats"]; id?: string }) {
+  if (!caveats.length) return null;
   return (
-    <Section id="caveats" title="What could change the answer">
+    <Section id={id} title={id === "eligibility" ? "Conditions for this route" : "Other important notes"}>
       <ul className="mt-5 space-y-4">
         {caveats.map((caveat) => (
           <li
@@ -595,7 +607,7 @@ function Caveats({ caveats }: { caveats: (typeof OUTCOMES)[OutcomeId]["caveats"]
 
 /* ------------------------------------------------------------------ */
 
-function Escalation() {
+function Escalation({ locale }: { locale: ReturnType<typeof parseLocale> }) {
   return (
     <section
       data-print="hide"
@@ -605,14 +617,10 @@ function Escalation() {
         If the bank refuses anyway
       </h2>
       <p className="body-fluid mt-2 max-w-[68ch] leading-relaxed text-ink">
-        Complain to the branch&apos;s Grievance Redressal Officer in writing,
-        quoting the paragraph above, and give them {ESCALATION.waitDays} days.
-        After that the {ESCALATION.scheme} is free to use.
+        {ESCALATION.caveat}
       </p>
       <p className="mt-3 max-w-[68ch] text-[1rem] leading-relaxed text-ink-soft">
-        It is free and it is real, and it is not a guarantee: in 2024-25, 40.78%
-        of the complaints the Ombudsman accepted were dismissed on the view that
-        there had been no deficiency in service.
+        <a href={ESCALATION.faq} target="_blank" rel="noreferrer" className="underline">Read the RBI&apos;s current complaint eligibility and time limits.</a>
       </p>
       <p className="mt-3 text-[1rem] text-ink-soft">
         <a
@@ -626,7 +634,7 @@ function Escalation() {
         · {ESCALATION.email} · {ESCALATION.post}
       </p>
       <Link
-        href="/bank-refused"
+        href={withLang("/bank-refused", locale)}
         className="mt-4 inline-flex items-center gap-2 text-[0.9375rem] font-bold text-link underline underline-offset-2"
       >
         The full route, plus a written complaint you can fill in
@@ -636,7 +644,7 @@ function Escalation() {
   );
 }
 
-function SourceLine() {
+function SourceLine({ locale }: { locale: ReturnType<typeof parseLocale> }) {
   return (
     <div className="mt-10 border-t border-rule pt-5 text-[0.9375rem] leading-relaxed text-ink-soft">
       <p>
@@ -657,14 +665,14 @@ function SourceLine() {
       </p>
       <p className="mt-2" data-print="hide">
         <Link
-          href="/start"
+          href={withLang("/start", locale)}
           className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
         >
           Answer the questions again
         </Link>
         {" · "}
         <Link
-          href="/contact"
+          href={withLang("/contact", locale)}
           className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
         >
           Found incorrect information? Tell us
