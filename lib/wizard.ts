@@ -193,6 +193,17 @@ export function resolve(a: Answers): Resolution {
     return { kind: "outcome", outcome: "out-of-scope", carry: a };
   }
 
+  // Para 11(b) overrides EVERYTHING below it, including para 9 — a dispute
+  // answer known this early (e.g. carried in from a scenario-card preset)
+  // must win before the nominee short-circuit ever runs. Without this, a
+  // "yes, nominee" answer after "heirs disagree" silently discarded the
+  // dispute and gave the nominee verdict its cheerful headline instead of
+  // the accurate one — the corrective caveat still showed further down the
+  // /nominee page, but the headline itself was wrong for that person.
+  if (a.heirs === "dispute") {
+    return { kind: "outcome", outcome: "dispute", carry: a };
+  }
+
   if (!a.nominee) return { kind: "question", question: QUESTIONS.nominee };
 
   // Para 9 is unconditional — no threshold test, no heir test. Short-circuit.
@@ -205,11 +216,9 @@ export function resolve(a: Answers): Resolution {
 
   if (!a.amount) return { kind: "question", question: QUESTIONS.amount };
   if (!a.heirs) return { kind: "question", question: QUESTIONS.heirs };
-
-  // Para 11(b) overrides everything below it.
-  if (a.heirs === "dispute") {
-    return { kind: "outcome", outcome: "dispute", carry: a };
-  }
+  // a.heirs === "dispute" is already handled above, before the nominee
+  // short-circuit — by the time we reach here it can only be "agree" or
+  // "unknown".
 
   // Nominee unknown: the amount and dispute answers still narrow the second
   // half of that page, so they are carried through rather than discarded.

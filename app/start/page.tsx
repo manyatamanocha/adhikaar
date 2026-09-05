@@ -13,8 +13,10 @@
 
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { SiteHeader, SiteFooter } from "../_components/chrome";
+import { RecoverNav } from "../recover/_components/nav";
+import { RecoverFooter } from "../recover/_components/footer";
 import { OUTCOMES } from "@/lib/outcomes";
+import { SCENARIOS } from "@/lib/scenarios";
 import {
   parseAnswers,
   previousAnswers,
@@ -35,7 +37,19 @@ export default async function Start({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const answers = parseAnswers(await searchParams);
+  const sp = await searchParams;
+  const answers = parseAnswers(sp);
+
+  // The recognition front door: shown only on a genuinely fresh /start (no
+  // answers at all yet), and skippable via ?classic=1 for anyone whose
+  // situation doesn't match a card and wants the question-by-question order
+  // instead — including the out-of-scope exit, which the classic order still
+  // asks about first.
+  const isFresh = Object.values(answers).every((v) => v === undefined);
+  if (isFresh && sp.classic !== "1") {
+    return <ScenarioPicker />;
+  }
+
   const step = resolve(answers);
 
   // A verdict is a page of its own, at its own URL. The wizard never renders one.
@@ -48,7 +62,7 @@ export default async function Start({
 
   return (
     <>
-      <SiteHeader />
+      <RecoverNav />
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
@@ -97,12 +111,79 @@ export default async function Start({
         </div>
       </main>
 
-      <SiteFooter />
+      <RecoverFooter />
     </>
   );
 }
 
 /* ------------------------------------------------------------------ */
+
+/**
+ * The recognition front door — shown before the four legal-shaped
+ * questions, so most people can find themselves in one line rather than
+ * parsing "What are you claiming?" first. Every card is a real URL into
+ * the same wizard/outcome machinery; nothing here is a shortcut around it.
+ */
+function ScenarioPicker() {
+  return (
+    <>
+      <RecoverNav />
+
+      <main className="flex-1 bg-mist">
+        <div className="shell max-w-[760px] py-8 sm:py-12">
+          <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
+            Where should we start?
+          </p>
+          <h1 className="display-lg mt-2.5 font-serif font-bold text-indigo-ink">
+            Which of these sounds like your situation?
+          </h1>
+          <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">
+            Pick whichever is closest — you can change any answer as you go.
+          </p>
+
+          <ul className="mt-7 space-y-3">
+            {SCENARIOS.map((s) => (
+              <li key={s.label}>
+                <Link
+                  href={s.href}
+                  className="group flex items-start gap-4 rounded-xl border-2 border-rule bg-white p-5 transition-all hover:border-indigo hover:shadow-[0_6px_24px_rgba(45,48,121,0.12)]"
+                >
+                  <span className="flex-1">
+                    <span className="display-md block font-serif font-bold text-indigo-ink">
+                      {s.label}
+                    </span>
+                    {s.detail && (
+                      <span className="body-fluid mt-1.5 block leading-relaxed text-ink-soft">
+                        {s.detail}
+                      </span>
+                    )}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="mt-1 shrink-0 text-[1.25rem] font-bold text-saffron-ink"
+                  >
+                    &rarr;
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-8 border-t border-rule-faint pt-5">
+            <Link
+              href="/start?classic=1"
+              className="-my-2.5 inline-block py-2.5 text-[1rem] font-bold text-indigo underline underline-offset-2"
+            >
+              None of these — answer four short questions instead
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      <RecoverFooter />
+    </>
+  );
+}
 
 function Progress({ current }: { current: number }) {
   return (

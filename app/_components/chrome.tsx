@@ -102,13 +102,21 @@ export function SiteFooter() {
       className="mt-auto border-t-4 border-saffron bg-indigo-ink"
     >
       <div className="shell py-10">
-        <div className="flex items-baseline gap-2.5">
-          <span className="font-deva text-[1.25rem] font-bold text-white">
-            अधिकार
-          </span>
-          <span className="text-[1rem] font-bold uppercase tracking-[0.06em] text-white/80">
-            Adhikaar
-          </span>
+        <div className="flex flex-wrap items-baseline justify-between gap-4">
+          <div className="flex items-baseline gap-2.5">
+            <span className="font-deva text-[1.25rem] font-bold text-white">
+              अधिकार
+            </span>
+            <span className="text-[1rem] font-bold uppercase tracking-[0.06em] text-white/80">
+              Adhikaar
+            </span>
+          </div>
+          <Link
+            href="/learn"
+            className="text-[0.9375rem] font-bold text-white/80 underline underline-offset-2 hover:text-white"
+          >
+            Learn
+          </Link>
         </div>
 
         <p className="mt-4 max-w-[62ch] text-[0.9375rem] leading-relaxed text-white/70">

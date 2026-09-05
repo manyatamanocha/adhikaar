@@ -14,7 +14,8 @@
  */
 
 import Link from "next/link";
-import { SiteHeader, SiteFooter } from "../_components/chrome";
+import { RecoverNav } from "../recover/_components/nav";
+import { RecoverFooter } from "../recover/_components/footer";
 import { PrintButton } from "../_components/print-button";
 import { DOCUMENTS, ASKABLE, type DocId } from "@/lib/documents";
 import { NOTIFICATION } from "@/lib/rbi";
@@ -54,7 +55,7 @@ export default async function Page({
 
   return (
     <>
-      <SiteHeader />
+      <RecoverNav />
 
       <main className="flex-1">
         <section className="bg-indigo">
@@ -145,7 +146,7 @@ export default async function Page({
         </div>
       </main>
 
-      <SiteFooter />
+      <RecoverFooter />
     </>
   );
 }

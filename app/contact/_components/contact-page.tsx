@@ -1,11 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 import { RecoverNav } from "../../recover/_components/nav";
+import { RecoverFooter } from "../../recover/_components/footer";
 import { HomeI18nProvider, useHomeT } from "../../recover/_components/home-i18n";
-import { LeafMark } from "../../recover/_components/brand";
-import { parseLocale, withLang } from "@/lib/i18n";
+import { parseLocale } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
 
 const PHONE = "+91 98765 43210";
@@ -26,7 +25,7 @@ export function ContactPage() {
       <div className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
         <RecoverNav />
         <Body />
-        <Footer />
+        <RecoverFooter />
       </div>
     </HomeI18nProvider>
   );
@@ -68,27 +67,5 @@ function Body() {
       </div>
       </div>
     </main>
-  );
-}
-
-function Footer() {
-  const { t, locale } = useHomeT();
-  return (
-    <footer className="border-t border-[#EFE7D8] bg-white py-16 text-[1.125rem] text-[#6B6255]">
-      <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
-        <div className="flex flex-wrap items-center justify-between gap-8">
-          <Link href={withLang("/", locale)} className="flex items-center gap-4">
-            <LeafMark className="h-[3.575rem] w-[3.575rem]" />
-            <span className="leading-tight">
-              <span className="block font-serif text-[2.275rem] font-bold text-[#16233F]">
-                Adhikaar
-              </span>
-              <span className="block text-[1.2188rem] text-[#6B6255]">{t.tagline}</span>
-            </span>
-          </Link>
-          <p>{t.footer.madeFor}</p>
-        </div>
-      </div>
-    </footer>
   );
 }

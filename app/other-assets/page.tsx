@@ -6,7 +6,8 @@
  */
 
 import Link from "next/link";
-import { SiteHeader, SiteFooter } from "../_components/chrome";
+import { RecoverNav } from "../recover/_components/nav";
+import { RecoverFooter } from "../recover/_components/footer";
 import { RAILS, DISCOVERY, LINKS_CHECKED } from "@/lib/rails";
 
 export const metadata = {
@@ -18,7 +19,7 @@ export const metadata = {
 export default function Page() {
   return (
     <>
-      <SiteHeader />
+      <RecoverNav />
 
       <main className="flex-1">
         <section className="bg-indigo">
@@ -146,7 +147,7 @@ export default function Page() {
         </div>
       </main>
 
-      <SiteFooter />
+      <RecoverFooter />
     </>
   );
 }

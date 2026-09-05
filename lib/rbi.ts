@@ -20,6 +20,15 @@ export const NOTIFICATION = {
   url: "https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12901&Mode=0",
 } as const;
 
+/**
+ * The date every clause below was last read against the notification text
+ * itself (not the date it was issued). One date for the whole file: every
+ * clause was checked in the same research pass, on 3 September 2026, and
+ * nothing has changed here since — a per-clause date would imply
+ * independent re-checks that never happened.
+ */
+export const RULES_VERIFIED_ON = "2026-09-03";
+
 export type Clause = {
   para: string;
   label: string;

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { LeafMark } from "./brand";
 import { ChevronDownIcon } from "./icons";
 import { LOCALES, LOCALE_LABEL, LOCALE_SHORT, withLang } from "@/lib/i18n";
@@ -21,19 +22,23 @@ import { useHomeT } from "./home-i18n";
 export function RecoverNav() {
   const [langOpen, setLangOpen] = useState(false);
   const { t, locale } = useHomeT();
+  const pathname = usePathname();
+
+  const linkClass = (active: boolean) =>
+    `transition-colors hover:text-[#F0B892] ${active ? "text-[#F0B892] underline decoration-2 underline-offset-8" : ""}`;
 
   return (
-    <header className="bg-[#FAF5EC] text-[#16233F]">
+    <header data-print="hide" className="bg-[#FAF5EC] text-[#16233F]">
       <div className="mx-auto grid max-w-[1920px] grid-cols-[1fr_auto_1fr] items-center gap-6 px-5 py-4 sm:px-8">
         <div />
 
-        <Link href={withLang("/", locale)} className="flex items-center justify-center gap-7">
-          <LeafMark className="h-[7.49rem] w-[7.49rem]" />
-          <span className="leading-tight">
-            <span className="block font-serif text-[5.62rem] font-bold">Adhikaar</span>
-            <span className="block text-[1.7551rem] text-[#6B6255]">
-              The counter companion for deceased-bank claims in India
-            </span>
+        <Link href={withLang("/", locale)} className="flex flex-col items-start gap-2">
+          <span className="flex items-center gap-7">
+            <LeafMark className="h-[7.49rem] w-[7.49rem]" />
+            <span className="font-serif text-[5.62rem] font-bold">Adhikaar</span>
+          </span>
+          <span className="text-[1.7551rem] text-[#6B6255]">
+            The counter companion for deceased-bank claims in India
           </span>
         </Link>
 
@@ -82,22 +87,19 @@ export function RecoverNav() {
         aria-label="Quick links"
         className="flex w-full flex-wrap items-center justify-center gap-x-28 gap-y-4 bg-[#16233F] px-5 py-6 text-[1.9688rem] font-bold text-white sm:px-8"
       >
-        <Link href={withLang("/", locale)} className="transition-colors hover:text-[#F0B892]">
+        <Link href={withLang("/", locale)} className={linkClass(pathname === "/")}>
           {t.nav.home}
         </Link>
-        <Link href="/guide" className="transition-colors hover:text-[#F0B892]">
-          {t.nav.aboutAdhikaar}
-        </Link>
-        <a href="#" className="transition-colors hover:text-[#F0B892]">
+        <a href="#find" className="transition-colors hover:text-[#F0B892]">
+          {t.nav.find}
+        </a>
+        <Link href="/banks" className={linkClass(pathname === "/banks")}>
           {t.nav.policy}
-        </a>
-        <a href="#" className="transition-colors hover:text-[#F0B892]">
-          {t.nav.updates}
-        </a>
-        <a href="#faq" className="transition-colors hover:text-[#F0B892]">
+        </Link>
+        <Link href="/faq" className={linkClass(pathname === "/faq")}>
           {t.nav.faq}
-        </a>
-        <Link href="/contact" className="transition-colors hover:text-[#F0B892]">
+        </Link>
+        <Link href="/contact" className={linkClass(pathname === "/contact")}>
           {t.nav.contact}
         </Link>
       </nav>

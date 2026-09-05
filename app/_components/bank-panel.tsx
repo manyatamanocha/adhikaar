@@ -12,7 +12,7 @@
  */
 
 import Link from "next/link";
-import { BANKS, getBank, type Bank } from "@/lib/banks";
+import { BANKS, getBank, isStale, type Bank } from "@/lib/banks";
 
 export function BankPanel({
   bankId,
@@ -35,6 +35,28 @@ export function BankPanel({
         Read from {bank.short}&apos;s own website, not from us. Checked{" "}
         {formatDate(bank.verifiedOn)}.
       </p>
+
+      {isStale(bank.verifiedOn) && (
+        <div className="hardbox mt-4">
+          <h3 className="display-md font-serif font-bold text-maroon">
+            This was checked over six months ago
+          </h3>
+          <p className="body-fluid mt-2 text-ink">
+            This policy may have changed. Confirm with the bank before relying
+            on it.
+          </p>
+        </div>
+      )}
+
+      {bank.practiceConflict && (
+        <div className="hardbox mt-4">
+          <h3 className="display-md font-serif font-bold text-maroon">
+            A documented gap between {bank.short}&apos;s policy and its
+            branch practice
+          </h3>
+          <p className="body-fluid mt-2 text-ink">{bank.practiceConflict}</p>
+        </div>
+      )}
 
       <div className="mt-5 rounded-xl border-2 border-indigo bg-white p-6">
         {bank.suretyQuote && (
@@ -123,6 +145,17 @@ export function BankPanel({
         >
           the whole table
         </Link>
+      </p>
+
+      <p data-print="hide" className="mt-2 text-[0.9375rem] text-ink-faint">
+        Found an outdated bank policy or incorrect information?{" "}
+        <Link
+          href="/contact"
+          className="font-bold text-link underline underline-offset-2"
+        >
+          Tell us
+        </Link>
+        .
       </p>
     </section>
   );

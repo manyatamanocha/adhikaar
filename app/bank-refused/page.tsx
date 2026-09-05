@@ -11,7 +11,8 @@
  */
 
 import Link from "next/link";
-import { SiteHeader, SiteFooter } from "../_components/chrome";
+import { RecoverNav } from "../recover/_components/nav";
+import { RecoverFooter } from "../recover/_components/footer";
 import { ComplaintLetter } from "../_components/complaint-letter";
 import { PrintButton } from "../_components/print-button";
 import { ESCALATION } from "@/lib/rbi";
@@ -47,7 +48,7 @@ const STEPS = [
 export default function BankRefusedPage() {
   return (
     <>
-      <SiteHeader />
+      <RecoverNav />
 
       <main className="flex-1">
         <section className="bg-blush border-b-4 border-maroon">
@@ -139,7 +140,7 @@ export default function BankRefusedPage() {
         </div>
       </main>
 
-      <SiteFooter />
+      <RecoverFooter />
     </>
   );
 }

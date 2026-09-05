@@ -22,9 +22,11 @@
  */
 
 import Link from "next/link";
-import { SiteHeader, SiteFooter } from "./chrome";
+import { RecoverNav } from "../recover/_components/nav";
+import { RecoverFooter } from "../recover/_components/footer";
 import { PrintButton } from "./print-button";
-import { CLAUSES, NOTIFICATION, TACTICS, ESCALATION } from "@/lib/rbi";
+import { CLAUSES, NOTIFICATION, RULES_VERIFIED_ON, TACTICS, ESCALATION } from "@/lib/rbi";
+import { formatDate } from "./bank-panel";
 import { DOCUMENTS, type DocId } from "@/lib/documents";
 import { OUTCOMES, type OutcomeId } from "@/lib/outcomes";
 import { parseHave, readiness, toggleHave } from "@/lib/readiness";
@@ -48,11 +50,11 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   if (sp.mode === "counter" && id in COUNTER_SCRIPT) {
     return (
       <>
-        <SiteHeader />
+        <RecoverNav />
         <main className="flex-1">
           <CounterMode id={id} answers={answers} />
         </main>
-        <SiteFooter />
+        <RecoverFooter />
       </>
     );
   }
@@ -84,7 +86,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
 
   return (
     <>
-      <SiteHeader />
+      <RecoverNav />
 
       <main className="flex-1">
         <Verdict id={id} answers={answers} bankId={bankId} />
@@ -94,6 +96,22 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               the one they walked in with. */}
           {outcome.goodNews && <BeliefSurvey outcome={id} />}
           <Steps steps={outcome.steps} />
+          {/* Promoted out of the (folded) Documents section per advisor review:
+              this was the single most useful sentence on the page and it was
+              hidden behind a "Show" tap. The full checklist stays folded below
+              — this is only the one-line summary and the "start today" call. */}
+          {outcome.documents && (
+            <div className="mt-8">
+              <ReadinessBox ids={outcome.documents} have={have} />
+              <a
+                href="#documents"
+                data-print="hide"
+                className="mt-2 inline-block text-[0.9375rem] font-bold text-link underline underline-offset-2"
+              >
+                See the full checklist and tick what you have
+              </a>
+            </div>
+          )}
           {outcome.documents && (
             <Documents
               ids={outcome.documents}
@@ -114,7 +132,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
         </div>
       </main>
 
-      <SiteFooter />
+      <RecoverFooter />
     </>
   );
 }
@@ -256,8 +274,6 @@ function Documents({
       note={`What to bring, what each one costs and how long it takes. Tick the ones you already have.`}
       lede="Cost and time below are realistic, not best-case. Nothing else on this list is a court document."
     >
-      <ReadinessBox ids={ids} have={have} />
-
       <ul className="mt-5 divide-y divide-rule-faint border-y border-rule-faint">
         {ids.map((id) => {
           const doc = DOCUMENTS[id];
@@ -356,7 +372,16 @@ function ReadinessBox({ ids, have }: { ids: DocId[]; have: DocId[] }) {
 
   if (r.untouched) {
     const longest = ids.filter((id) => DOCUMENTS[id].startFirst);
-    if (longest.length === 0) return null;
+    if (longest.length === 0) {
+      return (
+        <p className="actionbox mt-5 body-fluid">
+          <strong className="font-bold">
+            You&apos;ll need {numberWord(r.total)} documents for this claim.
+          </strong>{" "}
+          None of them has a long wait — tick off what you already have below.
+        </p>
+      );
+    }
     return (
       <p className="actionbox mt-5 body-fluid">
         <strong className="font-bold">Start today: </strong>
@@ -466,6 +491,11 @@ function Evidence({ clauses }: { clauses: (keyof typeof CLAUSES)[] }) {
                   {clause.label}
                 </span>
               </div>
+
+              <p className="mt-2 text-[0.875rem] text-ink-faint">
+                Source: {NOTIFICATION.title.split(" (")[0]}, 2025, paragraph{" "}
+                {clause.para} · Verified: {formatDate(RULES_VERIFIED_ON)}
+              </p>
 
               {clause.verbatim ? (
                 <blockquote className="body-fluid mt-3.5 border-l-4 border-saffron pl-4 font-serif leading-[1.6] text-ink">
@@ -631,6 +661,13 @@ function SourceLine() {
           className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
         >
           Answer the questions again
+        </Link>
+        {" · "}
+        <Link
+          href="/contact"
+          className="-my-2 inline-block py-2 font-bold text-link underline underline-offset-2"
+        >
+          Found incorrect information? Tell us
         </Link>
       </p>
     </div>

@@ -192,8 +192,8 @@ const en: HomeDict = {
   hero: {
     eyebrow: "For families. For what matters.",
     headline: "Money left behind shouldn't stay lost.",
-    sub: "Adhikaar gives families a clear, printable path for claiming a deceased person's bank deposits—without storing personal information.",
-    start: "Start a Search",
+    sub: "Adhikaar gives families a clear, printable path for claiming\na deceased person's bank deposits—without storing personal information.",
+    start: "Start your claim journey today",
     seeHow: "See how it works",
     trustFree: "Free to search",
     trustSecure: "Secure",
