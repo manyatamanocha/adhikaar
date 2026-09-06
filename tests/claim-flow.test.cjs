@@ -118,3 +118,33 @@ test("all completed combinations uphold simplified eligibility", () => {
   }
   assert.ok(favourable > 0, "swept every combination and never reached a favourable verdict -- the sweep is checking nothing");
 });
+
+/**
+ * The claim never leaves the browser in a URL.
+ *
+ * This site's URL *is* the family's case -- /confirm-details?nominee=
+ * survivorship&court=unknown and so on. Mixpanel attaches $current_url to
+ * every event by default, and `track_pageview: false` does NOT stop that: it
+ * only suppresses Mixpanel's own pageview events. An export on 6 Sep 2026
+ * found 85 of 110 events carrying claim answers this way.
+ *
+ * Asserted against the source rather than a live init, because the failure
+ * being guarded against is a config line being dropped, and the cost of it
+ * regressing unnoticed is the promise printed on five screens of this site.
+ */
+test("analytics never transmits the URL, which carries the family's answers", () => {
+  const src = fs.readFileSync(path.resolve(__dirname, "../lib/analytics.ts"), "utf8");
+
+  assert.match(src, /property_blacklist:\s*BLOCKED_PROPERTIES/,
+    "property_blacklist must be wired into mixpanel.init -- without it $current_url ships the whole claim");
+
+  for (const prop of ["$current_url", "$referrer", "$initial_referrer"]) {
+    assert.ok(src.includes(`"${prop}"`), `${prop} must stay in BLOCKED_PROPERTIES`);
+  }
+
+  // The two flags that look like they cover this, but do not. Kept for their
+  // own sake; this asserts nobody removed the blacklist believing these are
+  // equivalent -- the exact reasoning error that caused the original bug.
+  assert.match(src, /track_pageview:\s*false/);
+  assert.match(src, /autocapture:\s*false/);
+});

@@ -23,10 +23,33 @@
  *                              nothing survives the tab and no one is
  *                              recognised on a return visit
  *   · `disable_cookie`       — and no cookie specifically
- *   · `track_pageview: false`— no automatic URL capture; the URL holds answers
+ *   · `track_pageview: false`— no automatic pageview EVENTS
+ *   · `property_blacklist`   — and no URL on the events we send ourselves
  *
- * That last one matters most. The answers live in the query string, so letting
- * Mixpanel auto-capture URLs would ship the whole case by the back door.
+ * ─── The two of those are not the same control, and assuming they were was a
+ * real bug ───
+ *
+ * `track_pageview: false` and `autocapture: false` stop Mixpanel *sending its
+ * own pageview events*. They do nothing about `$current_url`, which the SDK
+ * attaches as a default property to every event we send deliberately. So for
+ * a period every `flow_started`, `question_answered` and `outcome_reached`
+ * carried the full URL — and this product's URL is the family's whole case:
+ *
+ *     /confirm-details?claiming=deposit-account&nominee=survivorship&court=unknown
+ *
+ * An export on 6 Sep 2026 found 85 of 110 events carrying claim answers this
+ * way. All of it was localhost development traffic and no real family was
+ * affected, but the promise on five screens of copy — "nothing about your
+ * family reaches a server" — was not true while that was live.
+ *
+ * `property_blacklist` is the control that actually removes them, stripping
+ * the properties before anything is transmitted. The referrer properties are
+ * blacklisted for the same reason: a shared claim link opened from another
+ * page would leak the sender's answers through `$referrer` instead.
+ *
+ * No metric depends on any of this. Every event carries its own explicit
+ * properties (`step`, `outcome`, `outcome_type`, `arrived_via`), which is
+ * what makes the URL safe to drop rather than something to be sanitised.
  *
  * With no token configured every function here is a no-op and the site runs
  * exactly as it does now.
@@ -51,6 +74,23 @@ const API_HOST =
     : REGION === "eu"
       ? "https://api-eu.mixpanel.com"
       : "https://api.mixpanel.com";
+
+/**
+ * Properties Mixpanel attaches by default that would carry the family's case
+ * off this machine. Exported so a test can assert the list, because the cost
+ * of this silently regressing is the product's central promise.
+ *
+ * `$current_url` is the critical one — this site's URL *is* the claim. The
+ * referrer properties are here because a shared link opened from another page
+ * puts the sender's answers in the referrer instead.
+ */
+export const BLOCKED_PROPERTIES = [
+  "$current_url",
+  "$initial_referrer",
+  "$referrer",
+  "$referring_domain",
+  "$initial_referring_domain",
+];
 
 let ready = false;
 
@@ -79,6 +119,10 @@ export function initAnalytics() {
     disable_cookie: true,
     track_pageview: false,
     autocapture: false,
+    // The control that actually keeps the claim off the wire. The two flags
+    // above only suppress Mixpanel's own pageview events; without this the
+    // URL rides along on every event we send ourselves. See the header.
+    property_blacklist: BLOCKED_PROPERTIES,
     record_sessions_percent: 0,
   });
   ready = true;
