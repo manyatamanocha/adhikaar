@@ -27,11 +27,11 @@ import { HOME_T, type HomeDict } from "@/lib/i18n-home";
 import {
   parseAnswers,
   answerQuestion,
+  answeredPrefix,
   previousAnswers,
   resolve,
   toQuery,
   maxRemainingQuestions,
-  QUESTION_ORDER,
   type Answers,
   type Option,
   type Question,
@@ -89,7 +89,10 @@ export default async function Start({
   const back = previousAnswers(answers);
   // Counted from the answers actually given, not from the question's fixed
   // ordinal, so the numerator matches a denominator that varies by path.
-  const answeredCount = QUESTION_ORDER.filter((id) => answers[id]).length;
+  // The contiguous prefix, not a raw filter -- a scenario card can pre-fill
+  // a LATER field (heirs=dispute) while an earlier one (court) is still
+  // unset, which must not inflate "how far the reader has actually gotten."
+  const answeredCount = answeredPrefix(answers).length;
 
   return (
     <>

@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { initAnalytics, track } from "@/lib/analytics";
 import { ALL_OUTCOMES } from "@/lib/outcomes";
-import { QUESTION_ORDER, parseAnswers } from "@/lib/wizard";
+import { QUESTION_ORDER, parseAnswers, answeredPrefix } from "@/lib/wizard";
 
 /**
  * One component, every event.
@@ -131,7 +131,11 @@ export function Analytics() {
 
     if (pathname === "/start") {
       const answers = parseAnswers(sp);
-      const answered = QUESTION_ORDER.filter((q) => answers[q]);
+      // The contiguous prefix, not a raw filter -- a scenario card can
+      // pre-fill a LATER field (heirs=dispute) while an earlier one (court)
+      // is still unset, which must not be logged as "just answered" or
+      // inflate the step number.
+      const answered = answeredPrefix(answers);
       if (answered.length === 0) {
         track("flow_started");
       } else {

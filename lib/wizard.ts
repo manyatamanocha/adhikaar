@@ -271,13 +271,20 @@ export function resolve(a: Answers, locale: Locale = "en"): Resolution {
   if (a.claiming !== "deposit-account" && a.claiming !== "deposit-fd" && a.claiming !== "deposit-both") return done("out-of-scope");
   if (!a.nominee) return ask("nominee");
   if (a.nominee === "unknown") return done("unknown-nominee");
+  // Court gates every outcome below and must be asked before ANY other
+  // branch gets to short-circuit past it -- including a pre-filled
+  // heirs=dispute answer. A scenario card ("The legal heirs disagree")
+  // deep-links straight to /start?claiming=...&heirs=dispute, which lands
+  // in `a` before nominee or court are ever asked. Checking heirs first
+  // (as this used to) let that pre-filled value skip the court question
+  // entirely once nominee was answered -- a real safety gap, since a court
+  // restriction can exist independently of a heir dispute and must never
+  // be silently skipped. See QUESTION_ORDER's comment for why court can't
+  // move any further down either.
+  if (!a.court) return ask("court");
   // A known dispute needs individual review, not a blanket statement that a
   // valid nominee must obtain succession documents.
   if (a.heirs === "dispute" && a.nominee !== "no") return review();
-  // Court still gates every outcome below, asked right after nominee is
-  // known rather than before it -- see QUESTION_ORDER's comment for why
-  // this can't move any further down without becoming unsafe.
-  if (!a.court) return ask("court");
   if (a.court !== "no") return review();
   if (a.nominee === "yes") return done("nominee");
   if (a.nominee === "survivorship") return done("survivorship");
@@ -319,8 +326,30 @@ export function answerQuestion(a: Answers, id: QuestionId, value: string): Answe
   }
   return parseAnswers({ ...next, [id]: value });
 }
+/**
+ * The contiguous prefix of QUESTION_ORDER actually reached by forward
+ * navigation -- stops at the first unanswered question.
+ *
+ * `QUESTION_ORDER.filter(id => a[id])` looks equivalent but isn't: a
+ * scenario-card deep link can pre-fill a LATER field (heirs=dispute) while
+ * an EARLIER one (court) is still unset, and a plain filter would count
+ * that pre-filled value as "answered so far" even though the reader has
+ * never actually reached it yet. That inflated the progress counter, threw
+ * off the `question_answered` analytics step number, and made the Back
+ * button delete the wrong field (the pre-filled one instead of the real
+ * last answer) -- landing back on the same question instead of the
+ * previous one.
+ */
+export function answeredPrefix(a: Answers): QuestionId[] {
+  const out: QuestionId[] = [];
+  for (const id of QUESTION_ORDER) {
+    if (!a[id]) break;
+    out.push(id);
+  }
+  return out;
+}
 export function previousAnswers(a: Answers): Answers | null {
-  const answered = QUESTION_ORDER.filter(id => a[id]);
+  const answered = answeredPrefix(a);
   if (!answered.length) return null;
   const previous = { ...a };
   delete previous[answered[answered.length - 1]];
