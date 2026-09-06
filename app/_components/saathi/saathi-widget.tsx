@@ -142,12 +142,12 @@ export function SaathiWidget() {
       className="fixed bottom-3 right-3 z-50 flex flex-col items-end gap-3 sm:bottom-5 sm:right-5"
     >
       {open && (
-        <div className="flex h-[42rem] w-[28rem] max-w-[calc(100vw-2.5rem)] max-h-[calc(100vh-8rem)] flex-col overflow-hidden rounded-2xl border border-[#EFE7D8] bg-white shadow-[0_20px_50px_rgba(22,35,63,0.25)]">
-          <div className="flex items-center gap-3 bg-[#16233F] px-4 py-3.5">
-            <SaathiAvatar className="h-9 w-9 shrink-0" />
+        <div className="flex h-[35.75rem] w-[23.75rem] max-w-[calc(100vw-2.5rem)] max-h-[calc(100vh-8rem)] flex-col overflow-hidden rounded-2xl border border-[#EFE7D8] bg-white shadow-[0_20px_50px_rgba(22,35,63,0.25)]">
+          <div className="flex items-center gap-3 bg-[#16233F] px-4 py-3">
+            <SaathiAvatar className="h-8 w-8 shrink-0" />
             <div className="min-w-0">
-              <p className="text-[1.5rem] font-bold text-white">Saathi</p>
-              <p className="truncate text-[1.05rem] text-white/70">Adhikaar&apos;s assistant</p>
+              <p className="text-[1.25rem] font-bold text-white">Saathi</p>
+              <p className="truncate text-[0.875rem] text-white/70">Adhikaar&apos;s assistant</p>
             </div>
             <button
               type="button"
@@ -192,7 +192,7 @@ export function SaathiWidget() {
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[1.125rem] leading-relaxed ${
+                className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-[0.9375rem] leading-relaxed ${
                   m.role === "user"
                     ? "ml-auto bg-[#E2653B] text-white"
                     : "bg-[#FAF5EC] text-[#16233F]"
@@ -212,7 +212,7 @@ export function SaathiWidget() {
               </div>
             ))}
             {sending && (
-              <div className="max-w-[85%] rounded-2xl bg-[#FAF5EC] px-3.5 py-2.5 text-[1.125rem] text-[#6B6255]">
+              <div className="max-w-[85%] rounded-2xl bg-[#FAF5EC] px-3.5 py-2.5 text-[0.9375rem] text-[#6B6255]">
                 Thinking…
               </div>
             )}
@@ -257,12 +257,12 @@ export function SaathiWidget() {
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={open ? "Close Saathi" : "Open Saathi, Adhikaar's assistant"}
-        className="group flex cursor-pointer items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 shadow-[0_10px_24px_rgba(22,35,63,0.28)] transition-transform hover:-translate-y-1 sm:gap-4 sm:py-3 sm:pl-3 sm:pr-7 sm:shadow-[0_16px_40px_rgba(22,35,63,0.28)]"
+        className="group flex cursor-pointer items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 shadow-[0_10px_24px_rgba(22,35,63,0.28)] transition-transform hover:-translate-y-1 sm:gap-3 sm:py-2 sm:pl-2 sm:pr-5 sm:shadow-[0_16px_40px_rgba(22,35,63,0.28)]"
       >
-        <span className="relative flex h-11 w-11 shrink-0 items-center justify-center sm:h-[8.25rem] sm:w-[8.25rem]">
-          <SaathiAvatar className="h-11 w-11 animate-[saathi-bob_3.4s_ease-in-out_infinite] sm:h-[8.25rem] sm:w-[8.25rem]" />
+        <span className="relative flex h-10 w-10 shrink-0 items-center justify-center sm:h-14 sm:w-14">
+          <SaathiAvatar className="h-10 w-10 animate-[saathi-bob_3.4s_ease-in-out_infinite] sm:h-14 sm:w-14" />
         </span>
-        <span className="text-[0.9375rem] font-bold text-[#16233F] sm:text-[1.375rem]">
+        <span className="text-[0.8125rem] font-bold text-[#16233F] sm:text-base">
           {open ? "Close" : "Ask Saathi"}
         </span>
       </button>

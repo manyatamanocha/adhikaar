@@ -94,9 +94,11 @@
   --color-accent-violet: #7147C4;
   --color-accent-blue: #3b5ea8;
 
-  --text-step: 0.9375rem;
-  --text-body: 1.1875rem;
-  --text-lede: 1.3125rem;
+  /* Cut ~15% across the whole scale, 6 Sep 2026, after the header/hero/Saathi
+     launcher were all found running well past this system's own ceiling. */
+  --text-step: 0.8125rem;
+  --text-body: 1rem;
+  --text-lede: 1.125rem;
 
   --radius-pill: 999px;
 }
@@ -194,24 +196,24 @@ a {
 /* The verdict sentence. Large enough to be the first thing read, capped so it
    never costs more than one screen on a phone. */
 .display-xl {
-  font-size: clamp(2.25rem, 4.4vw, 3.5rem);
+  font-size: clamp(1.9375rem, 3.75vw, 3rem);
   line-height: 1.14;
 }
-/* clamp(30px, 3vw, 42px) */
+/* clamp(30px, 3vw, 42px) x0.85 */
 .display-lg {
-  font-size: clamp(1.9375rem, 3vw, 2.75rem);
+  font-size: clamp(1.625rem, 2.55vw, 2.3125rem);
   line-height: 1.18;
 }
 .display-md {
-  font-size: clamp(1.3125rem, 1.6vw, 1.5625rem);
+  font-size: clamp(1.125rem, 1.36vw, 1.3125rem);
   line-height: 1.3;
 }
 .lede-fluid {
-  font-size: clamp(1.1875rem, 1.3vw, 1.4375rem);
+  font-size: clamp(1rem, 1.1vw, 1.25rem);
   line-height: 1.55;
 }
 .body-fluid {
-  font-size: clamp(1.0625rem, 1.1vw, 1.1875rem);
+  font-size: clamp(0.875rem, 0.935vw, 1rem);
 }
 
 /* A hard caveat is boxed. It cannot be collapsed and cannot be mistaken for

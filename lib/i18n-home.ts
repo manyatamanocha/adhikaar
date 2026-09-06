@@ -34,6 +34,8 @@ export type HomeDict = {
     eyebrow: string;
     headline: string;
     sub: string;
+    /** Bold callout on its own line, under `sub`. */
+    subBold: string;
     start: string;
     seeHow: string;
     trustFree: string;
@@ -483,7 +485,8 @@ const en: HomeDict = {
   hero: {
     eyebrow: "For families. For what matters.",
     headline: "Money left behind shouldn't stay lost.",
-    sub: "Adhikaar gives families a clear, printable path for claiming\na deceased person's bank deposits—no account or document uploads needed.",
+    sub: "Adhikaar gives families a clear path for claiming a deceased person's bank deposits.",
+    subBold: "No Login or Documents Upload Needed",
     start: "Begin your claim journey today",
     seeHow: "See how it works",
     trustFree: "Free to use",
@@ -949,7 +952,8 @@ const hi: HomeDict = {
   hero: {
     eyebrow: "परिवारों के लिए। ज़रूरी बातों के लिए।",
     headline: "पीछे छूटा पैसा खोया नहीं रहना चाहिए।",
-    sub: "अधिकार दिवंगत परिजन की बैंक जमा पर दावा करने के लिए\nस्पष्ट, छापने योग्य मार्गदर्शन देता है—खाता या दस्तावेज़ अपलोड ज़रूरी नहीं।",
+    sub: "अधिकार परिवारों को दिवंगत परिजन की बैंक जमा पर दावा करने का स्पष्ट रास्ता देता है।",
+    subBold: "कोई लॉगिन या दस्तावेज़ अपलोड ज़रूरी नहीं",
     start: "आज ही अपनी दावा यात्रा शुरू करें",
     seeHow: "देखें यह कैसे काम करता है",
     trustFree: "उपयोग मुफ़्त है",
@@ -1415,7 +1419,8 @@ const kn: HomeDict = {
   hero: {
     eyebrow: "ಕುಟುಂಬಗಳಿಗಾಗಿ. ಮುಖ್ಯವಾದುದಕ್ಕಾಗಿ.",
     headline: "ಉಳಿದ ಹಣ ಕಳೆದುಹೋಗಬಾರದು.",
-    sub: "ಮೃತ ಕುಟುಂಬ ಸದಸ್ಯರ ಬ್ಯಾಂಕ್ ಠೇವಣಿ ಕ್ಲೈಮ್ ಮಾಡಲು\nಅಧಿಕಾರ್ ಸ್ಪಷ್ಟ, ಮುದ್ರಿಸಬಹುದಾದ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತದೆ—ಖಾತೆ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಬೇಡ.",
+    sub: "ಅಧಿಕಾರ್ ಕುಟುಂಬಗಳಿಗೆ ಮೃತ ವ್ಯಕ್ತಿಯ ಬ್ಯಾಂಕ್ ಠೇವಣಿ ಕ್ಲೈಮ್ ಮಾಡಲು ಸ್ಪಷ್ಟ ಮಾರ್ಗವನ್ನು ನೀಡುತ್ತದೆ.",
+    subBold: "ಲಾಗಿನ್ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಅಗತ್ಯವಿಲ್ಲ",
     start: "ಇಂದೇ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
     seeHow: "ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ ನೋಡಿ",
     trustFree: "ಬಳಕೆ ಉಚಿತ",

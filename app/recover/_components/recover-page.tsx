@@ -80,33 +80,30 @@ function Hero() {
         alt=""
         width={1536}
         height={1024}
-        sizes="(max-width: 639px) 72vw, (max-width: 1023px) 60vw, 52vw"
+        sizes="(max-width: 639px) 82vw, (max-width: 1023px) 70vw, 62vw"
         preload
-        className="pointer-events-none absolute right-[20%] top-0 z-0 h-auto w-[72%] max-w-none object-contain object-right opacity-[0.14] mix-blend-multiply sm:w-[60%] lg:w-[52%]"
+        className="pointer-events-none absolute right-[8%] top-0 z-0 h-auto w-[82%] max-w-none object-contain object-right opacity-[0.154] mix-blend-multiply sm:w-[70%] lg:w-[62%]"
       />
       <div className="relative z-10 mx-auto max-w-[1920px] px-5 sm:px-8">
         <div className="max-w-[70rem]">
-          <p className="text-[1.0625rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
+          <p className="text-[0.875rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
             {t.hero.eyebrow}
           </p>
           <h1 className="display-xl mt-3 font-serif font-bold tracking-[-0.01em]">
             {t.hero.headline}
           </h1>
           <p className="lede-fluid mt-4 text-[#5B5344]">
-            {t.hero.sub.split("\n").map((line, index) => (
-              <span key={index} className="block">
-                {line}
-              </span>
-            ))}
+            {t.hero.sub}
+            <span className="mt-1 block font-bold text-[#16233F]">{t.hero.subBold}</span>
           </p>
 
           <Reveal delay={80} className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href={withLang("/start", locale)}
-              className="inline-flex items-center gap-2.5 rounded bg-[#E2653B] px-7 py-3.5 text-[1.125rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
+              className="inline-flex items-center gap-2 rounded bg-[#E2653B] px-6 py-3 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
             >
               {t.hero.start}
-              <ArrowRightIcon className="h-4 w-4" />
+              <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
             {/* Second door, added 6 Sep 2026. Plenty of people arrive wanting
                 only one thing -- the list of papers -- and are not ready to
@@ -115,10 +112,10 @@ function Hero() {
                 is still the primary path, and /documents ends by offering it. */}
             <Link
               href={withLang("/documents", locale)}
-              className="inline-flex items-center gap-2.5 rounded border-2 border-[#16233F]/25 px-7 py-[0.8125rem] text-[1.125rem] font-bold text-[#16233F] transition-colors hover:border-[#16233F]/60 hover:bg-white/60"
+              className="inline-flex items-center gap-2 rounded border-2 border-[#16233F]/25 px-6 py-[0.6875rem] text-[0.9375rem] font-bold text-[#16233F] transition-colors hover:border-[#16233F]/60 hover:bg-white/60"
             >
               {DOCS_T[locale].homeCta}
-              <ArrowRightIcon className="h-4 w-4" />
+              <ArrowRightIcon className="h-3.5 w-3.5" />
             </Link>
           </Reveal>
 
@@ -141,9 +138,9 @@ function StatsOverlap() {
           href="https://udgam.rbi.org.in"
           target="_blank"
           rel="noopener noreferrer"
-          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-8 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
-          <p className="text-[0.9375rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
+          <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
             {s.step1Label}
           </p>
           <p className="display-md mt-2 font-serif font-bold text-[#16233F]">
@@ -152,15 +149,15 @@ function StatsOverlap() {
           <p className="body-fluid mt-3 leading-snug text-[#6B6255]">
             {s.step1Body}
           </p>
-          <p className="mt-3 inline-flex items-center gap-2 text-[1.0625rem] font-bold text-[#E2653B]">
+          <p className="mt-3 inline-flex items-center gap-2 text-[0.875rem] font-bold text-[#E2653B]">
             {s.step1Cta}
-            <ArrowRightIcon className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            <ArrowRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </p>
         </a>
         <div
-          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-8 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
-          <p className="text-[0.9375rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
+          <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
             {s.step2Label}
           </p>
           <p className="display-md mt-2 font-serif font-bold text-[#16233F]">
@@ -173,17 +170,17 @@ function StatsOverlap() {
           </p>
           <Link
             href={withLang("/start", locale)}
-            className="mt-5 inline-flex w-fit items-center gap-2 rounded bg-[#E2653B] px-5 py-2.5 text-[1rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
+            className="mt-5 inline-flex w-fit items-center gap-2 rounded bg-[#E2653B] px-4 py-2 text-[0.875rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
           >
             {s.step2Cta}
-            <ArrowRightIcon className="h-4 w-4" />
+            <ArrowRightIcon className="h-3.5 w-3.5" />
           </Link>
         </div>
         <Link
           href={withLang("/start", locale)}
-          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-9 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
+          className="group mx-auto flex w-full max-w-[30rem] flex-col justify-start rounded-2xl bg-white p-8 shadow-[0_8px_24px_rgba(22,35,63,0.1)] transition-shadow hover:shadow-[0_12px_32px_rgba(22,35,63,0.16)]"
         >
-          <p className="text-[0.9375rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
+          <p className="text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
             {s.step3Label}
           </p>
           <p className="display-md mt-2 font-serif font-bold text-[#16233F]">
