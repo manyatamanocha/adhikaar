@@ -100,7 +100,7 @@ function Hero() {
           </h1>
           <p className="lede-fluid mt-4 text-[#5B5344]">
             {t.hero.sub}
-            <span className="mt-1 block font-bold text-[#16233F]">{t.hero.subBold}</span>
+            <span className="mt-1 block text-[clamp(0.88rem,0.968vw,1.1rem)] font-bold text-[#16233F]">{t.hero.subBold}</span>
           </p>
 
           <Reveal delay={80} className="mt-8 flex flex-wrap items-center gap-4">
