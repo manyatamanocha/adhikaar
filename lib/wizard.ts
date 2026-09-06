@@ -76,16 +76,22 @@ const unknownEn: Option = { value: "unknown", label: "I don't know yet", unsure:
 
 const en: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "What are you claiming?",
+    id: "claiming", number: 1, prompt: "Is this money in a bank account or deposit?",
     help: "",
     options: [
-      { value: "deposit-account", label: "A bank account", detail: "Savings or current." },
-      { value: "deposit-fd", label: "A bank deposit", detail: "Term or recurring deposit." },
-      { value: "deposit-both", label: "Both", detail: "A bank account and a deposit, at the same bank." },
-      // The exit. Without it, someone claiming a pension, an insurance policy,
-      // a locker or PPF is walked through bank-deposit guidance that does not
-      // apply to them -- and resolve()'s out-of-scope branch was unreachable,
-      // because no option could produce a non-deposit value.
+      // One answer, not three. "A bank account", "a bank deposit" and "both"
+      // were separate options until 7 Sep 2026, and nothing could tell them
+      // apart: resolve() only checks that the value is a deposit type, no
+      // verdict or printed sheet reads it, and every scenario card already
+      // hardcodes this value whatever asset it describes. Three routes to an
+      // identical destination, on the first screen a grieving reader sees.
+      // The retired values are still accepted below, for links already sent.
+      { value: "deposit-account", label: "Yes — an account, a deposit, or both", detail: "Savings, current, term or recurring." },
+      // The exit, and the only reason this screen still exists. Without it,
+      // someone claiming a pension, an insurance policy, a locker or PPF is
+      // walked through bank-deposit guidance that does not apply to them --
+      // and resolve()'s out-of-scope branch was unreachable, because no
+      // option could produce a non-deposit value.
       { value: "other", label: "Something else, or I'm not sure", detail: "A locker, pension, insurance, provident fund, shares — or you don't know yet.", unsure: true },
     ],
   },
@@ -129,12 +135,10 @@ const unknownHi: Option = { value: "unknown", label: "मुझे अभी न
 
 const hi: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "आप किस पर दावा कर रहे हैं?",
+    id: "claiming", number: 1, prompt: "क्या यह पैसा बैंक खाते या जमा में है?",
     help: "",
     options: [
-      { value: "deposit-account", label: "बैंक खाता", detail: "बचत या चालू खाता।" },
-      { value: "deposit-fd", label: "बैंक जमा", detail: "सावधि या आवर्ती जमा।" },
-      { value: "deposit-both", label: "दोनों", detail: "एक ही बैंक में खाता और जमा, दोनों।" },
+      { value: "deposit-account", label: "हाँ — खाता, जमा, या दोनों", detail: "बचत, चालू, सावधि या आवर्ती।" },
       { value: "other", label: "कुछ और, या मुझे यक़ीन नहीं है", detail: "लॉकर, पेंशन, बीमा, भविष्य निधि, शेयर — या आपको अभी पता नहीं है।", unsure: true },
     ],
   },
@@ -178,12 +182,10 @@ const unknownKn: Option = { value: "unknown", label: "ನನಗೆ ಇನ್ನ�
 
 const kn: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "ನೀವು ಯಾವುದಕ್ಕೆ ಹಕ್ಕು ಸಲ್ಲಿಸುತ್ತಿದ್ದೀರಿ?",
+    id: "claiming", number: 1, prompt: "ಈ ಹಣ ಬ್ಯಾಂಕ್ ಖಾತೆ ಅಥವಾ ಠೇವಣಿಯಲ್ಲಿದೆಯೇ?",
     help: "",
     options: [
-      { value: "deposit-account", label: "ಬ್ಯಾಂಕ್ ಖಾತೆ", detail: "ಉಳಿತಾಯ ಅಥವಾ ಚಾಲ್ತಿ ಖಾತೆ." },
-      { value: "deposit-fd", label: "ಬ್ಯಾಂಕ್ ಠೇವಣಿ", detail: "ಸ್ಥಿರ ಅಥವಾ ಪುನರಾವರ್ತಿತ ಠೇವಣಿ." },
-      { value: "deposit-both", label: "ಎರಡೂ", detail: "ಒಂದೇ ಬ್ಯಾಂಕಿನಲ್ಲಿ ಖಾತೆ ಮತ್ತು ಠೇವಣಿ, ಎರಡೂ." },
+      { value: "deposit-account", label: "ಹೌದು — ಖಾತೆ, ಠೇವಣಿ, ಅಥವಾ ಎರಡೂ", detail: "ಉಳಿತಾಯ, ಚಾಲ್ತಿ, ಸ್ಥಿರ ಅಥವಾ ಪುನರಾವರ್ತಿತ." },
       { value: "other", label: "ಬೇರೆ ಏನಾದರೂ, ಅಥವಾ ನನಗೆ ಖಚಿತವಿಲ್ಲ", detail: "ಲಾಕರ್, ಪಿಂಚಣಿ, ವಿಮೆ, ಭವಿಷ್ಯ ನಿಧಿ, ಷೇರುಗಳು — ಅಥವಾ ನಿಮಗೆ ಇನ್ನೂ ಗೊತ್ತಿಲ್ಲ.", unsure: true },
     ],
   },
@@ -268,6 +270,11 @@ export function resolve(a: Answers, locale: Locale = "en"): Resolution {
   const review = (): Resolution => ({ kind: "review", carry: a });
   const done = (outcome: OutcomeId): Resolution => ({ kind: "outcome", outcome, carry: a });
   if (!a.claiming) return ask("claiming");
+  // deposit-fd and deposit-both are no longer offered as answers (question one
+  // collapsed to a single deposit option on 7 Sep 2026) but are still honoured
+  // here. Every answer lives in the URL, so half-finished journeys are already
+  // out there as bookmarks and links sent to siblings; dropping these would
+  // turn one into a wrong "out of scope" verdict on reopening.
   if (a.claiming !== "deposit-account" && a.claiming !== "deposit-fd" && a.claiming !== "deposit-both") return done("out-of-scope");
   if (!a.nominee) return ask("nominee");
   if (a.nominee === "unknown") return done("unknown-nominee");
@@ -300,12 +307,33 @@ export function resolve(a: Answers, locale: Locale = "en"): Resolution {
   if (a.amount === "unknown" || a.amount === "equal") return review();
   return done(a.amount === "over" ? "over-threshold" : "under-threshold");
 }
+/**
+ * Answers that are no longer offered but must still be read from a URL.
+ *
+ * Every answer this product holds lives in the query string -- that is what
+ * makes a half-finished journey a link someone can send to a sibling. The
+ * flip side is that retiring an option cannot be done by deleting it: links
+ * carrying the old value are already out there in bookmarks, in WhatsApp
+ * messages, on printed sheets. parseAnswers validates against the options
+ * currently OFFERED, so a deleted value is silently dropped and the reader is
+ * sent back to a question they already answered.
+ *
+ * Retiring an option therefore means moving its value here, not removing it.
+ * resolve() must keep handling it too.
+ */
+const RETIRED_VALUES: Partial<Record<QuestionId, readonly string[]>> = {
+  // Question one offered "a bank account", "a bank deposit" and "both" until
+  // 7 Sep 2026; it now offers one deposit answer, since nothing downstream
+  // ever told them apart.
+  claiming: ["deposit-fd", "deposit-both"],
+};
 export function parseAnswers(sp: Record<string, string | string[] | undefined>): Answers {
   const a: Answers = {};
   for (const id of QUESTION_ORDER) {
     const raw = sp[id];
     const v = Array.isArray(raw) ? raw[0] : raw;
-    if (v && QUESTIONS[id]?.options.some(o => o.value === v)) Object.assign(a, { [id]: v });
+    const known = QUESTIONS[id]?.options.some(o => o.value === v) || RETIRED_VALUES[id]?.includes(v!);
+    if (v && known) Object.assign(a, { [id]: v });
   }
   return a;
 }

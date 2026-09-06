@@ -62,6 +62,48 @@ test("missing facts are asked again, including old bookmarked results", () => {
 test("lockers, minors, pensions and other assets exit the deposit flow", () => {
   for (const claiming of ["locker", "minor", "pension", "other"]) assert.equal(w.resolve({ claiming }).outcome, "out-of-scope");
 });
+/**
+ * Question one is a scope gate, not a taxonomy quiz.
+ *
+ * It used to offer "a bank account", "a bank deposit" and "both" as separate
+ * answers. Nothing in the product could tell them apart -- resolve() only
+ * ever checks that the value is one of the three, no verdict or printed
+ * sheet reads it, analytics never sends it, and every scenario card and
+ * /guide link already hardcodes deposit-account regardless of the asset it
+ * describes. So the first screen a bereaved reader ever sees asked them to
+ * classify their asset three ways to reach an identical destination.
+ *
+ * The one job that screen genuinely does is catch a locker, pension or
+ * insurance claim before the reader is walked through deposit guidance that
+ * does not apply to them. That exit stays; the busywork does not.
+ */
+test("question one offers a scope gate, and old links still work", () => {
+  const values = (locale) =>
+    w.QUESTIONS_BY_LOCALE[locale].claiming.options.map((o) => o.value).join("|");
+  for (const locale of ["en", "hi", "kn"]) {
+    assert.equal(values(locale), "deposit-account|other",
+      `${locale} must offer exactly the deposit answer and the exit`);
+  }
+
+  // The retired values stay legal. Every answer lives in the URL, so a
+  // half-finished journey is a shareable link -- and links already sent to a
+  // sibling, or bookmarked, still carry claiming=deposit-fd.
+  //
+  // Asserted through parseAnswers, not against resolve() directly, because
+  // that is the path the page actually takes and the two disagreed: resolve()
+  // honoured the retired values while parseAnswers, which validates against
+  // the options currently OFFERED, silently dropped them. The reader was sent
+  // back to question one with their answer discarded. Any test that hands
+  // resolve() a literal object cannot see that.
+  for (const claiming of ["deposit-fd", "deposit-both"]) {
+    assert.equal(w.parseAnswers({ claiming }).claiming, claiming,
+      `${claiming} must survive the URL parser`);
+    assert.equal(w.resolve(w.parseAnswers({ claiming })).question.id, "nominee",
+      `${claiming} must still be honoured from an existing link`);
+    assert.equal(w.resolve(w.parseAnswers({ ...base, claiming })).outcome, "under-threshold",
+      `${claiming} must still reach its verdict`);
+  }
+});
 test("all three deposit types reach the same verdict", () => {
   // The claiming answer was one value ("deposit") until it was split into
   // three. Nothing downstream distinguishes them -- the RBI's Directions
