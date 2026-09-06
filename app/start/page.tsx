@@ -173,7 +173,7 @@ function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
-          <p className="text-[1.375rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
+          <p className="text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-saffron-ink">
             {t.eyebrow}
           </p>
           <h1 className="display-lg mt-2.5 font-serif font-bold text-indigo-ink">
@@ -216,7 +216,7 @@ function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"
 
           <div className="mt-8 border-t border-rule-faint pt-5">
             <details open>
-              <summary className="cursor-pointer text-[1.45rem] font-bold text-indigo underline underline-offset-2">
+              <summary className="cursor-pointer text-[1rem] font-bold text-indigo underline underline-offset-2">
                 {t.somethingElse}
               </summary>
               <ul className="mt-4 space-y-3">
@@ -224,7 +224,7 @@ function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"
                   <li key={s.label}>
                     <Link href={withLang(s.href, locale)} className="group flex items-start gap-4 rounded-xl border border-rule bg-white p-4 transition-colors hover:border-indigo">
                       <span className="flex-1">
-                        <span className="block text-[1.32rem] font-bold text-indigo-ink">{s.label}</span>
+                        <span className="display-md block font-bold text-indigo-ink">{s.label}</span>
                         {s.detail && <span className="mt-1 block text-[1.13rem] leading-relaxed text-ink-soft">{s.detail}</span>}
                       </span>
                       <span aria-hidden="true" className="text-lg font-bold text-saffron-ink">→</span>
@@ -238,7 +238,7 @@ function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"
           <div className="mt-5">
             <Link
               href={withLang("/start", locale)}
-              className="-my-2.5 inline-block py-2.5 text-[1.375rem] font-bold text-indigo underline underline-offset-2"
+              className="-my-2.5 inline-block py-2.5 text-[1rem] font-bold text-indigo underline underline-offset-2"
             >
               {t.noneOfThese}
             </Link>

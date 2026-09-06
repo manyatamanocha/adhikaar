@@ -273,7 +273,7 @@ function Numbers({ lang }: { lang: Locale }) {
                   >
                     {n.icon}
                   </span>
-                  <p className="mt-3 font-serif text-[1.375rem] font-bold leading-[1.1] text-indigo-ink">
+                  <p className="display-md mt-3 font-serif font-bold leading-[1.1] text-indigo-ink">
                     {n.figure}
                   </p>
                   <p className="mt-1.5 text-[0.9375rem] font-bold text-ink">

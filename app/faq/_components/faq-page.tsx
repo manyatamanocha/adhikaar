@@ -55,14 +55,14 @@ function Body({
   mostAsked: string;
 }) {
   return (
-    <main className="mx-auto max-w-[1400px] px-5 py-20 sm:px-8">
+    <main className="mx-auto max-w-[1400px] px-5 py-8 sm:px-8 sm:py-12">
       <div className="max-w-[820px]">
-        <h1 className="font-serif text-[3.25rem] font-bold tracking-[-0.01em] text-[#16233F]">
+        <h1 className="display-xl font-serif font-bold tracking-[-0.01em] text-[#16233F]">
           {heading}
         </h1>
       </div>
 
-      <div className="mt-10 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
         {faqs.map((f) => (
           <FaqItem key={f.q} f={f} mostAsked={mostAsked} />
         ))}
@@ -76,17 +76,17 @@ function FaqItem({ f, mostAsked }: { f: Faq; mostAsked: string }) {
   return (
     <div
       className={
-        "rounded-2xl bg-white p-7 shadow-[0_16px_40px_rgba(22,35,63,0.08)]" +
+        "rounded-2xl bg-white p-7 shadow-[0_8px_24px_rgba(22,35,63,0.1)]" +
         (f.highlight ? " ring-2 ring-[#E2653B]" : "")
       }
     >
       {f.highlight && (
-        <span className="mb-2 inline-block rounded-full bg-[#E2653B]/10 px-3 py-1 text-[0.875rem] font-bold uppercase tracking-[0.08em] text-[#E2653B]">
+        <span className="mb-2 inline-block rounded-full bg-[#E2653B]/10 px-3 py-1 text-[0.8125rem] font-bold uppercase tracking-[0.1em] text-[#E2653B]">
           {mostAsked}
         </span>
       )}
-      <h2 className="text-[1.375rem] font-bold text-[#16233F]">{f.q}</h2>
-      <p className="mt-2 text-[1.125rem] leading-relaxed text-[#3A4256]">
+      <h2 className="display-md font-serif font-bold text-[#16233F]">{f.q}</h2>
+      <p className="body-fluid mt-2 leading-relaxed text-[#3A4256]">
         {f.a}
         {f.link && (
           <>

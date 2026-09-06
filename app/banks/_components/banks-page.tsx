@@ -41,37 +41,37 @@ export function BanksPage() {
       <div className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
         <RecoverNav />
 
-        <main className="mx-auto max-w-[1920px] px-5 py-14 sm:px-8">
+        <main className="mx-auto max-w-[1920px] px-5 py-8 sm:px-8 sm:py-12">
           <div className="max-w-[900px]">
             <p className="text-[0.9375rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
               {t.banksPage.eyebrow}
             </p>
-            <h1 className="mt-2 font-serif text-[2.75rem] font-bold tracking-[-0.01em] text-[#16233F]">
+            <h1 className="display-xl mt-2 font-serif font-bold tracking-[-0.01em] text-[#16233F]">
               {t.banksPage.heading}
             </h1>
-            <p className="mt-3 max-w-[64ch] text-[1.1875rem] leading-relaxed text-[#5B5344]">
+            <p className="lede-fluid mt-3 max-w-[64ch] leading-relaxed text-[#5B5344]">
               {t.banksPage.sub}
             </p>
             <Link
               href="/start"
-              className="mt-6 inline-flex items-center gap-2.5 rounded bg-[#E2653B] px-7 py-3.5 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
+              className="mt-6 inline-flex items-center gap-2.5 rounded bg-[#E2653B] px-6 py-3 text-[0.9375rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
             >
               {t.banksPage.cta}
               <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
 
-          <div className="mt-10 rounded-2xl border-2 border-[#16233F] bg-white p-6 text-[1.0625rem] leading-relaxed">
+          <div className="body-fluid mt-8 rounded-2xl border-2 border-[#16233F] bg-white p-6 leading-relaxed">
             <strong className="font-bold">{t.banksPage.everyCellStrong}</strong>{" "}
             {t.banksPage.everyCellBody}
           </div>
 
           {missing.length > 0 && (
             <div className="mt-6 rounded-2xl border-2 border-[#B84E1E] bg-[#FBEAE3] p-6">
-              <h2 className="font-serif text-[1.375rem] font-bold text-[#B84E1E]">
+              <h2 className="display-md font-serif font-bold text-[#B84E1E]">
                 {t.banksPage.emptyRowHeading}
               </h2>
-              <p className="mt-2 max-w-[70ch] text-[1.0625rem] leading-relaxed text-[#16233F]">
+              <p className="body-fluid mt-2 max-w-[70ch] leading-relaxed text-[#16233F]">
                 {t.banksPage.emptyRowBefore}{" "}
                 <strong className="font-bold">
                   {missing.map((b) => b.short).join(", ")}
@@ -79,7 +79,7 @@ export function BanksPage() {
                 {t.banksPage.emptyRowAfter}
               </p>
               {pageOnly.length > 0 && (
-                <p className="mt-3 max-w-[70ch] text-[1.0625rem] leading-relaxed text-[#16233F]">
+                <p className="body-fluid mt-3 max-w-[70ch] leading-relaxed text-[#16233F]">
                   <strong className="font-bold">
                     {pageOnly.map((b) => b.short).join(" and ")}
                   </strong>{" "}
@@ -196,9 +196,9 @@ export function BanksPage() {
               {BANKS.map((bank) => (
                 <li
                   key={bank.id}
-                  className="rounded-2xl bg-white p-7 shadow-[0_8px_24px_rgba(22,35,63,0.08)]"
+                  className="rounded-2xl bg-white p-7 shadow-[0_8px_24px_rgba(22,35,63,0.1)]"
                 >
-                  <h3 className="font-serif text-[1.375rem] font-bold text-[#16233F]">
+                  <h3 className="display-md font-serif font-bold text-[#16233F]">
                     {bank.name}
                   </h3>
 
