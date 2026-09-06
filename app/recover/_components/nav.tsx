@@ -35,11 +35,11 @@ function Navigation() {
       <div className="mx-auto flex max-w-[1920px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         <div aria-hidden="true" className="hidden lg:block" />
         <Link href={withLang("/", locale)} className="min-w-0">
-          <span className="flex items-center gap-3 sm:gap-5">
-            <LeafMark className="h-12 w-12 shrink-0 sm:h-20 sm:w-20 lg:h-[7.49rem] lg:w-[7.49rem]" />
-            <span className="font-serif text-[2.5rem] font-bold leading-tight sm:text-[4rem] lg:text-[5.62rem]">Adhikaar</span>
+          <span className="flex items-center gap-3">
+            <LeafMark className="h-9 w-9 shrink-0 sm:h-11 sm:w-11 lg:h-12 lg:w-12" />
+            <span className="font-serif text-[1.75rem] font-bold leading-tight sm:text-[2.25rem] lg:text-[2.75rem]">Adhikaar</span>
           </span>
-          <span className="mt-2 block text-[1.1rem] text-[#6B6255] sm:text-[1.4rem] lg:text-[1.7551rem]">
+          <span className="mt-1.5 block text-[0.9375rem] text-[#6B6255] sm:text-base lg:text-[1.125rem]">
             The counter companion for deceased-bank claims in India
           </span>
         </Link>
@@ -52,7 +52,7 @@ function Navigation() {
           </select>
         </label>
       </div>
-      <nav aria-label="Quick links" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 bg-[#16233F] px-5 py-4 text-lg font-bold text-white sm:gap-x-12 sm:text-2xl lg:text-[1.9688rem]">
+      <nav aria-label="Quick links" className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 bg-[#16233F] px-5 py-4 text-base font-bold text-white sm:gap-x-10 sm:text-lg lg:text-xl">
         {links.map(link => <Link key={link.href} href={withLang(link.href, locale)}
           aria-current={pathname === link.href ? "page" : undefined}
           className="inline-flex min-h-11 items-center hover:text-[#F0B892] aria-[current=page]:underline">{link.label}</Link>)}
