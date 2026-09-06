@@ -9,6 +9,7 @@ import { Reveal } from "./reveal";
 import { HomeI18nProvider, useHomeT } from "./home-i18n";
 import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
+import { DOCS_T } from "@/lib/i18n-documents";
 import { ArrowRightIcon } from "./icons";
 
 /**
@@ -105,6 +106,18 @@ function Hero() {
               className="inline-flex items-center gap-3 rounded bg-[#E2653B] px-10 py-5 text-[1.5rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
             >
               {t.hero.start}
+              <ArrowRightIcon className="h-5 w-5" />
+            </Link>
+            {/* Second door, added 6 Sep 2026. Plenty of people arrive wanting
+                only one thing -- the list of papers -- and are not ready to
+                answer seven questions to get it. Deliberately a quieter
+                secondary action, not a second orange button: the claim journey
+                is still the primary path, and /documents ends by offering it. */}
+            <Link
+              href={withLang("/documents", locale)}
+              className="inline-flex items-center gap-3 rounded border-2 border-[#16233F]/25 px-8 py-[1.15rem] text-[1.35rem] font-bold text-[#16233F] transition-colors hover:border-[#16233F]/60 hover:bg-white/60"
+            >
+              {DOCS_T[locale].homeCta}
               <ArrowRightIcon className="h-5 w-5" />
             </Link>
           </Reveal>
