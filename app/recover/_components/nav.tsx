@@ -25,7 +25,7 @@ function Navigation() {
   };
   const links = [
     { href: "/", label: t.nav.home },
-    { href: "/start", label: "Claim Guide" },
+    { href: "/start", label: t.nav.claimGuide },
     { href: "/banks", label: locale === "hi" ? "बैंक की नीतियाँ" : locale === "kn" ? "ಬ್ಯಾಂಕ್ ನೀತಿಗಳು" : "Bank policies" },
     { href: "/faq", label: t.nav.faq },
     { href: "/contact", label: t.nav.contact },

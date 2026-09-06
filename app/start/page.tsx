@@ -21,7 +21,6 @@ import { redirect } from "next/navigation";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { OUTCOMES } from "@/lib/outcomes";
-import { BANKS } from "@/lib/banks";
 import { SCENARIOS_BY_LOCALE, MORE_SCENARIOS_BY_LOCALE } from "@/lib/scenarios";
 import { parseLocale, withLang, type Locale } from "@/lib/i18n";
 import { HOME_T, type HomeDict } from "@/lib/i18n-home";
@@ -75,17 +74,6 @@ export default async function Start({
   const isFresh = Object.values(answers).every((v) => v === undefined);
   if (isFresh && sp.cards === "1") {
     return <ScenarioPicker locale={locale} t={t} />;
-  }
-
-  // Picking a bank first is its own opt-in step, ahead of question 1 --
-  // direct request, 6 Sep 2026. It never changes the verdict (see
-  // withBank's comment); it only pre-fills question 6 (bank type) from that
-  // bank's own real `type` field, and carries the bank forward so the
-  // verdict page's policy check doesn't ask the reader to pick it again.
-  // `skipBank=1` remembers "not sure / not listed" was already chosen once,
-  // the same way an answered question is never re-asked.
-  if (isFresh && !bankId && sp.skipBank !== "1") {
-    return <BankStepPicker locale={locale} t={t} />;
   }
 
   const step = resolve(answers, locale);
@@ -161,57 +149,6 @@ export default async function Start({
 }
 
 /* ------------------------------------------------------------------ */
-
-/**
- * The opt-in bank-first step, ahead of question 1 -- direct request,
- * 6 Sep 2026. Picking a bank here can only ever pre-fill question 6 (bank
- * type, from that bank's own real `type` field in lib/banks.ts) and carry
- * the bank id forward to the verdict page's policy check. It never
- * substitutes a bank's own number for the RBI's threshold -- that stays
- * the verdict's only source of truth, decided after this screen, not here.
- */
-function BankStepPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"] }) {
-  return (
-    <>
-      <RecoverNav />
-
-      <main className="flex-1 bg-mist">
-        <div className="shell max-w-[760px] py-8 sm:py-12">
-          <h1 className="display-lg font-serif font-bold text-indigo-ink">
-            {t.bankStepHeading}
-          </h1>
-          <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">
-            {t.bankStepBody}
-          </p>
-
-          <ul className="mt-7 flex flex-wrap gap-2.5">
-            {BANKS.map((b) => (
-              <li key={b.id}>
-                <Link
-                  href={withLang(`/start?bank=${b.id}&bankType=${b.type}`, locale)}
-                  className="inline-block rounded-pill border-2 border-indigo bg-white px-5 py-2.5 text-[1rem] font-bold text-indigo transition-colors hover:bg-indigo hover:text-white"
-                >
-                  {b.short}
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-6">
-            <Link
-              href={withLang("/start?skipBank=1", locale)}
-              className="-my-2.5 inline-block py-2.5 text-[1.0625rem] font-bold text-indigo underline underline-offset-2"
-            >
-              {t.bankStepSkip}
-            </Link>
-          </div>
-        </div>
-      </main>
-
-      <RecoverFooter />
-    </>
-  );
-}
 
 /**
  * The recognition front door — shown before the four legal-shaped

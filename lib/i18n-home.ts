@@ -25,6 +25,7 @@ export type HomeDict = {
     updates: string;
     contact: string;
     start: string;
+    claimGuide: string;
   };
   tagline: string;
   notice: { pre: string; strong: string };
@@ -246,9 +247,6 @@ export type HomeDict = {
     backToStart: string;
     privacyNote: string;
     privacyLink: string;
-    bankStepHeading: string;
-    bankStepBody: string;
-    bankStepSkip: string;
   };
 
   /** /confirm-details -- shown when the wizard needs a human review step (a court restriction, a will, a dispute, or an unconfirmed bank type/amount) instead of a clean outcome. */
@@ -474,6 +472,7 @@ const en: HomeDict = {
     updates: "Updates",
     contact: "Contact",
     start: "Begin your claim journey today",
+    claimGuide: "Claim Guide",
   },
   tagline: "What's yours should find its way home.",
   notice: {
@@ -712,9 +711,6 @@ const en: HomeDict = {
     backToStart: "Back to the start",
     privacyNote: "No account or document uploads. Answers appear in page links.",
     privacyLink: "Privacy details",
-    bankStepHeading: "Which bank is the account with?",
-    bankStepBody: "If your bank is one of these, we can skip a question later and check its published policy against the RBI rule at the end.",
-    bankStepSkip: "Not sure, or not listed — continue without picking a bank",
   },
 
   confirmDetailsPage: {
@@ -942,6 +938,7 @@ const hi: HomeDict = {
     updates: "अपडेट",
     contact: "संपर्क करें",
     start: "आज ही अपनी दावा यात्रा शुरू करें",
+    claimGuide: "दावा मार्गदर्शिका",
   },
   tagline: "आपकी चीज़ें, उन्हीं तक वापस पहुँचें।",
   notice: {
@@ -1180,9 +1177,6 @@ const hi: HomeDict = {
     privacyNote: "कोई खाता या दस्तावेज़ अपलोड नहीं। जवाब पेज के लिंक में दिखते हैं।",
     privacyLink: "गोपनीयता विवरण",
     timeEstimate: "इसमें लगभग 2–3 मिनट लगते हैं। शुरू करने के लिए दस्तावेज़ या सटीक जानकारी ज़रूरी नहीं है।",
-    bankStepHeading: "खाता किस बैंक में है?",
-    bankStepBody: "अगर आपका बैंक इनमें से एक है, तो हम बाद का एक सवाल छोड़ सकते हैं और आख़िर में उस बैंक की प्रकाशित नीति को RBI के नियम से जाँच सकते हैं।",
-    bankStepSkip: "पता नहीं, या सूची में नहीं है — बैंक चुने बिना आगे बढ़ें",
   },
 
   confirmDetailsPage: {
@@ -1410,6 +1404,7 @@ const kn: HomeDict = {
     updates: "ಅಪ್‌ಡೇಟ್‌ಗಳು",
     contact: "ಸಂಪರ್ಕಿಸಿ",
     start: "ಇಂದೇ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
+    claimGuide: "ಕ್ಲೈಮ್ ಮಾರ್ಗದರ್ಶಿ",
   },
   tagline: "ನಿಮ್ಮದು ನಿಮ್ಮ ದಾರಿ ಕಂಡುಕೊಳ್ಳಲಿ.",
   notice: {
@@ -1648,9 +1643,6 @@ const kn: HomeDict = {
     privacyNote: "ಯಾವುದೇ ಖಾತೆ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಇಲ್ಲ. ಉತ್ತರಗಳು ಪುಟದ ಲಿಂಕ್‌ಗಳಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
     privacyLink: "ಗೌಪ್ಯತೆ ವಿವರಗಳು",
     timeEstimate: "ಇದಕ್ಕೆ ಸುಮಾರು 2–3 ನಿಮಿಷಗಳು ಬೇಕಾಗುತ್ತವೆ. ಪ್ರಾರಂಭಿಸಲು ದಾಖಲೆಗಳು ಅಥವಾ ನಿಖರ ಮಾಹಿತಿ ಅಗತ್ಯವಿಲ್ಲ.",
-    bankStepHeading: "ಖಾತೆ ಯಾವ ಬ್ಯಾಂಕಿನಲ್ಲಿದೆ?",
-    bankStepBody: "ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಇವುಗಳಲ್ಲಿ ಒಂದಾಗಿದ್ದರೆ, ನಾವು ನಂತರದ ಒಂದು ಪ್ರಶ್ನೆಯನ್ನು ಬಿಟ್ಟುಬಿಡಬಹುದು ಮತ್ತು ಕೊನೆಯಲ್ಲಿ ಆ ಬ್ಯಾಂಕಿನ ಪ್ರಕಟಿತ ನೀತಿಯನ್ನು RBI ನಿಯಮದ ವಿರುದ್ಧ ಪರಿಶೀಲಿಸಬಹುದು.",
-    bankStepSkip: "ಗೊತ್ತಿಲ್ಲ, ಅಥವಾ ಪಟ್ಟಿಯಲ್ಲಿಲ್ಲ — ಬ್ಯಾಂಕ್ ಆಯ್ಕೆ ಮಾಡದೆ ಮುಂದುವರಿಸಿ",
   },
 
   confirmDetailsPage: {
