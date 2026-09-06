@@ -96,7 +96,27 @@ export default async function Start({
           <Progress {...progressFor(answers)} t={t} />
           <p className="mt-3 text-[1rem] font-semibold text-ink-soft">{t.timeEstimate}</p>
 
-          <h1 className="display-lg mt-6 font-serif font-bold text-indigo-ink">
+          {/* Above the question, not under the options -- direct request,
+              7 Sep 2026. A reader who mis-taps an answer should find the way
+              back without scrolling past the thing they are trying to undo,
+              and on a phone the options push it below the fold.
+
+              Above the HEADING rather than immediately above the list: a link
+              sitting between a question and its answers breaks the one
+              adjacency on this screen that has to stay tight. */}
+          <Link
+            href={withLang(back ? withBank(`/start${toQuery(back)}`, bankId) : "/", locale)}
+            // 23px of link is not a thumb target. The padding is cancelled by
+            // the negative margin, so this is a hit-area change, not a layout
+            // one -- and Back is the control a confused tester reaches for
+            // first.
+            className="-my-2.5 mt-4 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
+          >
+            <span aria-hidden="true">&larr;</span>
+            {back ? t.backAQuestion : t.backToStart}
+          </Link>
+
+          <h1 className="display-lg mt-4 font-serif font-bold text-indigo-ink">
             {question.prompt}
           </h1>
           {question.help && (
@@ -119,18 +139,7 @@ export default async function Start({
             ))}
           </ul>
 
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule-faint pt-5">
-            <Link
-              href={withLang(back ? withBank(`/start${toQuery(back)}`, bankId) : "/", locale)}
-              // 23px of link is not a thumb target. The padding is cancelled by
-              // the negative margin, so this is a hit-area change, not a
-              // layout one -- and Back is the control a confused tester reaches
-              // for first.
-              className="-my-2.5 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
-            >
-              <span aria-hidden="true">&larr;</span>
-              {back ? t.backAQuestion : t.backToStart}
-            </Link>
+          <div className="mt-8 border-t border-rule-faint pt-5">
             {/* Precise, because it has to be. The answers are not stored and
                 nothing here identifies anyone — but we do count which branch
                 of the law people land on, and saying "sent nowhere" would be
