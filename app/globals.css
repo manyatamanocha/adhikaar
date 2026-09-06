@@ -109,6 +109,22 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+
+  /* Everything on this site is sized in rem -- 234 hardcoded `text-[Nrem]`
+     values across the pages, plus the fluid display/lede/body classes below,
+     plus every Tailwind padding and gap. Reducing the root is therefore the
+     only lever that moves ALL of it by the same amount. Editing the five
+     fluid classes alone would have shrunk under half the type and left the
+     rest where it was, which is how a scale drifts apart in the first place.
+
+     90% of the browser default: 16px -> 14.4px. Type and spacing shrink
+     together, so proportions hold rather than the layout tightening around
+     smaller text.
+
+     A reader who has set a larger default font size in their browser still
+     gets 90% of THEIR size, not of ours -- which is why this is a percentage
+     and not a pixel value. */
+  font-size: 90%;
 }
 
 body {
