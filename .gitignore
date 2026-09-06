@@ -51,3 +51,6 @@ next-env.d.ts
 design/adhikaar-landing-page.html
 design/extracted/
 .superpowers
+
+.vercel
+.env*

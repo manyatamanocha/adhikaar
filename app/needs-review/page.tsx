@@ -24,17 +24,19 @@ export default async function ConfirmDetails({ searchParams }: {
   // uses for its own "Change:" links -- so the primary CTA sends the reader
   // to resolve the FIRST unconfirmed condition, not just back to the top.
   const startWithout = (field: keyof typeof a) => withLang(`/start${toQuery({ ...a, [field]: undefined })}`, locale);
-  // `href` is omitted only for the specific CONFIRMED blocking value (court
-  // "yes", will "yes", heirs "dispute") -- re-asking a question whose true
-  // answer is already known just returns resolve() straight back to this
-  // same review page, which was a real stuck loop (clicking "I know the
-  // answer now" on a confirmed court restriction re-asked court, the reader
-  // (correctly) answered "yes" again, and landed right back here). An
-  // unset or "unknown" value is still genuinely askable, so it keeps its
-  // href -- this step can be reached before court/will/heirs were ever
-  // asked (e.g. the heirs-dispute-with-a-nominee review branch fires before
-  // court is asked at all), and "not yet answered" must not be treated the
-  // same as "confirmed blocking".
+  // A real stuck loop: clicking "I know the answer now" cleared one field
+  // (e.g. court) and sent the reader back to /start, but resolve() checks
+  // court, then will, then heirs IN THAT FIXED ORDER (see lib/wizard.ts) --
+  // whichever of the three is a CONFIRMED blocking value (court "yes", a
+  // real will with no nominee, a real heir dispute) makes resolve() return
+  // to this exact review page again, unconditionally, no matter what any
+  // other field is. Re-asking a different field the reader hasn't touched
+  // yet (say, heirs, when court is genuinely "yes") never even gets read --
+  // resolve() dies at the court check first. So the only correct fix is:
+  // once ANY confirmed blocker is present, there is nothing left to ask.
+  // This case needs a lawyer, not another trip through the wizard.
+  const disputeConfirmed = a.heirs === "dispute" && a.nominee !== "no";
+  const blocked = restricted || (will && a.nominee === "no") || disputeConfirmed;
   const steps: { text: string; href?: string }[] = [
     ...(a.court !== "no" ? [{ text: restricted ? t.stepRestrictedYes : t.stepRestrictedAsk, href: restricted ? undefined : startWithout("court") }] : []),
     ...(a.will !== "no" && a.nominee === "no" ? [{ text: will ? t.stepWillYes : t.stepWillAsk, href: will ? undefined : startWithout("will") }] : []),
@@ -42,10 +44,10 @@ export default async function ConfirmDetails({ searchParams }: {
     ...(a.bankType === "unknown" || !a.bankType ? [{ text: t.stepBankTypeUnknown, href: startWithout("bankType") }] : []),
     ...(a.amount === "unknown" || a.amount === "equal" || !a.amount ? [{ text: t.stepAmountUnknown, href: startWithout("amount") }] : []),
   ];
-  // The button targets the first step that's actually re-askable, not just
-  // steps[0] -- if the first pending item is a confirmed fact needing
-  // advice, there is nothing here for the wizard to re-ask.
-  const nextAskable = steps.find(s => s.href);
+  // No button at all once a confirmed blocker exists -- no other field's
+  // answer changes the outcome, so there is nothing left to "come back"
+  // from. Otherwise, target the first genuinely re-askable field.
+  const nextAskable = blocked ? undefined : steps.find(s => s.href);
   return <>
     <RecoverNav />
     <main className="shell max-w-[860px] flex-1 py-10 sm:py-14" lang={locale}>
