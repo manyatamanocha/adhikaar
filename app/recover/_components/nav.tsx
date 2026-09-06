@@ -39,15 +39,15 @@ function Navigation() {
             <LeafMark className="h-6 w-6 shrink-0 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
             <span className="font-serif text-[1.1875rem] font-bold leading-tight sm:text-[1.5625rem] lg:text-[1.875rem]">Adhikaar</span>
           </span>
-          <span className="mt-1 block text-[0.625rem] text-[#6B6255] sm:text-[0.6875rem] lg:text-[0.75rem]">
+          <span className="mt-1 ml-8 block text-[0.625rem] text-[#6B6255] sm:ml-9 sm:text-[0.6875rem] lg:ml-10 lg:text-[0.75rem]">
             The counter companion for deceased-bank claims in India
           </span>
         </Link>
-        <label className="flex flex-col gap-1 text-base font-semibold lg:justify-self-end" lang="en">
+        <label className="flex flex-col gap-1 text-xs font-semibold lg:justify-self-end" lang="en">
           Page language
           <select aria-label="Page language" value={locale}
             onChange={event => router.push(withLang(pathname + (searchParams.size ? "?" + searchParams.toString() : ""), event.target.value as typeof locale))}
-            className="min-h-11 rounded-lg border border-[#E3D8C4] bg-white px-3 py-2 text-lg">
+            className="min-h-11 rounded-lg border border-[#E3D8C4] bg-white px-2.5 py-1.5 text-[0.8125rem]">
             {LOCALES.map(l => <option key={l} value={l}>{LOCALE_LABEL[l]}</option>)}
           </select>
         </label>

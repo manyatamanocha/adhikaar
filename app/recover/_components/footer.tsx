@@ -25,17 +25,17 @@ function FooterContent() {
   return (
     <footer lang={locale}
       data-print="hide"
-      className="mt-auto border-t border-[#EFE7D8] bg-[#F1E7D6] pb-10 pt-16 text-[1.2rem] text-[#6B6255]"
+      className="mt-auto border-t border-[#EFE7D8] bg-[#F1E7D6] pb-10 pt-16 text-[0.9375rem] text-[#6B6255]"
     >
       <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <div className="flex flex-col items-start gap-4 pb-6">
           <Link href={withLang("/", locale)} className="flex items-center gap-2.5">
-            <LeafMark className="h-7 w-7" />
+            <LeafMark className="h-[1.375rem] w-[1.375rem]" />
             <span className="leading-tight">
-              <span className="block font-serif text-[1.275rem] font-bold text-[#16233F]">
+              <span className="block font-serif text-[1rem] font-bold text-[#16233F]">
                 Adhikaar
               </span>
-              <span className="block text-[1.05rem] text-[#6B6255]">{t.tagline}</span>
+              <span className="block text-[0.8125rem] text-[#6B6255]">{t.tagline}</span>
             </span>
           </Link>
           <p>{t.footer.madeFor}</p>
