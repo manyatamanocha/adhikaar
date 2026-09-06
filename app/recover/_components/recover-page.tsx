@@ -62,7 +62,7 @@ export function RecoverPage() {
 function NoticeBar() {
   const { t } = useHomeT();
   return (
-    <div className="bg-[#16233F] px-4 py-3 text-center text-[1.375rem] text-[#D8DEEA]">
+    <div className="bg-[#16233F] px-4 py-2.5 text-center text-[1.1rem] text-[#D8DEEA]">
       <span className="block">{t.notice.pre}</span>
       <strong className="block font-semibold text-[#F0B892]">{t.notice.strong}</strong>
     </div>
