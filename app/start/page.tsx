@@ -21,6 +21,7 @@ import { redirect } from "next/navigation";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { OUTCOMES } from "@/lib/outcomes";
+import { BANKS } from "@/lib/banks";
 import { SCENARIOS_BY_LOCALE, MORE_SCENARIOS_BY_LOCALE } from "@/lib/scenarios";
 import { parseLocale, withLang, type Locale } from "@/lib/i18n";
 import { HOME_T, type HomeDict } from "@/lib/i18n-home";
@@ -40,6 +41,21 @@ export const metadata = {
   title: "Adhikaar — your claim guide",
 };
 
+/**
+ * `bank` is deliberately NOT part of Answers/QUESTION_ORDER -- it never
+ * changes the verdict logic, only which bank's own published policy is
+ * checked against it afterwards (see lib/banks.ts's honesty rule). It rides
+ * along on every wizard link the same way `lang` already does via withLang,
+ * rather than becoming wizard state resolve() has to reason about.
+ */
+function withBank(href: string, bankId: string | undefined): string {
+  if (!bankId) return href;
+  const [path, query] = href.split("?");
+  const q = new URLSearchParams(query ?? "");
+  q.set("bank", bankId);
+  return `${path}?${q}`;
+}
+
 export default async function Start({
   searchParams,
 }: {
@@ -49,6 +65,7 @@ export default async function Start({
   const locale = parseLocale(sp.lang);
   const t = HOME_T[locale].startPage;
   const answers = parseAnswers(sp);
+  const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
 
   // Default is the question-by-question order, starting at question 1 --
   // direct request, 6 Sep 2026: the claim journey should start with the
@@ -60,12 +77,23 @@ export default async function Start({
     return <ScenarioPicker locale={locale} t={t} />;
   }
 
+  // Picking a bank first is its own opt-in step, ahead of question 1 --
+  // direct request, 6 Sep 2026. It never changes the verdict (see
+  // withBank's comment); it only pre-fills question 6 (bank type) from that
+  // bank's own real `type` field, and carries the bank forward so the
+  // verdict page's policy check doesn't ask the reader to pick it again.
+  // `skipBank=1` remembers "not sure / not listed" was already chosen once,
+  // the same way an answered question is never re-asked.
+  if (isFresh && !bankId && sp.skipBank !== "1") {
+    return <BankStepPicker locale={locale} t={t} />;
+  }
+
   const step = resolve(answers, locale);
-  if (step.kind === "review") redirect(withLang("/confirm-details" + toQuery(step.carry), locale));
+  if (step.kind === "review") redirect(withLang(withBank("/confirm-details" + toQuery(step.carry), bankId), locale));
 
   // A verdict is a page of its own, at its own URL. The wizard never renders one.
   if (step.kind === "outcome") {
-    redirect(withLang(OUTCOMES[step.outcome].path + toQuery(step.carry), locale));
+    redirect(withLang(withBank(OUTCOMES[step.outcome].path + toQuery(step.carry), bankId), locale));
   }
 
   const { question } = step;
@@ -97,6 +125,7 @@ export default async function Start({
                   option={option}
                   answers={answers}
                   locale={locale}
+                  bankId={bankId}
                 />
               </li>
             ))}
@@ -104,7 +133,7 @@ export default async function Start({
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule-faint pt-5">
             <Link
-              href={withLang(back ? `/start${toQuery(back)}` : "/", locale)}
+              href={withLang(back ? withBank(`/start${toQuery(back)}`, bankId) : "/", locale)}
               // 23px of link is not a thumb target. The padding is cancelled by
               // the negative margin, so this is a hit-area change, not a
               // layout one -- and Back is the control a confused tester reaches
@@ -132,6 +161,57 @@ export default async function Start({
 }
 
 /* ------------------------------------------------------------------ */
+
+/**
+ * The opt-in bank-first step, ahead of question 1 -- direct request,
+ * 6 Sep 2026. Picking a bank here can only ever pre-fill question 6 (bank
+ * type, from that bank's own real `type` field in lib/banks.ts) and carry
+ * the bank id forward to the verdict page's policy check. It never
+ * substitutes a bank's own number for the RBI's threshold -- that stays
+ * the verdict's only source of truth, decided after this screen, not here.
+ */
+function BankStepPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"] }) {
+  return (
+    <>
+      <RecoverNav />
+
+      <main className="flex-1 bg-mist">
+        <div className="shell max-w-[760px] py-8 sm:py-12">
+          <h1 className="display-lg font-serif font-bold text-indigo-ink">
+            {t.bankStepHeading}
+          </h1>
+          <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">
+            {t.bankStepBody}
+          </p>
+
+          <ul className="mt-7 flex flex-wrap gap-2.5">
+            {BANKS.map((b) => (
+              <li key={b.id}>
+                <Link
+                  href={withLang(`/start?bank=${b.id}&bankType=${b.type}`, locale)}
+                  className="inline-block rounded-pill border-2 border-indigo bg-white px-5 py-2.5 text-[1rem] font-bold text-indigo transition-colors hover:bg-indigo hover:text-white"
+                >
+                  {b.short}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-6">
+            <Link
+              href={withLang("/start?skipBank=1", locale)}
+              className="-my-2.5 inline-block py-2.5 text-[1.0625rem] font-bold text-indigo underline underline-offset-2"
+            >
+              {t.bankStepSkip}
+            </Link>
+          </div>
+        </div>
+      </main>
+
+      <RecoverFooter />
+    </>
+  );
+}
 
 /**
  * The recognition front door — shown before the four legal-shaped
@@ -266,11 +346,13 @@ function AnswerLink({
   option,
   answers,
   locale,
+  bankId,
 }: {
   question: Question;
   option: Option;
   answers: Answers;
   locale: Locale;
+  bankId?: string;
 }) {
   const next = answerQuestion(answers, question.id, option.value);
   const accent = option.unsure
@@ -279,7 +361,7 @@ function AnswerLink({
 
   return (
     <Link
-      href={withLang(`/start${toQuery(next)}`, locale)}
+      href={withLang(withBank(`/start${toQuery(next)}`, bankId), locale)}
       className={`group flex items-start gap-4 rounded-xl border-2 bg-white p-5 transition-all ${accent}`}
     >
       <span className="flex-1">

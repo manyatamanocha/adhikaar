@@ -246,6 +246,9 @@ export type HomeDict = {
     backToStart: string;
     privacyNote: string;
     privacyLink: string;
+    bankStepHeading: string;
+    bankStepBody: string;
+    bankStepSkip: string;
   };
 
   /** /confirm-details -- shown when the wizard needs a human review step (a court restriction, a will, a dispute, or an unconfirmed bank type/amount) instead of a clean outcome. */
@@ -709,6 +712,9 @@ const en: HomeDict = {
     backToStart: "Back to the start",
     privacyNote: "No account or document uploads. Answers appear in page links.",
     privacyLink: "Privacy details",
+    bankStepHeading: "Which bank is the account with?",
+    bankStepBody: "If your bank is one of these, we can skip a question later and check its published policy against the RBI rule at the end.",
+    bankStepSkip: "Not sure, or not listed — continue without picking a bank",
   },
 
   confirmDetailsPage: {
@@ -1174,6 +1180,9 @@ const hi: HomeDict = {
     privacyNote: "कोई खाता या दस्तावेज़ अपलोड नहीं। जवाब पेज के लिंक में दिखते हैं।",
     privacyLink: "गोपनीयता विवरण",
     timeEstimate: "इसमें लगभग 2–3 मिनट लगते हैं। शुरू करने के लिए दस्तावेज़ या सटीक जानकारी ज़रूरी नहीं है।",
+    bankStepHeading: "खाता किस बैंक में है?",
+    bankStepBody: "अगर आपका बैंक इनमें से एक है, तो हम बाद का एक सवाल छोड़ सकते हैं और आख़िर में उस बैंक की प्रकाशित नीति को RBI के नियम से जाँच सकते हैं।",
+    bankStepSkip: "पता नहीं, या सूची में नहीं है — बैंक चुने बिना आगे बढ़ें",
   },
 
   confirmDetailsPage: {
@@ -1639,6 +1648,9 @@ const kn: HomeDict = {
     privacyNote: "ಯಾವುದೇ ಖಾತೆ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಇಲ್ಲ. ಉತ್ತರಗಳು ಪುಟದ ಲಿಂಕ್‌ಗಳಲ್ಲಿ ಕಾಣಿಸುತ್ತವೆ.",
     privacyLink: "ಗೌಪ್ಯತೆ ವಿವರಗಳು",
     timeEstimate: "ಇದಕ್ಕೆ ಸುಮಾರು 2–3 ನಿಮಿಷಗಳು ಬೇಕಾಗುತ್ತವೆ. ಪ್ರಾರಂಭಿಸಲು ದಾಖಲೆಗಳು ಅಥವಾ ನಿಖರ ಮಾಹಿತಿ ಅಗತ್ಯವಿಲ್ಲ.",
+    bankStepHeading: "ಖಾತೆ ಯಾವ ಬ್ಯಾಂಕಿನಲ್ಲಿದೆ?",
+    bankStepBody: "ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಇವುಗಳಲ್ಲಿ ಒಂದಾಗಿದ್ದರೆ, ನಾವು ನಂತರದ ಒಂದು ಪ್ರಶ್ನೆಯನ್ನು ಬಿಟ್ಟುಬಿಡಬಹುದು ಮತ್ತು ಕೊನೆಯಲ್ಲಿ ಆ ಬ್ಯಾಂಕಿನ ಪ್ರಕಟಿತ ನೀತಿಯನ್ನು RBI ನಿಯಮದ ವಿರುದ್ಧ ಪರಿಶೀಲಿಸಬಹುದು.",
+    bankStepSkip: "ಗೊತ್ತಿಲ್ಲ, ಅಥವಾ ಪಟ್ಟಿಯಲ್ಲಿಲ್ಲ — ಬ್ಯಾಂಕ್ ಆಯ್ಕೆ ಮಾಡದೆ ಮುಂದುವರಿಸಿ",
   },
 
   confirmDetailsPage: {
