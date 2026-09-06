@@ -172,10 +172,26 @@ No determination. Four questions:
 
 | Question | Purpose |
 |---|---|
-| When did the bank have all the documents it asked for? | Para 31's clock starts from receipt of **all** required documents, not from the first visit — see open question 3 |
+| **When did the bank receive all the documents it required?** | Para 31's clock, see below |
 | Did the bank give you an acknowledgement? | The single most useful piece of evidence |
 | Which bank? | Pulls that bank's own published policy from `lib/banks.ts` |
 | Have they given a written response? | Determines whether escalation is available yet |
+
+**The waiting-time question, exactly:**
+
+> **When did the bank receive all the documents it required?**
+> The 15-calendar-day period starts only after the bank has received the complete set of required documents — not when you first opened the claim.
+>
+> - Less than 15 days ago
+> - 15–30 days ago
+> - More than 30 days ago
+> - I'm not sure
+
+On "I'm not sure":
+
+> Check your acknowledgement receipt, or ask the bank to confirm the date it received the last document.
+
+🔴 **Only then may Adhikaar say the claim may be delayed.** Para 31 is verbatim: *"within a period not exceeding 15 calendar days from the date of receipt of all the required documents"*. A reader who submitted an incomplete set 20 days ago has no delay claim yet. Telling them otherwise sends them to a counter to assert a deadline that has not started, which the bank can correctly refuse.
 
 Shows: expected settlement timeline; a follow-up message template; what evidence to keep; when to complain in writing.
 
@@ -218,7 +234,49 @@ Goes straight to *"What did the bank ask you for?"*
 
 Then shows: whether the request may be unnecessary for their route; the relevant RBI paragraph; what to ask the bank in writing; a printable counter note; an escalation option.
 
-**This branch must not ask seven questions first.** It needs the nominee fact and nothing else — para 9 forbids these demands outright for a nominee or survivor, while para 10(a) prescribes a closed list and forbids third-party surety below the threshold. Where the nominee fact is unknown, both answers are given as conditions.
+**This branch must not ask seven questions first.**
+
+### 6.1 The logic
+
+```
+Bank demand → identify the demanded document → (surety only) bank type
+            → total amount → compare with threshold → cautious guidance
+```
+
+| Reader | Questions | Why |
+|---|---|---|
+| Nominee or surviving joint holder | **1** | Para 9 forbids succession certificate, letter of administration, probate, indemnity **and** third-party surety outright, *"irrespective of the amount standing to the credit"*. The amount cannot change the answer, so it is not asked. |
+| No nominee, demand is a **surety or bond** | **3** | Threshold-dependent — §6.2 |
+| No nominee, any other demand | **1** | Para 10(a) prescribes a closed list; the demand is on it or it is not |
+| Not sure about the nominee | **1** | Both routes given as conditions (§9) |
+
+The flagship case — *"the bank asked me for a succession certificate"* — is one question and an answer.
+
+### 6.2 The surety case
+
+🔴 **Never tell a reader a surety demand is wrong or allowed before knowing the bank type and the amount.**
+
+Bank type is asked **before** the amount, because "the applicable threshold" has no value until the bank type is known — a reader cannot answer "is it below the threshold" without being told which threshold.
+
+**1. What type of bank is it?**
+Commercial bank / Co-operative bank / I'm not sure
+
+**2. What is the total amount held at that bank?**
+Below the applicable threshold / Exactly at the threshold / Above the applicable threshold / I'm not sure
+
+*(The named figure — ₹15 lakh or ₹5 lakh — is substituted into the options once the bank type is known, the same way `questionFor` already does it in `lib/wizard.ts`.)*
+
+**Then:**
+
+| Answer | Guidance |
+|---|---|
+| Below threshold | A third-party surety should not be required under the relevant RBI rule |
+| Above threshold | A surety may be permitted, depending on the claim conditions and the bank's own policy |
+| Exactly at, or not sure | **No definite answer.** Ask the bank to confirm in writing which threshold applies and why the surety is required |
+
+The "exactly at" refusal is not caution for its own sake. `lib/rbi.ts`'s `noSurety` clause is `verbatim: true` and reads *"…in case of claims **up to** the threshold limit"*, while its own `label` — which is rendered in the UI at `app/_components/outcome.tsx:630` — reads *"below the threshold"*. Those disagree precisely at equality. Declining to answer there is correct regardless of which reading wins.
+
+⚠️ **Separate defect, to fix independently of this branch:** that label should be corrected against the notification, because it is displayed wherever the clause appears, not only here.
 
 `/what-were-you-asked-for` already exists and receives this.
 
@@ -378,7 +436,9 @@ Phase 1 alone fixes the orphaned scenario picker and gives `/what-were-you-asked
 ## 17. Open questions
 
 1. **Branch 5 has no research behind it.** n=2 covers claiming, not finding. Worth one interview, or ship it as a links page rather than a journey.
-2. **Does branch 3 need the amount?** Para 10(a)'s no-surety rule is threshold-dependent, so a surety demand above the threshold may be legitimate. Must be resolved before that branch is written, or the product will call a lawful demand unlawful.
+2. ~~Does branch 3 need the amount?~~ **Closed 7 Sep — see §6.2.** Yes, but only for surety demands, and bank type is asked first because "the applicable threshold" has no value without it. At the threshold exactly, or where either fact is unknown, no definite answer is given.
+
+   Left open by that closure: `noSurety`'s `label` ("below the threshold") contradicts its own verbatim text ("up to the threshold limit"), and the label is rendered in the UI. §6.2's refusal to answer at equality makes the contradiction harmless *for that branch*, but the label is wrong wherever else the clause is shown and needs correcting against the notification.
 3. ~~Branch 2.3's timeline claim needs a source.~~ **Closed 7 Sep.** `lib/rbi.ts`'s `fifteenDays` clause is para **31**, verbatim: *"within a period not exceeding 15 calendar days from the date of receipt of all the required documents"*.
 
    The wording carries a trap for branch 2.3. The clock starts **from receipt of all required documents**, not from the day the reader first walked into the branch. A reader who submitted an incomplete set has no 15-day claim yet, and telling them otherwise sends them to a counter with a demand that the bank can correctly refuse. Branch 2.3's first question must therefore establish *when the bank had everything*, not merely when the reader submitted something — and where that is unclear, the timeline is stated as a condition (§9), not a deadline.
