@@ -24,6 +24,7 @@ import { OUTCOMES } from "@/lib/outcomes";
 import { SCENARIOS_BY_LOCALE, MORE_SCENARIOS_BY_LOCALE } from "@/lib/scenarios";
 import { parseLocale, withLang, type Locale } from "@/lib/i18n";
 import { HOME_T, type HomeDict } from "@/lib/i18n-home";
+import { SITUATIONS_T, type Situation } from "@/lib/i18n-situations";
 import {
   parseAnswers,
   answerQuestion,
@@ -66,12 +67,26 @@ export default async function Start({
   const answers = parseAnswers(sp);
   const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
 
-  // Default is the question-by-question order, starting at question 1 --
-  // direct request, 6 Sep 2026: the claim journey should start with the
-  // seven questions, not an interstitial. The scenario-card picker (below)
-  // stays available, opt-in, via ?cards=1 for anyone who'd rather recognise
-  // their situation from a short list first.
   const isFresh = Object.values(answers).every((v) => v === undefined);
+
+  // A fresh visit meets the five situations, not question one.
+  //
+  // The wizard walked the RBI's decision tree in the RBI's order, which meant
+  // someone whose bank had already demanded a succession certificate had to
+  // answer seven questions about nominees, wills and thresholds before the
+  // product engaged with what had actually happened to them. See
+  // docs/superpowers/specs/2026-09-07-claim-journey-rebuild-design.md.
+  //
+  // `?begin=1` is the wizard's own door, used by the "I have not started"
+  // situation. A URL already carrying answers skips the picker entirely, so
+  // every link already shared or bookmarked lands exactly where it used to.
+  if (isFresh && sp.begin !== "1") {
+    return <SituationPicker locale={locale} />;
+  }
+
+  // The scenario-card picker, kept at ?cards=1. It has been unreachable since
+  // 6 Sep -- that string appears nowhere else in the codebase but a comment --
+  // and the situation picker above now does its job from the front door.
   if (isFresh && sp.cards === "1") {
     return <ScenarioPicker locale={locale} t={t} />;
   }
@@ -152,6 +167,77 @@ export default async function Start({
         </div>
       </main>
 
+      <RecoverFooter />
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+
+/**
+ * The opening screen — five situations, one of which is true of every reader.
+ *
+ * Each option is something the reader KNOWS happened, never a judgement about
+ * which stage they are in: "did the bank ask you for something you didn't
+ * understand" is a memory; "are you in the claim process" is an opinion. The
+ * five are mutually exclusive by construction, which is what lets them sit
+ * flat on one screen instead of nesting.
+ *
+ * Two of these destinations — /what-were-you-asked-for and /bank-refused —
+ * are fully written pages that have never had a front door. The third,
+ * /already-in-court, is reached one level in, from the "already started"
+ * menu.
+ */
+function SituationPicker({ locale }: { locale: Locale }) {
+  const t = SITUATIONS_T[locale];
+  const options: (Situation & { href: string })[] = [
+    // The wizard's own door. `begin=1` rather than a bare /start, which would
+    // land back here.
+    { ...t.notStarted, href: "/start?begin=1" },
+    { ...t.alreadyStarted, href: "/start/started" },
+    // Express lanes. These two also appear inside "already started" -- a
+    // reader who identifies by their problem rather than by their stage gets
+    // there in one click instead of two, and neither route is wrong.
+    { ...t.askedFor, href: "/what-were-you-asked-for" },
+    { ...t.refused, href: "/bank-refused" },
+    { ...t.dontKnow, href: "/start/find" },
+  ];
+  return (
+    <>
+      <RecoverNav />
+      <main className="flex-1 bg-mist">
+        <div className="shell max-w-[760px] py-8 sm:py-12">
+          <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
+            {t.eyebrow}
+          </p>
+          <h1 className="display-lg mt-2 font-serif font-bold text-indigo-ink">
+            {t.heading}
+          </h1>
+          <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">{t.sub}</p>
+          <ul className="mt-7 space-y-3">
+            {options.map((option) => (
+              <li key={option.href}>
+                <Link
+                  href={withLang(option.href, locale)}
+                  className="group flex items-start gap-4 rounded-xl border-2 border-rule bg-white p-5 transition-all hover:border-indigo hover:shadow-[0_6px_24px_rgba(45,48,121,0.12)]"
+                >
+                  <span className="flex-1">
+                    <span className="display-md block font-serif font-bold text-indigo-ink">
+                      {option.label}
+                    </span>
+                    <span className="body-fluid mt-1.5 block leading-relaxed text-ink-soft">
+                      {option.detail}
+                    </span>
+                  </span>
+                  <span aria-hidden="true" className="mt-1 shrink-0 text-[1.25rem] font-bold text-saffron-ink">
+                    &rarr;
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </main>
       <RecoverFooter />
     </>
   );
