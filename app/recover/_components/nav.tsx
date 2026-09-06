@@ -39,7 +39,7 @@ function Navigation() {
             <LeafMark className="h-6 w-6 shrink-0 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
             <span className="font-serif text-[1.1875rem] font-bold leading-tight sm:text-[1.5625rem] lg:text-[1.875rem]">Adhikaar</span>
           </span>
-          <span className="mt-1 block text-center text-[0.625rem] text-[#6B6255] sm:text-[0.6875rem] lg:text-[0.75rem]">
+          <span className="mt-1 block max-w-[20rem] text-center text-[0.625rem] text-[#6B6255] sm:max-w-[24rem] sm:text-[0.6875rem] lg:text-[0.75rem]">
             The counter companion for deceased-bank claims in India
           </span>
         </Link>
