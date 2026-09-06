@@ -54,7 +54,9 @@ Three things a neighbouring product could not truthfully copy:
 
 **In scope:** bank deposit accounts, lockers and safe custody, claimed by an adult heir or nominee. Four banks at launch: SBI, PNB, HDFC, ICICI.
 
-**Out of scope, hard:** account discovery · insurance · mutual funds · shares · EPF · NPS · post office · property mutation · dispute resolution · login · any stored user data · document generation beyond the printable sheet. Other rails get **one map page that points and never advises**.
+**Out of scope, hard:** insurance · mutual funds · shares · EPF · NPS · post office · property mutation · dispute resolution · login · any stored user data · document generation beyond the printable sheet. Other rails get **one map page that points and never advises**.
+
+**Account discovery — scope changed 7 Sep 2026.** It was out of scope, hard. It is now the fifth situation on `/start` ("I don't know where to begin"), and it is served exactly as "one map page that points and never advises": `/start/find/where` names UDGAM, the branch's own records, and IEPF, and states on the page that **Adhikaar runs no search and holds no index of anyone's accounts**. That sentence is the scope boundary — the product still does not search, and must not acquire a search box, a lookup form, or any claim that a deposit exists. Deliberately not a question flow: the primary research covers claiming, not finding, so there is no evidence to build a personalised search journey on. Do not delete this route as out-of-scope; the decision is recorded here.
 
 **Absolute prohibitions:**
 
