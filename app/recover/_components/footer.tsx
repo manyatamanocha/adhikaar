@@ -42,7 +42,7 @@ function FooterContent() {
         </div>
         <div className="border-t border-[#EFE7D8] pt-5">
           <section aria-labelledby="footer-terms">
-            <h2 id="footer-terms" className="font-semibold text-[#16233F]">Terms &amp; Conditions — disclaimer</h2>
+            <h2 id="footer-terms" className="font-semibold text-[#16233F]">Disclaimer</h2>
             <p className="mt-2 leading-relaxed">
               {t.footer.disclaimer}
             </p>
