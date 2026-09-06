@@ -10,13 +10,21 @@
 
 The journey stops walking the RBI's decision tree in the RBI's order, and starts at the reader's own situation.
 
+> **Choose situation → ask only the relevant questions → give one clear next action.**
+
 | | Today | After |
 |---|---|---|
-| Entry | One wizard, one question order, everyone | Five situations, five destinations |
+| Entry | One wizard, one question order, everyone | Five situations |
 | First question | "Is this money in a bank account or deposit?" | "What best describes your situation?" |
-| Question order | The order the law needs facts in | Only what this reader can actually answer |
-| Not knowing | Ends the journey at `needs-review` | Produces a sheet of what to go and ask |
-| Reachable outcomes | 5 of 8 outcome pages | All 8, plus one new flow |
+| Question order | The order the law needs facts in | Only what this reader can answer |
+| Not knowing | Ends the journey at `needs-review` | Produces exactly what to confirm with the bank |
+| Someone already stuck | Walks the whole questionnaire again | Goes straight to their own problem |
+
+### 1.1 The governing rule
+
+**Never make a reader repeat the questionnaire unless the missing information changes the answer.**
+
+Every branch below is a consequence of that rule. A person whose bank has demanded a succession certificate does not need to be asked about bank types and thresholds before being told the demand may be unlawful.
 
 ---
 
@@ -24,7 +32,7 @@ The journey stops walking the RBI's decision tree in the RBI's order, and starts
 
 ### 2.1 The current flow, measured
 
-Every branch of `resolve()` was walked exhaustively (23 distinct paths, no more).
+Every branch of `resolve()` was walked exhaustively — 23 distinct paths, no more.
 
 | Destination | Paths | Share |
 |---|---|---|
@@ -37,151 +45,87 @@ Every branch of `resolve()` was walked exhaustively (23 distinct paths, no more)
 | `unknown-nominee` | 1 | 4% |
 | `out-of-scope` | 1 | 4% |
 
-The single likeliest destination is the one that answers nothing. The product asks up to seven questions and most often replies "we cannot tell you yet."
+The single likeliest destination is the one that answers nothing.
 
 ### 2.2 Three structural faults
 
-1. **Every "I don't know yet" is a dead end.** On Q3 court, Q4 will, Q5 heirs, Q6 bank type and Q7 amount, that answer routes to `needs-review`. Five consecutive questions where the commonest honest answer from a bereaved reader terminates the journey.
-
-2. **The no-nominee reader must pass a five-question gauntlet cleanly** — no court order, no will, heirs agree, bank type known, amount known — to reach a real verdict. 10 of the 15 no-nominee paths (67%) end in review.
-
-3. **The questions ask for facts the reader does not hold.** Nominee registration is the *bank's* record. "Is there a court order restraining payment?" is a legal test, not an observation. "Does everyone entitled to inherit agree?" asks for a prediction about family behaviour, usually premature.
+1. **Every "I don't know yet" is a dead end.** On court, will, heirs, bank type and amount, that answer routes to `needs-review` — five consecutive questions where the commonest honest answer terminates the journey.
+2. **The no-nominee reader must pass a five-question gauntlet cleanly.** 10 of the 15 no-nominee paths (67%) end in review.
+3. **The questions ask for facts the reader does not hold.** Nominee registration is the bank's record. A restraining order is a legal test. Whether heirs agree is a prediction.
 
 ### 2.3 Two orphaned surfaces
 
 | Surface | State |
 |---|---|
-| Scenario picker (`ScenarioPicker` in `app/start/page.tsx`) | Gated behind `?cards=1`. That string appears **once** in the codebase — in a comment. Nothing links to it. Unreachable. |
-| `/already-in-court` | Fully written, live at its URL, counted in the Honest-Exit guardrail. `resolve()` cannot return it. Its only doors were three scenario cards. Unreachable. |
+| Scenario picker (`app/start/page.tsx`) | Gated behind `?cards=1`. That string appears once in the codebase — in a comment. Unreachable. |
+| `/already-in-court` | Fully written, live, counted in the Honest-Exit guardrail. `resolve()` cannot return it. Unreachable. Fixed by branch 2.5 below. |
 
 ### 2.4 What the research says
 
 From `Research Log.md` §11 (n=2, received 3 Sep 2026):
 
 - **R2, verbatim:** *"There is no standard process." "They are not given any set of documents to be brought." "No website that can give them a list."*
-- R2 is two years in, in district court, still unsettled. The design assumed a person at the *start*. There are two populations at different stages and the product serves one.
-- **The aggregate rule decides R2's case** and exists today only as a sentence of help text under Q7. Para 10 is explicit: *"the aggregate amount payable, including accrued interest, as on the date of the application"*.
+- R2 is two years in, in district court, unsettled. The design assumed a person at the start. There are two populations and the product serves one.
+- **The aggregate rule decides R2's case** and exists today only as help text. Para 10: *"the aggregate amount payable, including accrued interest, as on the date of the application"*.
 
 ---
 
 ## 3. The opening screen
 
-One screen, five options. Each is a fact the reader knows happened, not a judgement about which stage they are in.
-
 ```
 What best describes your situation?
 
-  1  We haven't been to the bank yet
-     Or we've been told what to expect, but haven't asked them
-
-  2  We've been to the bank and it's going normally
-     They took the claim; we want to know what comes next
-
-  3  The bank asked for something we don't understand
-     A succession certificate, an indemnity bond, a surety, a list of documents
-
-  4  The bank refused, or has gone quiet
-     No answer, repeated visits, or a flat refusal
-
-  5  We don't know if there's even an account
-     Looking for money we think exists somewhere
+  1  I have not started the claim
+  2  I've already started the claim
+  3  The bank asked for something I don't understand
+  4  The bank refused or delayed the claim
+  5  I don't know where to begin
 ```
 
-### 3.1 Why these five and not others
-
-Rejected: *"I have not started the claim"* alongside *"I don't know where to begin"* — the same person, forced to choose. Merged into option 1.
-
-Rejected: *"I've already started the claim"* as a sixth option — it is the parent of options 2, 3 and 4, not their sibling. Keeping it would make every already-started reader choose between a general option and a specific one that both apply.
-
-The test each option must pass: **the reader knows the answer without judging anything.** "Did the bank ask you for something you didn't understand" is a memory. "Are you in the claim process" is an opinion.
-
-### 3.2 Routing
-
-| Option | Branch | Destination | Build |
-|---|---|---|---|
-| 1 | A — Not yet at the bank | The counter sheet | **New** |
-| 2 | B — In progress | Conditional determination | Mostly exists |
-| 3 | C — Asked for something | `/what-were-you-asked-for` + rebuttal | Exists |
-| 4 | D — Refused or quiet | `/bank-refused` | Exists |
-| 5 | E — Discovery | UDGAM route | **New** |
+Options 3 and 4 also appear inside option 2. That redundancy is deliberate: option 2 serves a reader who identifies by **stage**, options 3 and 4 are express lanes for a reader who identifies by **problem**. Both reach the same content. A reader is never wrong, only slower by one screen.
 
 ---
 
-## 4. Branch A — "We haven't been to the bank yet"
+## 4. Branch 1 — I have not started the claim
 
-### 4.1 The premise
+### 4.1 Questions
 
-This reader cannot answer a nominee question. That fact is in the bank's records and they have not asked. Any flow that opens by asking it produces a guess, and a guess produces a wrong verdict carried to a counter.
+| # | Question | Options |
+|---|---|---|
+| 1 | Is this money in a bank account or deposit? | Yes — an account, a deposit, or both / Something else, or I'm not sure |
+| 2 | Was there a nominee or surviving joint holder? | Registered nominee / Joint holder survives / No nominee / Not sure |
+| 3 | Is there a court order stopping payment? | No / Yes / Not sure |
 
-So branch A does not attempt a verdict. **Its output is the sheet R2 said does not exist anywhere.**
+Question 1 stays two-option, per decision of 7 Sep (commit `8e36b3e`): nothing downstream distinguishes an account from a term deposit — `resolve()` checks only that the value is a deposit type, no verdict or printed sheet reads it, and analytics never sends it. Its only job is the out-of-scope exit for a locker, pension, insurance or PPF claim. Para 6(b) excludes PPF, SCSS, MSSC and SSA.
 
-### 4.2 Questions (2)
+### 4.2 Then
 
-| # | Question | Options | Purpose |
-|---|---|---|---|
-| 1 | Was your name on the account with theirs? | Joint account / Only theirs / Don't know | Survivorship is the one route the reader *can* know without the bank |
-| 2 | Roughly how much is at this bank, all accounts added together? | Under ₹5 lakh / ₹5–15 lakh / Over ₹15 lakh / No idea | Carries the aggregate rule in the question itself, not help text |
+| Answer to Q2 | Next |
+|---|---|
+| Registered nominee / joint holder survives | Nominee route and documents — para 9, unconditional at any amount |
+| No nominee | Ask will, heir agreement, bank type and amount (§4.3) |
+| Not sure | Show exactly what to confirm with the bank (§4.4) |
 
-Both accept "don't know" without penalty. Neither gates the output.
+### 4.3 The no-nominee continuation
 
-### 4.3 Output — the counter sheet
+| # | Question | Asked when |
+|---|---|---|
+| 4 | Did they leave a will? | always on this path |
+| 5 | Is anyone contesting who should receive this money? | always on this path |
+| 6 | Roughly how much, all accounts at this bank added together? | always on this path |
+| 7 | What kind of bank? | **only** when the total is between ₹5 and ₹15 lakh, or exactly on either |
 
-Three parts, all printable:
+Question 7 is conditional because below ₹5 lakh is under-threshold for both bank types and above ₹15 lakh is over for both. Most readers never see it.
 
-1. **Ask the bank, in writing** — the three questions whose answers unlock the verdict:
-   - Was a nominee registered on this account, and who?
-   - Is the account under any court order restraining payment? (para 8(ii))
-   - What is the total across all their accounts here, including accrued interest? (para 10)
+Question 6 carries the aggregate rule in its own wording rather than in help text — the gap `Research Log.md` §11 identifies as decisive for R2.
 
-2. **What they may not demand** — para 9 verbatim, with the standing rule that it is quoted only for the nominee/survivor case.
+Question 5 is reworded from "does everyone entitled to inherit agree" — a memory rather than a prediction. "Too early to say" is a real answer that holds the verdict conditional rather than ending it.
 
-3. **Both document lists** — para 9 route and para 10(a) route, side by side, so the reader is prepared whichever answer comes back.
+### 4.4 Threshold boundaries
 
-Plus a resume link: *"I know more now →"* re-enters the reader as branch B.
+Para 10 says *"less than the threshold limit"*, not "up to". Equality is not below.
 
-### 4.4 Why this counts as success
-
-Adhikaar's North Star (`2026-09-06-north-star-metric-design.md` §1) defines a claim-ready journey as reaching **either** a resolved claim route **or** a resolved information gap. Branch A produces the second, deliberately. This is the definition being used as designed, not stretched.
-
-**Stated honestly:** this will raise Weekly Claim-Ready Journeys, because journeys that today end at `needs-review` will end at a real sheet instead. That is a genuine improvement in delivered value, but the metric movement must not be reported as if the funnel improved on its own. The Honest-Exit Rate guardrail is unaffected — branch A never converts an unwelcome verdict into a welcome one.
-
----
-
-## 5. Branch B — "We've been to the bank and it's going normally"
-
-### 5.1 The premise
-
-This reader has been told things. They can often answer the nominee question, and a verdict is reachable.
-
-### 5.2 Questions
-
-Shortest path first, with every answer conditional rather than gated.
-
-| # | Question | Asked when | Notes |
-|---|---|---|---|
-| 1 | Was anyone named in the bank's records to receive this money? | always | Registered nominee / Joint holder survives / No one / **Don't know** |
-| 2 | Roughly how much, all accounts at this bank added together? | no one was named | A nominee resolves under para 9 at any amount, so this is never asked of them |
-| 3 | What kind of bank? | the total is between ₹5 and ₹15 lakh, or exactly on either | Below ₹5 lakh is under-threshold for both bank types; above ₹15 lakh is over for both. Most readers never see it. |
-| 4 | Did they leave a will? | no one was named | Irrelevant to a nominee — para 9 pays irrespective. Only para 10(a)'s heirs route is affected. |
-| 5 | Is anyone contesting who should receive this money? | no one was named | Reworded from "does everyone entitled to inherit agree" — a memory, not a prediction. "Too early to say" is a real answer. |
-
-**Path lengths:** registered nominee or surviving joint holder → **1 question**. No nominee → **4–5**. Today those are 3 and 7.
-
-Questions 4 and 5 exist because para 10's simplified procedure is granted *"provided…"* — its provisos are real preconditions, not optional colour. They are asked only of the readers they bind.
-
-Court restraint is **not asked as a question.** It rides on the verdict as a stated condition and is captured by the control in §7.1 — para 8(ii) is a condition on payment, not a fact this reader can verify in advance.
-
-Unknown answers to 4 and 5 do not terminate: they hold the verdict conditional in the same way court restraint does, and join the sheet's written questions for the bank.
-
-### 5.3 "Don't know" on question 1
-
-Does not end the journey. Produces both routes, stated as conditions, plus the single thing to go and confirm — the same shape as branch A's sheet, reached from a different door.
-
-### 5.4 Threshold boundaries
-
-Para 10 says *"less than the threshold limit"*, not "up to". Equality is therefore not below. The amount bands must preserve this:
-
-| Band | Commercial (₹15L) | Co-operative (₹5L) |
+| Total | Commercial (₹15L) | Co-operative (₹5L) |
 |---|---|---|
 | Less than ₹5 lakh | under | under |
 | Exactly ₹5 lakh | under | **equal — confirm** |
@@ -189,98 +133,174 @@ Para 10 says *"less than the threshold limit"*, not "up to". Equality is therefo
 | Exactly ₹15 lakh | **equal — confirm** | over |
 | More than ₹15 lakh | over | over |
 
-Bank type is required for every row except the first and last.
+### 4.5 The result page
 
----
+Every result page in the product carries these six parts, in this order:
 
-## 6. Branches C, D, E
-
-### 6.1 C — "The bank asked for something we don't understand"
-
-No determination. The job is to check what the reader was told against what the Directions permit.
-
-- Entry lists the things banks actually ask for: succession certificate, letter of administration, probate, indemnity bond, third-party surety, legal heir certificate, "a list we were given", "nothing was written down".
-- Succession certificate / letter of administration / probate / indemnity / surety → the para 9 rebuttal **if** nominee or survivor, else para 10(a)'s closed list and the no-surety rule.
-- Destination `/what-were-you-asked-for` already exists and receives this.
-- This branch needs the nominee fact to answer correctly, so it asks question 1 of branch B and nothing else.
-
-### 6.2 D — "The bank refused, or has gone quiet"
-
-No determination at all. Escalation content only: the 15-day settlement expectation, the compensation clause (para 31 — Bank Rate + 4%), the internal escalation ladder, and RB-IOS 2026 with the CRPC address. `/bank-refused` exists.
-
-### 6.3 E — "We don't know if there's even an account"
-
-The only branch with nothing behind it. Scope for this build:
-
-- Points at UDGAM (`udgam.rbi.org.in`), the Common Landing Portal and IEPF.
-- States plainly, on the page, that **Adhikaar runs no search** and holds no index — the standing rule from `/discovery`'s header comment.
-- Ends by handing the reader back to option 1 once an account is found.
-
-Explicitly **not** in scope: the `/discovery` landing-page repositioning, which is a separate unlinked experiment and a different question from the claim journey.
-
----
-
-## 7. Conditional verdicts
-
-Agreed model: a verdict may be given before every fact is known, **provided its condition is stated with it and visibly unresolved.**
-
-```
-If no court order is stopping payment, the bank must settle on
-para 9 — no succession certificate, at any amount.
-
-⚠ One thing left to confirm: is a court order stopping payment?
-```
-
-Rules:
-
-1. A claim is never stated flatly while a condition on it is open.
-2. The condition names the paragraph it comes from (8(ii) for restraint).
-3. Resolving a condition is always offered as an action, never left implicit.
-4. No conditional verdict may be printed without its condition on the printed sheet.
-
-Rule 4 matters most: the printed sheet is the artefact that reaches a bank counter, and a condition dropped in printing is exactly the failure the whole product exists to prevent.
-
-### 7.1 The condition is where the court question moved to
-
-Branch B does not ask about court restraint as a gating question (§5.2), but the fact still has to be capturable — otherwise the restraint page below is unreachable, which is precisely the fault this rebuild exists to fix (§2.3).
-
-The condition itself is the control:
-
-```
-⚠ One thing left to confirm: is a court order stopping payment?
-   [ No, none that we know of ]   [ Yes, there is ]   [ We don't know ]
-```
-
-| Answer | Result |
+| Part | Content |
 |---|---|
-| No | The condition closes. The verdict is restated flatly and becomes printable without it. |
-| Yes | Routes to the restraint page (§8) |
-| Don't know | Condition stays open. The verdict remains conditional, and "ask the bank whether it knows of any order" joins the sheet's written questions. |
+| Your likely route | Para 9 (nominee/survivor) or para 10(a) (no nominee), named plainly |
+| Documents required | The closed list for that route |
+| What the bank should not ask for | Succession certificate, letter of administration, probate, indemnity, third-party surety — as the route permits |
+| RBI source | Clause quoted verbatim with its paragraph number, from `lib/rbi.ts` |
+| What to say at the counter | Plain sentences the reader can read aloud |
+| Print / download | The sheet, carrying every open condition (§6) |
 
-So the court fact is still collected — after a verdict rather than before one, and phrased as confirming an answer the reader already has rather than as a test they must pass to receive one.
+**"Likely" is load-bearing.** Where a fact is still unconfirmed the route is stated as a condition, never as a settled fact.
 
 ---
 
-## 8. What happens to `needs-review`
+## 5. Branch 2 — I've already started the claim
 
-Today one page absorbs 14 of 23 paths for four unrelated reasons. It splits:
+### 5.1 Where are you now?
+
+```
+  2.1  I have not submitted documents
+  2.2  I submitted documents and am waiting
+  2.3  The bank asked for extra documents
+  2.4  The bank refused or delayed the claim
+  2.5  I have started a court case
+```
+
+### 5.2 — Documents not submitted
+
+Runs the minimum claim questions only: nominee or no nominee → court order → will and heir agreement → bank type and amount if required. Output is a personalised document checklist rather than a verdict page.
+
+### 5.3 — Submitted and waiting
+
+No determination. Four questions:
+
+| Question | Purpose |
+|---|---|
+| When did the bank have all the documents it asked for? | Para 31's clock starts from receipt of **all** required documents, not from the first visit — see open question 3 |
+| Did the bank give you an acknowledgement? | The single most useful piece of evidence |
+| Which bank? | Pulls that bank's own published policy from `lib/banks.ts` |
+| Have they given a written response? | Determines whether escalation is available yet |
+
+Shows: expected settlement timeline; a follow-up message template; what evidence to keep; when to complain in writing.
+
+### 5.4 — Bank asked for extra documents
+
+Same destination as branch 3 (§6). Asks what was demanded, then answers it.
+
+### 5.5 — Bank refused or delayed
+
+Same destination as branch 4 (§7).
+
+### 5.6 — Court case already started
+
+Three questions:
+
+| Question | Why |
+|---|---|
+| Is the case about this bank deposit? | Scope — an unrelated case does not engage the Directions |
+| Was it started before or after the new RBI Directions? | The Directions came into force 31 Mar 2026. R2's ordeal began before, and nobody told them the ground had moved. |
+| Is there currently a court order stopping payment? | Para 8(ii) |
+
+Shows the relevant RBI rule and **a note to discuss with a lawyer**.
+
+🔴 **Framing rule, non-negotiable:** *"take this clause to your lawyer and ask whether it changes your position"* — never "drop your case", and no promise that a case can be withdrawn or resolved automatically. Taken verbatim from `Research Log.md` §11's finding on R2.
+
+This gives `/already-in-court` its first reachable door and reverses the earlier decision to leave it orphaned. `already-in-court` therefore **stays** in the Honest-Exit outcome set in `app/api/metrics/route.ts`.
+
+---
+
+## 6. Branch 3 — The bank asked for something I don't understand
+
+Goes straight to *"What did the bank ask you for?"*
+
+- Succession certificate
+- Surety or bond
+- Affidavit
+- Genealogy / vanshavali
+- Legal-heir certificate
+- Other
+
+Then shows: whether the request may be unnecessary for their route; the relevant RBI paragraph; what to ask the bank in writing; a printable counter note; an escalation option.
+
+**This branch must not ask seven questions first.** It needs the nominee fact and nothing else — para 9 forbids these demands outright for a nominee or survivor, while para 10(a) prescribes a closed list and forbids third-party surety below the threshold. Where the nominee fact is unknown, both answers are given as conditions.
+
+`/what-were-you-asked-for` already exists and receives this.
+
+---
+
+## 7. Branch 4 — The bank refused or delayed
+
+Straight to escalation. Four questions only:
+
+- What happened?
+- Do you have it in writing?
+- How long have you been waiting?
+- Which bank is involved?
+
+Then the complaint letter and the escalation ladder:
+
+1. Ask for the refusal or delay in writing
+2. Written complaint to the branch
+3. The bank's grievance officer
+4. RBI Ombudsman (RB-IOS 2026) if eligible
+5. Keep all receipts, emails and acknowledgement numbers
+
+Compensation for bank-attributable delay is para 31 — Bank Rate + 4%. `/bank-refused` already exists.
+
+---
+
+## 8. Branch 5 — I don't know where to begin
+
+Two large choices, nothing else:
+
+```
+  I know the bank and found the deposit   →  branch 1
+  I don't know where the money is         →  the official search route
+```
+
+The search route points at UDGAM (`udgam.rbi.org.in`), the Common Landing Portal and IEPF, and **states on the page that Adhikaar runs no search** and holds no index. Once a possible deposit is found, the reader is handed into branch 1.
+
+The `/discovery` landing-page repositioning is a separate unlinked experiment and is not in scope.
+
+---
+
+## 9. Conditional answers
+
+A route may be given before every fact is known, **provided its condition is stated with it and visibly unresolved.**
+
+```
+If no court order is stopping payment, the bank must settle on para 9 —
+no succession certificate, at any amount.
+
+⚠ One thing left to confirm: is a court order stopping payment?
+   [ No, none we know of ]   [ Yes, there is ]   [ We don't know ]
+```
+
+| Rule | |
+|---|---|
+| 1 | A claim is never stated flatly while a condition on it is open |
+| 2 | The condition names the paragraph it comes from |
+| 3 | Resolving a condition is always offered as an action, never left implicit |
+| 4 | **No conditional answer may be printed without its condition on the sheet** |
+
+Rule 4 matters most: the printed sheet is what reaches a bank counter, and a condition dropped in printing is the exact failure this product exists to prevent.
+
+---
+
+## 10. What happens to `needs-review`
+
+One page absorbs 14 of 23 paths for four unrelated reasons. It splits:
 
 | Reason | Becomes | Reached from |
 |---|---|---|
-| Court restraint | Its own page — para 8(ii), what a restraint means, take it to a lawyer | The condition control, §7.1 |
-| A will exists | Probate route — what changes, what documents | Branch B, when a will is reported |
-| Exactly at the threshold | Boundary confirmation — para 10 says "less than", so confirm the total with the bank | Branch B, the two "equal" rows in §5.4 |
-| Plain uncertainty | The branch A sheet — what to go and find out | Any unresolved "don't know" |
-
-`/needs-review` remains as a route for the first case and keeps its 308 from `/confirm-details`.
+| Court restraint | Para 8(ii) page — what a restraint means, take it to a lawyer | Branch 1 Q3; the condition control (§9); branch 2.6 |
+| A will exists | Probate route | Branch 1 Q4 |
+| Exactly at the threshold | Boundary confirmation — para 10 says "less than" | The two "equal" rows in §4.4 |
+| Plain uncertainty | What to confirm with the bank | Any unresolved "not sure" |
 
 **Every row names what reaches it.** A destination with no named source is an orphan, and this product has shipped two of those already (§2.3).
 
 ---
 
-## 9. Outcome pages
+## 11. Outcome pages
 
-All eight existing outcome pages are kept at their current URLs. No content rewrite is in scope.
+All existing outcome pages keep their URLs. No content rewrite is in scope.
 
 | Outcome | Path | Reachable today | After |
 |---|---|---|---|
@@ -289,77 +309,76 @@ All eight existing outcome pages are kept at their current URLs. No content rewr
 | `under-threshold` | `/no-nominee/under-threshold` | yes | yes |
 | `over-threshold` | `/no-nominee/over-threshold` | yes | yes |
 | `unknown-nominee` | `/unknown-nominee` | yes | yes |
-| `dispute` | `/dispute` | yes | yes — from branch B question 5 |
-| `out-of-scope` | `/out-of-scope` | yes | yes |
-| `already-in-court` | `/already-in-court` | **no** | **no — see §12** |
+| `dispute` | `/dispute` | yes | yes — branch 1 Q5 |
+| `out-of-scope` | `/out-of-scope` | yes | yes — branch 1 Q1 |
+| `already-in-court` | `/already-in-court` | **no** | **yes — branch 2.6** |
 
 ---
 
-## 10. URLs and migration
+## 12. URLs and migration
 
-- The opening screen is `/start`. Each branch is its own route: `/start/new`, `/start/progress`, `/start/asked`, `/start/refused`, `/start/find`.
+- Opening screen at `/start`. Branches are their own routes: `/start/new`, `/start/started`, `/start/asked`, `/start/refused`, `/start/find`.
 - Answers stay in the query string. The URL remains the whole state; nothing is stored.
-- **Existing links must not break.** `/start?claiming=…&nominee=…` links are in bookmarks and messages. A bare `/start` with wizard answers present routes into branch B at the matching point rather than showing the opening screen.
-- `RETIRED_VALUES` in `lib/wizard.ts` is the existing mechanism for this and extends to any option this rebuild retires. Retiring an option means moving its value there, never deleting it.
+- **Existing links must not break.** `/start?claiming=…&nominee=…` links are in bookmarks and messages. A bare `/start` carrying wizard answers routes into branch 1 at the matching point rather than showing the opening screen.
+- `RETIRED_VALUES` in `lib/wizard.ts` is the mechanism for any option this rebuild retires. Retiring an option means moving its value there, never deleting it — deleting it silently strips the answer from every existing link.
 
 ---
 
-## 11. Analytics
+## 13. Analytics
 
 | Event | Change |
 |---|---|
-| `flow_started` | Gains a `branch` property (a–e). Without it the funnel cannot be read per branch. |
-| `question_answered` | Unchanged shape; `step` becomes branch-relative |
-| `actionable_result_viewed` | Now also fires for branch A's sheet — this is the NSM, see §4.4 |
+| `flow_started` | Gains a `branch` property. Without it the funnel cannot be read per branch. |
+| `question_answered` | Same shape; `step` becomes branch-relative |
+| `actionable_result_viewed` | Also fires for the "what to confirm" sheets — see §14 |
 | `outcome_reached` | Unchanged |
-| Honest-Exit outcome set | Remove `already-in-court` while it stays unreachable (§12), or the guardrail counts an impossible event |
+| Honest-Exit outcome set | Unchanged — `already-in-court` becomes reachable (§5.6) rather than being removed |
 
-No new personal data. No URL is transmitted; the existing `lib/analytics.ts` guarantees hold unchanged.
-
----
-
-## 12. Explicitly out of scope
-
-| Item | Decision |
-|---|---|
-| An "already in court" door | **Cut, by decision on 7 Sep.** `/already-in-court` stays built and unreachable. Its removal from the Honest-Exit set (§11) is the only related change. |
-| The document-list door as a top-level entry | Folded into branch C rather than given its own option |
-| `/discovery` landing repositioning | Separate experiment, untouched |
-| Rewriting outcome page content | Out — routing and entry only |
-| Hindi/Kannada review by a native speaker | Still outstanding across the product; this rebuild adds strings that inherit the same caveat |
+No new personal data. No URL is transmitted; `lib/analytics.ts`'s guarantees hold.
 
 ---
 
-## 13. Risks
+## 14. Effect on the North Star, stated plainly
 
-| Risk | Mitigation |
-|---|---|
-| A conditional verdict is printed without its condition | Rule 4 in §7; a test asserting the printed sheet carries every open condition |
-| Five options is too many for a bereaved reader on a phone | Each has a one-line description; they are mutually exclusive by construction (§3.1) |
-| Branch A raises the NSM and looks like a funnel win | Stated in §4.4 and to be repeated wherever the number is reported |
-| Retiring wizard options breaks shared links | `RETIRED_VALUES` (§10), with the existing test asserting through `parseAnswers` |
-| Branch E overstates what Adhikaar does | The page states it runs no search; "Start your search" wording is not reused |
+The NSM (`2026-09-06-north-star-metric-design.md` §1) counts journeys reaching **either** a resolved claim route **or** a resolved information gap. This rebuild converts journeys that today end at `needs-review` into the second kind.
+
+**Weekly Claim-Ready Journeys will therefore rise, and part of that rise is definitional rather than behavioural.** It must be reported that way wherever the number appears. The Honest-Exit Rate guardrail is unaffected: no unwelcome verdict is converted into a welcome one anywhere in this design.
 
 ---
 
-## 14. Phasing
+## 15. Phasing
 
-Each phase leaves the product shippable. No phase depends on a later one.
+Each phase ships on its own. No phase depends on a later one.
 
 | Phase | Contents | Why this order |
 |---|---|---|
-| 1 | Opening screen; branches C and D wired to the pages that already exist | Highest value per unit of work — three built pages get a front door, and two of them have never had one |
-| 2 | Branch B: the shortened question set and conditional verdicts | The determination engine; changes `resolve()` and is the riskiest legal surface |
-| 3 | Branch A: the counter sheet | Depends on phase 2's route logic to state both branches correctly |
-| 4 | `needs-review` split (§8) | Needs phases 2 and 3 to have named sources for each destination |
-| 5 | Branch E: discovery | Independent of everything above; gated on open question 1 |
+| 1 | Opening screen; branches 3 and 4 wired to pages that already exist | Highest value per unit of work — three built pages get a front door, two have never had one |
+| 2 | Branch 1: the question set and conditional answers | The determination engine; changes `resolve()`, the riskiest legal surface |
+| 3 | Branch 2's five-way menu; 2.6 court door; 2.3 waiting flow | 2.3 is genuinely new content; 2.4 and 2.5 are links to phase 1's work |
+| 4 | `needs-review` split (§10) | Needs phases 2 and 3 to have named sources |
+| 5 | Branch 5 discovery route | Independent; gated on open question 1 |
 
-Phase 1 alone fixes the orphaned scenario picker and gives `/what-were-you-asked-for` and `/bank-refused` real entry points, without touching `resolve()`.
+Phase 1 alone fixes the orphaned scenario picker and gives `/what-were-you-asked-for` and `/bank-refused` real entry points without touching `resolve()`.
 
 ---
 
-## 15. Open questions
+## 16. Risks
 
-1. **Branch E has no research behind it.** n=2 covers claiming, not finding. Worth one interview before building, or shipping it as a links page rather than a journey.
-2. **Does branch C need the amount question?** Para 10(a)'s no-surety rule is threshold-dependent, so a surety demand above the threshold may be legitimate. Needs resolving before that branch is written.
-3. **Branch B question 1 wording** is inherited from the current Q2 and has not been re-tested against a reader who has been to the bank but was told nothing useful.
+| Risk | Mitigation |
+|---|---|
+| A conditional answer is printed without its condition | Rule 4 (§9); a test asserting the printed sheet carries every open condition |
+| Branch 2.6 reads as legal advice | The framing rule in §5.6 is quoted from the research and must appear in the page copy, not only the spec |
+| Retiring wizard options breaks shared links | `RETIRED_VALUES` (§12), with the existing test asserting through `parseAnswers` |
+| The NSM rise is read as a funnel win | §14, repeated wherever the number is reported |
+| Branch 5 overstates what Adhikaar does | The page states it runs no search; `/discovery`'s "Start your search" wording is not reused |
+| Five entries plus a five-way submenu is a lot of surface | Phase 1 ships the entries alone and can be tested before the submenu is built |
+
+---
+
+## 17. Open questions
+
+1. **Branch 5 has no research behind it.** n=2 covers claiming, not finding. Worth one interview, or ship it as a links page rather than a journey.
+2. **Does branch 3 need the amount?** Para 10(a)'s no-surety rule is threshold-dependent, so a surety demand above the threshold may be legitimate. Must be resolved before that branch is written, or the product will call a lawful demand unlawful.
+3. ~~Branch 2.3's timeline claim needs a source.~~ **Closed 7 Sep.** `lib/rbi.ts`'s `fifteenDays` clause is para **31**, verbatim: *"within a period not exceeding 15 calendar days from the date of receipt of all the required documents"*.
+
+   The wording carries a trap for branch 2.3. The clock starts **from receipt of all required documents**, not from the day the reader first walked into the branch. A reader who submitted an incomplete set has no 15-day claim yet, and telling them otherwise sends them to a counter with a demand that the bank can correctly refuse. Branch 2.3's first question must therefore establish *when the bank had everything*, not merely when the reader submitted something — and where that is unclear, the timeline is stated as a condition (§9), not a deadline.
