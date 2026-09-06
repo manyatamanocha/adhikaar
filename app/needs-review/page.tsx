@@ -42,7 +42,11 @@ export default async function ConfirmDetails({ searchParams }: {
     ...(a.will !== "no" && a.nominee === "no" ? [{ text: will ? t.stepWillYes : t.stepWillAsk, href: will ? undefined : startWithout("will") }] : []),
     ...(a.heirs !== "agree" ? [{ text: t.stepDispute, href: a.heirs === "dispute" ? undefined : startWithout("heirs") }] : []),
     ...(a.bankType === "unknown" || !a.bankType ? [{ text: t.stepBankTypeUnknown, href: startWithout("bankType") }] : []),
-    ...(a.amount === "unknown" || a.amount === "equal" || !a.amount ? [{ text: t.stepAmountUnknown, href: startWithout("amount") }] : []),
+    // "equal" is the same shape of bug as court "yes" -- a confirmed fact,
+    // not an unknown. Re-asking the amount and truthfully answering "equal"
+    // again just returns here; only genuinely unknown/unset amounts are
+    // fixable by looking the figure up and coming back.
+    ...(a.amount === "unknown" || a.amount === "equal" || !a.amount ? [{ text: t.stepAmountUnknown, href: a.amount === "equal" ? undefined : startWithout("amount") }] : []),
   ];
   // No button at all once a confirmed blocker exists -- no other field's
   // answer changes the outcome, so there is nothing left to "come back"
