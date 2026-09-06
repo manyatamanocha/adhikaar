@@ -15,7 +15,7 @@ export default function Page() {
       eyebrow="Nominee claims"
       title="Nominee bank account claim after death"
       dek="Where a nominee is registered, the claim is meant to be simple: three documents, no court paperwork, whatever the amount in the account."
-      ctaHref="/start?claiming=deposit&nominee=yes"
+      ctaHref="/start?claiming=deposit-account&nominee=yes"
     >
       <ArticleSection heading="The rule">
         <p>

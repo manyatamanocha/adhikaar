@@ -50,13 +50,13 @@ export default async function Start({
   const t = HOME_T[locale].startPage;
   const answers = parseAnswers(sp);
 
-  // The recognition front door: shown only on a genuinely fresh /start (no
-  // answers at all yet), and skippable via ?classic=1 for anyone whose
-  // situation doesn't match a card and wants the question-by-question order
-  // instead — including the out-of-scope exit, which the classic order still
-  // asks about first.
+  // Default is the question-by-question order, starting at question 1 --
+  // direct request, 6 Sep 2026: the claim journey should start with the
+  // seven questions, not an interstitial. The scenario-card picker (below)
+  // stays available, opt-in, via ?cards=1 for anyone who'd rather recognise
+  // their situation from a short list first.
   const isFresh = Object.values(answers).every((v) => v === undefined);
-  if (isFresh && sp.classic !== "1") {
+  if (isFresh && sp.cards === "1") {
     return <ScenarioPicker locale={locale} t={t} />;
   }
 
@@ -83,9 +83,11 @@ export default async function Start({
           <h1 className="display-lg mt-6 font-serif font-bold text-indigo-ink">
             {question.prompt}
           </h1>
-          <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">
-            {question.help}
-          </p>
+          {question.help && (
+            <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">
+              {question.help}
+            </p>
+          )}
 
           <ul className="mt-7 space-y-3">
             {question.options.map((option) => (
@@ -209,7 +211,7 @@ function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"
 
           <div className="mt-5">
             <Link
-              href={withLang("/start?classic=1", locale)}
+              href={withLang("/start", locale)}
               className="-my-2.5 inline-block py-2.5 text-[1.375rem] font-bold text-indigo underline underline-offset-2"
             >
               {t.noneOfThese}

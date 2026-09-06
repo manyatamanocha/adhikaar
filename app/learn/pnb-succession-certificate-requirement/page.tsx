@@ -17,7 +17,7 @@ export default function Page() {
       eyebrow="Bank-specific"
       title="PNB succession certificate requirement"
       dek="Punjab National Bank does not require a succession certificate for most deceased-customer claims. Here is when it does, and when its own published page says it should not."
-      ctaHref="/start?claiming=deposit&nominee=no"
+      ctaHref="/start?claiming=deposit-account&nominee=no"
     >
       <ArticleSection heading="When PNB does not require one">
         <p>

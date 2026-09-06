@@ -299,8 +299,8 @@ function Situations({ lang }: { lang: Locale }) {
   const PATHS = [
     { icon: <PersonIcon />, chip: t.chipNoCertificate, tone: "green", title: t.pathNominee, body: t.pathNomineeBody, href: "/nominee" },
     { icon: <TwoPeopleIcon />, chip: t.chipNoCertificate, tone: "amber", title: t.pathJoint, body: t.pathJointBody, href: "/survivorship" },
-    { icon: <DocIcon />, chip: t.chipSixDocuments, tone: "blue", title: t.pathNoNominee, body: t.pathNoNomineeBody, href: "/start?claiming=deposit&nominee=no" },
-    { icon: <QuestionIcon />, chip: t.chipStartHere, tone: "violet", title: t.pathUnknown, body: t.pathUnknownBody, href: "/start?claiming=deposit&nominee=unknown" },
+    { icon: <DocIcon />, chip: t.chipSixDocuments, tone: "blue", title: t.pathNoNominee, body: t.pathNoNomineeBody, href: "/start?claiming=deposit-account&nominee=no" },
+    { icon: <QuestionIcon />, chip: t.chipStartHere, tone: "violet", title: t.pathUnknown, body: t.pathUnknownBody, href: "/start?claiming=deposit-account&nominee=unknown" },
   ];
   return (
     <section className="border-y border-rule-faint bg-mist">

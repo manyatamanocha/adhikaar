@@ -13,7 +13,7 @@ export default function Page() {
       eyebrow="Deadlines"
       title="RBI 15-day deceased claim rule"
       dek="Once a bank has every document it needs, it has 15 calendar days to settle the claim — and the Directions say what happens if it doesn't."
-      ctaHref="/start?claiming=deposit"
+      ctaHref="/start?claiming=deposit-account"
     >
       <ArticleSection heading="The rule, verbatim">
         <p>The deadline runs from a complete set of documents, not from the date of death:</p>

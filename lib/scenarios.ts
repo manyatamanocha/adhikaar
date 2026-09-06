@@ -33,7 +33,7 @@ import type { Locale } from "./i18n";
  * Translated 5 Sep 2026 into Hindi and Kannada -- labels and details are
  * Adhikaar's own plain-language descriptions, not statutory quotes, so
  * translating them is correct. `href` never changes across locales: the
- * query values (claiming=deposit, nominee=yes, etc.) are wizard state, not
+ * query values (claiming=deposit-account, nominee=yes, etc.) are wizard state, not
  * display text. Unchecked by a native speaker, same as the rest of the site.
  */
 
@@ -48,15 +48,15 @@ const enPrimary: Scenario[] = [
   {
     label: "The bank asked for a succession certificate",
     detail: "We'll check whether that was the right thing to ask for.",
-    href: "/start?claiming=deposit",
+    href: "/start?claiming=deposit-account",
   },
   {
     label: "There was a nominee on the account",
-    href: "/start?claiming=deposit&nominee=yes",
+    href: "/start?claiming=deposit-account&nominee=yes",
   },
   {
     label: "There was no nominee, or I'm not sure",
-    href: "/start?claiming=deposit",
+    href: "/start?claiming=deposit-account",
   },
 ];
 
@@ -64,11 +64,11 @@ const enMore: Scenario[] = [
   {
     label: "The account was joint, with a survivorship clause",
     detail: "“either or survivor”, “former or survivor”, or similar wording.",
-    href: "/start?claiming=deposit&nominee=survivorship",
+    href: "/start?claiming=deposit-account&nominee=survivorship",
   },
   {
     label: "The legal heirs disagree with each other",
-    href: "/start?claiming=deposit&heirs=dispute",
+    href: "/start?claiming=deposit-account&heirs=dispute",
   },
   {
     label: "We already started court proceedings",
@@ -81,15 +81,15 @@ const hiPrimary: Scenario[] = [
   {
     label: "बैंक ने उत्तराधिकार प्रमाणपत्र माँगा",
     detail: "हम जाँचेंगे कि क्या यह माँगना सही था।",
-    href: "/start?claiming=deposit",
+    href: "/start?claiming=deposit-account",
   },
   {
     label: "खाते में एक नामांकित व्यक्ति दर्ज था",
-    href: "/start?claiming=deposit&nominee=yes",
+    href: "/start?claiming=deposit-account&nominee=yes",
   },
   {
     label: "कोई नामांकित व्यक्ति नहीं था, या मुझे यक़ीन नहीं है",
-    href: "/start?claiming=deposit",
+    href: "/start?claiming=deposit-account",
   },
 ];
 
@@ -97,11 +97,11 @@ const hiMore: Scenario[] = [
   {
     label: "यह संयुक्त खाता था, उत्तरजीविता शर्त के साथ",
     detail: "“either or survivor”, “former or survivor”, या इससे मिलते-जुलते शब्द।",
-    href: "/start?claiming=deposit&nominee=survivorship",
+    href: "/start?claiming=deposit-account&nominee=survivorship",
   },
   {
     label: "क़ानूनी उत्तराधिकारी आपस में असहमत हैं",
-    href: "/start?claiming=deposit&heirs=dispute",
+    href: "/start?claiming=deposit-account&heirs=dispute",
   },
   {
     label: "हम पहले ही अदालती कार्यवाही शुरू कर चुके हैं",
@@ -114,15 +114,15 @@ const knPrimary: Scenario[] = [
   {
     label: "ಬ್ಯಾಂಕ್ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಕೇಳಿತು",
     detail: "ಅದನ್ನು ಕೇಳುವುದು ಸರಿಯಾಗಿತ್ತೇ ಎಂದು ನಾವು ಪರಿಶೀಲಿಸುತ್ತೇವೆ.",
-    href: "/start?claiming=deposit",
+    href: "/start?claiming=deposit-account",
   },
   {
     label: "ಖಾತೆಯಲ್ಲಿ ಒಬ್ಬ ನಾಮನಿರ್ದೇಶಿತರು ಇದ್ದರು",
-    href: "/start?claiming=deposit&nominee=yes",
+    href: "/start?claiming=deposit-account&nominee=yes",
   },
   {
     label: "ನಾಮನಿರ್ದೇಶಿತರು ಇರಲಿಲ್ಲ, ಅಥವಾ ನನಗೆ ಖಚಿತವಿಲ್ಲ",
-    href: "/start?claiming=deposit",
+    href: "/start?claiming=deposit-account",
   },
 ];
 
@@ -130,11 +130,11 @@ const knMore: Scenario[] = [
   {
     label: "ಇದು ಜಂಟಿ ಖಾತೆಯಾಗಿತ್ತು, ಉತ್ತರಜೀವಿತ್ವ ಷರತ್ತಿನೊಂದಿಗೆ",
     detail: "“either or survivor”, “former or survivor”, ಅಥವಾ ಇದೇ ರೀತಿಯ ಪದಗಳು.",
-    href: "/start?claiming=deposit&nominee=survivorship",
+    href: "/start?claiming=deposit-account&nominee=survivorship",
   },
   {
     label: "ಕಾನೂನುಬದ್ಧ ಉತ್ತರಾಧಿಕಾರಿಗಳು ಪರಸ್ಪರ ಭಿನ್ನಾಭಿಪ್ರಾಯ ಹೊಂದಿದ್ದಾರೆ",
-    href: "/start?claiming=deposit&heirs=dispute",
+    href: "/start?claiming=deposit-account&heirs=dispute",
   },
   {
     label: "ನಾವು ಈಗಾಗಲೇ ನ್ಯಾಯಾಲಯದ ವಿಚಾರಣೆ ಪ್ರಾರಂಭಿಸಿದ್ದೇವೆ",

@@ -17,7 +17,7 @@ export default function Page() {
       eyebrow="Bank-specific"
       title="SBI deceased account claim process"
       dek="What State Bank of India itself has published, read from its own pages and checked on the date below — not inferred from the RBI's general rule."
-      ctaHref="/start?claiming=deposit"
+      ctaHref="/start?claiming=deposit-account"
     >
       <ArticleSection heading="SBI's own threshold and surety position">
         <p>

@@ -14,7 +14,7 @@ export default function Page() {
       eyebrow="No nominee"
       title="Documents required when there is no nominee"
       dek="Below the threshold, with no nominee registered, the RBI does not just discourage extra paperwork — it requires the bank to settle on a closed list of six documents."
-      ctaHref="/start?claiming=deposit&nominee=no"
+      ctaHref="/start?claiming=deposit-account&nominee=no"
     >
       <ArticleSection heading="The rule">
         <p>

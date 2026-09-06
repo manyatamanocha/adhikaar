@@ -15,7 +15,7 @@ import type { OutcomeId } from "./outcomes";
 
 export type QuestionId = "claiming" | "court" | "nominee" | "will" | "heirs" | "bankType" | "amount";
 export type Answers = Partial<{
-  claiming: "deposit" | "locker" | "pension" | "other" | "minor";
+  claiming: "deposit-account" | "deposit-fd" | "deposit-both" | "locker" | "pension" | "other" | "minor";
   court: "yes" | "no" | "unknown";
   nominee: "yes" | "survivorship" | "no" | "unknown";
   will: "yes" | "no" | "unknown";
@@ -48,13 +48,11 @@ const unknownEn: Option = { value: "unknown", label: "I don't know yet", unsure:
 const en: Record<QuestionId, Question> = {
   claiming: {
     id: "claiming", number: 1, prompt: "What are you claiming?",
-    help: "This guide covers a deceased adult's bank deposits claimed by an adult. Other assets need different procedures.",
+    help: "",
     options: [
-      { value: "deposit", label: "A bank account or fixed deposit", detail: "Savings, current, recurring or fixed deposits at a bank." },
-      { value: "locker", label: "A bank locker or articles in safe custody", detail: "Locker access and inventory follow a separate process, not this deposit checklist." },
-      { value: "pension", label: "A government or family pension" },
-      { value: "other", label: "Insurance, provident fund, shares, post office savings or property" },
-      { value: "minor", label: "The claimant is under 18, or acting through a guardian" },
+      { value: "deposit-account", label: "A bank account", detail: "Savings or current." },
+      { value: "deposit-fd", label: "A bank deposit", detail: "Term or recurring deposit." },
+      { value: "deposit-both", label: "Both", detail: "A bank account and a deposit, at the same bank." },
     ],
   },
   court: {
@@ -98,13 +96,11 @@ const unknownHi: Option = { value: "unknown", label: "मुझे अभी न
 const hi: Record<QuestionId, Question> = {
   claiming: {
     id: "claiming", number: 1, prompt: "आप किस पर दावा कर रहे हैं?",
-    help: "यह गाइड किसी दिवंगत वयस्क के बैंक जमा पर एक वयस्क द्वारा किए गए दावे को कवर करती है। अन्य संपत्तियों के लिए अलग प्रक्रियाएँ चाहिए।",
+    help: "",
     options: [
-      { value: "deposit", label: "बैंक खाता या सावधि जमा", detail: "बैंक में बचत, चालू, आवर्ती या सावधि जमा।" },
-      { value: "locker", label: "बैंक लॉकर या सुरक्षित हिरासत में सामान", detail: "लॉकर एक्सेस और सूची एक अलग प्रक्रिया का पालन करती है, यह जमा सूची नहीं।" },
-      { value: "pension", label: "सरकारी या पारिवारिक पेंशन" },
-      { value: "other", label: "बीमा, भविष्य निधि, शेयर, डाकघर बचत, या संपत्ति" },
-      { value: "minor", label: "दावेदार 18 वर्ष से कम है, या अभिभावक के ज़रिए काम कर रहा है" },
+      { value: "deposit-account", label: "बैंक खाता", detail: "बचत या चालू खाता।" },
+      { value: "deposit-fd", label: "बैंक जमा", detail: "सावधि या आवर्ती जमा।" },
+      { value: "deposit-both", label: "दोनों", detail: "एक ही बैंक में खाता और जमा, दोनों।" },
     ],
   },
   court: {
@@ -148,13 +144,11 @@ const unknownKn: Option = { value: "unknown", label: "ನನಗೆ ಇನ್ನ�
 const kn: Record<QuestionId, Question> = {
   claiming: {
     id: "claiming", number: 1, prompt: "ನೀವು ಯಾವುದಕ್ಕೆ ಹಕ್ಕು ಸಲ್ಲಿಸುತ್ತಿದ್ದೀರಿ?",
-    help: "ಈ ಮಾರ್ಗದರ್ಶಿ ದಿವಂಗತ ವಯಸ್ಕರ ಬ್ಯಾಂಕ್ ಠೇವಣಿಗಳ ಮೇಲೆ ವಯಸ್ಕರು ಸಲ್ಲಿಸುವ ಹಕ್ಕನ್ನು ಒಳಗೊಂಡಿದೆ. ಇತರ ಆಸ್ತಿಗಳಿಗೆ ಬೇರೆ ಪ್ರಕ್ರಿಯೆಗಳು ಬೇಕು.",
+    help: "",
     options: [
-      { value: "deposit", label: "ಬ್ಯಾಂಕ್ ಖಾತೆ ಅಥವಾ ಸ್ಥಿರ ಠೇವಣಿ", detail: "ಬ್ಯಾಂಕಿನಲ್ಲಿ ಉಳಿತಾಯ, ಚಾಲ್ತಿ, ಪುನರಾವರ್ತಿತ ಅಥವಾ ಸ್ಥಿರ ಠೇವಣಿಗಳು." },
-      { value: "locker", label: "ಬ್ಯಾಂಕ್ ಲಾಕರ್ ಅಥವಾ ಸುರಕ್ಷಿತ ಪಾಲನೆಯಲ್ಲಿರುವ ವಸ್ತುಗಳು", detail: "ಲಾಕರ್ ಪ್ರವೇಶ ಮತ್ತು ಪಟ್ಟಿ ಪ್ರತ್ಯೇಕ ಪ್ರಕ್ರಿಯೆಯನ್ನು ಅನುಸರಿಸುತ್ತದೆ, ಈ ಠೇವಣಿ ಪಟ್ಟಿಯಲ್ಲ." },
-      { value: "pension", label: "ಸರ್ಕಾರಿ ಅಥವಾ ಕುಟುಂಬ ಪಿಂಚಣಿ" },
-      { value: "other", label: "ವಿಮೆ, ಭವಿಷ್ಯ ನಿಧಿ, ಷೇರುಗಳು, ಅಂಚೆ ಕಚೇರಿ ಉಳಿತಾಯ, ಅಥವಾ ಆಸ್ತಿ" },
-      { value: "minor", label: "ಹಕ್ಕುದಾರರು 18 ವರ್ಷಕ್ಕಿಂತ ಕಡಿಮೆ ವಯಸ್ಸಿನವರು, ಅಥವಾ ಪೋಷಕರ ಮೂಲಕ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತಿದ್ದಾರೆ" },
+      { value: "deposit-account", label: "ಬ್ಯಾಂಕ್ ಖಾತೆ", detail: "ಉಳಿತಾಯ ಅಥವಾ ಚಾಲ್ತಿ ಖಾತೆ." },
+      { value: "deposit-fd", label: "ಬ್ಯಾಂಕ್ ಠೇವಣಿ", detail: "ಸ್ಥಿರ ಅಥವಾ ಪುನರಾವರ್ತಿತ ಠೇವಣಿ." },
+      { value: "deposit-both", label: "ಎರಡೂ", detail: "ಒಂದೇ ಬ್ಯಾಂಕಿನಲ್ಲಿ ಖಾತೆ ಮತ್ತು ಠೇವಣಿ, ಎರಡೂ." },
     ],
   },
   court: {
@@ -238,7 +232,7 @@ export function resolve(a: Answers, locale: Locale = "en"): Resolution {
   const review = (): Resolution => ({ kind: "review", carry: a });
   const done = (outcome: OutcomeId): Resolution => ({ kind: "outcome", outcome, carry: a });
   if (!a.claiming) return ask("claiming");
-  if (a.claiming !== "deposit") return done("out-of-scope");
+  if (a.claiming !== "deposit-account" && a.claiming !== "deposit-fd" && a.claiming !== "deposit-both") return done("out-of-scope");
   if (!a.nominee) return ask("nominee");
   if (a.nominee === "unknown") return done("unknown-nominee");
   // A known dispute needs individual review, not a blanket statement that a

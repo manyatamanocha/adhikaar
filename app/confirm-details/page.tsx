@@ -45,9 +45,9 @@ export default async function ConfirmDetails({ searchParams }: {
       <ul className="body-fluid mt-4 space-y-3">{QUESTION_ORDER.filter(id => a[id]).map(id => {
         const earlier = answerQuestion(a, id, a[id]!);
         delete earlier[id];
-        return <li key={id}><Link className="text-link underline" href={withLang("/start" + (toQuery(earlier) || "?classic=1"), locale)}>{t.change} {QUESTIONS[id].prompt}</Link></li>;
+        return <li key={id}><Link className="text-link underline" href={withLang("/start" + toQuery(earlier), locale)}>{t.change} {QUESTIONS[id].prompt}</Link></li>;
       })}</ul>
-      <p className="body-fluid mt-4"><Link className="text-link underline" href={withLang("/start?classic=1", locale)}>{t.startAgain}</Link></p>
+      <p className="body-fluid mt-4"><Link className="text-link underline" href={withLang("/start", locale)}>{t.startAgain}</Link></p>
       <p className="mt-8 text-ink-soft">{t.disclaimer} <a href={NOTIFICATION.url} target="_blank" rel="noreferrer" className="underline">{t.readDirections}</a></p>
     </main>
     <RecoverFooter />
