@@ -134,17 +134,22 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
 
   "legal-heir-certificate": {
     id: "legal-heir-certificate",
-    name: "Legal heir certificate",
-    official: "Annex I-E accepts this OR a declaration",
+    // Named as the either/or it actually is. Para 10(a) accepts a legal heir
+    // certificate OR an acceptable declaration about the heirs, and the
+    // difference is weeks: the certificate takes 30-45 days, the declaration
+    // takes days. Showing only the certificate as the line item -- with the
+    // alternative in small print -- cost families time they never had to lose.
+    name: "Legal heir certificate (or an acceptable declaration)",
+    official: "Annex I-E accepts either one",
     prescribed: true,
-    from: "The Tehsildar or revenue office, or your state's e-district portal",
-    cost: "₹20–200, varies by state",
-    time: "30–45 days typically. Karnataka ~21, Tamil Nadu ~30, Maharashtra ~45",
+    from: "Certificate: the Tehsildar or revenue office, or your state's e-district portal. Declaration: an independent person the bank accepts",
+    cost: "Certificate ₹20–200, varies by state. Declaration: stamp paper only",
+    time: "Certificate 30–45 days typically (Karnataka ~21, Tamil Nadu ~30, Maharashtra ~45). Declaration: days",
     leadDays: 45,
     what:
-      "A revenue officer's certificate naming the legal heirs. This is NOT a succession certificate and does not come from a court.",
+      "Para 10(a) accepts EITHER a revenue officer's certificate naming the legal heirs, OR a declaration about who the heirs are made by an independent person the bank accepts. Neither is a succession certificate, and neither comes from a court. Ask the bank whether it will take the declaration — it often can, and it is much faster.",
     note:
-      "Online in some states only. Timelines are service targets, not guarantees.",
+      "The certificate is online in some states only, and its timelines are service targets, not guarantees. If it will take six weeks, ask about the declaration before you start queueing.",
     startFirst: true,
   },
 
@@ -317,13 +322,13 @@ const hiDocText: Record<DocId, DocText> = {
     what: "अन्य उत्तराधिकारियों की पुष्टि कि उन्हें पैसा आपको दिए जाने पर कोई आपत्ति नहीं। यह सिर्फ़ तब चाहिए जब अन्य उत्तराधिकारी हों।",
   },
   "legal-heir-certificate": {
-    name: "क़ानूनी उत्तराधिकारी प्रमाणपत्र",
-    official: "Annex I-E इसे या घोषणा को स्वीकार करता है",
-    from: "तहसीलदार या राजस्व कार्यालय, या आपके राज्य का ई-डिस्ट्रिक्ट पोर्टल",
-    cost: "₹20–200, राज्य के अनुसार अलग",
-    time: "आमतौर पर 30–45 दिन। कर्नाटक ~21, तमिलनाडु ~30, महाराष्ट्र ~45",
-    what: "राजस्व अधिकारी का प्रमाणपत्र जो क़ानूनी उत्तराधिकारियों के नाम बताता है। यह उत्तराधिकार प्रमाणपत्र नहीं है और न्यायालय से नहीं आता।",
-    note: "कुछ राज्यों में ही ऑनलाइन। समय-सीमाएँ सेवा लक्ष्य हैं, गारंटी नहीं।",
+    name: "क़ानूनी उत्तराधिकारी प्रमाणपत्र (या एक स्वीकार्य घोषणा)",
+    official: "Annex I-E दोनों में से किसी एक को स्वीकार करता है",
+    from: "प्रमाणपत्र: तहसीलदार या राजस्व कार्यालय, या आपके राज्य का ई-डिस्ट्रिक्ट पोर्टल। घोषणा: बैंक द्वारा स्वीकार्य कोई स्वतंत्र व्यक्ति",
+    cost: "प्रमाणपत्र ₹20–200, राज्य के अनुसार अलग। घोषणा: सिर्फ़ स्टाम्प पेपर",
+    time: "प्रमाणपत्र आमतौर पर 30–45 दिन (कर्नाटक ~21, तमिलनाडु ~30, महाराष्ट्र ~45)। घोषणा: कुछ दिन",
+    what: "पैरा 10(a) दोनों में से किसी एक को स्वीकार करता है — राजस्व अधिकारी का प्रमाणपत्र जो क़ानूनी उत्तराधिकारियों के नाम बताता है, या बैंक द्वारा स्वीकार्य किसी स्वतंत्र व्यक्ति की घोषणा कि उत्तराधिकारी कौन हैं। इनमें से कोई भी उत्तराधिकार प्रमाणपत्र नहीं है, और कोई भी न्यायालय से नहीं आता। बैंक से पूछें कि क्या वह घोषणा स्वीकार करेगा — अक्सर कर लेता है, और यह कहीं तेज़ है।",
+    note: "प्रमाणपत्र कुछ राज्यों में ही ऑनलाइन है, और उसकी समय-सीमाएँ सेवा लक्ष्य हैं, गारंटी नहीं। अगर इसमें छह हफ़्ते लगेंगे, तो क़तार में लगने से पहले घोषणा के बारे में पूछें।",
   },
   "heir-declaration": {
     name: "या: उत्तराधिकारी कौन हैं इसकी घोषणा",
@@ -427,13 +432,13 @@ const knDocText: Record<DocId, DocText> = {
     what: "ಹಣವನ್ನು ನಿಮಗೆ ಬಿಡುಗಡೆ ಮಾಡುವುದಕ್ಕೆ ತಮಗೆ ಆಕ್ಷೇಪವಿಲ್ಲ ಎಂದು ಇತರ ವಾರಸುದಾರರು ದೃಢೀಕರಿಸುವುದು. ಇತರ ವಾರಸುದಾರರು ಇದ್ದಾಗ ಮಾತ್ರ ಅಗತ್ಯ.",
   },
   "legal-heir-certificate": {
-    name: "ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರ ಪ್ರಮಾಣಪತ್ರ",
-    official: "Annex I-E ಇದನ್ನು ಅಥವಾ ಘೋಷಣೆಯನ್ನು ಸ್ವೀಕರಿಸುತ್ತದೆ",
-    from: "ತಹಸೀಲ್ದಾರ್ ಅಥವಾ ಕಂದಾಯ ಕಚೇರಿ, ಅಥವಾ ನಿಮ್ಮ ರಾಜ್ಯದ ಇ-ಡಿಸ್ಟ್ರಿಕ್ಟ್ ಪೋರ್ಟಲ್",
-    cost: "₹20–200, ರಾಜ್ಯದಿಂದ ರಾಜ್ಯಕ್ಕೆ ಬದಲಾಗುತ್ತದೆ",
-    time: "ಸಾಮಾನ್ಯವಾಗಿ 30–45 ದಿನಗಳು. ಕರ್ನಾಟಕ ~21, ತಮಿಳುನಾಡು ~30, ಮಹಾರಾಷ್ಟ್ರ ~45",
-    what: "ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರರನ್ನು ಹೆಸರಿಸುವ ಕಂದಾಯ ಅಧಿಕಾರಿಯ ಪ್ರಮಾಣಪತ್ರ. ಇದು ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರವಲ್ಲ ಮತ್ತು ನ್ಯಾಯಾಲಯದಿಂದ ಬರುವುದಿಲ್ಲ.",
-    note: "ಕೆಲವು ರಾಜ್ಯಗಳಲ್ಲಿ ಮಾತ್ರ ಆನ್‌ಲೈನ್. ಸಮಯಮಿತಿಗಳು ಸೇವಾ ಗುರಿಗಳು, ಖಾತರಿಗಳಲ್ಲ.",
+    name: "ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರ ಪ್ರಮಾಣಪತ್ರ (ಅಥವಾ ಸ್ವೀಕಾರಾರ್ಹ ಘೋಷಣೆ)",
+    official: "Annex I-E ಇವೆರಡರಲ್ಲಿ ಯಾವುದನ್ನಾದರೂ ಸ್ವೀಕರಿಸುತ್ತದೆ",
+    from: "ಪ್ರಮಾಣಪತ್ರ: ತಹಸೀಲ್ದಾರ್ ಅಥವಾ ಕಂದಾಯ ಕಚೇರಿ, ಅಥವಾ ನಿಮ್ಮ ರಾಜ್ಯದ ಇ-ಡಿಸ್ಟ್ರಿಕ್ಟ್ ಪೋರ್ಟಲ್. ಘೋಷಣೆ: ಬ್ಯಾಂಕ್ ಸ್ವೀಕರಿಸುವ ಸ್ವತಂತ್ರ ವ್ಯಕ್ತಿ",
+    cost: "ಪ್ರಮಾಣಪತ್ರ ₹20–200, ರಾಜ್ಯದಿಂದ ರಾಜ್ಯಕ್ಕೆ ಬದಲಾಗುತ್ತದೆ. ಘೋಷಣೆ: ಸ್ಟ್ಯಾಂಪ್ ಪೇಪರ್ ಮಾತ್ರ",
+    time: "ಪ್ರಮಾಣಪತ್ರ ಸಾಮಾನ್ಯವಾಗಿ 30–45 ದಿನಗಳು (ಕರ್ನಾಟಕ ~21, ತಮಿಳುನಾಡು ~30, ಮಹಾರಾಷ್ಟ್ರ ~45). ಘೋಷಣೆ: ಕೆಲವು ದಿನಗಳು",
+    what: "ಪ್ಯಾರಾ 10(a) ಇವೆರಡರಲ್ಲಿ ಯಾವುದನ್ನಾದರೂ ಸ್ವೀಕರಿಸುತ್ತದೆ — ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರರನ್ನು ಹೆಸರಿಸುವ ಕಂದಾಯ ಅಧಿಕಾರಿಯ ಪ್ರಮಾಣಪತ್ರ, ಅಥವಾ ವಾರಸುದಾರರು ಯಾರೆಂಬ ಬಗ್ಗೆ ಬ್ಯಾಂಕ್ ಸ್ವೀಕರಿಸುವ ಸ್ವತಂತ್ರ ವ್ಯಕ್ತಿಯ ಘೋಷಣೆ. ಇವೆರಡೂ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರವಲ್ಲ, ಮತ್ತು ಇವೆರಡೂ ನ್ಯಾಯಾಲಯದಿಂದ ಬರುವುದಿಲ್ಲ. ಬ್ಯಾಂಕ್ ಘೋಷಣೆಯನ್ನು ಸ್ವೀಕರಿಸುತ್ತದೆಯೇ ಎಂದು ಕೇಳಿ — ಆಗಾಗ್ಗೆ ಸ್ವೀಕರಿಸುತ್ತದೆ, ಮತ್ತು ಅದು ಹೆಚ್ಚು ವೇಗವಾಗಿದೆ.",
+    note: "ಪ್ರಮಾಣಪತ್ರ ಕೆಲವು ರಾಜ್ಯಗಳಲ್ಲಿ ಮಾತ್ರ ಆನ್‌ಲೈನ್, ಮತ್ತು ಅದರ ಸಮಯಮಿತಿಗಳು ಸೇವಾ ಗುರಿಗಳು, ಖಾತರಿಗಳಲ್ಲ. ಇದಕ್ಕೆ ಆರು ವಾರ ಬೇಕಾದರೆ, ಸಾಲಿನಲ್ಲಿ ನಿಲ್ಲುವ ಮೊದಲು ಘೋಷಣೆಯ ಬಗ್ಗೆ ಕೇಳಿ.",
   },
   "heir-declaration": {
     name: "ಅಥವಾ: ವಾರಸುದಾರರು ಯಾರೆಂಬ ಘೋಷಣೆ",

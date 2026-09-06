@@ -53,6 +53,11 @@ const en: Record<QuestionId, Question> = {
       { value: "deposit-account", label: "A bank account", detail: "Savings or current." },
       { value: "deposit-fd", label: "A bank deposit", detail: "Term or recurring deposit." },
       { value: "deposit-both", label: "Both", detail: "A bank account and a deposit, at the same bank." },
+      // The exit. Without it, someone claiming a pension, an insurance policy,
+      // a locker or PPF is walked through bank-deposit guidance that does not
+      // apply to them -- and resolve()'s out-of-scope branch was unreachable,
+      // because no option could produce a non-deposit value.
+      { value: "other", label: "Something else, or I'm not sure", detail: "A locker, pension, insurance, provident fund, shares — or you don't know yet.", unsure: true },
     ],
   },
   court: {
@@ -101,6 +106,7 @@ const hi: Record<QuestionId, Question> = {
       { value: "deposit-account", label: "बैंक खाता", detail: "बचत या चालू खाता।" },
       { value: "deposit-fd", label: "बैंक जमा", detail: "सावधि या आवर्ती जमा।" },
       { value: "deposit-both", label: "दोनों", detail: "एक ही बैंक में खाता और जमा, दोनों।" },
+      { value: "other", label: "कुछ और, या मुझे यक़ीन नहीं है", detail: "लॉकर, पेंशन, बीमा, भविष्य निधि, शेयर — या आपको अभी पता नहीं है।", unsure: true },
     ],
   },
   court: {
@@ -149,6 +155,7 @@ const kn: Record<QuestionId, Question> = {
       { value: "deposit-account", label: "ಬ್ಯಾಂಕ್ ಖಾತೆ", detail: "ಉಳಿತಾಯ ಅಥವಾ ಚಾಲ್ತಿ ಖಾತೆ." },
       { value: "deposit-fd", label: "ಬ್ಯಾಂಕ್ ಠೇವಣಿ", detail: "ಸ್ಥಿರ ಅಥವಾ ಪುನರಾವರ್ತಿತ ಠೇವಣಿ." },
       { value: "deposit-both", label: "ಎರಡೂ", detail: "ಒಂದೇ ಬ್ಯಾಂಕಿನಲ್ಲಿ ಖಾತೆ ಮತ್ತು ಠೇವಣಿ, ಎರಡೂ." },
+      { value: "other", label: "ಬೇರೆ ಏನಾದರೂ, ಅಥವಾ ನನಗೆ ಖಚಿತವಿಲ್ಲ", detail: "ಲಾಕರ್, ಪಿಂಚಣಿ, ವಿಮೆ, ಭವಿಷ್ಯ ನಿಧಿ, ಷೇರುಗಳು — ಅಥವಾ ನಿಮಗೆ ಇನ್ನೂ ಗೊತ್ತಿಲ್ಲ.", unsure: true },
     ],
   },
   court: {
