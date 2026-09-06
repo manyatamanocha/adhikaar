@@ -250,19 +250,23 @@ function SituationGroup({
       <h2 className="text-[0.875rem] font-bold uppercase tracking-[0.14em] text-ink-faint">
         {label}
       </h2>
-      <ul className="mt-3">
+      {/* Every option is its own box -- direct instruction, 7 Sep. An earlier
+          pass set the non-leading options as rule-separated rows to save
+          vertical space on a phone; as built they read as a bare list rather
+          than as five things you choose between. The hierarchy now comes from
+          the leading card's heavier border and larger type, not from taking
+          the others' boxes away, and the padding is kept tighter than the
+          original so all five still fit one phone screen. */}
+      <ul className="mt-3 space-y-2.5">
         {options.map((option) => (
           <li key={option.href}>
             <Link
               href={withLang(option.href, locale)}
-              className={
+              className={`group flex items-center gap-4 rounded-xl bg-white px-5 py-4 transition-all hover:shadow-[0_6px_24px_rgba(45,48,121,0.14)] ${
                 option.lead
-                  ? "group flex items-center gap-4 rounded-xl border-2 border-indigo bg-white px-5 py-4 transition-shadow hover:shadow-[0_6px_24px_rgba(45,48,121,0.14)]"
-                  : // A rule between rows, not a box around each. Keeps all five
-                    // choices inside one phone screen and stops every option
-                    // shouting at the same volume as the one most people need.
-                    "group flex items-center gap-4 border-b border-rule px-1 py-4 transition-colors hover:bg-white/70"
-              }
+                  ? "border-2 border-indigo"
+                  : "border border-rule hover:border-indigo"
+              }`}
             >
               <span className="flex-1">
                 <span
