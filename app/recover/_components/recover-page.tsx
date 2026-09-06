@@ -82,7 +82,13 @@ function Hero() {
         height={1024}
         sizes="(max-width: 639px) 82vw, (max-width: 1023px) 70vw, 62vw"
         preload
-        className="pointer-events-none absolute right-[8%] top-0 z-0 h-auto w-[82%] max-w-none object-contain object-right opacity-[0.154] mix-blend-multiply sm:w-[70%] lg:w-[62%]"
+        // The mask fades both vertical edges into the cream. At 15% opacity
+        // under mix-blend-multiply this is a background wash, and a hard
+        // rectangle edge on a wash reads as a mistake -- nothing else on the
+        // page has a visible box. Fading is what lets the image stay this
+        // large and this dark without looking pasted on. -webkit- included
+        // for older Android WebViews, which are a real share of this audience.
+        className="pointer-events-none absolute right-[8%] top-0 z-0 h-auto w-[82%] max-w-none object-contain object-right opacity-[0.154] mix-blend-multiply [-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_78%,transparent_100%)] [mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_78%,transparent_100%)] sm:w-[70%] lg:w-[62%]"
       />
       <div className="relative z-10 mx-auto max-w-[1920px] px-5 sm:px-8">
         <div className="max-w-[70rem]">
