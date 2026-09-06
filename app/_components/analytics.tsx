@@ -20,10 +20,55 @@ import { QUESTION_ORDER, parseAnswers } from "@/lib/wizard";
  * sheet is the product's real output. Counting only button presses would
  * undercount the thing that matters most.
  */
+/**
+ * Which KIND of page someone arrived on. A category, never the address --
+ * `/learn/pnb-succession-certificate-requirement` reports only "learn".
+ */
+function entryCategory(pathname: string): string {
+  if (pathname === "/") return "home";
+  if (pathname.startsWith("/learn")) return "learn";
+  if (pathname === "/start") return "start";
+  if (pathname === "/faq") return "faq";
+  if (pathname === "/banks") return "banks";
+  if (ALL_OUTCOMES.some((o) => o.path === pathname)) return "outcome";
+  return "other";
+}
+
+/**
+ * How they got here, in five buckets. The referrer's ADDRESS is never sent --
+ * only which bucket it falls into.
+ *
+ * "shared_link" is the important one: a first page view whose URL already
+ * carries wizard answers means someone was sent that link mid-journey. That
+ * is Adhikaar's propagation signal, and it exists for free because every
+ * journey's state lives in its URL.
+ */
+function arrivedVia(hasAnswersOnEntry: boolean): string {
+  if (hasAnswersOnEntry) return "shared_link";
+  let ref = "";
+  try {
+    ref = document.referrer ?? "";
+  } catch {
+    return "direct";
+  }
+  if (!ref) return "direct";
+  let host = "";
+  try {
+    host = new URL(ref).hostname.toLowerCase();
+  } catch {
+    return "other";
+  }
+  if (host === window.location.hostname) return "internal";
+  if (/google|bing|duckduckgo|yahoo|ecosia|search/.test(host)) return "search";
+  if (/whatsapp|facebook|instagram|t\.co|twitter|x\.com|linkedin|telegram|reddit/.test(host)) return "social";
+  return "other";
+}
+
 export function Analytics() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const lastFired = useRef<string | null>(null);
+  const landingFired = useRef(false);
 
   useEffect(() => {
     initAnalytics();
@@ -71,6 +116,19 @@ export function Analytics() {
     const sp: Record<string, string> = {};
     searchParams.forEach((v, k) => (sp[k] = v));
 
+    // The denominator of Journey Start Rate. Fires once per browsing
+    // session, whichever page they landed on -- an SEO article is as valid
+    // an entry point as the homepage, and counting only the homepage would
+    // understate the reach the /learn pages are built for.
+    if (!landingFired.current) {
+      landingFired.current = true;
+      const entryAnswers = parseAnswers(sp);
+      track("landing_viewed", {
+        entry: entryCategory(pathname),
+        arrived_via: arrivedVia(QUESTION_ORDER.some((q) => entryAnswers[q])),
+      });
+    }
+
     if (pathname === "/start") {
       const answers = parseAnswers(sp);
       const answered = QUESTION_ORDER.filter((q) => answers[q]);
@@ -104,6 +162,10 @@ export function Analytics() {
         outcome: outcome.id,
         outcome_type: outcome.id === "unknown-nominee" ? "information_required" : "claim_route",
       });
+      // Switching to the five-line version is a costly, deliberate act --
+      // you do it because you are about to stand at a counter. Counts
+      // toward Next-Step Action Rate alongside printing.
+      if (sp.mode === "counter") track("counter_mode_opened", { outcome: outcome.id });
       if (sp.bank) track("bank_selected", { bank: sp.bank, outcome: outcome.id });
       if (sp.have) {
         // How many of the required documents they say they hold, and how many

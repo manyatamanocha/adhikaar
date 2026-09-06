@@ -91,6 +91,26 @@ export type EventName =
    * This is the numerator of Actionable Next-Step Rate; the denominator is
    * `question_answered` step 1 (answering the first decision question).
    */
+  /**
+   * Fired once per browsing session, on the first page seen. This is the
+   * DENOMINATOR of Journey Start Rate -- without it that metric cannot be
+   * computed at all, since `track_pageview` is deliberately off (the URL
+   * carries the family's answers, so automatic URL capture would ship the
+   * whole case by the back door).
+   *
+   * Carries two coarse enums and nothing else: `entry` (which kind of page
+   * they arrived on) and `arrived_via` (how they got here). No URL, no
+   * query string, no referrer string -- a category, never an address.
+   *
+   * `arrived_via: "shared_link"` is the propagation signal: because every
+   * journey's state lives in its URL, a visitor arriving on a URL that
+   * ALREADY contains answers was almost certainly sent that link by someone
+   * else. For a once-per-lifetime product, that is the closest thing to a
+   * retention signal we can honestly have.
+   */
+  | "landing_viewed"
+  /** Opened the five-line version meant for standing at a bank counter. */
+  | "counter_mode_opened"
   | "actionable_result_viewed"
   /**
    * The stronger downstream signal: did the reader feel ready to act on
