@@ -179,3 +179,49 @@ test("progress total shrinks to the real worst case for the path taken", () => {
       `total must leave room for the question being asked (${nominee})`);
   }
 });
+
+/**
+ * The bar's geometry must not change under the reader.
+ *
+ * Shrinking the denominator itself (7 -> 3 once a nominee is known) is
+ * correct and stays. What broke was showing it as the whole scale: two
+ * screens said "of up to 7", the third said "of up to 3", so the earlier
+ * screens read as having lied and the bar jumped from two sevenths filled to
+ * completely full in one click. progressFor keeps all three numbers apart --
+ * where the reader is, how far this path can still go, and the fixed scale
+ * everything is drawn on -- so the ruled-out questions can be shown as spent
+ * rather than deleted.
+ */
+test("progress reports position, reach and a fixed scale separately", () => {
+  // Re-homed into this realm before comparing: the vm loader above builds
+  // objects against its own Object.prototype, which deepStrictEqual counts as
+  // a difference. Same reason the URL round-trip test compares JSON strings.
+  const progress = (a) => JSON.parse(JSON.stringify(w.progressFor(a)));
+
+  assert.deepEqual(progress({}), { current: 1, reachable: 7, total: 7 });
+  assert.deepEqual(progress({ claiming: "deposit-account" }),
+    { current: 2, reachable: 7, total: 7 });
+
+  // The screen that produced the bug report: still question 3 of the same
+  // seven-question scale, but only three of them can ever be asked.
+  assert.deepEqual(progress({ claiming: "deposit-account", nominee: "yes" }),
+    { current: 3, reachable: 3, total: 7 });
+  assert.deepEqual(progress({ claiming: "deposit-account", nominee: "survivorship" }),
+    { current: 3, reachable: 3, total: 7 });
+
+  // The scale is the same seven on every screen of every path -- that is the
+  // whole point -- and the reader is never past the end of their own reach.
+  const walk = (a) => {
+    const step = w.resolve(a);
+    if (step.kind !== "question") return;
+    const p = w.progressFor(a);
+    const where = JSON.stringify(a);
+    assert.equal(p.total, w.TOTAL_QUESTIONS, `scale must never change (${where})`);
+    assert.ok(p.current <= p.reachable, `position past its own reach (${where})`);
+    assert.ok(p.reachable <= p.total, `reach past the scale (${where})`);
+    for (const option of w.QUESTIONS[step.question.id].options) {
+      walk(w.answerQuestion(a, step.question.id, option.value));
+    }
+  };
+  walk({});
+});

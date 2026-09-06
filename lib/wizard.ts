@@ -348,6 +348,32 @@ export function answeredPrefix(a: Answers): QuestionId[] {
   }
   return out;
 }
+/**
+ * Everything the progress indicator needs, as three numbers that mean three
+ * different things.
+ *
+ * `total` is the fixed scale -- always seven -- so the bar is drawn the same
+ * width on every screen of every path. `reachable` is how far THIS journey
+ * can still go, which legitimately shrinks (a registered nominee resolves
+ * under para 9 at any amount, so four of the seven stop existing). `current`
+ * is where the reader is standing.
+ *
+ * Keeping them apart is the fix for a real bug: the page previously used
+ * `reachable` as the whole scale, so the counter read "of up to 7" twice and
+ * then "of up to 3", and the bar jumped from two sevenths to completely full
+ * in a single click. The reader's own answer had shortened their journey --
+ * good news -- but it was presented as the product moving the goalposts. The
+ * gap between `reachable` and `total` is now shown as questions spent, not
+ * questions deleted.
+ */
+export function progressFor(a: Answers): { current: number; reachable: number; total: number } {
+  const answered = answeredPrefix(a).length;
+  return {
+    current: answered + 1,
+    reachable: answered + maxRemainingQuestions(a),
+    total: TOTAL_QUESTIONS,
+  };
+}
 export function previousAnswers(a: Answers): Answers | null {
   const answered = answeredPrefix(a);
   if (!answered.length) return null;

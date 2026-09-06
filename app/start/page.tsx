@@ -27,11 +27,10 @@ import { HOME_T, type HomeDict } from "@/lib/i18n-home";
 import {
   parseAnswers,
   answerQuestion,
-  answeredPrefix,
   previousAnswers,
+  progressFor,
   resolve,
   toQuery,
-  maxRemainingQuestions,
   type Answers,
   type Option,
   type Question,
@@ -87,12 +86,6 @@ export default async function Start({
 
   const { question } = step;
   const back = previousAnswers(answers);
-  // Counted from the answers actually given, not from the question's fixed
-  // ordinal, so the numerator matches a denominator that varies by path.
-  // The contiguous prefix, not a raw filter -- a scenario card can pre-fill
-  // a LATER field (heirs=dispute) while an earlier one (court) is still
-  // unset, which must not inflate "how far the reader has actually gotten."
-  const answeredCount = answeredPrefix(answers).length;
 
   return (
     <>
@@ -100,11 +93,7 @@ export default async function Start({
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
-          <Progress
-            current={answeredCount + 1}
-            total={answeredCount + maxRemainingQuestions(answers)}
-            questionOf={t.questionOf}
-          />
+          <Progress {...progressFor(answers)} t={t} />
           <p className="mt-3 text-[1rem] font-semibold text-ink-soft">{t.timeEstimate}</p>
 
           <h1 className="display-lg mt-6 font-serif font-bold text-indigo-ink">
@@ -254,36 +243,74 @@ function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"
 }
 
 /**
- * `total` is the real worst case for THIS journey, not QUESTION_ORDER's
- * length -- see maxRemainingQuestions. A reader with a registered nominee is
- * three questions from an answer, and telling them "of 7" made the product
- * look like it stopped early instead of finishing.
+ * The bar is always the full seven questions wide, on every screen of every
+ * path -- that fixed scale is the point.
+ *
+ * The journey's real length is path-dependent and usually shorter: a
+ * registered nominee resolves under para 9 at any amount, so four questions
+ * stop existing the moment that answer is given. An earlier version made the
+ * bar itself that short, which meant the counter said "of up to 7" twice and
+ * then "of up to 3", and the bar jumped from two sevenths filled to
+ * completely full in one click. The reader had done nothing wrong -- their
+ * answer had shortened their own journey -- but it read as the product moving
+ * the goalposts mid-flow.
+ *
+ * So the ruled-out questions stay on the scale as hollow segments and are
+ * named in words underneath. Shrinking becomes visible progress ("four of
+ * these are not your problem") instead of a silently rewritten total.
  */
 function Progress({
   current,
+  reachable,
   total,
-  questionOf,
+  t,
 }: {
   current: number;
+  reachable: number;
   total: number;
-  questionOf: (current: number, total: number) => string;
+  t: HomeDict["startPage"];
 }) {
+  const ruledOut = total - reachable;
+  const isLast = current === reachable;
   return (
     <div>
       <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
-        {questionOf(current, total)}
+        {t.questionOf(current, total)}
+        {ruledOut > 0 && (
+          // Sentence case inside a caps eyebrow on purpose: it is a sentence,
+          // and setting it in caps alongside the step number reads as a second
+          // label rather than an explanation of the one beside it.
+          <span className="ml-2 font-semibold normal-case tracking-normal text-ink-soft">
+            · {t.questionsRuledOut(ruledOut)}
+          </span>
+        )}
       </p>
       <ol className="mt-2.5 flex gap-1.5" aria-hidden="true">
-        {Array.from({ length: total }, (_, i) => (
-          <li
-            key={i}
-            className={`h-1.5 flex-1 rounded-pill ${
-              i + 1 <= current ? "bg-indigo" : "bg-rule"
-            }`}
-          />
-        ))}
+        {Array.from({ length: total }, (_, i) => {
+          const step = i + 1;
+          // Answered or current; still ahead of you; or ruled out by an
+          // answer you already gave -- three states, three weights.
+          const fill =
+            step <= current
+              ? "bg-indigo"
+              : step <= reachable
+                ? "bg-rule"
+                : "border border-dashed border-rule bg-transparent";
+          return <li key={i} className={`h-1.5 flex-1 rounded-pill ${fill}`} />;
+        })}
       </ol>
-      <p className="sr-only">{questionOf(current, total)}</p>
+      {isLast && (
+        <p className="mt-2 text-[0.9375rem] font-semibold text-indigo-ink">
+          {t.lastQuestion}
+        </p>
+      )}
+      {/* One sentence for a screen reader, rather than three fragments it
+          would have to assemble. */}
+      <p className="sr-only">
+        {t.questionOf(current, total)}
+        {ruledOut > 0 && ` — ${t.questionsRuledOut(ruledOut)}`}
+        {isLast && ` — ${t.lastQuestion}`}
+      </p>
     </div>
   );
 }
