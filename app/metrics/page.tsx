@@ -114,6 +114,17 @@ export default async function MetricsPage() {
                     actionable claim path. A count, not a rate: helping 600 of
                     1,000 families is more families helped than 80 of 100.
                   </p>
+                  {/* Stated rather than left to be discovered. Someone who
+                      opens this expecting live figures and sees a low number
+                      should know whether they are looking at "nothing
+                      happened" or "the last hour has not landed yet" — the
+                      same distinction the "—" rule makes elsewhere. */}
+                  <p className="mt-2 text-[0.9375rem] text-ink-faint">
+                    Figures update hourly. Usage from the past hour may not
+                    appear yet — this reads from an export that trails live
+                    traffic, so a low number here can mean “not yet counted”
+                    rather than “did not happen”.
+                  </p>
                 </div>
               </section>
 
