@@ -148,3 +148,34 @@ test("analytics never transmits the URL, which carries the family's answers", ()
   assert.match(src, /track_pageview:\s*false/);
   assert.match(src, /autocapture:\s*false/);
 });
+
+/**
+ * The progress bar's denominator is path-dependent and must not overstate.
+ *
+ * A registered nominee resolves under para 9 at any amount, so that journey
+ * is three questions long. Showing "Step 3 of 7" told those readers the
+ * product had stopped a third of the way through, when it had actually
+ * finished -- the same confusion that made the flow look broken.
+ */
+test("progress total shrinks to the real worst case for the path taken", () => {
+  const remaining = (a) => w.QUESTION_ORDER.filter((id) => a[id]).length + w.maxRemainingQuestions(a);
+
+  assert.equal(remaining({}), 7, "a fresh journey can still ask all seven");
+  assert.equal(remaining({ claiming: "deposit-account", nominee: "yes" }), 3,
+    "a registered nominee is three questions from an answer, not seven");
+  assert.equal(remaining({ claiming: "deposit-account", nominee: "survivorship" }), 3,
+    "survivorship resolves on para 9 the same way");
+  assert.equal(remaining({ claiming: "deposit-account", nominee: "no" }), 7,
+    "the no-nominee path really can ask all seven");
+
+  // Never advertises fewer questions than remain -- but only where a question
+  // is actually being asked. "I don't know" on the nominee question resolves
+  // straight to /unknown-nominee, so there is no next question to leave room
+  // for, and the progress bar is never rendered on that path.
+  for (const nominee of ["yes", "survivorship", "no", "unknown"]) {
+    const a = { claiming: "deposit-account", nominee };
+    if (w.resolve(a).kind !== "question") continue;
+    assert.ok(remaining(a) >= w.QUESTION_ORDER.filter((id) => a[id]).length + 1,
+      `total must leave room for the question being asked (${nominee})`);
+  }
+});

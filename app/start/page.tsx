@@ -30,7 +30,8 @@ import {
   previousAnswers,
   resolve,
   toQuery,
-  TOTAL_QUESTIONS,
+  maxRemainingQuestions,
+  QUESTION_ORDER,
   type Answers,
   type Option,
   type Question,
@@ -77,7 +78,7 @@ export default async function Start({
   }
 
   const step = resolve(answers, locale);
-  if (step.kind === "review") redirect(withLang(withBank("/confirm-details" + toQuery(step.carry), bankId), locale));
+  if (step.kind === "review") redirect(withLang(withBank("/needs-review" + toQuery(step.carry), bankId), locale));
 
   // A verdict is a page of its own, at its own URL. The wizard never renders one.
   if (step.kind === "outcome") {
@@ -86,6 +87,9 @@ export default async function Start({
 
   const { question } = step;
   const back = previousAnswers(answers);
+  // Counted from the answers actually given, not from the question's fixed
+  // ordinal, so the numerator matches a denominator that varies by path.
+  const answeredCount = QUESTION_ORDER.filter((id) => answers[id]).length;
 
   return (
     <>
@@ -93,7 +97,11 @@ export default async function Start({
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
-          <Progress current={question.number} questionOf={t.questionOf} />
+          <Progress
+            current={answeredCount + 1}
+            total={answeredCount + maxRemainingQuestions(answers)}
+            questionOf={t.questionOf}
+          />
           <p className="mt-3 text-[1rem] font-semibold text-ink-soft">{t.timeEstimate}</p>
 
           <h1 className="display-lg mt-6 font-serif font-bold text-indigo-ink">
@@ -242,20 +250,28 @@ function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"
   );
 }
 
+/**
+ * `total` is the real worst case for THIS journey, not QUESTION_ORDER's
+ * length -- see maxRemainingQuestions. A reader with a registered nominee is
+ * three questions from an answer, and telling them "of 7" made the product
+ * look like it stopped early instead of finishing.
+ */
 function Progress({
   current,
+  total,
   questionOf,
 }: {
   current: number;
+  total: number;
   questionOf: (current: number, total: number) => string;
 }) {
   return (
     <div>
       <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
-        {questionOf(current, TOTAL_QUESTIONS)}
+        {questionOf(current, total)}
       </p>
       <ol className="mt-2.5 flex gap-1.5" aria-hidden="true">
-        {Array.from({ length: TOTAL_QUESTIONS }, (_, i) => (
+        {Array.from({ length: total }, (_, i) => (
           <li
             key={i}
             className={`h-1.5 flex-1 rounded-pill ${
@@ -264,7 +280,7 @@ function Progress({
           />
         ))}
       </ol>
-      <p className="sr-only">{questionOf(current, TOTAL_QUESTIONS)}</p>
+      <p className="sr-only">{questionOf(current, total)}</p>
     </div>
   );
 }

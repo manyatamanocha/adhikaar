@@ -180,12 +180,12 @@ export function Analytics() {
       return;
     }
 
-    if (pathname === "/confirm-details") {
+    if (pathname === "/needs-review") {
       // The other genuinely unresolved terminal state: the wizard could not
       // reach a claim route (a will, a restriction, a dispute flag, or an
       // unknown bank type/amount still needs confirming), but the page
       // still resolves a concrete next action -- go find out X.
-      track("actionable_result_viewed", { outcome: "confirm-details", outcome_type: "information_required" });
+      track("actionable_result_viewed", { outcome: "needs-review", outcome_type: "information_required" });
       return;
     }
 

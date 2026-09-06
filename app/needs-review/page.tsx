@@ -24,13 +24,28 @@ export default async function ConfirmDetails({ searchParams }: {
   // uses for its own "Change:" links -- so the primary CTA sends the reader
   // to resolve the FIRST unconfirmed condition, not just back to the top.
   const startWithout = (field: keyof typeof a) => withLang(`/start${toQuery({ ...a, [field]: undefined })}`, locale);
-  const steps: { text: string; href: string }[] = [
-    ...(a.court !== "no" ? [{ text: restricted ? t.stepRestrictedYes : t.stepRestrictedAsk, href: startWithout("court") }] : []),
-    ...(a.will !== "no" && a.nominee === "no" ? [{ text: will ? t.stepWillYes : t.stepWillAsk, href: startWithout("will") }] : []),
-    ...(a.heirs !== "agree" ? [{ text: t.stepDispute, href: startWithout("heirs") }] : []),
+  // `href` is omitted only for the specific CONFIRMED blocking value (court
+  // "yes", will "yes", heirs "dispute") -- re-asking a question whose true
+  // answer is already known just returns resolve() straight back to this
+  // same review page, which was a real stuck loop (clicking "I know the
+  // answer now" on a confirmed court restriction re-asked court, the reader
+  // (correctly) answered "yes" again, and landed right back here). An
+  // unset or "unknown" value is still genuinely askable, so it keeps its
+  // href -- this step can be reached before court/will/heirs were ever
+  // asked (e.g. the heirs-dispute-with-a-nominee review branch fires before
+  // court is asked at all), and "not yet answered" must not be treated the
+  // same as "confirmed blocking".
+  const steps: { text: string; href?: string }[] = [
+    ...(a.court !== "no" ? [{ text: restricted ? t.stepRestrictedYes : t.stepRestrictedAsk, href: restricted ? undefined : startWithout("court") }] : []),
+    ...(a.will !== "no" && a.nominee === "no" ? [{ text: will ? t.stepWillYes : t.stepWillAsk, href: will ? undefined : startWithout("will") }] : []),
+    ...(a.heirs !== "agree" ? [{ text: t.stepDispute, href: a.heirs === "dispute" ? undefined : startWithout("heirs") }] : []),
     ...(a.bankType === "unknown" || !a.bankType ? [{ text: t.stepBankTypeUnknown, href: startWithout("bankType") }] : []),
     ...(a.amount === "unknown" || a.amount === "equal" || !a.amount ? [{ text: t.stepAmountUnknown, href: startWithout("amount") }] : []),
   ];
+  // The button targets the first step that's actually re-askable, not just
+  // steps[0] -- if the first pending item is a confirmed fact needing
+  // advice, there is nothing here for the wizard to re-ask.
+  const nextAskable = steps.find(s => s.href);
   return <>
     <RecoverNav />
     <main className="shell max-w-[860px] flex-1 py-10 sm:py-14" lang={locale}>
@@ -38,8 +53,8 @@ export default async function ConfirmDetails({ searchParams }: {
       <p className="body-fluid mt-5 text-ink-soft">{t.sub}</p>
       <h2 className="display-md mt-8 font-serif font-bold">{t.whatToDoNext}</h2>
       <ol className="body-fluid mt-4 list-decimal space-y-4 pl-6">{steps.map(s => <li key={s.text}>{s.text}</li>)}</ol>
-      {steps.length > 0 && (
-        <NextStepButton href={steps[0].href} label={knowAnswerNow} outcomeType="information_required" />
+      {nextAskable && (
+        <NextStepButton href={nextAskable.href!} label={knowAnswerNow} outcomeType="information_required" />
       )}
       <h2 className="display-md mt-8 font-serif font-bold">{t.reviewAnswers}</h2>
       <ul className="body-fluid mt-4 space-y-3">{QUESTION_ORDER.filter(id => a[id]).map(id => {

@@ -36,12 +36,24 @@ export const revalidate = 300;
 
 const EXPORT_HOST = "https://data-eu.mixpanel.com/api/2.0/export";
 
-/** Verdicts where the honest answer is "this is not straightforward". */
+/**
+ * Verdicts where the honest answer is "this is not straightforward".
+ *
+ * `needs-review` belongs here and was missed on the first pass: a court
+ * restriction, a will, or a flagged dispute sending someone to a lawyer is
+ * exactly the unwelcome truth this guardrail exists to protect. Omitting it
+ * made the guardrail under-count the thing it measures.
+ *
+ * `confirm-details` is the same outcome under its old route name, kept so
+ * events recorded before the 6 Sep rename still count.
+ */
 const HONEST_EXIT_OUTCOMES = new Set([
   "dispute",
   "over-threshold",
   "already-in-court",
   "out-of-scope",
+  "needs-review",
+  "confirm-details",
 ]);
 
 type MixpanelEvent = {

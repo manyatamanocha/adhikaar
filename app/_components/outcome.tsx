@@ -55,7 +55,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   if (hasAnswers && id !== "already-in-court") {
     const route = resolve(answers);
     if (route.kind === "question") redirect(withLang("/start" + toQuery(answers), locale));
-    if (route.kind === "review") redirect(withLang("/confirm-details" + toQuery(answers), locale));
+    if (route.kind === "review") redirect(withLang("/needs-review" + toQuery(answers), locale));
     if (route.kind === "outcome" && route.outcome !== id) redirect(withLang(OUTCOMES[route.outcome].path + toQuery(answers), locale));
   }
   const bankId = typeof sp.bank === "string" ? sp.bank : undefined;

@@ -43,6 +43,35 @@ export type Question = { id: QuestionId; number: number; prompt: string; help: s
 export const QUESTION_ORDER: QuestionId[] = ["claiming", "nominee", "court", "will", "heirs", "bankType", "amount"];
 export const TOTAL_QUESTIONS = QUESTION_ORDER.length;
 
+/**
+ * How many questions this journey can still ask, at worst, from here.
+ *
+ * The wizard's length is path-dependent and most paths are short: a
+ * registered nominee resolves under para 9 at any amount, so that journey is
+ * claiming -> nominee -> court and stops at three. A fixed "of 7" told those
+ * readers they were a third of the way through something that was about to
+ * end, which reads as the product cutting them off rather than answering
+ * them -- and on the one screen where a bereaved reader is deciding whether
+ * this tool is worth continuing with.
+ *
+ * This walks every answer the reader could still give and returns the deepest
+ * branch, so the denominator is a real worst case rather than a guess. It
+ * shrinks as answers narrow the tree: "of 7" on question one, "of 3" once a
+ * nominee is known. The search is bounded by QUESTION_ORDER's length and each
+ * question's option count, and every branch short-circuits at an outcome.
+ */
+export function maxRemainingQuestions(a: Answers): number {
+  const step = resolve(a);
+  if (step.kind !== "question") return 0;
+  const id = step.question.id;
+  let deepest = 0;
+  for (const option of QUESTIONS[id].options) {
+    const branch = maxRemainingQuestions(answerQuestion(a, id, option.value));
+    if (branch > deepest) deepest = branch;
+  }
+  return 1 + deepest;
+}
+
 const unknownEn: Option = { value: "unknown", label: "I don't know yet", unsure: true };
 
 const en: Record<QuestionId, Question> = {
