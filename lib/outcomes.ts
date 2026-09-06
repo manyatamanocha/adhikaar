@@ -14,7 +14,7 @@
  * describe what a clause says; the clause itself is quoted beside it.
  */
 
-import { CLAUSES, SARBATI_DEVI, IN_TRUST } from "./rbi";
+import { CLAUSES, SARBATI_DEVI } from "./rbi";
 import {
   NOMINEE_PROCEDURE,
   SIMPLIFIED_PROCEDURE,
@@ -73,9 +73,9 @@ const EXCLUSIONS_CAVEAT: Caveat = {
 };
 
 const TRUST_CAVEAT: Caveat = {
-  title: "Being paid is not the same as owning it",
+  title: "Getting the money doesn't make it yours",
   body:
-    `The bank is allowed to pay you. That does not make the money yours alone. The Supreme Court held in ${SARBATI_DEVI.case} (${SARBATI_DEVI.citation}) that a nominee is only "${SARBATI_DEVI.text}" — the money still passes to the legal heirs under succession law. The bank pays ${IN_TRUST}. If you are not the only heir, you hold it for the others.`,
+    `The bank can pay this money to you because you're the nominee — but that's only about who's allowed to collect it, not who owns it. The Supreme Court has ruled that a nominee is just "${SARBATI_DEVI.text}" (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation}). The money itself still belongs to the legal heirs under inheritance law, and if you're not the only heir, you're expected to hold it for the others rather than keep it all.`,
   weight: "hard",
 };
 
@@ -315,8 +315,8 @@ const EXCLUSIONS_CAVEAT_HI: Caveat = {
 };
 
 const TRUST_CAVEAT_HI: Caveat = {
-  title: "भुगतान मिलना, मालिकाना हक होने जैसा नहीं है",
-  body: `बैंक आपको भुगतान कर सकता है। इसका मतलब यह नहीं कि पैसा सिर्फ़ आपका है। सर्वोच्च न्यायालय ने ${SARBATI_DEVI.case} (${SARBATI_DEVI.citation}) में कहा था कि नामांकित व्यक्ति केवल "${SARBATI_DEVI.text}" है — पैसा उत्तराधिकार कानून के तहत क़ानूनी उत्तराधिकारियों को ही जाता है। बैंक ${IN_TRUST} भुगतान करता है। अगर आप अकेले उत्तराधिकारी नहीं हैं, तो आप इसे बाकियों की ओर से रखते हैं।`,
+  title: "पैसा मिलना, इसका मालिक होना नहीं है",
+  body: `बैंक आपको भुगतान कर सकता है क्योंकि आप नामांकित व्यक्ति हैं — लेकिन इसका मतलब सिर्फ़ यह है कि पैसा पाने का हक़ आपको है, मालिक होने का नहीं। सर्वोच्च न्यायालय ने कहा है कि नामांकित व्यक्ति सिर्फ़ "${SARBATI_DEVI.text}" है (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation})। पैसा उत्तराधिकार क़ानून के तहत अब भी क़ानूनी उत्तराधिकारियों का ही है, और अगर आप अकेले उत्तराधिकारी नहीं हैं, तो आपको इसे अपने लिए रखने के बजाय बाक़ी सबके लिए भी रखना है।`,
   weight: "hard",
 };
 
@@ -339,8 +339,8 @@ const EXCLUSIONS_CAVEAT_KN: Caveat = {
 };
 
 const TRUST_CAVEAT_KN: Caveat = {
-  title: "ಪಾವತಿ ಸಿಗುವುದು ಮಾಲೀಕತ್ವ ಸಿಗುವಂತಲ್ಲ",
-  body: `ಬ್ಯಾಂಕ್ ನಿಮಗೆ ಪಾವತಿಸಬಹುದು. ಇದರಿಂದ ಹಣ ನಿಮ್ಮದೊಬ್ಬರದೇ ಆಗುವುದಿಲ್ಲ. ಸರ್ವೋಚ್ಚ ನ್ಯಾಯಾಲಯವು ${SARBATI_DEVI.case} (${SARBATI_DEVI.citation}) ಪ್ರಕರಣದಲ್ಲಿ ನಾಮನಿರ್ದೇಶಿತರು ಕೇವಲ "${SARBATI_DEVI.text}" ಎಂದು ತೀರ್ಪು ನೀಡಿತ್ತು — ಹಣವು ಉತ್ತರಾಧಿಕಾರ ಕಾನೂನಿನ ಅಡಿಯಲ್ಲಿ ವಾರಸುದಾರರಿಗೇ ಸೇರುತ್ತದೆ. ಬ್ಯಾಂಕ್ ${IN_TRUST} ಪಾವತಿಸುತ್ತದೆ. ನೀವು ಏಕೈಕ ವಾರಸುದಾರರಲ್ಲದಿದ್ದರೆ, ನೀವು ಅದನ್ನು ಇತರರ ಪರವಾಗಿ ಹಿಡಿದಿಟ್ಟುಕೊಳ್ಳುತ್ತೀರಿ.`,
+  title: "ಹಣ ಸಿಗುವುದು ಅದರ ಮಾಲೀಕರಾಗುವುದು ಅಲ್ಲ",
+  body: `ನೀವು ನಾಮನಿರ್ದೇಶಿತರಾಗಿರುವುದರಿಂದ ಬ್ಯಾಂಕ್ ನಿಮಗೆ ಹಣ ಪಾವತಿಸಬಹುದು — ಆದರೆ ಇದರ ಅರ್ಥ ಹಣ ಪಡೆಯುವ ಹಕ್ಕು ನಿಮಗಿದೆ ಎಂದಷ್ಟೇ, ಮಾಲೀಕತ್ವ ಅಲ್ಲ. ನಾಮನಿರ್ದೇಶಿತರು ಕೇವಲ "${SARBATI_DEVI.text}" ಎಂದು ಸರ್ವೋಚ್ಚ ನ್ಯಾಯಾಲಯ ತೀರ್ಪು ನೀಡಿದೆ (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation}). ಹಣ ಇನ್ನೂ ಉತ್ತರಾಧಿಕಾರ ಕಾನೂನಿನ ಪ್ರಕಾರ ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರರಿಗೇ ಸೇರಿದ್ದು, ಮತ್ತು ನೀವು ಏಕೈಕ ವಾರಸುದಾರರಲ್ಲದಿದ್ದರೆ, ಇಡೀ ಹಣವನ್ನು ನೀವೊಬ್ಬರೇ ಇಟ್ಟುಕೊಳ್ಳುವ ಬದಲು ಇತರರಿಗಾಗಿಯೂ ಇಟ್ಟುಕೊಳ್ಳಬೇಕು.`,
   weight: "hard",
 };
 

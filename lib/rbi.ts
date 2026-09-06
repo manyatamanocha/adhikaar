@@ -160,10 +160,6 @@ export const SARBATI_DEVI = {
     "A nominee is the person the bank is allowed to pay. They do not become the owner. The money still belongs to the legal heirs under succession law, and a nominee who is not the sole heir holds it in trust for the others.",
 } as const;
 
-/** RBI's own framing of what payment to a claimant means. Use verbatim. */
-export const IN_TRUST =
-  "in trust for all legal heirs, and not as an adjudication of succession rights";
-
 export const THRESHOLDS = {
   commercial: 1_500_000,
   cooperative: 500_000,

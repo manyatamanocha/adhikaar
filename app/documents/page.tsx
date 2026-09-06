@@ -33,7 +33,7 @@ import { parseLocale, withLang, type Locale } from "@/lib/i18n";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { documentText, NOMINEE_PROCEDURE, SIMPLIFIED_PROCEDURE, type DocId } from "@/lib/documents";
-import { CLAUSES, NOTIFICATION, SARBATI_DEVI, type Clause } from "@/lib/rbi";
+import { CLAUSES, NOTIFICATION, SARBATI_DEVI, THRESHOLDS, type Clause } from "@/lib/rbi";
 import { DOCS_T, type DocsDict } from "@/lib/i18n-documents";
 
 export const metadata = {
@@ -95,7 +95,7 @@ export default async function Page({
           {/* Route 2 — no nominee, below the threshold. Para 10(a). */}
           <section className="mt-12 border-t border-rule pt-9">
             <h2 className="display-lg font-serif font-bold text-indigo-ink">
-              {t.simplifiedHeading}
+              {t.simplifiedHeading(THRESHOLDS.commercialLabel, THRESHOLDS.cooperativeLabel)}
             </h2>
             <p className="mt-1.5 text-[1.0625rem] font-bold text-[#E2653B]">
               {t.simplifiedSub}
@@ -117,7 +117,7 @@ export default async function Page({
           {/* Where the lists stop applying. */}
           <section className="mt-10">
             <h2 className="display-md font-serif font-bold text-indigo-ink">
-              {t.aboveHeading}
+              {t.aboveHeading(THRESHOLDS.commercialLabel, THRESHOLDS.cooperativeLabel)}
             </h2>
             <Gloss t={t} gloss={t.aboveGloss} clause={CLAUSES.aboveThreshold} />
             <Gloss t={t} gloss={t.disputeGloss} clause={CLAUSES.dispute} />

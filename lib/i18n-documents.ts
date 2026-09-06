@@ -14,6 +14,15 @@ import type { Locale } from "./i18n";
  * counter. Document names, cost and time come from documentText() in
  * lib/documents.ts, which is already translated.
  *
+ * Rewritten 6 Sep 2026 for plain language, after the original ownership
+ * section ("Being paid is not the same as owning it") was flagged as unclear
+ * — both here and on the verdict pages, which had the same problem in
+ * lib/outcomes.ts's TRUST_CAVEAT. Two concrete fixes carried through both
+ * places: (1) short, direct sentences instead of legal-contrast constructions
+ * ("not merely X — it Y"), and (2) actual rupee figures in the headings
+ * instead of the word "threshold" standing alone — a reader should not have
+ * to hold an abstract term in their head to know which list is theirs.
+ *
  * Hindi and Kannada here have NOT been checked by a native speaker, same as
  * the rest of the site.
  */
@@ -30,11 +39,12 @@ export type DocsDict = {
   nomineeHeading: string;
   nomineeSub: string;
   nomineeGloss: string;
-  /** Sarbati Devi. Load-bearing on every nominee surface. */
+  /** Sarbati Devi. Load-bearing on every nominee surface. Matches outcomes.ts's TRUST_CAVEAT wording. */
   ownershipHeading: string;
   ownership: string;
 
-  simplifiedHeading: string;
+  /** Takes the RBI's own rupee figures so the amount is stated, not just "the threshold." */
+  simplifiedHeading: (commercial: string, cooperative: string) => string;
   simplifiedSub: string;
   simplifiedGloss: string;
   noSuretyGloss: string;
@@ -42,7 +52,7 @@ export type DocsDict = {
   notOnListHeading: string;
   notOnList: string;
 
-  aboveHeading: string;
+  aboveHeading: (commercial: string, cooperative: string) => string;
   aboveGloss: string;
   disputeGloss: string;
 
@@ -59,40 +69,42 @@ export type DocsDict = {
 };
 
 const en: DocsDict = {
-  homeCta: "See what documents are required",
+  homeCta: "See what documents you'll need",
   eyebrow: "Before you go to the branch",
   heading: "What documents will the bank need?",
-  sub: "There are two lists, and they are very different lengths. Which one applies to you is decided by one fact: whether a nominee or a surviving joint holder was on record.",
+  sub: "There are two possible lists — one short, one longer. Which one is yours comes down to a single fact: was a nominee, or a surviving joint holder, named on the account?",
   routeNote:
-    "This is not a choice. The bank decides which list applies from what is already on the account. If you are not sure which is yours, the claim journey confirms it in a few questions.",
+    "You don't get to choose which list applies — it depends on what was already set up on the account. Not sure which is yours? The claim journey works it out in a few questions.",
 
   nomineeHeading: "If a nominee or surviving joint holder is on record",
-  nomineeSub: "Three documents. No amount limit.",
+  nomineeSub: "Three documents. Any amount.",
   nomineeGloss:
-    "Where a nominee or a surviving joint holder is registered, the bank is not allowed to ask for a succession certificate, letter of administration or probate, or for an indemnity or surety — whatever the balance is.",
-  ownershipHeading: "Being paid is not the same as owning it",
+    "If a nominee or surviving joint holder was registered, the bank must pay out without asking for a succession certificate, probate, or any court paperwork like it — no matter how much money is in the account.",
+  ownershipHeading: "Getting the money doesn't make it yours",
   ownership:
-    "A nominee is the person the bank is allowed to pay. They do not become the owner. The money still belongs to the legal heirs under succession law, and a nominee who is not the sole heir holds it in trust for the others.",
+    "The bank can pay this money to you because you're the nominee — but that's only about who's allowed to collect it, not who owns it. The money itself still belongs to the legal heirs under inheritance law. If there are other heirs — siblings, parents, anyone else with a legal share — you're expected to hold it for them too, not keep it all.",
 
-  simplifiedHeading: "If there was no nominee, and the total is below the threshold",
-  simplifiedSub: "Six documents. Nothing beyond them.",
+  simplifiedHeading: (commercial, cooperative) =>
+    `If there was no nominee, and the total is under ${commercial} (${cooperative} at a co-operative bank)`,
+  simplifiedSub: "Six documents. Nothing more.",
   simplifiedGloss:
-    "Below the threshold, the rule does not merely discourage extra paperwork — it requires the bank to settle the claim on this list.",
+    "Below that amount, this is the bank's complete list. It can't ask you for anything beyond these six, and it can't refuse to settle once you've handed them over.",
   noSuretyGloss:
-    "A third party who signs to guarantee the claim cannot be demanded at all below the threshold.",
+    "Below that amount, the bank also can't ask a third person to act as guarantor for your claim.",
 
-  notOnListHeading: "What is deliberately not on either list",
+  notOnListHeading: "What the bank should not ask you for",
   notOnList:
-    "A succession certificate, probate, a family-tree document (vanshavali), witnesses to the indemnity, or a third-party surety. Below the threshold, a branch asking for any of these is asking for more than the rule allows.",
+    "A succession certificate. Probate. A family-tree document (vanshavali). Witnesses. A guarantor. If a branch asks for any of these below the limit, they're asking for more than the rule allows.",
 
-  aboveHeading: "If the total is at or above the threshold",
+  aboveHeading: (commercial, cooperative) =>
+    `If the total is ${commercial} or more (${cooperative} or more at a co-operative bank)`,
   aboveGloss:
-    "The simplified list stops applying. The bank may ask for a succession certificate or equivalent, or a legal heir certificate or a sworn affidavit. The threshold is the total across every account at that one bank, not per account.",
+    "The six-document list above no longer applies. The bank can ask for a succession certificate (or a similar court document), or for a legal heir certificate plus a sworn affidavit. One thing to check: this limit is added up across every account you hold at that one bank — it isn't counted separately for each account.",
   disputeGloss:
-    "Where the heirs are contesting each other, the bank requires a court document whatever the amount — a probate, letter of administration, succession certificate, or a court order.",
+    "If the legal heirs disagree with each other, the bank will ask for a court document no matter how much money is involved — a probate, letter of administration, succession certificate, or court order.",
 
   ctaHeading: "Not sure which list is yours?",
-  ctaSub: "A few questions, and you get the list for your situation with the paragraph it comes from.",
+  ctaSub: "Answer a few questions and we'll tell you exactly which list applies, and which rule it comes from.",
   cta: "Start the claim journey",
 
   paraLabel: (para) => `RBI Directions, paragraph ${para}`,
@@ -103,40 +115,42 @@ const en: DocsDict = {
 };
 
 const hi: DocsDict = {
-  homeCta: "देखें कौन-से दस्तावेज़ चाहिए",
+  homeCta: "देखें आपको कौन-से दस्तावेज़ चाहिए होंगे",
   eyebrow: "शाखा जाने से पहले",
   heading: "बैंक को कौन-से दस्तावेज़ चाहिए होंगे?",
-  sub: "दो सूचियाँ हैं, और उनकी लंबाई में बड़ा फ़र्क़ है। आप पर कौन-सी लागू होगी, यह एक बात से तय होता है: खाते में नामांकित व्यक्ति या जीवित संयुक्त धारक दर्ज था या नहीं।",
+  sub: "दो सूचियाँ हो सकती हैं — एक छोटी, एक बड़ी। आपकी कौन-सी है, यह एक बात से तय होता है: क्या खाते में नामांकित व्यक्ति या जीवित संयुक्त धारक दर्ज था?",
   routeNote:
-    "यह आपकी पसंद नहीं है। बैंक खाते में पहले से दर्ज जानकारी से तय करता है कि कौन-सी सूची लागू होगी। यदि आपको यक़ीन नहीं है कि आपका मामला कौन-सा है, तो दावा यात्रा कुछ सवालों में इसकी पुष्टि कर देती है।",
+    "कौन-सी सूची लागू होगी, यह आपकी पसंद नहीं है — यह इस बात पर निर्भर करता है कि खाते में पहले से क्या दर्ज था। यक़ीन नहीं है कि आपकी कौन-सी है? दावा यात्रा कुछ सवालों में यह बता देती है।",
 
   nomineeHeading: "यदि नामांकित व्यक्ति या जीवित संयुक्त धारक दर्ज है",
-  nomineeSub: "तीन दस्तावेज़। कोई राशि सीमा नहीं।",
+  nomineeSub: "तीन दस्तावेज़। कितनी भी राशि हो।",
   nomineeGloss:
-    "जहाँ नामांकित व्यक्ति या जीवित संयुक्त धारक दर्ज है, वहाँ बैंक उत्तराधिकार प्रमाणपत्र, प्रशासन पत्र या प्रोबेट, या क्षतिपूर्ति बॉन्ड या ज़मानत नहीं माँग सकता — शेष राशि चाहे जितनी हो।",
-  ownershipHeading: "भुगतान मिलना और मालिक होना एक बात नहीं है",
+    "यदि नामांकित व्यक्ति या जीवित संयुक्त धारक दर्ज था, तो बैंक को उत्तराधिकार प्रमाणपत्र, प्रोबेट, या ऐसा कोई न्यायालयीन काग़ज़ माँगे बिना भुगतान करना होगा — खाते में राशि चाहे जितनी भी हो।",
+  ownershipHeading: "पैसा मिलना, इसका मालिक होना नहीं है",
   ownership:
-    "नामांकित व्यक्ति वह है जिसे बैंक भुगतान कर सकता है। वे मालिक नहीं बन जाते। उत्तराधिकार क़ानून के अनुसार पैसा अब भी क़ानूनी उत्तराधिकारियों का है, और जो नामांकित व्यक्ति अकेला उत्तराधिकारी नहीं है, वह उसे बाक़ी सबके लिए न्यास (ट्रस्ट) में रखता है।",
+    "बैंक आपको यह पैसा दे सकता है क्योंकि आप नामांकित व्यक्ति हैं — लेकिन इसका मतलब सिर्फ़ यह है कि पैसा पाने का हक़ आपको है, मालिक होने का नहीं। यह पैसा उत्तराधिकार क़ानून के तहत अब भी क़ानूनी उत्तराधिकारियों का ही है। अगर भाई-बहन, माता-पिता, या कोई और क़ानूनी उत्तराधिकारी हैं, तो आपको यह पैसा उनके लिए भी रखना है, सिर्फ़ अपने लिए नहीं।",
 
-  simplifiedHeading: "यदि कोई नामांकित व्यक्ति नहीं था, और कुल राशि सीमा से कम है",
-  simplifiedSub: "छह दस्तावेज़। इनसे आगे कुछ नहीं।",
+  simplifiedHeading: (commercial, cooperative) =>
+    `यदि कोई नामांकित व्यक्ति नहीं था, और कुल राशि ${commercial} से कम है (सहकारी बैंक में ${cooperative} से कम)`,
+  simplifiedSub: "छह दस्तावेज़। इनसे ज़्यादा कुछ नहीं।",
   simplifiedGloss:
-    "सीमा से कम राशि पर नियम केवल अतिरिक्त काग़ज़ी कार्रवाई को हतोत्साहित नहीं करता — वह बैंक से अपेक्षा करता है कि वह इसी सूची के आधार पर दावा निपटाए।",
+    "इस राशि से कम होने पर, यही बैंक की पूरी सूची है। बैंक इन छह के अलावा कुछ नहीं माँग सकता, और इन्हें देने के बाद दावा निपटाने से मना नहीं कर सकता।",
   noSuretyGloss:
-    "सीमा से कम राशि के दावों में दावे की ज़मानत देने वाला कोई तीसरा व्यक्ति माँगा ही नहीं जा सकता।",
+    "इस राशि से कम होने पर, बैंक आपके दावे की ज़मानत देने के लिए किसी तीसरे व्यक्ति को भी नहीं माँग सकता।",
 
-  notOnListHeading: "दोनों सूचियों में जानबूझकर क्या नहीं है",
+  notOnListHeading: "बैंक को आपसे यह नहीं माँगना चाहिए",
   notOnList:
-    "उत्तराधिकार प्रमाणपत्र, प्रोबेट, वंशावली, क्षतिपूर्ति बॉन्ड के गवाह, या तीसरे पक्ष की ज़मानत। सीमा से कम राशि पर इनमें से कुछ भी माँगने वाली शाखा नियम से ज़्यादा माँग रही है।",
+    "उत्तराधिकार प्रमाणपत्र। प्रोबेट। वंशावली। गवाह। कोई ज़मानतदार। सीमा से कम राशि पर शाखा इनमें से कुछ भी माँगे, तो वह नियम से ज़्यादा माँग रही है।",
 
-  aboveHeading: "यदि कुल राशि सीमा के बराबर या उससे अधिक है",
+  aboveHeading: (commercial, cooperative) =>
+    `यदि कुल राशि ${commercial} या उससे अधिक है (सहकारी बैंक में ${cooperative} या उससे अधिक)`,
   aboveGloss:
-    "सरल सूची लागू होना बंद हो जाती है। बैंक उत्तराधिकार प्रमाणपत्र या समकक्ष, या क़ानूनी उत्तराधिकारी प्रमाणपत्र या शपथपत्र माँग सकता है। सीमा उस एक बैंक के सभी खातों की कुल राशि पर लगती है, प्रति खाता नहीं।",
+    "ऊपर वाली छह-दस्तावेज़ सूची अब लागू नहीं होती। बैंक उत्तराधिकार प्रमाणपत्र (या ऐसा ही कोई न्यायालयीन दस्तावेज़), या क़ानूनी उत्तराधिकारी प्रमाणपत्र और शपथपत्र माँग सकता है। एक बात ध्यान रखें: यह सीमा उस एक बैंक के आपके सभी खातों की कुल राशि पर लगती है, हर खाते पर अलग से नहीं।",
   disputeGloss:
-    "जहाँ उत्तराधिकारी आपस में विवाद कर रहे हों, वहाँ राशि चाहे जितनी हो, बैंक न्यायालय का दस्तावेज़ माँगता है — प्रोबेट, प्रशासन पत्र, उत्तराधिकार प्रमाणपत्र, या न्यायालयीन आदेश।",
+    "अगर क़ानूनी उत्तराधिकारी आपस में असहमत हैं, तो राशि चाहे जितनी हो, बैंक न्यायालय का दस्तावेज़ माँगेगा — प्रोबेट, प्रशासन पत्र, उत्तराधिकार प्रमाणपत्र, या न्यायालयीन आदेश।",
 
   ctaHeading: "यक़ीन नहीं कि कौन-सी सूची आपकी है?",
-  ctaSub: "कुछ सवाल, और आपको अपनी स्थिति की सूची उस पैराग्राफ़ के साथ मिलेगी जिससे वह आती है।",
+  ctaSub: "कुछ सवालों के जवाब दें, और हम आपको बताएँगे कि आप पर कौन-सी सूची लागू होती है, और यह किस नियम से आती है।",
   cta: "दावा यात्रा शुरू करें",
 
   paraLabel: (para) => `आरबीआई निर्देश, पैराग्राफ़ ${para}`,
@@ -147,40 +161,42 @@ const hi: DocsDict = {
 };
 
 const kn: DocsDict = {
-  homeCta: "ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು ಎಂದು ನೋಡಿ",
+  homeCta: "ನಿಮಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ ಎಂದು ನೋಡಿ",
   eyebrow: "ಶಾಖೆಗೆ ಹೋಗುವ ಮೊದಲು",
   heading: "ಬ್ಯಾಂಕಿಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ?",
-  sub: "ಎರಡು ಪಟ್ಟಿಗಳಿವೆ, ಮತ್ತು ಅವುಗಳ ಉದ್ದದಲ್ಲಿ ದೊಡ್ಡ ವ್ಯತ್ಯಾಸವಿದೆ. ನಿಮಗೆ ಯಾವುದು ಅನ್ವಯಿಸುತ್ತದೆ ಎಂಬುದನ್ನು ಒಂದೇ ಸಂಗತಿ ನಿರ್ಧರಿಸುತ್ತದೆ: ಖಾತೆಯಲ್ಲಿ ನಾಮನಿರ್ದೇಶಿತರು ಅಥವಾ ಉಳಿದ ಜಂಟಿ ಖಾತೆದಾರರು ದಾಖಲಾಗಿದ್ದರೇ ಎಂಬುದು.",
+  sub: "ಎರಡು ಪಟ್ಟಿಗಳು ಇರಬಹುದು — ಒಂದು ಚಿಕ್ಕದು, ಒಂದು ದೊಡ್ಡದು. ನಿಮ್ಮದು ಯಾವುದು ಎಂಬುದು ಒಂದೇ ಸಂಗತಿಯಿಂದ ನಿರ್ಧಾರವಾಗುತ್ತದೆ: ಖಾತೆಯಲ್ಲಿ ನಾಮನಿರ್ದೇಶಿತರು ಅಥವಾ ಉಳಿದ ಜಂಟಿ ಖಾತೆದಾರರು ದಾಖಲಾಗಿದ್ದರೇ?",
   routeNote:
-    "ಇದು ನಿಮ್ಮ ಆಯ್ಕೆಯಲ್ಲ. ಖಾತೆಯಲ್ಲಿ ಈಗಾಗಲೇ ಇರುವ ಮಾಹಿತಿಯಿಂದ ಯಾವ ಪಟ್ಟಿ ಅನ್ವಯಿಸುತ್ತದೆ ಎಂದು ಬ್ಯಾಂಕ್ ನಿರ್ಧರಿಸುತ್ತದೆ. ನಿಮ್ಮದು ಯಾವುದು ಎಂಬ ಬಗ್ಗೆ ಖಚಿತವಿಲ್ಲದಿದ್ದರೆ, ಕ್ಲೇಮ್ ಪ್ರಯಾಣವು ಕೆಲವು ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ಅದನ್ನು ಖಚಿತಪಡಿಸುತ್ತದೆ.",
+    "ಯಾವ ಪಟ್ಟಿ ಅನ್ವಯಿಸುತ್ತದೆ ಎಂಬುದು ನಿಮ್ಮ ಆಯ್ಕೆಯಲ್ಲ — ಖಾತೆಯಲ್ಲಿ ಮೊದಲೇ ಏನಿತ್ತು ಎಂಬುದರ ಮೇಲೆ ಅದು ಅವಲಂಬಿತ. ನಿಮ್ಮದು ಯಾವುದು ಎಂದು ಖಚಿತವಿಲ್ಲವೇ? ಕ್ಲೇಮ್ ಪ್ರಯಾಣ ಕೆಲವು ಪ್ರಶ್ನೆಗಳಲ್ಲಿ ಅದನ್ನು ಕಂಡುಹಿಡಿಯುತ್ತದೆ.",
 
   nomineeHeading: "ನಾಮನಿರ್ದೇಶಿತರು ಅಥವಾ ಉಳಿದ ಜಂಟಿ ಖಾತೆದಾರರು ದಾಖಲಾಗಿದ್ದರೆ",
-  nomineeSub: "ಮೂರು ದಾಖಲೆಗಳು. ಮೊತ್ತದ ಮಿತಿ ಇಲ್ಲ.",
+  nomineeSub: "ಮೂರು ದಾಖಲೆಗಳು. ಎಷ್ಟೇ ಮೊತ್ತವಿರಲಿ.",
   nomineeGloss:
-    "ನಾಮನಿರ್ದೇಶಿತರು ಅಥವಾ ಉಳಿದ ಜಂಟಿ ಖಾತೆದಾರರು ದಾಖಲಾಗಿರುವಲ್ಲಿ, ಬ್ಯಾಂಕ್ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ, ಆಡಳಿತ ಪತ್ರ ಅಥವಾ ಪ್ರೊಬೇಟ್, ಅಥವಾ ನಷ್ಟಭರ್ತಿ ಬಾಂಡ್ ಅಥವಾ ಜಾಮೀನು ಕೇಳುವಂತಿಲ್ಲ — ಬಾಕಿ ಮೊತ್ತ ಎಷ್ಟೇ ಇರಲಿ.",
-  ownershipHeading: "ಹಣ ಪಡೆಯುವುದು ಮತ್ತು ಮಾಲೀಕರಾಗುವುದು ಒಂದೇ ಅಲ್ಲ",
+    "ನಾಮನಿರ್ದೇಶಿತರು ಅಥವಾ ಉಳಿದ ಜಂಟಿ ಖಾತೆದಾರರು ದಾಖಲಾಗಿದ್ದರೆ, ಬ್ಯಾಂಕ್ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ, ಪ್ರೊಬೇಟ್, ಅಥವಾ ಅಂತಹ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಕಾಗದಪತ್ರ ಕೇಳದೆಯೇ ಪಾವತಿಸಬೇಕು — ಖಾತೆಯಲ್ಲಿ ಎಷ್ಟೇ ಮೊತ್ತವಿರಲಿ.",
+  ownershipHeading: "ಹಣ ಸಿಗುವುದು ಅದರ ಮಾಲೀಕರಾಗುವುದು ಅಲ್ಲ",
   ownership:
-    "ನಾಮನಿರ್ದೇಶಿತರು ಎಂದರೆ ಬ್ಯಾಂಕ್ ಹಣ ಪಾವತಿಸಬಹುದಾದ ವ್ಯಕ್ತಿ. ಅವರು ಮಾಲೀಕರಾಗುವುದಿಲ್ಲ. ಉತ್ತರಾಧಿಕಾರ ಕಾನೂನಿನ ಪ್ರಕಾರ ಹಣ ಇನ್ನೂ ಕಾನೂನುಬದ್ಧ ಉತ್ತರಾಧಿಕಾರಿಗಳಿಗೇ ಸೇರಿದ್ದು, ಏಕೈಕ ಉತ್ತರಾಧಿಕಾರಿಯಲ್ಲದ ನಾಮನಿರ್ದೇಶಿತರು ಅದನ್ನು ಉಳಿದವರ ಪರವಾಗಿ ಟ್ರಸ್ಟ್‌ನಲ್ಲಿ ಹೊಂದಿರುತ್ತಾರೆ.",
+    "ನೀವು ನಾಮನಿರ್ದೇಶಿತರಾಗಿರುವುದರಿಂದ ಬ್ಯಾಂಕ್ ನಿಮಗೆ ಈ ಹಣ ಪಾವತಿಸಬಹುದು — ಆದರೆ ಇದರ ಅರ್ಥ ಹಣ ಪಡೆಯುವ ಹಕ್ಕು ನಿಮಗಿದೆ ಎಂದಷ್ಟೇ, ಮಾಲೀಕತ್ವ ಅಲ್ಲ. ಈ ಹಣ ಇನ್ನೂ ಉತ್ತರಾಧಿಕಾರ ಕಾನೂನಿನ ಪ್ರಕಾರ ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರರಿಗೇ ಸೇರಿದ್ದು. ಒಡಹುಟ್ಟಿದವರು, ಪೋಷಕರು, ಅಥವಾ ಇತರ ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರರು ಇದ್ದರೆ, ನೀವು ಈ ಹಣವನ್ನು ಅವರಿಗಾಗಿಯೂ ಇಟ್ಟುಕೊಳ್ಳಬೇಕು, ನಿಮಗೊಬ್ಬರಿಗೇ ಅಲ್ಲ.",
 
-  simplifiedHeading: "ನಾಮನಿರ್ದೇಶಿತರು ಇಲ್ಲದಿದ್ದರೆ, ಮತ್ತು ಒಟ್ಟು ಮೊತ್ತ ಮಿತಿಗಿಂತ ಕಡಿಮೆಯಿದ್ದರೆ",
-  simplifiedSub: "ಆರು ದಾಖಲೆಗಳು. ಅವುಗಳ ಆಚೆ ಏನೂ ಇಲ್ಲ.",
+  simplifiedHeading: (commercial, cooperative) =>
+    `ನಾಮನಿರ್ದೇಶಿತರು ಇಲ್ಲದಿದ್ದರೆ, ಮತ್ತು ಒಟ್ಟು ಮೊತ್ತ ${commercial} ಕ್ಕಿಂತ ಕಡಿಮೆಯಿದ್ದರೆ (ಸಹಕಾರಿ ಬ್ಯಾಂಕಿನಲ್ಲಿ ${cooperative} ಕ್ಕಿಂತ ಕಡಿಮೆ)`,
+  simplifiedSub: "ಆರು ದಾಖಲೆಗಳು. ಅದಕ್ಕಿಂತ ಹೆಚ್ಚೇನೂ ಇಲ್ಲ.",
   simplifiedGloss:
-    "ಮಿತಿಗಿಂತ ಕಡಿಮೆ ಮೊತ್ತಕ್ಕೆ ನಿಯಮವು ಹೆಚ್ಚುವರಿ ಕಾಗದಪತ್ರವನ್ನು ಕೇವಲ ನಿರುತ್ಸಾಹಗೊಳಿಸುವುದಿಲ್ಲ — ಈ ಪಟ್ಟಿಯ ಆಧಾರದ ಮೇಲೆ ಕ್ಲೇಮ್ ಇತ್ಯರ್ಥಗೊಳಿಸುವಂತೆ ಬ್ಯಾಂಕಿಗೆ ಸೂಚಿಸುತ್ತದೆ.",
+    "ಈ ಮೊತ್ತಕ್ಕಿಂತ ಕಡಿಮೆಯಿದ್ದರೆ, ಇದೇ ಬ್ಯಾಂಕಿನ ಸಂಪೂರ್ಣ ಪಟ್ಟಿ. ಈ ಆರರ ಆಚೆ ಬ್ಯಾಂಕ್ ಏನನ್ನೂ ಕೇಳುವಂತಿಲ್ಲ, ಮತ್ತು ಇವುಗಳನ್ನು ನೀಡಿದ ನಂತರ ಕ್ಲೇಮ್ ಇತ್ಯರ್ಥಗೊಳಿಸಲು ನಿರಾಕರಿಸುವಂತಿಲ್ಲ.",
   noSuretyGloss:
-    "ಮಿತಿಯೊಳಗಿನ ಕ್ಲೇಮ್‌ಗಳಲ್ಲಿ ಕ್ಲೇಮಿಗೆ ಜಾಮೀನು ನೀಡುವ ಮೂರನೇ ವ್ಯಕ್ತಿಯನ್ನು ಕೇಳುವಂತೆಯೇ ಇಲ್ಲ.",
+    "ಈ ಮೊತ್ತಕ್ಕಿಂತ ಕಡಿಮೆಯಿದ್ದರೆ, ನಿಮ್ಮ ಕ್ಲೇಮಿಗೆ ಜಾಮೀನುದಾರರಾಗಿ ಯಾವುದೇ ಮೂರನೇ ವ್ಯಕ್ತಿಯನ್ನು ಬ್ಯಾಂಕ್ ಕೇಳುವಂತಿಲ್ಲ.",
 
-  notOnListHeading: "ಎರಡೂ ಪಟ್ಟಿಗಳಲ್ಲಿ ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ಇಲ್ಲದಿರುವುದು",
+  notOnListHeading: "ಬ್ಯಾಂಕ್ ನಿಮ್ಮಿಂದ ಇವನ್ನು ಕೇಳಬಾರದು",
   notOnList:
-    "ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ, ಪ್ರೊಬೇಟ್, ವಂಶಾವಳಿ ದಾಖಲೆ, ನಷ್ಟಭರ್ತಿ ಬಾಂಡ್‌ಗೆ ಸಾಕ್ಷಿಗಳು, ಅಥವಾ ಮೂರನೇ ವ್ಯಕ್ತಿಯ ಜಾಮೀನು. ಮಿತಿಗಿಂತ ಕಡಿಮೆ ಮೊತ್ತದಲ್ಲಿ ಇವುಗಳಲ್ಲಿ ಯಾವುದನ್ನಾದರೂ ಕೇಳುವ ಶಾಖೆ ನಿಯಮಕ್ಕಿಂತ ಹೆಚ್ಚು ಕೇಳುತ್ತಿದೆ.",
+    "ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ. ಪ್ರೊಬೇಟ್. ವಂಶಾವಳಿ ದಾಖಲೆ. ಸಾಕ್ಷಿಗಳು. ಜಾಮೀನುದಾರರು. ಮಿತಿಗಿಂತ ಕಡಿಮೆ ಮೊತ್ತದಲ್ಲಿ ಶಾಖೆ ಇವುಗಳಲ್ಲಿ ಯಾವುದನ್ನಾದರೂ ಕೇಳಿದರೆ, ಅದು ನಿಯಮಕ್ಕಿಂತ ಹೆಚ್ಚು ಕೇಳುತ್ತಿದೆ.",
 
-  aboveHeading: "ಒಟ್ಟು ಮೊತ್ತ ಮಿತಿಗೆ ಸಮ ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚಿದ್ದರೆ",
+  aboveHeading: (commercial, cooperative) =>
+    `ಒಟ್ಟು ಮೊತ್ತ ${commercial} ಅಥವಾ ಅದಕ್ಕಿಂತ ಹೆಚ್ಚಿದ್ದರೆ (ಸಹಕಾರಿ ಬ್ಯಾಂಕಿನಲ್ಲಿ ${cooperative} ಅಥವಾ ಹೆಚ್ಚು)`,
   aboveGloss:
-    "ಸರಳ ಪಟ್ಟಿ ಅನ್ವಯವಾಗುವುದು ನಿಲ್ಲುತ್ತದೆ. ಬ್ಯಾಂಕ್ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಅಥವಾ ಸಮಾನವಾದದ್ದು, ಅಥವಾ ಕಾನೂನುಬದ್ಧ ಉತ್ತರಾಧಿಕಾರಿ ಪ್ರಮಾಣಪತ್ರ ಅಥವಾ ಪ್ರಮಾಣಪತ್ರ ಅಫಿಡವಿಟ್ ಕೇಳಬಹುದು. ಮಿತಿಯು ಆ ಒಂದೇ ಬ್ಯಾಂಕಿನ ಎಲ್ಲ ಖಾತೆಗಳ ಒಟ್ಟು ಮೊತ್ತಕ್ಕೆ ಅನ್ವಯಿಸುತ್ತದೆ, ಪ್ರತಿ ಖಾತೆಗೆ ಅಲ್ಲ.",
+    "ಮೇಲಿನ ಆರು-ದಾಖಲೆಗಳ ಪಟ್ಟಿ ಇನ್ನು ಅನ್ವಯಿಸುವುದಿಲ್ಲ. ಬ್ಯಾಂಕ್ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ (ಅಥವಾ ಅಂತಹ ಇನ್ನೊಂದು ನ್ಯಾಯಾಲಯದ ದಾಖಲೆ), ಅಥವಾ ಕಾನೂನುಬದ್ಧ ಉತ್ತರಾಧಿಕಾರಿ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು ಪ್ರಮಾಣಪತ್ರ ಅಫಿಡವಿಟ್ ಕೇಳಬಹುದು. ಒಂದು ಗಮನಿಸಬೇಕಾದ ಸಂಗತಿ: ಈ ಮಿತಿಯು ಆ ಒಂದೇ ಬ್ಯಾಂಕಿನಲ್ಲಿ ನಿಮ್ಮ ಎಲ್ಲ ಖಾತೆಗಳ ಒಟ್ಟು ಮೊತ್ತಕ್ಕೆ ಅನ್ವಯಿಸುತ್ತದೆ, ಪ್ರತಿ ಖಾತೆಗೆ ಪ್ರತ್ಯೇಕವಾಗಿ ಅಲ್ಲ.",
   disputeGloss:
-    "ಉತ್ತರಾಧಿಕಾರಿಗಳು ಪರಸ್ಪರ ವಿವಾದದಲ್ಲಿದ್ದರೆ, ಮೊತ್ತ ಎಷ್ಟೇ ಇರಲಿ ಬ್ಯಾಂಕ್ ನ್ಯಾಯಾಲಯದ ದಾಖಲೆ ಕೇಳುತ್ತದೆ — ಪ್ರೊಬೇಟ್, ಆಡಳಿತ ಪತ್ರ, ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ, ಅಥವಾ ನ್ಯಾಯಾಲಯದ ಆದೇಶ.",
+    "ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರರು ಪರಸ್ಪರ ಭಿನ್ನಾಭಿಪ್ರಾಯ ಹೊಂದಿದ್ದರೆ, ಮೊತ್ತ ಎಷ್ಟೇ ಇರಲಿ ಬ್ಯಾಂಕ್ ನ್ಯಾಯಾಲಯದ ದಾಖಲೆ ಕೇಳುತ್ತದೆ — ಪ್ರೊಬೇಟ್, ಆಡಳಿತ ಪತ್ರ, ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ, ಅಥವಾ ನ್ಯಾಯಾಲಯದ ಆದೇಶ.",
 
   ctaHeading: "ಯಾವ ಪಟ್ಟಿ ನಿಮ್ಮದು ಎಂದು ಖಚಿತವಿಲ್ಲವೇ?",
-  ctaSub: "ಕೆಲವು ಪ್ರಶ್ನೆಗಳು, ಮತ್ತು ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಯ ಪಟ್ಟಿಯನ್ನು ಅದು ಬರುವ ಪ್ಯಾರಾಗ್ರಾಫ್‌ನೊಂದಿಗೆ ಪಡೆಯುತ್ತೀರಿ.",
+  ctaSub: "ಕೆಲವು ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ, ಮತ್ತು ನಿಮಗೆ ಯಾವ ಪಟ್ಟಿ ಅನ್ವಯಿಸುತ್ತದೆ ಮತ್ತು ಅದು ಯಾವ ನಿಯಮದಿಂದ ಬರುತ್ತದೆ ಎಂದು ನಾವು ನಿಖರವಾಗಿ ಹೇಳುತ್ತೇವೆ.",
   cta: "ಕ್ಲೇಮ್ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
 
   paraLabel: (para) => `ಆರ್‌ಬಿಐ ನಿರ್ದೇಶನಗಳು, ಪ್ಯಾರಾಗ್ರಾಫ್ ${para}`,
