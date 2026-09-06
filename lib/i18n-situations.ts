@@ -44,7 +44,18 @@ export type SituationsDict = {
   eyebrow: string;
   heading: string;
   sub: string;
-  /** The five options, in display order. */
+  /**
+   * The two group labels.
+   *
+   * The five options are ordered by who actually arrives. PRODUCT.md's primary
+   * user "has already been to a bank and been handed a list of demands... they
+   * arrive holding a demand, usually for a succession certificate" -- so that
+   * situation reads first and carries the weight, and the two not-yet cases sit
+   * below their own label rather than competing with it.
+   */
+  groupSpoken: string;
+  groupNotYet: string;
+  /** The five options. */
   notStarted: Situation;
   alreadyStarted: Situation;
   askedFor: Situation;
@@ -100,6 +111,8 @@ export type SituationsDict = {
 
 const en: SituationsDict = {
   eyebrow: "Where to start",
+  groupSpoken: "You have spoken to the bank",
+  groupNotYet: "You have not been to the bank yet",
   heading: "What best describes your situation?",
   sub: "Pick the one closest to where you are. You will only be asked the questions that change your answer.",
   notStarted: {
@@ -183,6 +196,8 @@ const en: SituationsDict = {
 
 const hi: SituationsDict = {
   eyebrow: "कहाँ से शुरू करें",
+  groupSpoken: "आप बैंक जा चुके हैं",
+  groupNotYet: "आप अभी बैंक नहीं गए हैं",
   heading: "आपकी स्थिति इनमें से किससे मिलती है?",
   sub: "जो सबसे क़रीब हो उसे चुनें। आपसे केवल वही सवाल पूछे जाएँगे जो आपके जवाब को बदलते हैं।",
   notStarted: {
@@ -266,6 +281,8 @@ const hi: SituationsDict = {
 
 const kn: SituationsDict = {
   eyebrow: "ಎಲ್ಲಿಂದ ಪ್ರಾರಂಭಿಸಬೇಕು",
+  groupSpoken: "ನೀವು ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿದ್ದೀರಿ",
+  groupNotYet: "ನೀವು ಇನ್ನೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ",
   heading: "ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಯನ್ನು ಇವುಗಳಲ್ಲಿ ಯಾವುದು ಸರಿಯಾಗಿ ವಿವರಿಸುತ್ತದೆ?",
   sub: "ಹತ್ತಿರವಾದದ್ದನ್ನು ಆರಿಸಿ. ನಿಮ್ಮ ಉತ್ತರವನ್ನು ಬದಲಾಯಿಸುವ ಪ್ರಶ್ನೆಗಳನ್ನು ಮಾತ್ರ ಕೇಳಲಾಗುತ್ತದೆ.",
   notStarted: {

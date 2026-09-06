@@ -190,56 +190,105 @@ export default async function Start({
  */
 function SituationPicker({ locale }: { locale: Locale }) {
   const t = SITUATIONS_T[locale];
-  const options: (Situation & { href: string })[] = [
-    // The wizard's own door. `begin=1` rather than a bare /start, which would
-    // land back here.
-    { ...t.notStarted, href: "/start?begin=1" },
-    { ...t.alreadyStarted, href: "/start/started" },
+
+  // Ordered by who actually arrives, not by chronology. PRODUCT.md's primary
+  // user has ALREADY been to a bank and is holding a demand -- usually for a
+  // succession certificate -- so that situation takes the first slot and the
+  // extra weight. The first draft put "I have not started" first, which gave
+  // the strongest position on the page to the case the product is least
+  // often used for.
+  //
+  // `lead` is the one row that is a filled card. Everything else is a rule-
+  // separated row: five equal cards gave the product no opinion about which
+  // door most people need, and pushed the last two below the fold on a phone,
+  // which is the primary device.
+  const spoken: (Situation & { href: string; lead?: boolean })[] = [
     // Express lanes. These two also appear inside "already started" -- a
     // reader who identifies by their problem rather than by their stage gets
     // there in one click instead of two, and neither route is wrong.
-    { ...t.askedFor, href: "/what-were-you-asked-for" },
+    { ...t.askedFor, href: "/what-were-you-asked-for", lead: true },
     { ...t.refused, href: "/bank-refused" },
+    { ...t.alreadyStarted, href: "/start/started" },
+  ];
+  const notYet: (Situation & { href: string })[] = [
+    // The wizard's own door. `begin=1` rather than a bare /start, which would
+    // land back here.
+    { ...t.notStarted, href: "/start?begin=1" },
     { ...t.dontKnow, href: "/start/find" },
   ];
+
   return (
     <>
       <RecoverNav />
       <main className="flex-1 bg-mist">
-        <div className="shell max-w-[760px] py-8 sm:py-12">
-          <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">
-            {t.eyebrow}
-          </p>
-          <h1 className="display-lg mt-2 font-serif font-bold text-indigo-ink">
+        <div className="shell max-w-[680px] py-8 sm:py-12">
+          <h1 className="display-lg font-serif font-bold text-indigo-ink">
             {t.heading}
           </h1>
-          <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">{t.sub}</p>
-          <ul className="mt-7 space-y-3">
-            {options.map((option) => (
-              <li key={option.href}>
-                <Link
-                  href={withLang(option.href, locale)}
-                  className="group flex items-start gap-4 rounded-xl border-2 border-rule bg-white p-5 transition-all hover:border-indigo hover:shadow-[0_6px_24px_rgba(45,48,121,0.12)]"
-                >
-                  <span className="flex-1">
-                    <span className="display-md block font-serif font-bold text-indigo-ink">
-                      {option.label}
-                    </span>
-                    <span className="body-fluid mt-1.5 block leading-relaxed text-ink-soft">
-                      {option.detail}
-                    </span>
-                  </span>
-                  <span aria-hidden="true" className="mt-1 shrink-0 text-[1.25rem] font-bold text-saffron-ink">
-                    &rarr;
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <p className="body-fluid mt-2.5 max-w-[62ch] text-ink-soft">{t.sub}</p>
+
+          <SituationGroup label={t.groupSpoken} options={spoken} locale={locale} />
+          <SituationGroup label={t.groupNotYet} options={notYet} locale={locale} />
         </div>
       </main>
       <RecoverFooter />
     </>
+  );
+}
+
+function SituationGroup({
+  label,
+  options,
+  locale,
+}: {
+  label: string;
+  options: (Situation & { href: string; lead?: boolean })[];
+  locale: Locale;
+}) {
+  return (
+    <section className="mt-8">
+      <h2 className="text-[0.875rem] font-bold uppercase tracking-[0.14em] text-ink-faint">
+        {label}
+      </h2>
+      <ul className="mt-3">
+        {options.map((option) => (
+          <li key={option.href}>
+            <Link
+              href={withLang(option.href, locale)}
+              className={
+                option.lead
+                  ? "group flex items-center gap-4 rounded-xl border-2 border-indigo bg-white px-5 py-4 transition-shadow hover:shadow-[0_6px_24px_rgba(45,48,121,0.14)]"
+                  : // A rule between rows, not a box around each. Keeps all five
+                    // choices inside one phone screen and stops every option
+                    // shouting at the same volume as the one most people need.
+                    "group flex items-center gap-4 border-b border-rule px-1 py-4 transition-colors hover:bg-white/70"
+              }
+            >
+              <span className="flex-1">
+                <span
+                  className={
+                    option.lead
+                      ? "display-md block font-serif font-bold text-indigo-ink"
+                      : "block font-serif text-[1.125rem] font-bold text-indigo-ink sm:text-[1.25rem]"
+                  }
+                >
+                  {option.label}
+                </span>
+                <span className="mt-1 block text-[0.9375rem] leading-relaxed text-ink-soft sm:text-[1rem]">
+                  {option.detail}
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-[1.25rem] font-bold text-saffron-ink transition-transform group-hover:translate-x-0.5"
+              >
+                &rarr;
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
