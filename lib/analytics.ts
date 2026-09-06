@@ -54,8 +54,20 @@ const API_HOST =
 
 let ready = false;
 
+/**
+ * Local development never leaves real-user numbers. Every session working on
+ * this codebase runs against localhost, and without this guard every click
+ * while building or testing a feature lands in the same Mixpanel project as
+ * real claimants -- which is exactly what happened before this was added
+ * (109 events, 108 of them from localhost, 0 from production).
+ */
+function isLocalDev(): boolean {
+  if (typeof window === "undefined") return false;
+  return window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+}
+
 export function initAnalytics() {
-  if (ready || !TOKEN || typeof window === "undefined") return;
+  if (ready || !TOKEN || typeof window === "undefined" || isLocalDev()) return;
   mixpanel.init(TOKEN, {
     api_host: API_HOST,
     ip: false,
