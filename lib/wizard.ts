@@ -15,7 +15,13 @@ import type { OutcomeId } from "./outcomes";
 
 export type QuestionId = "claiming" | "court" | "nominee" | "will" | "heirs" | "bankType" | "amount";
 export type Answers = Partial<{
-  claiming: "deposit-account" | "deposit-fd" | "deposit-both" | "locker" | "pension" | "other" | "minor";
+  // "locker", "pension" and "minor" were members here until 7 Sep 2026 and
+  // were never reachable: no option offered them and parseAnswers rejects any
+  // value no option offers, so they could arrive from neither a click nor a
+  // URL. All three are covered by "other", which is a real answer and routes
+  // to the same out-of-scope verdict. The retired deposit values stay,
+  // because links carrying those genuinely exist -- see RETIRED_VALUES.
+  claiming: "deposit-account" | "deposit-fd" | "deposit-both" | "other";
   court: "yes" | "no" | "unknown";
   nominee: "yes" | "survivorship" | "no" | "unknown";
   will: "yes" | "no" | "unknown";

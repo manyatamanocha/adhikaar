@@ -59,8 +59,27 @@ test("missing facts are asked again, including old bookmarked results", () => {
     assert.equal(w.resolve(a).kind, "question", key);
   }
 });
-test("lockers, minors, pensions and other assets exit the deposit flow", () => {
-  for (const claiming of ["locker", "minor", "pension", "other"]) assert.equal(w.resolve({ claiming }).outcome, "out-of-scope");
+/**
+ * Asserted through parseAnswers, like every other URL-borne answer.
+ *
+ * This used to walk "locker", "minor" and "pension" as well, which read as
+ * broad coverage but tested nothing: no option has ever produced those
+ * values and the parser has never accepted them, so they could not arrive
+ * from a URL either. Handing them straight to resolve() exercised a branch
+ * the app cannot reach, while the reachable path -- a real reader picking
+ * "Something else, or I'm not sure" -- went through the parser this test
+ * skipped. That is precisely the gap that hid the retired-value bug.
+ */
+test("anything that is not a bank deposit exits the deposit flow", () => {
+  assert.equal(w.resolve(w.parseAnswers({ claiming: "other" })).outcome, "out-of-scope");
+
+  // A value no option offers is not quietly treated as an answer: it is
+  // dropped, and the reader is asked the question rather than routed on a
+  // guess about what they meant.
+  for (const claiming of ["locker", "minor", "pension", "", "deposit"]) {
+    assert.equal(w.parseAnswers({ claiming }).claiming, undefined, claiming);
+    assert.equal(w.resolve(w.parseAnswers({ claiming })).question.id, "claiming", claiming);
+  }
 });
 /**
  * Question one is a scope gate, not a taxonomy quiz.
