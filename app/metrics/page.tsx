@@ -78,7 +78,7 @@ type Metrics = {
   perQuestion: Record<string, number>;
   outcomes: Record<string, number>;
   arrivedVia: Record<string, number>;
-  dataQuality: { eventsConsidered: number; developmentEventsExcluded: number };
+  dataQuality: { eventsConsidered: number };
   generatedAt: string;
 };
 
@@ -442,9 +442,8 @@ export default async function MetricsPage() {
               <section className="mt-10 border-t border-rule-faint pt-5">
                 <p className="text-[0.9375rem] text-ink-faint">
                   Window {m.window.from} to {m.window.to} ·{" "}
-                  {m.dataQuality.eventsConsidered} events counted ·{" "}
-                  {m.dataQuality.developmentEventsExcluded} development events
-                  excluded · refreshed every 5 minutes.
+                  {m.dataQuality.eventsConsidered} events counted · refreshed
+                  every 5 minutes.
                 </p>
                 <p className="mt-2 text-[0.9375rem] text-ink-faint">
                   Rates with no denominator render “—” rather than 0%. Nothing
