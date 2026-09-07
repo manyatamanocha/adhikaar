@@ -152,7 +152,7 @@ function bankOptions(otherLabel: string, otherDetail: string): Option[] {
 
 const en: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "Is this money in a bank account or deposit?",
+    id: "claiming", number: 1, prompt: "The claim is for which of the following?",
     help: "",
     options: [
       // One answer, not three. "A bank account", "a bank deposit" and "both"
@@ -162,7 +162,7 @@ const en: Record<QuestionId, Question> = {
       // hardcodes this value whatever asset it describes. Three routes to an
       // identical destination, on the first screen a grieving reader sees.
       // The retired values are still accepted below, for links already sent.
-      { value: "deposit-account", label: "Yes — an account, a deposit, or both", detail: "Savings, current, term or recurring." },
+      { value: "deposit-account", label: "A bank account, a deposit, or both", detail: "Savings, current, term or recurring." },
       // The exit, and the only reason this screen still exists. Without it,
       // someone claiming a pension, an insurance policy, a locker or PPF is
       // walked through bank-deposit guidance that does not apply to them --
@@ -172,12 +172,12 @@ const en: Record<QuestionId, Question> = {
     ],
   },
   court: {
-    id: "court", number: 3, prompt: "Is there a court order stopping the bank from paying?",
-    help: "A court order stopping payment is different from simply having a court case. If you are unsure, ask the bank whether it knows of such an order.",
-    options: [{ value: "no", label: "No such court order is known" }, { value: "yes", label: "Yes, a court order is stopping payment" }, unknownEn],
+    id: "court", number: 3, prompt: "Is there a court order currently stopping the bank from paying this money?",
+    help: "This is different from simply having a court case about the money — only an order that specifically stops payment counts here. If you're not sure, ask the bank whether it knows of one.",
+    options: [{ value: "no", label: "No — there's no such order (whether or not there's a case)" }, { value: "yes", label: "Yes, a court order is stopping payment" }, unknownEn],
   },
   nominee: {
-    id: "nominee", number: 2, prompt: "Was someone named in the bank records to receive the money?",
+    id: "nominee", number: 2, prompt: "Is there a registered nominee for this account?",
     help: "This person is called a nominee. Check the bank's records. For a joint account, a surviving holder may qualify under an 'either or survivor' instruction.",
     options: [
       { value: "yes", label: "Yes, there is a registered nominee", detail: "The sole account holder, or all joint depositors, have died." },
@@ -207,7 +207,7 @@ const en: Record<QuestionId, Question> = {
   },
   bank: {
     id: "bank", number: 8, prompt: "Which bank is the money at?",
-    help: "This does not change your result. It adds what your own bank has already published, in its own words — which is harder to argue with at a counter than a rule the officer has not read.",
+    help: "This does not change your result — it only means we can show you your bank's own published policy alongside the questions that follow.",
     options: bankOptions(
       "Another bank, or I'm not sure",
       "You will get the RBI rules, which apply to every bank.",
@@ -219,20 +219,20 @@ const unknownHi: Option = { value: "unknown", label: "मुझे अभी न
 
 const hi: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "क्या यह पैसा बैंक खाते या जमा में है?",
+    id: "claiming", number: 1, prompt: "यह दावा इनमें से किसके लिए है?",
     help: "",
     options: [
-      { value: "deposit-account", label: "हाँ — खाता, जमा, या दोनों", detail: "बचत, चालू, सावधि या आवर्ती।" },
+      { value: "deposit-account", label: "एक बैंक खाता, एक जमा, या दोनों", detail: "बचत, चालू, सावधि या आवर्ती।" },
       { value: "other", label: "कुछ और, या मुझे यक़ीन नहीं है", detail: "लॉकर, पेंशन, बीमा, भविष्य निधि, शेयर — या आपको अभी पता नहीं है।", unsure: true },
     ],
   },
   court: {
-    id: "court", number: 3, prompt: "क्या कोई अदालती आदेश बैंक को भुगतान करने से रोक रहा है?",
-    help: "भुगतान रोकने वाला अदालती आदेश होना केवल अदालती मामला होने से अलग है। अगर आपको यक़ीन न हो, तो बैंक से पूछें कि क्या उसे ऐसे किसी आदेश की जानकारी है।",
-    options: [{ value: "no", label: "ऐसा कोई अदालती आदेश ज्ञात नहीं है" }, { value: "yes", label: "हाँ, एक अदालती आदेश भुगतान रोक रहा है" }, unknownHi],
+    id: "court", number: 3, prompt: "क्या फ़िलहाल कोई अदालती आदेश बैंक को यह पैसा देने से रोक रहा है?",
+    help: "यह केवल पैसे से जुड़ा कोई अदालती मामला होने से अलग है — यहाँ सिर्फ़ वह आदेश गिना जाता है जो भुगतान को स्पष्ट रूप से रोकता है। अगर यक़ीन न हो, तो बैंक से पूछें कि क्या उसे ऐसे किसी आदेश की जानकारी है।",
+    options: [{ value: "no", label: "नहीं — ऐसा कोई आदेश नहीं है (चाहे मामला हो या न हो)" }, { value: "yes", label: "हाँ, एक अदालती आदेश भुगतान रोक रहा है" }, unknownHi],
   },
   nominee: {
-    id: "nominee", number: 2, prompt: "क्या बैंक के रिकॉर्ड में पैसा पाने के लिए किसी का नाम दर्ज था?",
+    id: "nominee", number: 2, prompt: "क्या इस खाते के लिए कोई पंजीकृत नामांकित व्यक्ति है?",
     help: "इस व्यक्ति को नामांकित व्यक्ति (नॉमिनी) कहा जाता है। बैंक के रिकॉर्ड जाँचें। संयुक्त खाते में, जीवित धारक 'either or survivor' निर्देश के तहत पात्र हो सकता है।",
     options: [
       { value: "yes", label: "हाँ, एक पंजीकृत नामांकित व्यक्ति है", detail: "एकल खाताधारक, या सभी संयुक्त जमाकर्ता, गुज़र चुके हैं।" },
@@ -262,7 +262,7 @@ const hi: Record<QuestionId, Question> = {
   },
   bank: {
     id: "bank", number: 8, prompt: "पैसा किस बैंक में है?",
-    help: "इससे आपका नतीजा नहीं बदलता। यह आपके अपने बैंक की प्रकाशित नीति, उसी के शब्दों में, साथ जोड़ देता है — काउंटर पर उसे नकारना उस नियम से कहीं मुश्किल है जो अधिकारी ने पढ़ा ही न हो।",
+    help: "इससे आपका नतीजा नहीं बदलता — इसका मतलब बस इतना है कि हम आपके बैंक की प्रकाशित नीति आगे के सवालों के साथ दिखा सकते हैं।",
     options: bankOptions(
       "कोई और बैंक, या मुझे ठीक से नहीं पता",
       "आपको आरबीआई के नियम मिलेंगे, जो हर बैंक पर लागू होते हैं।",
@@ -274,20 +274,20 @@ const unknownKn: Option = { value: "unknown", label: "ನನಗೆ ಇನ್ನ�
 
 const kn: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "ಈ ಹಣ ಬ್ಯಾಂಕ್ ಖಾತೆ ಅಥವಾ ಠೇವಣಿಯಲ್ಲಿದೆಯೇ?",
+    id: "claiming", number: 1, prompt: "ಈ ಹಕ್ಕು ಇವುಗಳಲ್ಲಿ ಯಾವುದಕ್ಕಾಗಿದೆ?",
     help: "",
     options: [
-      { value: "deposit-account", label: "ಹೌದು — ಖಾತೆ, ಠೇವಣಿ, ಅಥವಾ ಎರಡೂ", detail: "ಉಳಿತಾಯ, ಚಾಲ್ತಿ, ಸ್ಥಿರ ಅಥವಾ ಪುನರಾವರ್ತಿತ." },
+      { value: "deposit-account", label: "ಬ್ಯಾಂಕ್ ಖಾತೆ, ಠೇವಣಿ, ಅಥವಾ ಎರಡೂ", detail: "ಉಳಿತಾಯ, ಚಾಲ್ತಿ, ಸ್ಥಿರ ಅಥವಾ ಪುನರಾವರ್ತಿತ." },
       { value: "other", label: "ಬೇರೆ ಏನಾದರೂ, ಅಥವಾ ನನಗೆ ಖಚಿತವಿಲ್ಲ", detail: "ಲಾಕರ್, ಪಿಂಚಣಿ, ವಿಮೆ, ಭವಿಷ್ಯ ನಿಧಿ, ಷೇರುಗಳು — ಅಥವಾ ನಿಮಗೆ ಇನ್ನೂ ಗೊತ್ತಿಲ್ಲ.", unsure: true },
     ],
   },
   court: {
-    id: "court", number: 3, prompt: "ಬ್ಯಾಂಕ್ ಪಾವತಿಸದಂತೆ ತಡೆಯುವ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶವಿದೆಯೇ?",
-    help: "ಪಾವತಿಯನ್ನು ತಡೆಯುವ ನ್ಯಾಯಾಲಯದ ಆದೇಶ ಇರುವುದು, ಕೇವಲ ನ್ಯಾಯಾಲಯದ ಪ್ರಕರಣ ಇರುವುದಕ್ಕಿಂತ ಬೇರೆ. ಖಚಿತವಿಲ್ಲದಿದ್ದರೆ, ಅಂತಹ ಆದೇಶದ ಬಗ್ಗೆ ಬ್ಯಾಂಕಿಗೆ ಗೊತ್ತಿದೆಯೇ ಎಂದು ಕೇಳಿ.",
-    options: [{ value: "no", label: "ಅಂತಹ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶ ತಿಳಿದಿಲ್ಲ" }, { value: "yes", label: "ಹೌದು, ಒಂದು ನ್ಯಾಯಾಲಯದ ಆದೇಶ ಪಾವತಿಯನ್ನು ತಡೆಯುತ್ತಿದೆ" }, unknownKn],
+    id: "court", number: 3, prompt: "ಈ ಹಣವನ್ನು ಪಾವತಿಸದಂತೆ ಬ್ಯಾಂಕನ್ನು ಪ್ರಸ್ತುತ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶ ತಡೆಯುತ್ತಿದೆಯೇ?",
+    help: "ಇದು ಹಣದ ಬಗ್ಗೆ ಕೇವಲ ನ್ಯಾಯಾಲಯದ ಪ್ರಕರಣ ಇರುವುದಕ್ಕಿಂತ ಬೇರೆ — ಇಲ್ಲಿ ಪಾವತಿಯನ್ನು ನಿರ್ದಿಷ್ಟವಾಗಿ ತಡೆಯುವ ಆದೇಶ ಮಾತ್ರ ಎಣಿಕೆಯಾಗುತ್ತದೆ. ಖಚಿತವಿಲ್ಲದಿದ್ದರೆ, ಅಂತಹ ಆದೇಶದ ಬಗ್ಗೆ ಬ್ಯಾಂಕಿಗೆ ಗೊತ್ತಿದೆಯೇ ಎಂದು ಕೇಳಿ.",
+    options: [{ value: "no", label: "ಇಲ್ಲ — ಅಂತಹ ಆದೇಶ ಇಲ್ಲ (ಪ್ರಕರಣ ಇರಲಿ ಅಥವಾ ಇಲ್ಲದಿರಲಿ)" }, { value: "yes", label: "ಹೌದು, ಒಂದು ನ್ಯಾಯಾಲಯದ ಆದೇಶ ಪಾವತಿಯನ್ನು ತಡೆಯುತ್ತಿದೆ" }, unknownKn],
   },
   nominee: {
-    id: "nominee", number: 2, prompt: "ಹಣ ಪಡೆಯಲು ಬ್ಯಾಂಕಿನ ದಾಖಲೆಗಳಲ್ಲಿ ಯಾರಾದರೂ ಹೆಸರಿಸಲ್ಪಟ್ಟಿದ್ದರೇ?",
+    id: "nominee", number: 2, prompt: "ಈ ಖಾತೆಗೆ ನೋಂದಾಯಿತ ನಾಮನಿರ್ದೇಶಿತರು ಇದ್ದಾರೆಯೇ?",
     help: "ಈ ವ್ಯಕ್ತಿಯನ್ನು ನಾಮನಿರ್ದೇಶಿತರು ಎಂದು ಕರೆಯಲಾಗುತ್ತದೆ. ಬ್ಯಾಂಕಿನ ದಾಖಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ. ಜಂಟಿ ಖಾತೆಯಲ್ಲಿ, ಜೀವಂತ ಇರುವ ಧಾರಕರು 'either or survivor' ಸೂಚನೆಯಡಿ ಅರ್ಹರಾಗಬಹುದು.",
     options: [
       { value: "yes", label: "ಹೌದು, ನೋಂದಾಯಿತ ನಾಮನಿರ್ದೇಶಿತರು ಇದ್ದಾರೆ", detail: "ಏಕೈಕ ಖಾತೆದಾರರು, ಅಥವಾ ಎಲ್ಲಾ ಜಂಟಿ ಠೇವಣಿದಾರರು, ಮರಣ ಹೊಂದಿದ್ದಾರೆ." },
@@ -317,7 +317,7 @@ const kn: Record<QuestionId, Question> = {
   },
   bank: {
     id: "bank", number: 8, prompt: "ಹಣ ಯಾವ ಬ್ಯಾಂಕಿನಲ್ಲಿದೆ?",
-    help: "ಇದು ನಿಮ್ಮ ಫಲಿತಾಂಶವನ್ನು ಬದಲಾಯಿಸುವುದಿಲ್ಲ. ನಿಮ್ಮ ಸ್ವಂತ ಬ್ಯಾಂಕ್ ಈಗಾಗಲೇ ಪ್ರಕಟಿಸಿರುವುದನ್ನು, ಅದರದೇ ಮಾತುಗಳಲ್ಲಿ ಸೇರಿಸುತ್ತದೆ — ಅಧಿಕಾರಿ ಓದದ ನಿಯಮಕ್ಕಿಂತ ಅದನ್ನು ಕೌಂಟರ್‌ನಲ್ಲಿ ಅಲ್ಲಗಳೆಯುವುದು ಕಷ್ಟ.",
+    help: "ಇದು ನಿಮ್ಮ ಫಲಿತಾಂಶವನ್ನು ಬದಲಾಯಿಸುವುದಿಲ್ಲ — ಇದರರ್ಥ ನಿಮ್ಮ ಬ್ಯಾಂಕಿನ ಪ್ರಕಟಿತ ನೀತಿಯನ್ನು ಮುಂದಿನ ಪ್ರಶ್ನೆಗಳ ಜೊತೆ ತೋರಿಸಬಹುದು ಎಂದು ಮಾತ್ರ.",
     options: bankOptions(
       "ಬೇರೆ ಬ್ಯಾಂಕ್, ಅಥವಾ ನನಗೆ ಖಚಿತವಿಲ್ಲ",
       "ಪ್ರತಿ ಬ್ಯಾಂಕಿಗೂ ಅನ್ವಯಿಸುವ ಆರ್‌ಬಿಐ ನಿಯಮಗಳು ನಿಮಗೆ ಸಿಗುತ್ತವೆ.",
