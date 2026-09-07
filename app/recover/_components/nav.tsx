@@ -39,7 +39,7 @@ function Navigation() {
             <LeafMark className="h-6 w-6 shrink-0 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
             <span className="font-serif text-[1.1875rem] font-bold leading-tight sm:text-[1.5625rem] lg:text-[1.875rem]">Adhikaar</span>
           </span>
-          <span className="mt-1.5 inline-block translate-x-4 rounded-full bg-gradient-to-b from-[#FDF3E4] to-[#F5E4C8] px-3 py-1 text-center text-[0.625rem] font-semibold text-[#7A4A1E] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_1px_3px_rgba(200,118,26,0.25)] sm:text-[0.6875rem] lg:text-[0.75rem]">
+          <span className="mt-1.5 inline-block translate-x-4 rounded-full bg-gradient-to-b from-[#F5DFAE] to-[#E4BC72] px-3 py-1 text-center text-[0.625rem] font-semibold text-[#5C3813] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_1px_3px_rgba(180,100,20,0.35)] sm:text-[0.6875rem] lg:text-[0.75rem]">
             The counter companion for deceased-bank claims in India
           </span>
         </Link>
