@@ -63,6 +63,17 @@ export default async function Started({
           </h1>
           <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">{t.sub}</p>
 
+          {/* Above the options, not under them -- direct request, 7 Sep 2026.
+              A reader who picked the wrong door should find the way back
+              without scrolling past every option they did not want. */}
+          <Link
+            href={withLang("/start", locale)}
+            className="-my-2.5 mt-4 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
+          >
+            <span aria-hidden="true">&larr;</span>
+            {t.back}
+          </Link>
+
           <ul className="mt-7 space-y-3">
             {options.map((option) => (
               <li key={option.href}>
@@ -85,16 +96,6 @@ export default async function Started({
               </li>
             ))}
           </ul>
-
-          <div className="mt-8 border-t border-rule-faint pt-5">
-            <Link
-              href={withLang("/start", locale)}
-              className="-my-2.5 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
-            >
-              <span aria-hidden="true">&larr;</span>
-              {t.back}
-            </Link>
-          </div>
         </div>
       </main>
       <RecoverFooter />

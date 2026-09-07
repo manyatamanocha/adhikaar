@@ -227,8 +227,13 @@ function SituationPicker({ locale }: { locale: Locale }) {
           </h1>
           <p className="body-fluid mt-2.5 max-w-[62ch] text-ink-soft">{t.sub}</p>
 
-          <SituationGroup label={t.groupSpoken} options={spoken} locale={locale} />
+          {/* "Not been yet" first -- direct request, 7 Sep 2026. It is the
+              chronological start of the journey, and it holds the two doors a
+              reader who has no idea what happens next needs to find without
+              first reading three rows about a bank conversation they have not
+              had. */}
           <SituationGroup label={t.groupNotYet} options={notYet} locale={locale} />
+          <SituationGroup label={t.groupSpoken} options={spoken} locale={locale} />
         </div>
       </main>
       <RecoverFooter />
