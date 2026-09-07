@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { initAnalytics, track } from "@/lib/analytics";
+import { track } from "@/lib/analytics";
 import { ALL_OUTCOMES } from "@/lib/outcomes";
 import { QUESTION_ORDER, parseAnswers, answeredPrefix } from "@/lib/wizard";
 
@@ -184,10 +184,6 @@ export function Analytics() {
   const lastFired = useRef<string | null>(null);
   const landingFired = useRef(false);
   const startedFired = useRef(false);
-
-  useEffect(() => {
-    initAnalytics();
-  }, []);
 
   useEffect(() => {
     const onPrint = () => {
