@@ -233,7 +233,13 @@ function SituationPicker({ locale }: { locale: Locale }) {
   // rows, no filled card, since nothing here is being emphasised over
   // anything else by design.
   const options: (Situation & { href: string })[] = [
-    { ...t.dontKnow, href: "/start/find" },
+    // Goes straight to the search page now, not the two-way fork -- the
+    // fork's content turned out to just restate Q1 rather than address the
+    // actual problem this option names ("I don't know where the money is").
+    // /start/find/where already serves exactly that reader. /start/find
+    // itself is now unreachable from this screen (still works if visited
+    // directly) -- 7 Sep 2026 evening, see the bank-question-earlier spec §2.11.
+    { ...t.dontKnow, href: "/start/find/where" },
     // The wizard's own door. `begin=1` rather than a bare /start, which would
     // land back here. `entry=new` marks the reader as someone who has not
     // been to a counter, which is what drops the court-order question -- see
