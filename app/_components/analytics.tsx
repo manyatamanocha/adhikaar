@@ -138,11 +138,52 @@ const SITUATION_RESOLUTIONS: Record<
   "/what-were-you-asked-for": { outcome: "asked-for", outcome_type: "claim_route", requires: "asked" },
 };
 
+/**
+ * Which door the reader came in through, or null if this is not a journey
+ * surface at all.
+ *
+ * This is the denominator half of the same problem SITUATION_RESOLUTIONS
+ * fixed for the numerator. `flow_started` used to fire only at a bare /start,
+ * so a reader who took the /what-were-you-asked-for or /bank-refused door
+ * could reach a resolution having never fired a start -- numerator without
+ * denominator, which is why Resolution Rate could exceed 100%.
+ *
+ * 🔴 The bare situation picker is deliberately NOT a start. It is a menu; the
+ * reader has not chosen a door yet, and counting it would put every bounce
+ * from the front screen into the denominator of a rate that measures whether
+ * a chosen journey resolves. They are still counted in `landing_viewed`,
+ * which is what Journey Start Rate exists to compare against.
+ *
+ * ⚠️ This changes what `flow_started` MEANS. Before 7 Sep 2026 it meant
+ * "arrived at /start with no answers"; it now means "entered a branch".
+ * Events either side of that date are not directly comparable, the same
+ * definitional discontinuity the North Star carries (metrics route, §14).
+ */
+function branchFor(pathname: string, sp: Record<string, string>): string | null {
+  if (pathname === "/start") {
+    // begin=1 is the wizard's own door; answers already in the URL mean a
+    // shared mid-journey link, which is a start for whoever opened it.
+    return sp.begin === "1" || QUESTION_ORDER.some((q) => sp[q]) ? "new" : null;
+  }
+  if (pathname === "/start/started") return "started";
+  if (pathname.startsWith("/start/find")) return "find";
+  if (pathname === "/what-were-you-asked-for") return "asked";
+  if (pathname === "/bank-refused") return "refused";
+  // Landing straight on a result without passing any door: someone was sent
+  // the link. Only reached when this is the FIRST journey surface of the
+  // session -- an ordinary wizard journey has already fired at /start.
+  if (pathname === "/needs-review" || ALL_OUTCOMES.some((o) => o.path === pathname)) {
+    return "shared";
+  }
+  return null;
+}
+
 export function Analytics() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const lastFired = useRef<string | null>(null);
   const landingFired = useRef(false);
+  const startedFired = useRef(false);
 
   useEffect(() => {
     initAnalytics();
@@ -203,6 +244,17 @@ export function Analytics() {
       });
     }
 
+    // The journey's denominator. Once per session, on the first screen that
+    // identifies which door was taken -- `branch` is what lets Resolution Rate
+    // be read per door instead of as one number over five different journeys.
+    if (!startedFired.current) {
+      const branch = branchFor(pathname, sp);
+      if (branch) {
+        startedFired.current = true;
+        track("flow_started", { branch });
+      }
+    }
+
     if (pathname === "/start") {
       const answers = parseAnswers(sp);
       // The contiguous prefix, not a raw filter -- a scenario card can
@@ -210,9 +262,7 @@ export function Analytics() {
       // is still unset, which must not be logged as "just answered" or
       // inflate the step number.
       const answered = answeredPrefix(answers);
-      if (answered.length === 0) {
-        track("flow_started");
-      } else {
+      if (answered.length > 0) {
         const just = answered[answered.length - 1];
         // Both values are fixed enum members from lib/wizard — never free text,
         // never a rupee figure. They name the branch of the law, nothing more.

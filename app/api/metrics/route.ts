@@ -30,42 +30,15 @@
  */
 
 import { NextResponse } from "next/server";
+// Every metric definition lives in lib/metrics.ts, which is pure and testable.
+// This file is only the fetch, the development-traffic filter, and the
+// envelope -- see tests/metrics.test.cjs for the arithmetic's proof.
+import { aggregate, type MixpanelEvent } from "@/lib/metrics";
 
 export const runtime = "nodejs";
 export const revalidate = 300;
 
 const EXPORT_HOST = "https://data-eu.mixpanel.com/api/2.0/export";
-
-/**
- * Verdicts where the honest answer is "this is not straightforward".
- *
- * `needs-review` belongs here and was missed on the first pass: a court
- * restriction, a will, or a flagged dispute sending someone to a lawyer is
- * exactly the unwelcome truth this guardrail exists to protect. Omitting it
- * made the guardrail under-count the thing it measures.
- *
- * `confirm-details` is the same outcome under its old route name, kept so
- * events recorded before the 6 Sep rename still count.
- */
-const HONEST_EXIT_OUTCOMES = new Set([
-  "dispute",
-  "over-threshold",
-  "already-in-court",
-  "out-of-scope",
-  "needs-review",
-  "confirm-details",
-]);
-
-type MixpanelEvent = {
-  event: string;
-  properties: Record<string, unknown>;
-};
-
-/** A rate, or null when the denominator is empty. Never 0% for "no data". */
-function rate(numerator: number, denominator: number): number | null {
-  if (!denominator) return null;
-  return Math.round((numerator / denominator) * 1000) / 10;
-}
 
 function isoDate(d: Date): string {
   return d.toISOString().slice(0, 10);
@@ -137,111 +110,9 @@ export async function GET() {
     return true;
   });
 
-  const of = (name: string) => real.filter((e) => e.event === name);
-  const journeys = (name: string) =>
-    new Set(of(name).map((e) => String(e.properties["distinct_id"] ?? ""))).size;
-
-  const landing = journeys("landing_viewed");
-  const started = journeys("flow_started");
-  // Claim-ready is NOT "finished the seven questions". Since 7 Sep it also
-  // counts the situation branches that resolve without the wizard -- the
-  // UDGAM search route, and a named bank demand answered against the RBI's
-  // list (SITUATION_RESOLUTIONS in app/_components/analytics.tsx). That
-  // matches the NSM's own definition, which is "a resolved claim route OR a
-  // resolved information gap", not a question count.
-  //
-  // Rebuild spec §14: part of the resulting rise is DEFINITIONAL, not
-  // behavioural, and has to be reported that way wherever this number is
-  // quoted alongside figures from before 7 Sep 2026.
-  const claimReady = journeys("actionable_result_viewed");
-
-  // North Star: claim-ready journeys in the last 7 days.
-  const weekAgo = Date.now() / 1000 - 7 * 24 * 60 * 60;
-  const weeklyClaimReady = new Set(
-    of("actionable_result_viewed")
-      .filter((e) => Number(e.properties["time"] ?? 0) >= weekAgo)
-      .map((e) => String(e.properties["distinct_id"] ?? "")),
-  ).size;
-
-  // Which of the three senses of "outcome" each claim-ready journey came from.
-  //
-  // Without this the North Star is a single number mixing legal determinations
-  // with situation-branch resolutions, and the §14 warning that part of its
-  // rise is definitional cannot be checked by anyone reading it -- which is
-  // this endpoint's entire reason for existing (see the header: the constraint
-  // is access, not analysis).
-  //
-  // Counted as DISTINCT JOURNEYS, like claimReadyJourneys. A journey that
-  // resolved twice by different routes -- a situation branch and then a
-  // verdict -- is counted under both, so these can sum to MORE than
-  // claimReadyJourneys. They are a decomposition of where answers come from,
-  // not mutually exclusive buckets.
-  //
-  // "unattributed" is every event recorded before 7 Sep 2026, when the
-  // property did not exist. It is not a fourth kind and will not grow.
-  const bySource: Record<string, Set<string>> = {};
-  for (const e of of("actionable_result_viewed")) {
-    const s = String(e.properties["resolution_source"] ?? "unattributed");
-    (bySource[s] ??= new Set()).add(String(e.properties["distinct_id"] ?? ""));
-  }
-  const claimReadyBySource = Object.fromEntries(
-    Object.entries(bySource).map(([s, ids]) => [s, ids.size]),
-  );
-
-  // Per-question drop-off: how many journeys reached each step at all.
-  const perStep: Record<string, number> = {};
-  for (const e of of("question_answered")) {
-    const step = String(e.properties["step"] ?? "?");
-    perStep[step] = (perStep[step] ?? 0) + 1;
-  }
-
-  const outcomes: Record<string, number> = {};
-  for (const e of of("outcome_reached")) {
-    const o = String(e.properties["outcome"] ?? "?");
-    outcomes[o] = (outcomes[o] ?? 0) + 1;
-  }
-  const outcomeTotal = Object.values(outcomes).reduce((a, b) => a + b, 0);
-  const honestExits = Object.entries(outcomes)
-    .filter(([o]) => HONEST_EXIT_OUTCOMES.has(o))
-    .reduce((a, [, n]) => a + n, 0);
-
-  const nextStep = new Set(
-    real
-      .filter((e) =>
-        ["sheet_printed", "counter_mode_opened", "next_step_intent"].includes(
-          e.event,
-        ),
-      )
-      .map((e) => String(e.properties["distinct_id"] ?? "")),
-  ).size;
-
-  const arrivedVia: Record<string, number> = {};
-  for (const e of of("landing_viewed")) {
-    const a = String(e.properties["arrived_via"] ?? "unknown");
-    arrivedVia[a] = (arrivedVia[a] ?? 0) + 1;
-  }
-
   return NextResponse.json({
     window: { from: isoDate(from), to: isoDate(to) },
-    northStar: { weeklyClaimReadyJourneys: weeklyClaimReady },
-    funnel: {
-      landingVisitors: landing,
-      journeysStarted: started,
-      claimReadyJourneys: claimReady,
-      showingIntent: nextStep,
-      journeyStartRate: rate(started, landing),
-      claimReadyJourneyRate: rate(claimReady, started),
-      nextStepActionRate: rate(nextStep, claimReady),
-      claimReadyBySource,
-    },
-    guardrail: {
-      honestExitRate: rate(honestExits, outcomeTotal),
-      honestExits,
-      outcomesReached: outcomeTotal,
-    },
-    perQuestion: perStep,
-    outcomes,
-    arrivedVia,
+    ...aggregate(real),
     dataQuality: {
       eventsConsidered: real.length,
       developmentEventsExcluded: excludedDev,
