@@ -75,7 +75,16 @@ export function parseEntry(raw: string | string[] | undefined): Entry | undefine
  * asked -- and still gates every outcome -- immediately after nominee,
  * before any done() call; only its position in the ask order moved.
  */
-export const QUESTION_ORDER: QuestionId[] = ["claiming", "nominee", "court", "will", "heirs", "bankType", "amount"];
+/**
+ * heirs moved ahead of will, 7 Sep 2026, when the nominee path started asking
+ * it (see resolve()). QUESTION_ORDER is not decoration: answeredPrefix() reads
+ * the contiguous prefix of it, so a path that asks its questions in a
+ * different order than this array lists them breaks Back and the progress
+ * counter. The nominee path asks claiming -> nominee -> court -> heirs, so
+ * heirs has to sit before will here, and resolve() has to ask it before will
+ * on the no-nominee path too. The two must always agree.
+ */
+export const QUESTION_ORDER: QuestionId[] = ["claiming", "nominee", "court", "heirs", "will", "bankType", "amount"];
 export const TOTAL_QUESTIONS = QUESTION_ORDER.length;
 
 /**
@@ -145,12 +154,12 @@ const en: Record<QuestionId, Question> = {
     ],
   },
   will: {
-    id: "will", number: 4, prompt: "Did the person leave a will?",
+    id: "will", number: 5, prompt: "Did the person leave a will?",
     help: "A will can change which documents the bank asks for. If you have not checked, choose 'I don't know yet'.",
     options: [{ value: "no", label: "No will was left" }, { value: "yes", label: "Yes, there is a will" }, unknownEn],
   },
   heirs: {
-    id: "heirs", number: 5, prompt: "Does everyone entitled to inherit agree?",
+    id: "heirs", number: 4, prompt: "Does everyone entitled to inherit agree?",
     help: "If family members disagree about who should receive the money, the standard checklist may not apply. Get advice before relying on it.",
     options: [{ value: "agree", label: "Yes, everyone agrees" }, { value: "dispute", label: "No, family members disagree" }, unknownEn],
   },
@@ -192,12 +201,12 @@ const hi: Record<QuestionId, Question> = {
     ],
   },
   will: {
-    id: "will", number: 4, prompt: "क्या व्यक्ति ने वसीयत छोड़ी थी?",
+    id: "will", number: 5, prompt: "क्या व्यक्ति ने वसीयत छोड़ी थी?",
     help: "वसीयत इस बात को बदल सकती है कि बैंक कौन से दस्तावेज़ माँगता है। अगर आपने जाँचा नहीं है, तो 'मुझे अभी नहीं पता' चुनें।",
     options: [{ value: "no", label: "कोई वसीयत नहीं छोड़ी गई" }, { value: "yes", label: "हाँ, एक वसीयत है" }, unknownHi],
   },
   heirs: {
-    id: "heirs", number: 5, prompt: "क्या विरासत पाने के हक़दार सभी लोग सहमत हैं?",
+    id: "heirs", number: 4, prompt: "क्या विरासत पाने के हक़दार सभी लोग सहमत हैं?",
     help: "अगर परिवार के सदस्य इस बात पर असहमत हैं कि पैसा किसे मिलना चाहिए, तो मानक सूची लागू नहीं हो सकती। इस पर भरोसा करने से पहले सलाह लें।",
     options: [{ value: "agree", label: "हाँ, सभी सहमत हैं" }, { value: "dispute", label: "नहीं, परिवार के सदस्य असहमत हैं" }, unknownHi],
   },
@@ -239,12 +248,12 @@ const kn: Record<QuestionId, Question> = {
     ],
   },
   will: {
-    id: "will", number: 4, prompt: "ವ್ಯಕ್ತಿ ವಿಲ್ ಬಿಟ್ಟುಹೋಗಿದ್ದರೇ?",
+    id: "will", number: 5, prompt: "ವ್ಯಕ್ತಿ ವಿಲ್ ಬಿಟ್ಟುಹೋಗಿದ್ದರೇ?",
     help: "ವಿಲ್ ಬ್ಯಾಂಕ್ ಯಾವ ದಾಖಲೆಗಳನ್ನು ಕೇಳುತ್ತದೆ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಬಹುದು. ನೀವು ಪರಿಶೀಲಿಸದಿದ್ದರೆ, 'ನನಗೆ ಇನ್ನೂ ಗೊತ್ತಿಲ್ಲ' ಆಯ್ಕೆಮಾಡಿ.",
     options: [{ value: "no", label: "ಯಾವುದೇ ವಿಲ್ ಬಿಟ್ಟಿಲ್ಲ" }, { value: "yes", label: "ಹೌದು, ಒಂದು ವಿಲ್ ಇದೆ" }, unknownKn],
   },
   heirs: {
-    id: "heirs", number: 5, prompt: "ಆಸ್ತಿ ಪಡೆಯಲು ಅರ್ಹರಾದ ಎಲ್ಲರೂ ಒಪ್ಪುತ್ತಾರೆಯೇ?",
+    id: "heirs", number: 4, prompt: "ಆಸ್ತಿ ಪಡೆಯಲು ಅರ್ಹರಾದ ಎಲ್ಲರೂ ಒಪ್ಪುತ್ತಾರೆಯೇ?",
     help: "ಹಣ ಯಾರಿಗೆ ಸಿಗಬೇಕು ಎಂಬುದರ ಬಗ್ಗೆ ಕುಟುಂಬ ಸದಸ್ಯರು ಭಿನ್ನಾಭಿಪ್ರಾಯ ಹೊಂದಿದ್ದರೆ, ಪ್ರಮಾಣಿತ ಪಟ್ಟಿ ಅನ್ವಯಿಸದೇ ಇರಬಹುದು. ಇದನ್ನು ಅವಲಂಬಿಸುವ ಮೊದಲು ಸಲಹೆ ಪಡೆಯಿರಿ.",
     options: [{ value: "agree", label: "ಹೌದು, ಎಲ್ಲರೂ ಒಪ್ಪುತ್ತಾರೆ" }, { value: "dispute", label: "ಇಲ್ಲ, ಕುಟುಂಬ ಸದಸ್ಯರು ಭಿನ್ನಾಭಿಪ್ರಾಯ ಹೊಂದಿದ್ದಾರೆ" }, unknownKn],
   },
@@ -326,7 +335,9 @@ export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resol
   // Not asked of a reader who has not been to the bank yet -- see Entry.
   if (!a.court && entry !== "new") return ask("court");
   // A known dispute needs individual review, not a blanket statement that a
-  // valid nominee must obtain succession documents.
+  // valid nominee must obtain succession documents. Kept ahead of the court
+  // gate so a dispute that arrived pre-set from a scenario card wins even
+  // before the court answer is in.
   if (a.heirs === "dispute" && a.nominee !== "no") return review();
   // An ANSWERED restriction still stops everything, on every path. An
   // unanswered one reaches here only on the "new" entry, where the question
@@ -336,13 +347,34 @@ export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resol
   // must not be read as a restriction, and must not be read as its absence
   // either.
   if (a.court && a.court !== "no") return review();
+  // 🔴 Asked on EVERY path, including nominee and survivorship -- closed 7 Sep
+  // 2026. It used to be asked only after the nominee short-circuit had already
+  // returned a verdict, which meant a registered nominee whose family is
+  // contesting the money reached "no succession certificate needed, whatever
+  // the amount" without ever being asked about the contest. Para 11(b)
+  // overrides para 9: where there are "contesting claims or dispute amongst
+  // the legal heir(s)" the bank requires probate, a letter of administration,
+  // a succession certificate or a court order. The verdict page carried
+  // DISPUTE_CAVEAT as a hard box throughout, so nobody was left without the
+  // warning -- but the headline was wrong for that reader, which is the part
+  // that gets read.
+  if (!a.heirs) return ask("heirs");
+  // A dispute with no nominee is the /dispute page's own case. With a nominee
+  // it is not: para 9 may still oblige the bank to pay the nominee, who then
+  // holds in trust for the heirs (Sarbati Devi), and saying flatly that a
+  // valid nominee must go and get a succession certificate would be wrong in
+  // the other direction. That one goes to review.
+  if (a.heirs === "dispute") return a.nominee === "no" ? done("dispute") : review();
+  // "I don't know whether everyone agrees" is not a contested claim, and para
+  // 9 is unconditional. Sending every unsure nominee to review would gut the
+  // strongest verdict in the product over an answer that establishes nothing;
+  // the hard dispute caveat on the page covers it. On the no-nominee path,
+  // where the whole route depends on heir agreement, it still needs review.
   if (a.nominee === "yes") return done("nominee");
   if (a.nominee === "survivorship") return done("survivorship");
+  if (a.heirs === "unknown") return review();
   if (!a.will) return ask("will");
   if (a.will !== "no") return review();
-  if (!a.heirs) return ask("heirs");
-  if (a.heirs === "dispute") return done("dispute");
-  if (a.heirs === "unknown") return review();
   if (!a.bankType) return ask("bankType");
   if (a.bankType === "unknown") return review();
   if (!a.amount) return ask("amount");

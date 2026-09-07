@@ -29,7 +29,7 @@ const { withLang } = load("i18n");
 // against parseAnswers' output, which is built in QUESTION_ORDER. Keep these
 // in QUESTION_ORDER (claiming, nominee, court, ...) or that test fails for a
 // reason that has nothing to do with the flow.
-const base = { claiming: "deposit-account", nominee: "no", court: "no", will: "no", heirs: "agree", bankType: "commercial", amount: "under" };
+const base = { claiming: "deposit-account", nominee: "no", court: "no", heirs: "agree", will: "no", bankType: "commercial", amount: "under" };
 
 test("confirmed no-nominee route and commercial/co-operative thresholds", () => {
   assert.equal(w.resolve(base).outcome, "under-threshold");
@@ -44,13 +44,58 @@ test("unknown, equality, wills and court restrictions cannot get a favourable ch
     assert.equal(situationFrom(a), "unknown");
   }
 });
-test("nominees and survivors still require a court check but not the no-nominee threshold questions", () => {
+test("nominees and survivors require a court check and a heirs check, but not the no-nominee threshold questions", () => {
   for (const nominee of ["yes", "survivorship"]) {
     assert.equal(w.resolve({ claiming: "deposit-account", nominee }).question.id, "court");
-    assert.equal(w.resolve({ claiming: "deposit-account", nominee, court: "no" }).kind, "outcome");
+    // Both gates, in order, and neither is skippable.
+    assert.equal(w.resolve({ claiming: "deposit-account", nominee, court: "no" }).question.id, "heirs");
+    assert.equal(w.resolve({ claiming: "deposit-account", nominee, court: "no", heirs: "agree" }).kind, "outcome");
     assert.equal(w.resolve({ claiming: "deposit-account", nominee, court: "yes" }).kind, "review");
     assert.equal(w.resolve({ claiming: "deposit-account", nominee, court: "no", heirs: "dispute" }).kind, "review");
+    // ...and nothing beyond those two. The threshold questions never apply:
+    // para 9 is unconditional at any amount.
+    assert.equal(w.resolve({ claiming: "deposit-account", nominee, court: "no", heirs: "agree" }).outcome, nominee === "yes" ? "nominee" : "survivorship");
   }
+});
+/**
+ * The gap this closes, recorded because it survived four days and two reviews.
+ *
+ * The heirs question used to be asked only on the no-nominee path, AFTER the
+ * nominee short-circuit had already returned a verdict. So a registered
+ * nominee whose family is contesting the money was told "you should not be
+ * asked for a succession certificate, whatever the amount" without ever being
+ * asked whether anyone was contesting it. Para 11(b) overrides para 9 exactly
+ * there. resolve() caught it only when heirs=dispute arrived pre-set in the
+ * URL from a scenario card -- which is to say, almost never.
+ */
+test("a contested family is asked about on the nominee path, not just the no-nominee one", () => {
+  for (const nominee of ["yes", "survivorship"]) {
+    const answered = { claiming: "deposit-account", nominee, court: "no" };
+    assert.equal(w.resolve(answered).question.id, "heirs", `${nominee} must be asked`);
+    // A contest with a nominee is not the /dispute page's case: para 9 may
+    // still oblige the bank to pay the nominee, who holds in trust for the
+    // heirs. It needs review, not a flat "go and get a succession certificate".
+    assert.equal(w.resolve({ ...answered, heirs: "dispute" }).kind, "review");
+    // "I don't know" establishes no contest, and para 9 is unconditional, so
+    // it must NOT cost the reader the strongest verdict in the product.
+    assert.equal(w.resolve({ ...answered, heirs: "unknown" }).kind, "outcome");
+  }
+  // With no nominee, a contest is /dispute's own case and reaches it -- now
+  // ahead of the will question, since para 11(b) overrides either way.
+  assert.equal(w.resolve({ claiming: "deposit-account", nominee: "no", court: "no", heirs: "dispute" }).outcome, "dispute");
+  assert.equal(w.resolve({ claiming: "deposit-account", nominee: "no", court: "no", heirs: "dispute", will: "yes" }).outcome, "dispute");
+  // The skipped-court entry does not skip this one: whether the family is
+  // fighting has nothing to do with whether anyone has been to a bank.
+  assert.equal(w.resolve({ claiming: "deposit-account", nominee: "yes" }, "en", "new").question.id, "heirs");
+  // QUESTION_ORDER and the ask order must agree, or Back and the progress
+  // counter read the wrong field -- see answeredPrefix.
+  assert.ok(w.QUESTION_ORDER.indexOf("heirs") < w.QUESTION_ORDER.indexOf("will"));
+  // Joined rather than deep-compared: the vm loader builds arrays against its
+  // own realm's prototype, which deepStrictEqual counts as a difference.
+  assert.equal(
+    w.answeredPrefix({ claiming: "deposit-account", nominee: "yes", court: "no", heirs: "agree" }).join(","),
+    "claiming,nominee,court,heirs",
+  );
 });
 /**
  * The "not been to the bank yet" entry drops the court QUESTION, never the
@@ -65,7 +110,7 @@ test("nominees and survivors still require a court check but not the no-nominee 
  * (outcome.tsx's CourtAssumption, rendered on `!answers.court`).
  */
 test("the not-been-to-the-bank entry skips the court question but not the court gate", () => {
-  const start = { claiming: "deposit-account", nominee: "yes" };
+  const start = { claiming: "deposit-account", nominee: "yes", heirs: "agree" };
   // Asked on every other entry...
   assert.equal(w.resolve(start).question.id, "court");
   // ...and not on this one, which goes straight to the verdict.
@@ -78,9 +123,9 @@ test("the not-been-to-the-bank entry skips the court question but not the court 
   // Out of scope still exits before anything else, entry or no entry.
   assert.equal(w.resolve({ claiming: "other" }, "en", "new").outcome, "out-of-scope");
   // No-nominee still walks its own questions; only court is dropped.
-  assert.equal(w.resolve({ claiming: "deposit-account", nominee: "no" }, "en", "new").question.id, "will");
+  assert.equal(w.resolve({ claiming: "deposit-account", nominee: "no" }, "en", "new").question.id, "heirs");
   assert.equal(
-    w.resolve({ claiming: "deposit-account", nominee: "no", will: "no", heirs: "agree", bankType: "commercial", amount: "under" }, "en", "new").outcome,
+    w.resolve({ claiming: "deposit-account", nominee: "no", heirs: "agree", will: "no", bankType: "commercial", amount: "under" }, "en", "new").outcome,
     "under-threshold",
   );
   // Only the literal string counts -- anything else is a normal journey.
@@ -180,7 +225,8 @@ test("filling the new court check preserves scenario presets and a known dispute
   assert.equal(a.heirs, "dispute");
   assert.equal(w.resolve(a).kind, "review");
   const nominee = w.answerQuestion({ claiming: "deposit-account", nominee: "yes" }, "court", "no");
-  assert.equal(w.resolve(nominee).outcome, "nominee");
+  assert.equal(w.resolve(nominee).question.id, "heirs");
+  assert.equal(w.resolve({ ...nominee, heirs: "agree" }).outcome, "nominee");
 });
 test("URL parser only accepts known categories and round trips safely", () => {
   assert.equal(w.parseAnswers({ claiming: "name", amount: "100000" }).claiming, undefined);
@@ -259,9 +305,11 @@ test("progress total shrinks to the real worst case for the path taken", () => {
   const remaining = (a) => w.QUESTION_ORDER.filter((id) => a[id]).length + w.maxRemainingQuestions(a);
 
   assert.equal(remaining({}), 7, "a fresh journey can still ask all seven");
-  assert.equal(remaining({ claiming: "deposit-account", nominee: "yes" }), 3,
-    "a registered nominee is three questions from an answer, not seven");
-  assert.equal(remaining({ claiming: "deposit-account", nominee: "survivorship" }), 3,
+  // Four, not three, since 7 Sep 2026: the nominee path now asks about a
+  // contested family as well as a court order. Para 11(b) overrides para 9.
+  assert.equal(remaining({ claiming: "deposit-account", nominee: "yes" }), 4,
+    "a registered nominee is four questions from an answer, not seven");
+  assert.equal(remaining({ claiming: "deposit-account", nominee: "survivorship" }), 4,
     "survivorship resolves on para 9 the same way");
   assert.equal(remaining({ claiming: "deposit-account", nominee: "no" }), 7,
     "the no-nominee path really can ask all seven");
@@ -303,9 +351,9 @@ test("progress reports position, reach and a fixed scale separately", () => {
   // The screen that produced the bug report: still question 3 of the same
   // seven-question scale, but only three of them can ever be asked.
   assert.deepEqual(progress({ claiming: "deposit-account", nominee: "yes" }),
-    { current: 3, reachable: 3, total: 7 });
+    { current: 3, reachable: 4, total: 7 });
   assert.deepEqual(progress({ claiming: "deposit-account", nominee: "survivorship" }),
-    { current: 3, reachable: 3, total: 7 });
+    { current: 3, reachable: 4, total: 7 });
 
   // The scale is the same seven on every screen of every path -- that is the
   // whole point -- and the reader is never past the end of their own reach.
