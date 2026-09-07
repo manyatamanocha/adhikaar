@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
-import { parseAnswers, toQuery, QUESTIONS_BY_LOCALE, QUESTION_ORDER, answerQuestion } from "@/lib/wizard";
+import { parseAnswers, toQuery, QUESTIONS_BY_LOCALE, QUESTION_ORDER, answerQuestion, effectiveBankType } from "@/lib/wizard";
 import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
 import { NOTIFICATION } from "@/lib/rbi";
@@ -20,6 +20,10 @@ export default async function ConfirmDetails({ searchParams }: {
   const QUESTIONS = QUESTIONS_BY_LOCALE[locale];
   const restricted = a.court === "yes";
   const will = a.will === "yes";
+  // bank is asked at Q2 now, so a.bankType is legitimately undefined for
+  // 8/9 bank answers (never asked, because the bank itself already tells
+  // us the type) -- read through effectiveBankType, not the raw field.
+  const bankType = effectiveBankType(a);
   // Same "clear this one field, go find out, come back" href the wizard
   // uses for its own "Change:" links -- so the primary CTA sends the reader
   // to resolve the FIRST unconfirmed condition, not just back to the top.
@@ -41,7 +45,7 @@ export default async function ConfirmDetails({ searchParams }: {
     ...(a.court !== "no" ? [{ text: restricted ? t.stepRestrictedYes : t.stepRestrictedAsk, href: restricted ? undefined : startWithout("court") }] : []),
     ...(a.will !== "no" && a.nominee === "no" ? [{ text: will ? t.stepWillYes : t.stepWillAsk, href: will ? undefined : startWithout("will") }] : []),
     ...(a.heirs !== "agree" ? [{ text: t.stepDispute, href: a.heirs === "dispute" ? undefined : startWithout("heirs") }] : []),
-    ...(a.bankType === "unknown" || !a.bankType ? [{ text: t.stepBankTypeUnknown, href: startWithout("bankType") }] : []),
+    ...(bankType === "unknown" || !bankType ? [{ text: t.stepBankTypeUnknown, href: startWithout("bankType") }] : []),
     // "equal" is the same shape of bug as court "yes" -- a confirmed fact,
     // not an unknown. Re-asking the amount and truthfully answering "equal"
     // again just returns here; only genuinely unknown/unset amounts are
@@ -64,9 +68,18 @@ export default async function ConfirmDetails({ searchParams }: {
       )}
       <h2 className="display-md mt-8 font-serif font-bold">{t.reviewAnswers}</h2>
       <ul className="body-fluid mt-4 space-y-3">{QUESTION_ORDER.filter(id => a[id]).map(id => {
-        const earlier = answerQuestion(a, id, a[id]!);
-        delete earlier[id];
-        return <li key={id}><Link className="text-link underline" href={withLang("/start" + toQuery(earlier), locale)}>{t.change} {QUESTIONS[id].prompt}</Link></li>;
+        // `bank` never affects the verdict, so changing it must not discard
+        // every answer that came after it the way every other field's
+        // change correctly does -- startWithout() clears only this field.
+        let href: string;
+        if (id === "bank") {
+          href = startWithout("bank");
+        } else {
+          const earlier = answerQuestion(a, id, a[id]!);
+          delete earlier[id];
+          href = withLang("/start" + toQuery(earlier), locale);
+        }
+        return <li key={id}><Link className="text-link underline" href={href}>{t.change} {QUESTIONS[id].prompt}</Link></li>;
       })}</ul>
       <p className="body-fluid mt-4"><Link className="text-link underline" href={withLang("/start", locale)}>{t.startAgain}</Link></p>
       <p className="mt-8 text-ink-soft">{t.disclaimer} <a href={NOTIFICATION.url} target="_blank" rel="noreferrer" className="underline">{t.readDirections}</a></p>

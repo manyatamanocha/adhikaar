@@ -65,9 +65,12 @@ export default async function Where({
 
           {/* Above the options, not under them -- direct request, 7 Sep 2026.
               A reader who picked the wrong door should find the way back
-              without scrolling past every option they did not want. */}
+              without scrolling past every option they did not want. Points
+              at /start, not /start/find: the "I do not know from where to
+              start" option on /start now links straight here, bypassing the
+              /start/find fork, so this back link matches that shortcut. */}
           <Link
-            href={withLang("/start/find", locale)}
+            href={withLang("/start", locale)}
             className="-my-2.5 mt-4 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
           >
             <span aria-hidden="true">&larr;</span>

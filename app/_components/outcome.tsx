@@ -64,6 +64,16 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
     // and dropping it here would send a "new" reader back to the court
     // question this path deliberately never asks.
     const carry = toQuery(answers) + (entry ? `${toQuery(answers) ? "&" : "?"}entry=${entry}` : "");
+    // bank is asked at Q2 now, so "the next question is bank" no longer
+    // implies every OTHER answer is present the way it did when bank was
+    // asked last -- a URL missing bank AND something later (e.g. only
+    // ?claiming=... set) would also land here first. Re-resolve with a
+    // placeholder bank to find out whether anything ELSE is actually
+    // missing; bank never changes the verdict, so this second resolution
+    // is authoritative for every other check too.
+    const gap = route.kind === "question" && route.question.id === "bank"
+      ? resolve({ ...answers, bank: "other" }, "en", entry)
+      : route;
     // The bank question is the one unanswered question that must NOT bounce a
     // reader out of their verdict -- reaching this branch means an old link
     // (predating this redesign, or the brief "ask last" design that preceded
@@ -72,11 +82,11 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
     // makes a verdict shareable. It gets the verdict, with the bank picker
     // sitting at the top via BankBox. Every other unanswered question is
     // still a real gap and still redirects.
-    if (route.kind === "question" && route.question.id !== "bank") {
+    if (gap.kind === "question" && gap.question.id !== "bank") {
       redirect(withLang("/start" + carry, locale));
     }
-    if (route.kind === "review") redirect(withLang("/needs-review" + carry, locale));
-    if (route.kind === "outcome" && route.outcome !== id) redirect(withLang(OUTCOMES[route.outcome].path + carry, locale));
+    if (gap.kind === "review") redirect(withLang("/needs-review" + carry, locale));
+    if (gap.kind === "outcome" && gap.outcome !== id) redirect(withLang(OUTCOMES[gap.outcome].path + carry, locale));
   }
   // Now an answer like any other (BANK_QUESTION), so it arrives validated
   // against the bank table and a hand-edited ?bank=anything is dropped rather
