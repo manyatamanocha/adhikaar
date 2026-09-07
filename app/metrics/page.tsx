@@ -89,6 +89,69 @@ function pct(v: number | null): string {
 }
 
 /**
+ * One guardrail, as a tile: name, number, and its reasoning behind an ⓘ.
+ *
+ * The three used to be full-width bordered blocks stacked down the page, each
+ * carrying its whole paragraph in the open. Three stacked boxes of prose read
+ * as three unrelated sections rather than one row of checks you scan, so the
+ * numbers -- the part you actually come here for -- were separated by about a
+ * screen of text each. The reasoning is not cut, only folded: it is the part
+ * that makes these numbers honest and it is one tap away.
+ *
+ * <details> rather than a floating popover, for two reasons: this page is a
+ * server component with no client state, and a panel positioned over a tile
+ * one-third of a phone screen wide has nowhere to go. Opening one pushes its
+ * own tile taller and the grid row grows with it. The print rules in
+ * globals.css force every <details> open, so a printed copy carries all three
+ * arguments whether or not the reader tapped anything.
+ */
+function Guardrail({
+  label,
+  question,
+  value,
+  children,
+}: {
+  label: string;
+  /** The thing this number is actually asking, shown when the ⓘ is open. */
+  question: string;
+  value: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <details className="actionbox group">
+      {/* The whole tile is the summary -- name, ⓘ and number together --
+          rather than the ⓘ being a control inside a flex row. A <details>
+          panel is a sibling of its summary and takes the width of the
+          <details>, so putting the summary in a shrink-0 flex cell would size
+          the reasoning to a 24px circle. It also makes the whole tile the tap
+          target, which is the right size on a phone. */}
+      <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden">
+        <span className="flex items-start justify-between gap-3">
+          <span className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
+            {label}
+          </span>
+          <span
+            aria-hidden="true"
+            className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border-2 border-indigo font-serif text-[0.8125rem] font-bold italic text-indigo"
+          >
+            i
+          </span>
+        </span>
+        <span className="display-md mt-2 block font-serif font-bold text-indigo-ink">
+          {value}
+        </span>
+      </summary>
+      <div className="mt-3 border-t border-rule pt-3">
+        <p className="text-[0.9375rem] font-bold text-indigo-ink">{question}</p>
+        <p className="mt-1 text-[0.9375rem] leading-relaxed text-ink-soft">
+          {children}
+        </p>
+      </div>
+    </details>
+  );
+}
+
+/**
  * The five doors, in the reader's words rather than the event's.
  * "unattributed" is every journey started before `branch` existed.
  */
@@ -314,79 +377,71 @@ export default async function MetricsPage() {
                   worse.
                 </p>
 
-                <div className="mt-5 space-y-4">
-                  <div className="actionbox">
-                    <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
-                      Honest-Exit Rate · are we still telling the unwelcome truth
-                    </p>
-                    <p className="display-md mt-1 font-serif font-bold text-indigo-ink">
-                      {pct(m.guardrails.honestExitRate)}
-                    </p>
-                    <p className="body-fluid mt-1 max-w-[62ch] text-ink-soft">
-                      {m.guardrails.honestExits} of{" "}
-                      {m.guardrails.journeysReachingOutcome} journeys reaching a
-                      verdict ended in a dispute, above-threshold,
-                      already-in-court or out-of-scope one. The North Star could
-                      be inflated by telling people what they want to hear. If
-                      resolved journeys rise while this falls, the product is
-                      manufacturing false confidence — a reason to review the
-                      logic, not to celebrate.
-                    </p>
-                  </div>
+                {/* One row, so the three numbers can be read against each
+                    other at a glance -- they are three checks on the same
+                    claim, and stacked full-width, each behind a paragraph,
+                    they read as three unrelated sections. No argument is cut:
+                    each sits behind its own ⓘ. See Guardrail. */}
+                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  <Guardrail
+                    label="Honest-Exit Rate"
+                    question="Are we still telling the unwelcome truth?"
+                    value={pct(m.guardrails.honestExitRate)}
+                  >
+                    {m.guardrails.honestExits} of{" "}
+                    {m.guardrails.journeysReachingOutcome} journeys reaching a
+                    verdict ended in a dispute, above-threshold, already-in-court
+                    or out-of-scope one. The North Star could be inflated by
+                    telling people what they want to hear. If resolved journeys
+                    rise while this falls, the product is manufacturing false
+                    confidence — a reason to review the logic, not to celebrate.
+                  </Guardrail>
 
-                  <div className="actionbox">
-                    <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
-                      Situation Resolution Share · is the number growing by
-                      delivery or by definition
-                    </p>
-                    <p className="display-md mt-1 font-serif font-bold text-indigo-ink">
-                      {pct(m.guardrails.situationResolutionShare)}
-                    </p>
-                    <p className="body-fluid mt-1 max-w-[62ch] text-ink-soft">
-                      The share of resolutions that came from a situation branch
-                      rather than a verdict. The guardrail above cannot see this:
-                      it reads verdicts only, so it would not notice the cheapest
-                      way to raise a resolution count, which is to declare more
-                      pages resolutions. There is deliberately no target — a high
-                      share is not bad, because those resolutions are real value.
-                      What matters is the move. If it climbs while verdicts stay
-                      flat, ask whether the traffic changed or the definition did.
-                    </p>
-                  </div>
+                  <Guardrail
+                    label="Situation Resolution Share"
+                    question="Is the number growing by delivery or by definition?"
+                    value={pct(m.guardrails.situationResolutionShare)}
+                  >
+                    The share of resolutions that came from a situation branch
+                    rather than a verdict. The Honest-Exit Rate cannot see this:
+                    it reads verdicts only, so it would not notice the cheapest
+                    way to raise a resolution count, which is to declare more
+                    pages resolutions. There is deliberately no target — a high
+                    share is not bad, because those resolutions are real value.
+                    What matters is the move. If it climbs while verdicts stay
+                    flat, ask whether the traffic changed or the definition did.
+                  </Guardrail>
 
-                  <div className="actionbox">
-                    <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
-                      Stale Citation Share · is the evidence still true
-                    </p>
-                    <p className="display-md mt-1 font-serif font-bold text-indigo-ink">
-                      {pct(m.guardrails.staleCitationShare)}
-                    </p>
-                    <p className="body-fluid mt-1 max-w-[62ch] text-ink-soft">
-                      Of the {m.guardrails.journeysCitingABank} journeys that
-                      cited a specific bank&rsquo;s published policy, the share
-                      citing a record more than six months past its last check.
-                      The bank-by-bank table is the part of this product that
-                      decays without anyone touching it.
-                    </p>
-                    {/* Provenance while fresh, a real warning once it is not.
-                        This used to run on for two sentences explaining that
-                        the clauses share one verification date -- record-keeping
-                        the reader never asked about, on a page of moving
-                        numbers, in a line that would have read the same for
-                        five months. It earns its space only when it flips. */}
-                    {m.guardrails.rulesStale ? (
-                      <p className="mt-2 text-[0.9375rem] font-bold text-maroon">
-                        The RBI clauses are past their check window — last read
-                        against the notification on {m.guardrails.rulesVerifiedOn},
-                        and due a re-read.
-                      </p>
-                    ) : (
-                      <p className="mt-2 text-[0.9375rem] text-ink-faint">
-                        RBI clauses last checked {m.guardrails.rulesVerifiedOn}.
-                      </p>
-                    )}
-                  </div>
+                  <Guardrail
+                    label="Stale Citation Share"
+                    question="Is the evidence still true?"
+                    value={pct(m.guardrails.staleCitationShare)}
+                  >
+                    Of the {m.guardrails.journeysCitingABank} journeys that cited
+                    a specific bank&rsquo;s published policy, the share citing a
+                    record more than six months past its last check. The
+                    bank-by-bank table is the part of this product that decays
+                    without anyone touching it.
+                  </Guardrail>
                 </div>
+
+                {/* Provenance while fresh, a real warning once it is not.
+                    Out of the Stale Citation tile and under the row since the
+                    tiles went side by side: it is a standing fact about the
+                    whole RBI clause set, carrying its own date, not a reading
+                    of that percentage -- and inside a tile it would have been
+                    the one line of body text in a row of bare numbers. */}
+                {m.guardrails.rulesStale ? (
+                  <p className="mt-4 max-w-[62ch] text-[0.9375rem] font-bold text-maroon">
+                    The RBI clauses are past their check window — last read
+                    against the notification on {m.guardrails.rulesVerifiedOn},
+                    and due a re-read.
+                  </p>
+                ) : (
+                  <p className="mt-4 text-[0.9375rem] text-ink-faint">
+                    RBI clauses last checked {m.guardrails.rulesVerifiedOn}.
+                  </p>
+                )}
               </section>
 
               <section className="mt-10">
