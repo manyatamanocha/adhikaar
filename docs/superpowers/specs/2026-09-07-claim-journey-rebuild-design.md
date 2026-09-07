@@ -1,7 +1,7 @@
 # Adhikaar — Claim Journey Rebuild
 
 **Date:** 7 September 2026
-**Status:** Design agreed, pending review. No implementation started.
+**Status:** **Phase 1 shipped and live** (§15) — the opening screen, `/start/started`, `/start/find`, `/start/find/where`, and branches 3 and 4 wired to the pages that already existed. Phases 2–5 not started. Two changes landed that this document did not specify: account discovery moved into scope (`PRODUCT.md`, `39735df`), and the court-order question is no longer asked on the "not been to the bank yet" entry (`a500c1d`) — §4.1's question 3 still describes the old behaviour.
 **Replaces:** the single seven-question wizard at `/start`
 
 ---
