@@ -43,7 +43,6 @@ export type Situation = {
 export type SituationsDict = {
   eyebrow: string;
   heading: string;
-  sub: string;
   /**
    * The two group labels.
    *
@@ -114,7 +113,6 @@ const en: SituationsDict = {
   groupSpoken: "You have spoken to the bank",
   groupNotYet: "You have not been to the bank yet",
   heading: "What best describes your situation?",
-  sub: "Pick the one closest to where you are. You will only be asked the questions that change your answer.",
   notStarted: {
     label: "I have not started the claim",
     detail: "Nobody has been to the bank yet, or you have only been told what to expect.",
@@ -199,7 +197,6 @@ const hi: SituationsDict = {
   groupSpoken: "आप बैंक जा चुके हैं",
   groupNotYet: "आप अभी बैंक नहीं गए हैं",
   heading: "आपकी स्थिति इनमें से किससे मिलती है?",
-  sub: "जो सबसे क़रीब हो उसे चुनें। आपसे केवल वही सवाल पूछे जाएँगे जो आपके जवाब को बदलते हैं।",
   notStarted: {
     label: "मैंने अभी दावा शुरू नहीं किया है",
     detail: "अभी तक कोई बैंक नहीं गया, या आपको केवल बताया गया है कि क्या होगा।",
@@ -284,7 +281,6 @@ const kn: SituationsDict = {
   groupSpoken: "ನೀವು ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿದ್ದೀರಿ",
   groupNotYet: "ನೀವು ಇನ್ನೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ",
   heading: "ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಯನ್ನು ಇವುಗಳಲ್ಲಿ ಯಾವುದು ಸರಿಯಾಗಿ ವಿವರಿಸುತ್ತದೆ?",
-  sub: "ಹತ್ತಿರವಾದದ್ದನ್ನು ಆರಿಸಿ. ನಿಮ್ಮ ಉತ್ತರವನ್ನು ಬದಲಾಯಿಸುವ ಪ್ರಶ್ನೆಗಳನ್ನು ಮಾತ್ರ ಕೇಳಲಾಗುತ್ತದೆ.",
   notStarted: {
     label: "ನಾನು ಇನ್ನೂ ಹಕ್ಕು ಸಲ್ಲಿಸಲು ಪ್ರಾರಂಭಿಸಿಲ್ಲ",
     detail: "ಇನ್ನೂ ಯಾರೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ, ಅಥವಾ ಏನಾಗುತ್ತದೆ ಎಂದು ಮಾತ್ರ ಹೇಳಲಾಗಿದೆ.",

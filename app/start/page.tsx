@@ -225,7 +225,6 @@ function SituationPicker({ locale }: { locale: Locale }) {
           <h1 className="display-lg font-serif font-bold text-indigo-ink">
             {t.heading}
           </h1>
-          <p className="body-fluid mt-2.5 max-w-[62ch] text-ink-soft">{t.sub}</p>
 
           {/* "Not been yet" first -- direct request, 7 Sep 2026. It is the
               chronological start of the journey, and it holds the two doors a
