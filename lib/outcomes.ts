@@ -58,24 +58,45 @@ export type Outcome = {
   tracker: boolean;
 };
 
+/**
+ * Rewritten 8 Sep 2026, in plain language, on direct instruction: a reader
+ * walking the nominee page found these "unclear and unnecessary."
+ *
+ * Two things changed beyond wording. This caveat is shared by the nominee,
+ * survivorship AND no-nominee routes, and its old first sentence read "for a
+ * claim WITHOUT a nominee or survivorship clause..." -- i.e. on the nominee
+ * page it opened by describing the opposite of the reader's own situation.
+ * That is why it read as confusing: it was. The text is now true on every
+ * route that carries it. RBI paragraph numbers are also out of the body --
+ * the citation belongs in the evidence section, not in a warning box a
+ * grieving reader has to parse.
+ */
 const DISPUTE_CAVEAT: Caveat = {
-  title: "If the heirs disagree, this changes",
+  title: "If another heir disagrees, this changes",
   body:
-    "For a claim without a nominee or survivorship clause, a contesting claim changes the documentation route under paragraph 11(b). A valid nominee's payment route and the heirs' ultimate inheritance rights are different questions. For a disputed nominee claim, get individual advice rather than assuming either route applies automatically.",
+    "This page assumes nobody is arguing about who should get the money. If someone is, the documents the bank asks for can change — and being the nominee does not decide who finally owns it. Get advice on your own situation before relying on this page.",
   weight: "hard",
 };
 
 const EXCLUSIONS_CAVEAT: Caveat = {
   title: "This does not cover PPF, SCSS, MSSC or SSA",
   body:
-    "Para 6(b) puts government savings schemes outside these Directions — Public Provident Fund, Senior Citizens' Savings Scheme, Mahila Samman Savings Certificate and Sukanya Samriddhi. Those follow their own scheme rules. Nothing on this page applies to them.",
+    "Government savings schemes sit outside these RBI rules — Public Provident Fund, Senior Citizens' Savings Scheme, Mahila Samman Savings Certificate and Sukanya Samriddhi. Each has its own claim process. Nothing on this page applies to them.",
   weight: "hard",
 };
 
+/**
+ * The one caveat that stays whatever else goes. A nominee who reads "you
+ * should not be asked for a succession certificate", collects the money,
+ * spends it, and is then sued by a sibling has been set up by this page.
+ * Sarbati Devi is the anchor and stays quoted -- the product's rule is quote
+ * and cite, never assert, and dropping the citation to shorten the box would
+ * turn a Supreme Court holding into this site's opinion.
+ */
 const TRUST_CAVEAT: Caveat = {
-  title: "Getting the money doesn't make it yours",
+  title: "Collecting the money is not the same as owning it",
   body:
-    `The bank can pay this money to you because you're the nominee — but that's only about who's allowed to collect it, not who owns it. The Supreme Court has ruled that a nominee is just "${SARBATI_DEVI.text}" (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation}). The money itself still belongs to the legal heirs under inheritance law, and if you're not the only heir, you're expected to hold it for the others rather than keep it all.`,
+    `The bank can hand you this money because you are the nominee. That settles who may collect it — not who it belongs to. The Supreme Court has said a nominee is only "${SARBATI_DEVI.text}" (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation}). If there are other heirs, their share is still theirs, and you are expected to hold it for them rather than keep it.`,
   weight: "hard",
 };
 
@@ -303,20 +324,20 @@ export const ALL_OUTCOMES = Object.values(OUTCOMES);
 type OutcomeText = Pick<Outcome, "verdict" | "summary" | "steps" | "caveats">;
 
 const DISPUTE_CAVEAT_HI: Caveat = {
-  title: "अगर उत्तराधिकारी असहमत हों, तो यह बदल जाता है",
-  body: "बिना नामांकित व्यक्ति या उत्तरजीविता शर्त वाले दावे के लिए, विवादित दावा होने पर पैराग्राफ 11(b) के तहत दस्तावेज़ीकरण का रास्ता बदल जाता है। एक वैध नामांकित व्यक्ति को भुगतान का रास्ता और उत्तराधिकारियों के अंतिम उत्तराधिकार अधिकार अलग-अलग सवाल हैं। विवादित नामांकन दावे के लिए, यह मान लेने के बजाय कि कोई एक रास्ता अपने आप लागू होगा, व्यक्तिगत सलाह लें।",
+  title: "अगर कोई दूसरा उत्तराधिकारी असहमत हो, तो यह बदल जाता है",
+  body: "यह पृष्ठ यह मानकर चलता है कि पैसा किसे मिलना चाहिए, इस पर कोई विवाद नहीं है। अगर विवाद है, तो बैंक जो दस्तावेज़ माँगेगा वे बदल सकते हैं — और नामांकित व्यक्ति होना यह तय नहीं करता कि आख़िर में पैसे का मालिक कौन है। इस पृष्ठ पर भरोसा करने से पहले अपनी स्थिति के लिए सलाह लें।",
   weight: "hard",
 };
 
 const EXCLUSIONS_CAVEAT_HI: Caveat = {
   title: "यह PPF, SCSS, MSSC या SSA को कवर नहीं करता",
-  body: "पैरा 6(b) सरकारी बचत योजनाओं को इन निर्देशों के दायरे से बाहर रखता है — पब्लिक प्रॉविडेंट फंड, वरिष्ठ नागरिक बचत योजना, महिला सम्मान बचत प्रमाणपत्र और सुकन्या समृद्धि। ये अपनी योजना के नियमों का पालन करती हैं। इस पृष्ठ पर कुछ भी इन पर लागू नहीं होता।",
+  body: "सरकारी बचत योजनाएँ इन RBI नियमों के दायरे से बाहर हैं — पब्लिक प्रॉविडेंट फंड, वरिष्ठ नागरिक बचत योजना, महिला सम्मान बचत प्रमाणपत्र और सुकन्या समृद्धि। हर एक की अपनी दावा प्रक्रिया है। इस पृष्ठ पर कुछ भी इन पर लागू नहीं होता।",
   weight: "hard",
 };
 
 const TRUST_CAVEAT_HI: Caveat = {
-  title: "पैसा मिलना, इसका मालिक होना नहीं है",
-  body: `बैंक आपको भुगतान कर सकता है क्योंकि आप नामांकित व्यक्ति हैं — लेकिन इसका मतलब सिर्फ़ यह है कि पैसा पाने का हक़ आपको है, मालिक होने का नहीं। सर्वोच्च न्यायालय ने कहा है कि नामांकित व्यक्ति सिर्फ़ "${SARBATI_DEVI.text}" है (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation})। पैसा उत्तराधिकार क़ानून के तहत अब भी क़ानूनी उत्तराधिकारियों का ही है, और अगर आप अकेले उत्तराधिकारी नहीं हैं, तो आपको इसे अपने लिए रखने के बजाय बाक़ी सबके लिए भी रखना है।`,
+  title: "पैसा लेना और उसका मालिक होना एक बात नहीं है",
+  body: `बैंक आपको यह पैसा दे सकता है क्योंकि आप नामांकित व्यक्ति हैं। इससे यह तय होता है कि पैसा कौन ले सकता है — यह नहीं कि वह किसका है। सर्वोच्च न्यायालय ने कहा है कि नामांकित व्यक्ति सिर्फ़ "${SARBATI_DEVI.text}" है (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation})। अगर दूसरे उत्तराधिकारी भी हैं, तो उनका हिस्सा उन्हीं का है, और आपसे उम्मीद है कि आप उसे अपने पास रखने के बजाय उनके लिए सँभालेंगे।`,
   weight: "hard",
 };
 
@@ -327,20 +348,20 @@ const NOT_ADVICE_HI: Caveat = {
 };
 
 const DISPUTE_CAVEAT_KN: Caveat = {
-  title: "ವಾರಸುದಾರರು ಭಿನ್ನಾಭಿಪ್ರಾಯ ಹೊಂದಿದ್ದರೆ, ಇದು ಬದಲಾಗುತ್ತದೆ",
-  body: "ನಾಮನಿರ್ದೇಶಿತ ವ್ಯಕ್ತಿ ಅಥವಾ ಉತ್ತರಜೀವಿತ್ವ ಷರತ್ತು ಇಲ್ಲದ ಹಕ್ಕುಗಾಗಿ, ವಿವಾದಿತ ಹಕ್ಕು ಇದ್ದರೆ ಪ್ಯಾರಾಗ್ರಾಫ್ 11(b) ಅಡಿಯಲ್ಲಿ ದಾಖಲೆ ಮಾರ್ಗ ಬದಲಾಗುತ್ತದೆ. ಮಾನ್ಯ ನಾಮನಿರ್ದೇಶಿತರಿಗೆ ಪಾವತಿ ಮಾರ್ಗ ಮತ್ತು ವಾರಸುದಾರರ ಅಂತಿಮ ಉತ್ತರಾಧಿಕಾರ ಹಕ್ಕುಗಳು ಬೇರೆ ಬೇರೆ ಪ್ರಶ್ನೆಗಳು. ವಿವಾದಿತ ನಾಮನಿರ್ದೇಶನ ಹಕ್ಕಿಗಾಗಿ, ಯಾವುದೇ ಮಾರ್ಗ ತಾನಾಗಿಯೇ ಅನ್ವಯಿಸುತ್ತದೆ ಎಂದು ಭಾವಿಸುವ ಬದಲು ಪ್ರತ್ಯೇಕ ಸಲಹೆ ಪಡೆಯಿರಿ.",
+  title: "ಬೇರೊಬ್ಬ ವಾರಸುದಾರರು ಒಪ್ಪದಿದ್ದರೆ, ಇದು ಬದಲಾಗುತ್ತದೆ",
+  body: "ಹಣ ಯಾರಿಗೆ ಸಿಗಬೇಕು ಎಂಬ ಬಗ್ಗೆ ಯಾರೂ ವಾದ ಮಾಡುತ್ತಿಲ್ಲ ಎಂದು ಈ ಪುಟ ಭಾವಿಸುತ್ತದೆ. ವಾದವಿದ್ದರೆ, ಬ್ಯಾಂಕ್ ಕೇಳುವ ದಾಖಲೆಗಳು ಬದಲಾಗಬಹುದು — ಮತ್ತು ನಾಮನಿರ್ದೇಶಿತರಾಗಿರುವುದು ಕೊನೆಗೆ ಹಣದ ಮಾಲೀಕರು ಯಾರು ಎಂಬುದನ್ನು ನಿರ್ಧರಿಸುವುದಿಲ್ಲ. ಈ ಪುಟವನ್ನು ನಂಬುವ ಮೊದಲು ನಿಮ್ಮ ಸ್ವಂತ ಪರಿಸ್ಥಿತಿಗೆ ಸಲಹೆ ಪಡೆಯಿರಿ.",
   weight: "hard",
 };
 
 const EXCLUSIONS_CAVEAT_KN: Caveat = {
   title: "ಇದು PPF, SCSS, MSSC ಅಥವಾ SSA ಅನ್ನು ಒಳಗೊಂಡಿಲ್ಲ",
-  body: "ಪ್ಯಾರಾ 6(b) ಸರ್ಕಾರಿ ಉಳಿತಾಯ ಯೋಜನೆಗಳನ್ನು — ಸಾರ್ವಜನಿಕ ಭವಿಷ್ಯ ನಿಧಿ, ಹಿರಿಯ ನಾಗರಿಕರ ಉಳಿತಾಯ ಯೋಜನೆ, ಮಹಿಳಾ ಸಮ್ಮಾನ್ ಉಳಿತಾಯ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು ಸುಕನ್ಯಾ ಸಮೃದ್ಧಿ — ಈ ನಿರ್ದೇಶನಗಳ ವ್ಯಾಪ್ತಿಯಿಂದ ಹೊರಗಿಡುತ್ತದೆ. ಅವು ತಮ್ಮದೇ ಯೋಜನಾ ನಿಯಮಗಳನ್ನು ಅನುಸರಿಸುತ್ತವೆ. ಈ ಪುಟದಲ್ಲಿ ಯಾವುದೂ ಅವುಗಳಿಗೆ ಅನ್ವಯಿಸುವುದಿಲ್ಲ.",
+  body: "ಸರ್ಕಾರಿ ಉಳಿತಾಯ ಯೋಜನೆಗಳು ಈ RBI ನಿಯಮಗಳ ವ್ಯಾಪ್ತಿಯಿಂದ ಹೊರಗಿವೆ — ಸಾರ್ವಜನಿಕ ಭವಿಷ್ಯ ನಿಧಿ, ಹಿರಿಯ ನಾಗರಿಕರ ಉಳಿತಾಯ ಯೋಜನೆ, ಮಹಿಳಾ ಸಮ್ಮಾನ್ ಉಳಿತಾಯ ಪ್ರಮಾಣಪತ್ರ ಮತ್ತು ಸುಕನ್ಯಾ ಸಮೃದ್ಧಿ. ಪ್ರತಿಯೊಂದಕ್ಕೂ ತನ್ನದೇ ಹಕ್ಕು ಪ್ರಕ್ರಿಯೆ ಇದೆ. ಈ ಪುಟದಲ್ಲಿ ಯಾವುದೂ ಅವುಗಳಿಗೆ ಅನ್ವಯಿಸುವುದಿಲ್ಲ.",
   weight: "hard",
 };
 
 const TRUST_CAVEAT_KN: Caveat = {
-  title: "ಹಣ ಸಿಗುವುದು ಅದರ ಮಾಲೀಕರಾಗುವುದು ಅಲ್ಲ",
-  body: `ನೀವು ನಾಮನಿರ್ದೇಶಿತರಾಗಿರುವುದರಿಂದ ಬ್ಯಾಂಕ್ ನಿಮಗೆ ಹಣ ಪಾವತಿಸಬಹುದು — ಆದರೆ ಇದರ ಅರ್ಥ ಹಣ ಪಡೆಯುವ ಹಕ್ಕು ನಿಮಗಿದೆ ಎಂದಷ್ಟೇ, ಮಾಲೀಕತ್ವ ಅಲ್ಲ. ನಾಮನಿರ್ದೇಶಿತರು ಕೇವಲ "${SARBATI_DEVI.text}" ಎಂದು ಸರ್ವೋಚ್ಚ ನ್ಯಾಯಾಲಯ ತೀರ್ಪು ನೀಡಿದೆ (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation}). ಹಣ ಇನ್ನೂ ಉತ್ತರಾಧಿಕಾರ ಕಾನೂನಿನ ಪ್ರಕಾರ ಕಾನೂನುಬದ್ಧ ವಾರಸುದಾರರಿಗೇ ಸೇರಿದ್ದು, ಮತ್ತು ನೀವು ಏಕೈಕ ವಾರಸುದಾರರಲ್ಲದಿದ್ದರೆ, ಇಡೀ ಹಣವನ್ನು ನೀವೊಬ್ಬರೇ ಇಟ್ಟುಕೊಳ್ಳುವ ಬದಲು ಇತರರಿಗಾಗಿಯೂ ಇಟ್ಟುಕೊಳ್ಳಬೇಕು.`,
+  title: "ಹಣ ಪಡೆಯುವುದು ಮತ್ತು ಅದರ ಮಾಲೀಕರಾಗುವುದು ಒಂದೇ ಅಲ್ಲ",
+  body: `ನೀವು ನಾಮನಿರ್ದೇಶಿತರಾಗಿರುವುದರಿಂದ ಬ್ಯಾಂಕ್ ನಿಮಗೆ ಈ ಹಣವನ್ನು ಕೊಡಬಹುದು. ಇದು ಹಣವನ್ನು ಯಾರು ಪಡೆಯಬಹುದು ಎಂಬುದನ್ನು ನಿರ್ಧರಿಸುತ್ತದೆ — ಅದು ಯಾರಿಗೆ ಸೇರಿದ್ದು ಎಂಬುದನ್ನಲ್ಲ. ನಾಮನಿರ್ದೇಶಿತರು ಕೇವಲ "${SARBATI_DEVI.text}" ಎಂದು ಸರ್ವೋಚ್ಚ ನ್ಯಾಯಾಲಯ ಹೇಳಿದೆ (${SARBATI_DEVI.case}, ${SARBATI_DEVI.citation}). ಬೇರೆ ವಾರಸುದಾರರಿದ್ದರೆ, ಅವರ ಪಾಲು ಅವರದ್ದೇ, ಮತ್ತು ಅದನ್ನು ನೀವು ಇಟ್ಟುಕೊಳ್ಳುವ ಬದಲು ಅವರಿಗಾಗಿ ಕಾಪಾಡಬೇಕು ಎಂದು ನಿರೀಕ್ಷಿಸಲಾಗುತ್ತದೆ.`,
   weight: "hard",
 };
 
