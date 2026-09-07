@@ -143,6 +143,16 @@ export async function GET() {
 
   const landing = journeys("landing_viewed");
   const started = journeys("flow_started");
+  // Claim-ready is NOT "finished the seven questions". Since 7 Sep it also
+  // counts the situation branches that resolve without the wizard -- the
+  // UDGAM search route, and a named bank demand answered against the RBI's
+  // list (SITUATION_RESOLUTIONS in app/_components/analytics.tsx). That
+  // matches the NSM's own definition, which is "a resolved claim route OR a
+  // resolved information gap", not a question count.
+  //
+  // Rebuild spec §14: part of the resulting rise is DEFINITIONAL, not
+  // behavioural, and has to be reported that way wherever this number is
+  // quoted alongside figures from before 7 Sep 2026.
   const claimReady = journeys("actionable_result_viewed");
 
   // North Star: claim-ready journeys in the last 7 days.

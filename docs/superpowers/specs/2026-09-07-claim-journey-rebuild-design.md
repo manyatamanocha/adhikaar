@@ -388,7 +388,7 @@ All existing outcome pages keep their URLs. No content rewrite is in scope.
 |---|---|
 | `flow_started` | Gains a `branch` property. Without it the funnel cannot be read per branch. |
 | `question_answered` | Same shape; `step` becomes branch-relative |
-| `actionable_result_viewed` | Also fires for the "what to confirm" sheets — see §14 |
+| `actionable_result_viewed` | Also fires for the "what to confirm" sheets — see §14. **Shipped 7 Sep**: `SITUATION_RESOLUTIONS` in `app/_components/analytics.tsx` counts `/start/find/where` (`information_required`) and `/what-were-you-asked-for?asked=…` (`claim_route`). `/bank-refused` is deliberately excluded — nine inbound links, no state of its own, so a bare arrival resolves nothing. |
 | `outcome_reached` | Unchanged |
 | Honest-Exit outcome set | Unchanged — `already-in-court` becomes reachable (§5.6) rather than being removed |
 

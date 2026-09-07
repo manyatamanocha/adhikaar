@@ -27,7 +27,11 @@ import { QUESTION_ORDER, parseAnswers, answeredPrefix } from "@/lib/wizard";
 function entryCategory(pathname: string): string {
   if (pathname === "/") return "home";
   if (pathname.startsWith("/learn")) return "learn";
-  if (pathname === "/start") return "start";
+  // Every /start/* screen, not just the wizard. The situation picker's
+  // branches (/start/started, /start/find) are the journey's front door for
+  // most readers now; reporting them as "other" would hide the entry point
+  // the rebuild was built around.
+  if (pathname.startsWith("/start")) return "start";
   if (pathname === "/faq") return "faq";
   if (pathname === "/banks") return "banks";
   if (ALL_OUTCOMES.some((o) => o.path === pathname)) return "outcome";
@@ -63,6 +67,54 @@ function arrivedVia(hasAnswersOnEntry: boolean): string {
   if (/whatsapp|facebook|instagram|t\.co|twitter|x\.com|linkedin|telegram|reddit/.test(host)) return "social";
   return "other";
 }
+
+/**
+ * Journeys that resolve WITHOUT the seven questions.
+ *
+ * The wizard is one route to an answer, not the definition of one. The NSM
+ * design doc (2026-09-06-north-star-metric-design.md §1) defines a claim-ready
+ * journey as one that resolves "a resolved claim route OR a resolved
+ * information gap", and states the promise as "you will leave knowing what to
+ * do next". Neither clause mentions question seven.
+ *
+ * Before this, `actionable_result_viewed` fired only on the eight wizard
+ * outcome pages and /needs-review — every one of them reachable only by
+ * walking the full question set. So a reader who took the situation picker's
+ * "I don't know where to begin" door, answered its one question and left with
+ * the UDGAM search route was counted as an ABANDONMENT. They left knowing
+ * exactly what to do next. That is the metric's own definition of success.
+ *
+ * ─── Why these two pages and not every branch destination ───
+ *
+ * `requires` is the gate, and it is the whole honesty of this table. A page
+ * counts when the reader ANSWERED that branch's question and reached its
+ * terminal screen — not when they merely arrived at a page that happens to be
+ * useful.
+ *
+ * /bank-refused is deliberately absent. It is the escalation reference, linked
+ * from the FAQ, the footer, Saathi, counter mode and every verdict page — nine
+ * inbound links, no state of its own. Counting a bare arrival there would
+ * count FAQ browsers as claim-ready journeys and double-count anyone who
+ * reached a verdict and then clicked through. It resolves nothing on its own;
+ * it is where a resolved journey goes next.
+ *
+ * These fire `actionable_result_viewed` only, never `outcome_reached`. The
+ * Honest-Exit guardrail is computed from `outcome_reached` and must keep
+ * measuring verdicts, which is the one thing it is for. Rebuild spec §13.
+ */
+const SITUATION_RESOLUTIONS: Record<
+  string,
+  { outcome: string; outcome_type: "claim_route" | "information_required"; requires?: string }
+> = {
+  // Branch 5. Reachable only by answering "no, I don't know where the money
+  // is held". The claim route is genuinely unresolved — Adhikaar runs no
+  // search and says so — but what to do next is not.
+  "/start/find/where": { outcome: "find-where", outcome_type: "information_required" },
+  // Branch 3, gated on the reader naming what the bank demanded. The page
+  // then answers it against the RBI's own list, which is a resolved route.
+  // Ungated, this is just the document reference with no answer on it.
+  "/what-were-you-asked-for": { outcome: "asked-for", outcome_type: "claim_route", requires: "asked" },
+};
 
 export function Analytics() {
   const pathname = usePathname();
@@ -191,6 +243,17 @@ export function Analytics() {
       // still resolves a concrete next action -- go find out X.
       track("actionable_result_viewed", { outcome: "needs-review", outcome_type: "information_required" });
       return;
+    }
+
+    // A situation branch that resolved something. Checked before the demand
+    // counter below, because on /what-were-you-asked-for both are true of the
+    // same page view and neither returns.
+    const situation = SITUATION_RESOLUTIONS[pathname];
+    if (situation && (!situation.requires || sp[situation.requires])) {
+      track("actionable_result_viewed", {
+        outcome: situation.outcome,
+        outcome_type: situation.outcome_type,
+      });
     }
 
     if (pathname === "/what-were-you-asked-for" && sp.asked) {
