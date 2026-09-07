@@ -1,17 +1,36 @@
 # Adhikaar — North Star Metric and Metrics Framework
 
-**Date:** 6 September 2026
-**Status:** Agreed, pending instrumentation of three gaps (see §10)
+**Date:** 6 September 2026 · **revised 7 September 2026**
+**Status:** Agreed and instrumented. §10's three gaps are closed; the guardrail set was extended on 7 Sep (§9).
 **Frameworks applied:** Product Analytics Session 1 (Introduction to Product Analytics 101) and Session 2 (The Art of Finding the "One Metric"), Shravan Tickoo
+
+### What changed on 7 September 2026
+
+**The metric was renamed, not redefined.** "Claim-Ready Journeys" became **Weekly Resolved Journeys**. Same event, same arithmetic — but "claim-ready" reads oddly for a journey whose honest resolution is *"this is out of scope"* or *"here is what you must go and establish,"* both of which §1 has always counted.
+
+Four things did change, and each is marked in place below:
+
+1. **Instrumentation caught up to §1.** Until 7 Sep, `actionable_result_viewed` fired only on the eight wizard verdicts and `/needs-review` — so the "resolved information gap" half of §1's definition, written 6 Sep, was never actually counted. Situation-branch resolutions now fire it. **Part of the resulting rise is definitional, not behavioural, and must be reported that way against any figure from before 7 Sep.**
+2. **Resolution Rate is now a cohort** — the journeys that started in the window, and how many of *those* resolved. It was previously all resolutions ÷ all starts, two populations that need not overlap, which could exceed 100%.
+3. **Two guardrails added** (§9): Situation Resolution Share and Stale Citation Share.
+4. **`flow_started` now means "entered a branch"**, carrying which one, rather than "arrived at `/start`". Events either side of 7 Sep are not directly comparable.
+
+The arithmetic for every metric below lives in `lib/metrics.ts` and is proved in `tests/metrics.test.cjs`.
 
 ---
 
 ## 1. The answer
 
-> **North Star Metric: Weekly Claim-Ready Journeys**
-> The number of unique claim journeys per week that reach a complete, actionable claim path.
+> **North Star Metric: Weekly Resolved Journeys**
+> The count of unique journeys per week that receive a valid, situation-appropriate resolution.
 
-A claim journey is **claim-ready** when the product has resolved either:
+**Unit: journeys, not families.** A journey is approximated within a browsing session. A family returning tomorrow counts twice. There is no cross-session identity and there will not be one — `lib/analytics.ts` runs with `disable_persistence` and `disable_cookie`, which is a shipped privacy promise, not an oversight (§10).
+
+**"Valid" is a precondition, not a filter.** Every citation carries a `verbatim` flag; unverified bank fields stay `null` rather than being guessed; nothing invalid ships. So the word is true of 100% of the numerator and excludes nothing. The invalidity you would most want to exclude — a misattributed clause — is a bug, and the product cannot observe its own bugs. The invalidity it *can* observe is staleness, which is a guardrail (§9), not a deduction from the count.
+
+**"Situation-appropriate" is a design claim, not a filter.** The picker routes: choose "the bank refused" and you reach the refusal page. Appropriateness is guaranteed by construction. What the phrase earns is the *segmentation* — `flow_started` carries `branch`, so the North Star and Resolution Rate can be read per door.
+
+A journey is **resolved** when the product has delivered either:
 
 - **A resolved claim route** — the family knows which RBI route applies, what documents it needs, and what to ask the bank for; or
 - **A resolved information gap** — the product could not determine the claim route, but has resolved *what the family must go and find out next* (e.g. "ask the bank in writing whether a nominee was registered").
@@ -42,7 +61,7 @@ Both decks treat **retention** as the ultimate proof of product-market fit (Sess
 
 The North Star is a **periodic count**, not a conversion percentage. A rate can improve while delivered value shrinks:
 
-| | Journeys started | Claim-ready | Rate | Families actually helped |
+| | Journeys started | Resolved | Rate | Families actually helped |
 |---|---|---|---|---|
 | Week 1 | 100 | 80 | **80%** | 80 |
 | Week 2 | 1,000 | 600 | **60%** | **600** |
@@ -51,7 +70,7 @@ The rate ranks Week 1 higher. Week 2 helped 7.5× more families. A North Star th
 
 This also matches every NSM in the source material — Zomato's *Weekly Orders Delivered*, Uber's *Weekly Rides*, Airbnb's *Nights Booked*, Spotify's *Time Spent Listening*. All periodic counts of completed value loops; none a conversion percentage.
 
-**Periodic, not cumulative.** Weekly Claim-Ready Journeys can fall. That is what separates it from the vanity metrics Session 1 catalogues (p24–28) — Total Registered Users and Total App Downloads can only ever rise.
+**Periodic, not cumulative.** Weekly Resolved Journeys can fall. That is what separates it from the vanity metrics Session 1 catalogues (p24–28) — Total Registered Users and Total App Downloads can only ever rise.
 
 ---
 
@@ -65,7 +84,7 @@ The user arrives holding a demand they believe is lawful, thinking *"ab main kya
 
 Session 1's Zomato test (p19) is the right lens: not "App Opens" (browsing doesn't satisfy hunger), not even "Orders Placed" (food might arrive cold) — the true value is the completed loop, *"Orders Delivered On-Time with Positive Rating."*
 
-Adhikaar's true completed loop is **"the bank settled the claim without demanding an unnecessary succession certificate."** The product structurally cannot observe that (§9). Weekly Claim-Ready Journeys is the closest **observable** point on that loop, and it is genuinely customer-centric: it counts families who left equipped, not sessions or pageviews.
+Adhikaar's true completed loop is **"the bank settled the claim without demanding an unnecessary succession certificate."** The product structurally cannot observe that (§9). Weekly Resolved Journeys is the closest **observable** point on that loop, and it is genuinely customer-centric: it counts families who left equipped, not sessions or pageviews.
 
 ### Characteristic 2 — Represents product strategy ✅
 
@@ -83,22 +102,30 @@ Adhikaar has no revenue — it is free, with no login and no monetisation. The c
 
 ## 6. The full metrics framework
 
+Four layers, in order: **value → efficiency → behaviour → safety.**
+
 | Tier | Metric | Formula | What it tells us |
 |---|---|---|---|
-| **North Star** | **Weekly Claim-Ready Journeys** | unique journeys reaching a claim-ready state per week | How many families actually got value |
-| Leading | Journey Start Rate | users who start the claim journey ÷ landing-page users × 100 | Is the landing page converting visitors into starters |
-| Leading | Claim-Ready Journey Rate | users reaching claim-ready ÷ users who start × 100 | How effectively the journey carries users to an outcome |
-| Leading | Per-Question Drop-off Rate | users abandoning at question *n* ÷ users who reached question *n* × 100 | **Which specific question** loses people |
-| Leading / intent | Next-Step Action Rate | claim-ready users who print, download or open counter mode ÷ claim-ready users × 100 | Are users signalling they'll act on the guidance |
-| **Guardrail** | Honest-Exit Rate | journeys ending in dispute / above-threshold / out-of-scope verdicts ÷ all journeys × 100 | Are we still telling people the unwelcome truth (§9) |
-| Lagging | Claim Initiation Rate | users who actually initiate a claim ÷ claim-ready users × 100 | Did advice convert to real-world action |
-| Lagging | Successful Claim Rate | users whose claim succeeds ÷ users who initiate × 100 | Final real-world impact |
+| **North Star** | **Weekly Resolved Journeys** | unique journeys receiving a resolution per week | How many families actually got value |
+| **OMTM** (this quarter) | **Resolution Rate** | journeys started in the window that resolved ÷ journeys started in that window × 100 | Whether the core experience works (§11) |
+| Leading | Journey Start Rate | journeys that enter a branch ÷ landing-page visitors × 100 | Is the landing page converting visitors into starters |
+| Leading | Journeys Started | count of journeys entering any branch | Demand and entry volume — a diagnostic, never the OMTM |
+| Leading | Per-Question Drop-off Rate | journeys abandoning at question *n* ÷ journeys reaching question *n* × 100 | **Which specific question** loses people |
+| Behaviour | Next-Step Action Rate | resolved journeys that print, open counter mode or click the next step ÷ resolved journeys **eligible to** ÷ × 100 | Are users signalling they'll act |
+| **Guardrail** | Honest-Exit Rate | unique journeys ending in a dispute / above-threshold / out-of-scope verdict ÷ unique journeys reaching any verdict × 100 | Are we still telling the unwelcome truth (§9) |
+| **Guardrail** | Situation Resolution Share | resolved journeys from situation branches ÷ all resolved journeys × 100 | Is the North Star growing by delivery or by definition (§9) |
+| **Guardrail** | Stale Citation Share | resolved journeys citing a bank row past its 182-day window ÷ journeys citing any bank × 100 | Is the compiled bank table rotting (§9) |
+| Validation | Belief Correction Rate | survey answers of "yes, I thought I needed one" ÷ all survey answers × 100 | Is the myth actually being corrected |
+| Lagging | Claim Initiation Rate | journeys that initiate a claim ÷ resolved journeys × 100 | Did advice convert to real-world action |
+| Lagging | Successful Claim Rate | claims that succeed ÷ claims initiated × 100 | Final real-world impact |
 
-**Supporting efficiency metric: Median Time to Claim-Ready** — median elapsed time from journey start to claim-ready state (target scale: minutes, not tens of minutes). Adhikaar exists to make a complicated bank and government process simple. If a user needs twenty minutes to extract an answer, the experience has failed even at a high completion rate.
+**Supporting efficiency metric: Median Time to Resolution** — median elapsed time from a journey's start to its resolution (target scale: minutes, not tens of minutes). Adhikaar exists to make a complicated process simple; if a user needs twenty minutes to extract an answer, the experience has failed even at a high completion rate.
+
+**Two denominators are deliberately not "all journeys."** Next-Step Action Rate divides by journeys *eligible* to act — `NextStepButton` renders on verdicts and `/needs-review` only, so a situation resolution has no control to click and would otherwise be scored as a failure to act. Belief Correction Rate divides by *survey responses*, not journeys: `BeliefSurvey` renders only where `hasAnswers && outcome.goodNews`, so it cannot appear on over-threshold, out-of-scope, already-in-court, `/needs-review` or either situation branch. Both limits are stated in the response body itself.
 
 ### Why Per-Question Drop-off, not whole-funnel drop-off
 
-A whole-funnel drop-off rate (`abandoned ÷ started`) is arithmetically `100 − Claim-Ready Journey Rate` — the same number inverted, adding no information.
+A whole-funnel drop-off rate (`abandoned ÷ started`) is arithmetically `100 − Resolution Rate` — the same number inverted, adding no information.
 
 Per-question drop-off adds the information that matters. This is the Zerodha lesson (Session 2, p44): they did not learn "onboarding leaks," they learned it leaked *specifically at document upload*, fixed that one step with DigiLocker, and conversion jumped. A whole-funnel number could never have located that.
 
@@ -110,11 +137,11 @@ Per-question drop-off adds the information that matters. This is the Zerodha les
 Landing visitors
    │  Journey Start Rate
    ▼
-Journey starters
-   │  Claim-Ready Journey Rate        ← Per-Question Drop-off locates the leaks
+Journey starters (by branch)
+   │  Resolution Rate  ← OMTM        ← Per-Question Drop-off locates the leaks
    ▼
-★ CLAIM-READY JOURNEYS  ← NORTH STAR (weekly count)
-   │  Next-Step Action Rate
+★ RESOLVED JOURNEYS  ← NORTH STAR (weekly count)
+   │  Next-Step Action Rate          ← over ELIGIBLE journeys only
    ▼
 Users showing intent to act
    │  Claim Initiation Rate           ← research-measured (§10)
@@ -125,9 +152,11 @@ Claims actually initiated
 Money recovered
 ```
 
+Every rung from "journey starters" down can also be read **per branch**, because `flow_started` carries the door the reader came in through. Without that, Resolution Rate is one number averaged over five very different journeys.
+
 **The four-state ladder, stated once:**
 
-- **Claim-ready** = value delivered
+- **Resolved** = value delivered
 - **Print / download / counter mode** = intent signal
 - **Claim initiated** = behavioural outcome
 - **Claim successful** = final impact
@@ -145,10 +174,10 @@ Intent therefore sits *below* the North Star as its own rate, where a fall in it
 Session 2's anatomy (p22): trunk → branches (mathematical levers) → leaves (daily work), decomposed the way Swiggy's GOV is (p23).
 
 ```
-Weekly Claim-Ready Journeys
+Weekly Resolved Journeys
   = Landing Visitors
   × Journey Start Rate
-  × Claim-Ready Journey Rate
+  × Resolution Rate
 ```
 
 Each term is a real leak point, and the chain matches the funnel in §7 exactly: visitors who arrive, the share who begin answering, and the share of those who reach an answer. The BDFE framework (Session 1, p31–38) maps each to controllable levers.
@@ -161,7 +190,7 @@ Each term is a real leak point, and the chain matches the funnel in §7 exactly:
 
 ### Depth (Engagement) — richer, more personalised answers
 
-- **Input metrics:** share of claim-ready journeys carrying the bank's *own published policy* rather than only the generic RBI rule (`bank_selected`); documents ticked ÷ documents required (`readiness_checked`)
+- **Input metrics:** share of resolved journeys carrying the bank's *own published policy* rather than only the generic RBI rule (`bank_selected`); documents ticked ÷ documents required (`readiness_checked`)
 - **Levers:** expanding bank coverage beyond the current eight; the `BankGapAlert` surfacing a bank's documented policy gap above the fold; document checklist quality
 
 ### Frequency → **Propagation** (substituted, per §3)
@@ -175,7 +204,7 @@ The dimension the framework assumes does not exist here. A family claims once; t
 
 ### Efficiency (Friction) — faster from arrival to answer
 
-- **Input metrics:** Median Time to Claim-Ready; per-question drop-off
+- **Input metrics:** Median Time to Resolution; per-question drop-off
 - **Levers:** the scenario-card front door (recognise your own situation in one line instead of parsing a legal menu first); the field-specific "I know the answer now" routing, which returns a user to the *single* unresolved question rather than the top of the wizard
 
 ---
@@ -186,19 +215,37 @@ Session 1 devotes a chapter to guardrails (p43–51) because *"when a measure be
 
 ### Adhikaar's specific cobra
 
-**If claim-ready journeys are the goal, the product becomes incentivised to hand out a confident answer even when the honest answer is *"your heirs are in dispute / you are above the threshold / this is out of scope — take advice."***
+**If resolved journeys are the goal, the product becomes incentivised to hand out a confident answer even when the honest answer is *"your heirs are in dispute / you are above the threshold / this is out of scope — take advice."***
 
 Suppressing or softening those verdicts would raise the North Star every single week while sending grieving families to argue a case at a bank counter that they would lose. This is a *quality and safety* guardrail failure in Session 1's taxonomy (p51), and for this product it is the most damaging thing that could happen — worse than a low metric.
 
 ### The guardrail
 
-> **Honest-Exit Rate** = journeys ending in a dispute, above-threshold, or out-of-scope verdict ÷ all journeys × 100
+> **Honest-Exit Rate** = unique journeys ending in a dispute, above-threshold, or out-of-scope verdict ÷ unique journeys reaching **any** verdict × 100
 
-**Reading it:** if Weekly Claim-Ready Journeys rises while Honest-Exit Rate falls, the product is manufacturing false confidence. That combination triggers a review of the wizard's branching logic, not a celebration.
+**Corrected 7 Sep.** This section previously said *"÷ all journeys,"* which the code never implemented and which would have mixed journeys that reached a verdict with journeys that never got near one. It also counted events rather than journeys, so a reader who reloaded a verdict page three times counted three times.
 
-These outcomes are already instrumented (`outcome_reached` carries the outcome id), so this guardrail costs nothing to add.
+**Reading it:** if Weekly Resolved Journeys rises while Honest-Exit Rate falls, the product is manufacturing false confidence. That combination triggers a review of the wizard's branching logic, not a celebration.
 
-**Secondary guardrail (cheap, optional):** corrections reported through `/contact` ("found incorrect information") per 1,000 claim-ready journeys.
+### The second cobra, found 7 Sep
+
+**Honest-Exit answers the wrong question now.** It reads `outcome_reached`, which only the eight verdicts fire. Situation resolutions do not. So it cannot see what became the cheapest way to raise a resolution count: **declaring more pages resolutions.**
+
+That is not hypothetical. On 7 Sep two entries were added to a lookup table and the North Star's reachable numerator grew by two pages, with no product change and no family better served. Nothing objected. Left unchecked, adding `/bank-refused`, `/guide`, `/faq` and `/banks` would multiply the number the same way — each addition individually arguable, collectively meaningless.
+
+> **Situation Resolution Share** = unique resolved journeys from situation branches ÷ all unique resolved journeys × 100
+
+🔴 **No threshold, deliberately.** A high share is not bad. A situation resolution is real delivered value and §1 counts it on purpose. What the number is for is the **move**: if it climbs while verdict resolutions stay flat, ask whether traffic mix genuinely changed or whether the definition of "resolution" was loosened. Set a baseline once real users exist; read it per branch, since a shift driven by one door getting more traffic is product mix, not gaming.
+
+### The third guardrail: is the evidence still true?
+
+The compiled bank-by-bank table is the product's moat, and it decays silently. `lib/banks.ts` already carries `verifiedOn` per row and an `isStale()` at 182 days.
+
+> **Stale Citation Share** = unique resolved journeys citing a bank row past its window ÷ unique journeys citing any bank × 100
+
+Computed server-side from the table itself, so it needs no new event. `RULES_VERIFIED_ON` is reported alongside it as a single flag rather than a rate — every RBI clause was verified in one pass, so if that goes stale the whole product does at once.
+
+**Secondary guardrail (cheap, optional, still not built):** corrections reported through `/contact` ("found incorrect information") per 1,000 resolved journeys.
 
 ---
 
@@ -206,22 +253,30 @@ These outcomes are already instrumented (`outcome_reached` carries the outcome i
 
 ### Instrumented today
 
-| Event | Serves |
-|---|---|
-| `flow_started` | Journeys Started |
-| `question_answered` (carries `step`) | First-question completion; per-question drop-off |
-| `actionable_result_viewed` (carries `outcome_type`) | **North Star** |
-| `outcome_reached` (carries `outcome`) | Honest-Exit Rate |
-| `sheet_printed` | Next-Step Action Rate |
-| `next_step_intent` | Next-Step Action Rate (stated) |
-| `readiness_checked`, `bank_selected` | Depth inputs |
-| `survey_answered` | Belief-flip validation |
+| Event | Carries | Serves |
+|---|---|---|
+| `landing_viewed` | `entry`, `arrived_via` | Journey Start Rate denominator; propagation |
+| `flow_started` | **`branch`** | Journeys Started; Resolution Rate denominator; per-door funnel |
+| `question_answered` | `step` | Per-question drop-off |
+| `actionable_result_viewed` | `outcome_type`, **`resolution_source`** | **North Star**; Resolution Rate; Situation Resolution Share |
+| `outcome_reached` | `outcome` | Honest-Exit Rate |
+| `sheet_printed`, `counter_mode_opened`, `next_step_intent` | — | Next-Step Action Rate |
+| `readiness_checked`, `bank_selected` | — | Depth inputs; Stale Citation Share |
+| `survey_answered` | `believed_certificate_needed` | Belief Correction Rate |
 
-### Three gaps to close
+All of it is aggregated in `lib/metrics.ts`, exposed at `/api/metrics`, and proved in `tests/metrics.test.cjs`.
 
-1. **Landing-page visitors are not counted at all.** `lib/analytics.ts` sets `track_pageview: false` and `autocapture: false` (deliberately — the URL carries the family's answers, so automatic URL capture would ship the whole case by the back door), and no homepage event exists. **Journey Start Rate has no denominator today.** Fix: one explicit `landing_viewed` event on the homepage, carrying no URL and no properties — privacy-consistent, since it records only that a page was seen.
-2. **Counter mode is not separately tracked.** It is a query parameter on an outcome path, so it currently reads as an ordinary `outcome_reached`. Needed for Next-Step Action Rate.
-3. **Propagation source is not tracked.** Needed for the referral input metric.
+### The three gaps — all closed
+
+1. ~~**Landing-page visitors are not counted.**~~ **Closed.** `landing_viewed` fires once per session on the first page seen, carrying two coarse enums and no URL. Journey Start Rate has its denominator.
+2. ~~**Counter mode is not separately tracked.**~~ **Closed.** `counter_mode_opened` fires on `?mode=counter`.
+3. ~~**Propagation source is not tracked.**~~ **Closed.** `arrived_via` buckets the referrer, and `"shared_link"` — a first page view whose URL already carries answers — is the propagation signal §3 substitutes for retention.
+
+### What is still not built
+
+- **Per-Question Drop-off *Rate*.** `perQuestion` returns raw counts by step; the rate is derived by the reader, not computed.
+- **The `/contact` corrections guardrail** (§9).
+- **Everything downstream of intent** — see below, and that is by design.
 
 ### Metrics that cannot be instrumented, by design
 
@@ -239,9 +294,11 @@ Session 2 (p14–15) separates the **North Star** (where we are going) from the 
 
 Adhikaar is at MVP / Empathy stage. Traffic is small and unproven, and the funnel's very first step has no measurement at all (§10).
 
-> **OMTM for this quarter: Claim-Ready Journey Rate.**
+> **OMTM for this quarter: Resolution Rate.**
 
-Reason: at this stage, a low completion rate means the journey itself is broken, and pouring acquisition into a broken journey wastes it (Session 1, p12 — fix conversion before acquisition; *"premature acquisition scaling with poor conversion is like filling a bucket with holes"*). Once the journey reliably carries people to an answer, the constraint shifts to Breadth, and the OMTM moves to Journeys Started.
+Reason: at this stage, a low completion rate means the journey itself is broken, and pouring acquisition into a broken journey wastes it (Session 1, p12 — fix conversion before acquisition; *"premature acquisition scaling with poor conversion is like filling a bucket with holes"*). If 100 people start and 10 get a useful resolution, the product is not healthy however much traffic arrives. Start volume tells you about demand; Resolution Rate tells you whether the core experience works. Once the journey reliably carries people to an answer, the constraint shifts to Breadth, and the OMTM moves to Journeys Started.
+
+**It stays the OMTM while it reads `null`.** With no production traffic, Resolution Rate has an empty denominator and `rate()` returns `null` rather than a false `0%`. The correct report is **"Resolution Rate — N/A, insufficient production data,"** not a temporary promotion of Journeys Started because that one happens to be computable. A metric hierarchy that reshuffles itself according to how much data exists is not a hierarchy — it moves every time traffic does, and nothing can be tracked across the change.
 
 The North Star does not change when the OMTM does. That is the point of having both.
 
@@ -253,7 +310,7 @@ The North Star does not change when the OMTM does. That is the point of having b
 |---|---|
 | Total users / visits | Vanity: cumulative, only ever rises, says nothing about value (Session 1, p24) |
 | Weekly Sheets Printed | Undercounts phone users reading at the counter; printing alone doesn't prove comprehension |
-| Claim-Ready Journey **Rate** as the North Star | A rate can rise while families helped falls (§4). Retained as the primary leading metric |
+| Resolution Rate as the North Star | A rate can rise while families helped falls (§4). Retained one level down, as the OMTM (§11) |
 | Retention / WAU / MAU | Structurally invalid for a once-per-lifetime product (§3) |
 | Money recovered | The true outcome, but unobservable by design. Retained as the lagging impact tier |
 | Costly-action requirement inside the North Star | Would penalise the phone user who got full value without printing (§7) |
@@ -262,4 +319,6 @@ The North Star does not change when the OMTM does. That is the point of having b
 
 ## 13. If the submission template demands a percentage
 
-If the case-study format requires the North Star expressed as a rate, present **Claim-Ready Journey Rate (%)** as the headline with the weekly count beside it — and state explicitly that the count is the true North Star and the rate is its leading indicator. Do not silently swap one for the other; the substitution changes what the metric means (§4).
+If the case-study format requires the North Star expressed as a rate, present **Resolution Rate (%)** as the headline with the weekly count beside it — and state explicitly that the count is the true North Star and the rate is the OMTM beneath it. Do not silently swap one for the other; the substitution changes what the metric means (§4).
+
+**This is now the standing architecture, not a fallback.** §11 names Resolution Rate the OMTM outright, so the two numbers are always reported together: the count is the value delivered, the rate is the efficiency of delivering it. §4's argument against a rate is why the *North Star* is a count — it is not an argument against having the rate at all.
