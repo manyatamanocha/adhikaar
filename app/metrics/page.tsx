@@ -309,7 +309,7 @@ export default async function MetricsPage() {
                   Guardrails
                 </h2>
                 <p className="body-fluid mt-2 max-w-[62ch] text-ink-soft">
-                  Three checks that a rising North Star is real. Each answers a
+                  Three checks that a rising North Star is real — each answers a
                   different way the number could look good while the product got
                   worse.
                 </p>
@@ -368,15 +368,23 @@ export default async function MetricsPage() {
                       The bank-by-bank table is the part of this product that
                       decays without anyone touching it.
                     </p>
-                    <p className="mt-2 text-[0.9375rem] text-ink-faint">
-                      The RBI clauses were last checked against the notification
-                      on {m.guardrails.rulesVerifiedOn} —{" "}
-                      {m.guardrails.rulesStale
-                        ? "now past their window and due a re-read."
-                        : "still within their window."}{" "}
-                      They carry one date for the whole set, because they were
-                      verified in a single pass.
-                    </p>
+                    {/* Provenance while fresh, a real warning once it is not.
+                        This used to run on for two sentences explaining that
+                        the clauses share one verification date -- record-keeping
+                        the reader never asked about, on a page of moving
+                        numbers, in a line that would have read the same for
+                        five months. It earns its space only when it flips. */}
+                    {m.guardrails.rulesStale ? (
+                      <p className="mt-2 text-[0.9375rem] font-bold text-maroon">
+                        The RBI clauses are past their check window — last read
+                        against the notification on {m.guardrails.rulesVerifiedOn},
+                        and due a re-read.
+                      </p>
+                    ) : (
+                      <p className="mt-2 text-[0.9375rem] text-ink-faint">
+                        RBI clauses last checked {m.guardrails.rulesVerifiedOn}.
+                      </p>
+                    )}
                   </div>
                 </div>
               </section>
