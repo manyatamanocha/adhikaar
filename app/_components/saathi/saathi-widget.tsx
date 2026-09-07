@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
 import { SaathiAvatar } from "./avatar";
 
@@ -80,6 +80,53 @@ const GREETING: ChatMessage = {
     "Namaste, I'm Saathi. Ask me about claiming a deceased family member's bank deposit -- what documents you'll need, whether a succession certificate applies, or where to start.",
 };
 
+// A grieving reader is not scanning the page for a chat button. This is the
+// one-time nudge that says so, not a permanent one: shown once, a few seconds
+// after landing, then never again on this browser -- opening Saathi or
+// dismissing the bubble both count as "seen".
+//
+// Read as an external store, same pattern as deadline-tracker.tsx's
+// acknowledgement date, and for the same reason: localStorage doesn't exist
+// during the server render, so reading it directly in the component body (or
+// in a plain useState initializer, which runs again on the client's first
+// render too) would compute a different answer server-side vs. client-side --
+// a hydration mismatch. `useSyncExternalStore`'s `getServerSnapshot` gives
+// both the server and the very first client paint the same safe answer
+// (already seen, so nothing extra renders); React then re-reads real
+// localStorage once mounted and re-renders only if that answer was wrong,
+// without a mismatch warning. It also means the bubble timer's own effect
+// schedules `setIntroOpen` from inside a callback rather than calling it
+// synchronously in the effect body, which is what a plain
+// `useEffect(() => setState(...), [])` would have done here.
+const INTRO_KEY = "adhikaar.saathiIntroSeen";
+let introMemory = false;
+const introListeners = new Set<() => void>();
+
+function readIntroSeen(): boolean {
+  try {
+    return introMemory || localStorage.getItem(INTRO_KEY) === "1";
+  } catch {
+    return true; // fail closed -- never nag if storage is unreadable
+  }
+}
+function markIntroSeen(): void {
+  introMemory = true;
+  try {
+    localStorage.setItem(INTRO_KEY, "1");
+  } catch {
+    /* storage blocked; introMemory still marks it seen for this visit */
+  }
+  introListeners.forEach((notify) => notify());
+}
+function subscribeIntroSeen(notify: () => void) {
+  introListeners.add(notify);
+  window.addEventListener("storage", notify);
+  return () => {
+    introListeners.delete(notify);
+    window.removeEventListener("storage", notify);
+  };
+}
+
 export function SaathiWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([GREETING]);
@@ -87,8 +134,33 @@ export function SaathiWidget() {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [contactShown, setContactShown] = useState<"call" | "email" | null>(null);
+  const introSeenNow = useSyncExternalStore(subscribeIntroSeen, readIntroSeen, () => true);
+  const [introOpen, setIntroOpen] = useState(false);
+  // The attention ring: on for as long as this browser hasn't seen the nudge
+  // AND the panel is closed. Once the reader has opened Saathi once, the
+  // button has done its job -- a permanently pulsing widget on every other
+  // page they visit afterward would just be noise.
+  const showPulse = !introSeenNow && !open;
   const scrollRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // The speech bubble follows the ring a few seconds in -- not on first
+  // paint, so it never fights the page's own content for the reader's first
+  // look -- and only for as long as this browser hasn't seen it yet.
+  useEffect(() => {
+    if (introSeenNow) return;
+    const timer = setTimeout(() => setIntroOpen(true), 3500);
+    return () => clearTimeout(timer);
+  }, [introSeenNow]);
+  // Opening Saathi at all -- whether the reader noticed the ring, the bubble,
+  // or found the button on their own -- means the nudge has done its job.
+  // Dismissing the bubble by its own close button does the same without
+  // opening the chat. Either way it is marked seen so it never returns on
+  // this browser, on any page.
+  function dismissIntro() {
+    setIntroOpen(false);
+    if (!introSeenNow) markIntroSeen();
+  }
 
   // Click anywhere outside the widget closes it, same as a typical chat
   // widget -- listens only while open, so it never intercepts clicks
@@ -107,6 +179,11 @@ export function SaathiWidget() {
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
   }, [messages, open]);
+
+  function toggleOpen() {
+    if (!open && (introOpen || showPulse)) dismissIntro();
+    setOpen((v) => !v);
+  }
 
   async function send() {
     const text = input.trim();
@@ -253,16 +330,56 @@ export function SaathiWidget() {
         </div>
       )}
 
+      {/* The one-time nudge. A speech-bubble shape (the tail points at the
+          launcher below it) rather than a generic toast, so it reads as
+          Saathi speaking up rather than a site notification. Its own close
+          button is separate from tapping the launcher, since dismissing the
+          suggestion and opening the chat are different actions and the
+          bubble shouldn't swallow a click meant for the button beneath it. */}
+      {introOpen && !open && (
+        <div className="saathi-anim-intro relative max-w-[15rem] animate-[saathi-intro-in_0.35s_ease-out]">
+          <div className="rounded-2xl border border-[#E3D8C4] bg-white px-4 py-3 pr-8 shadow-[0_14px_34px_rgba(22,35,63,0.22)]">
+            <p className="text-[0.8125rem] font-semibold leading-snug text-[#16233F]">
+              Have a question about your claim? Ask Saathi — it&apos;s free.
+            </p>
+            <button
+              type="button"
+              onClick={dismissIntro}
+              aria-label="Dismiss"
+              className="absolute right-2 top-2 rounded-full p-1 text-[#6B6255] transition-colors hover:bg-[#FAF5EC] hover:text-[#16233F]"
+            >
+              ✕
+            </button>
+          </div>
+          {/* The tail, pointing down at the launcher */}
+          <div
+            aria-hidden="true"
+            className="absolute -bottom-[0.4rem] right-6 h-3 w-3 rotate-45 border-b border-r border-[#E3D8C4] bg-white"
+          />
+        </div>
+      )}
+
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={toggleOpen}
         aria-label={open ? "Close Saathi" : "Open Saathi, Adhikaar's assistant"}
-        className="group flex cursor-pointer items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 shadow-[0_10px_24px_rgba(22,35,63,0.28)] transition-transform hover:-translate-y-1 sm:gap-3 sm:py-2 sm:pl-2 sm:pr-5 sm:shadow-[0_16px_40px_rgba(22,35,63,0.28)]"
+        className="group relative flex cursor-pointer items-center gap-[0.6rem] rounded-full bg-gradient-to-b from-[#F5DFAE] to-[#E4BC72] py-[0.45rem] pl-[0.45rem] pr-[1.2rem] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_12px_29px_rgba(22,35,63,0.28)] transition-transform hover:-translate-y-1 sm:gap-[0.9rem] sm:py-[0.6rem] sm:pl-[0.6rem] sm:pr-[1.5rem] sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_19px_48px_rgba(22,35,63,0.28)]"
       >
-        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center sm:h-11 sm:w-11">
-          <SaathiAvatar className="h-8 w-8 animate-[saathi-bob_3.4s_ease-in-out_infinite] sm:h-11 sm:w-11" />
+        {/* The attention ring -- a soft terracotta pulse behind the avatar,
+            expanding and fading on a slow loop. Only while the panel is
+            closed and the reader hasn't opened Saathi yet: once they've used
+            it, the button has done its job and a permanently pulsing widget
+            would just be visual noise on every other page they visit. */}
+        {!open && showPulse && (
+          <span
+            aria-hidden="true"
+            className="saathi-anim-pulse absolute left-[0.45rem] top-[0.45rem] h-[2.4rem] w-[2.4rem] animate-[saathi-pulse_2.4s_ease-out_infinite] rounded-full bg-[#E2653B] sm:left-[0.6rem] sm:top-[0.6rem] sm:h-[3.3rem] sm:w-[3.3rem]"
+          />
+        )}
+        <span className="relative flex h-[2.4rem] w-[2.4rem] shrink-0 items-center justify-center sm:h-[3.3rem] sm:w-[3.3rem]">
+          <SaathiAvatar className="saathi-anim-bob h-[2.4rem] w-[2.4rem] animate-[saathi-bob_3.4s_ease-in-out_infinite] sm:h-[3.3rem] sm:w-[3.3rem]" />
         </span>
-        <span className="text-[0.625rem] font-bold text-[#16233F] sm:text-[0.8125rem]">
+        <span className="relative text-[0.75rem] font-bold text-[#16233F] sm:text-[0.975rem]">
           {open ? "Close" : "Ask Saathi"}
         </span>
       </button>
@@ -271,6 +388,22 @@ export function SaathiWidget() {
         @keyframes saathi-bob {
           0%, 100% { transform: translateY(0); }
           50% { transform: translateY(-3px); }
+        }
+        @keyframes saathi-pulse {
+          0% { transform: scale(0.85); opacity: 0.55; }
+          70%, 100% { transform: scale(1.55); opacity: 0; }
+        }
+        @keyframes saathi-intro-in {
+          from { opacity: 0; transform: translateY(0.5rem); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        /* Bobbing, pulsing and the bubble sliding in are all decorative --
+           useful when they help a reader notice the button, actively unwanted
+           motion for anyone who has asked the OS to reduce it. */
+        @media (prefers-reduced-motion: reduce) {
+          .saathi-anim-bob, .saathi-anim-pulse, .saathi-anim-intro {
+            animation: none !important;
+          }
         }
       `}</style>
     </div>
