@@ -112,8 +112,10 @@ const en: SituationsDict = {
   groupNotYet: "You have not been to the bank yet",
   heading: "My Claim Process",
   // "Not started the claim" is now framed as not knowing the PROCESS -- same
-  // destination, the full wizard -- and repurposed for "don't know from where
-  // to start" (unchanged: /start/find, the money-finding branch).
+  // destination, the full wizard. "Don't know from where to start" (dontKnow,
+  // below) points straight at /start/find/where since 7 Sep 2026 evening --
+  // /start/find, the old two-way fork, is bypassed (still works if visited
+  // directly, just has no inbound link from here any more).
   notStarted: {
     label: "I do not know the process",
     detail: "You have not been to the bank yet, and are not sure what happens next.",

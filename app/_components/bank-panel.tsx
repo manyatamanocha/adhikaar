@@ -2,9 +2,11 @@
  * The bank overlay.
  *
  * The RBI clause tells the officer what the regulator requires. This panel
- * tells them what their OWN employer has already published. That second one is
- * harder to argue with across a counter, and it is the reason the bank is asked
- * last rather than first: it changes the evidence, never the verdict.
+ * tells them what their OWN employer has already published. That second one
+ * is harder to argue with across a counter. Which bank is asked at Q2, right
+ * after the reader confirms this is a bank deposit -- but it still never
+ * changes the verdict, only the evidence shown alongside it: resolve()'s
+ * legal branching runs entirely on the seven other facts.
  *
  * Every field here is either read from that bank's own page or it is null, and
  * a null says so. See lib/banks.ts — the honesty rule lives there and this

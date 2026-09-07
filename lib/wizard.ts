@@ -43,7 +43,7 @@ export type Answers = Partial<{
   bank: string;
 }>;
 export type Option = { value: string; label: string; detail?: string; unsure?: boolean };
-export type Question = { id: QuestionId; number: number; prompt: string; help: string; options: Option[] };
+export type Question = { id: QuestionId; prompt: string; help: string; options: Option[] };
 
 /**
  * Which door the reader came in through.
@@ -93,9 +93,9 @@ export function parseEntry(raw: string | string[] | undefined): Entry | undefine
  * it (see resolve()). QUESTION_ORDER is not decoration: answeredPrefix() reads
  * the contiguous prefix of it, so a path that asks its questions in a
  * different order than this array lists them breaks Back and the progress
- * counter. The nominee path asks claiming -> nominee -> court -> heirs, so
- * heirs has to sit before will here, and resolve() has to ask it before will
- * on the no-nominee path too. The two must always agree.
+ * counter. The nominee path asks claiming -> bank -> nominee -> court ->
+ * heirs, so heirs has to sit before will here, and resolve() has to ask it
+ * before will on the no-nominee path too. The two must always agree.
  */
 export const QUESTION_ORDER: QuestionId[] = ["claiming", "bank", "nominee", "court", "heirs", "will", "bankType", "amount"];
 export const TOTAL_QUESTIONS = QUESTION_ORDER.length;
@@ -152,7 +152,7 @@ function bankOptions(otherLabel: string, otherDetail: string): Option[] {
 
 const en: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "The claim is for which of the following?",
+    id: "claiming", prompt: "The claim is for which of the following?",
     help: "",
     options: [
       // One answer, not three. "A bank account", "a bank deposit" and "both"
@@ -172,12 +172,12 @@ const en: Record<QuestionId, Question> = {
     ],
   },
   court: {
-    id: "court", number: 3, prompt: "Is there a court order currently stopping the bank from paying this money?",
+    id: "court", prompt: "Is there a court order currently stopping the bank from paying this money?",
     help: "This is different from simply having a court case about the money — only an order that specifically stops payment counts here. If you're not sure, ask the bank whether it knows of one.",
     options: [{ value: "no", label: "No — there's no such order (whether or not there's a case)" }, { value: "yes", label: "Yes, a court order is stopping payment" }, unknownEn],
   },
   nominee: {
-    id: "nominee", number: 2, prompt: "Is there a registered nominee for this account?",
+    id: "nominee", prompt: "Is there a registered nominee for this account?",
     help: "This person is called a nominee. Check the bank's records. For a joint account, a surviving holder may qualify under an 'either or survivor' instruction.",
     options: [
       { value: "yes", label: "Yes, there is a registered nominee", detail: "The sole account holder, or all joint depositors, have died." },
@@ -186,27 +186,27 @@ const en: Record<QuestionId, Question> = {
     ],
   },
   will: {
-    id: "will", number: 5, prompt: "Did the person leave a will?",
+    id: "will", prompt: "Did the person leave a will?",
     help: "A will can change which documents the bank asks for. If you have not checked, choose 'I don't know yet'.",
     options: [{ value: "no", label: "No will was left" }, { value: "yes", label: "Yes, there is a will" }, unknownEn],
   },
   heirs: {
-    id: "heirs", number: 4, prompt: "Does everyone entitled to inherit agree?",
+    id: "heirs", prompt: "Does everyone entitled to inherit agree?",
     help: "If family members disagree about who should receive the money, the standard checklist may not apply. Get advice before relying on it.",
     options: [{ value: "agree", label: "Yes, everyone agrees" }, { value: "dispute", label: "No, family members disagree" }, unknownEn],
   },
   bankType: {
-    id: "bankType", number: 6, prompt: "What kind of bank is it?",
+    id: "bankType", prompt: "What kind of bank is it?",
     help: "The RBI threshold is ₹5 lakh for co-operative banks and ₹15 lakh for other banks. Your bank may set a higher limit, so ask the branch to confirm.",
     options: [{ value: "commercial", label: "A regular commercial bank", detail: "For example, SBI, PNB, HDFC Bank or ICICI Bank." }, { value: "cooperative", label: "A co-operative bank" }, unknownEn],
   },
   amount: {
-    id: "amount", number: 7, prompt: "How much money is held at this bank in total?",
+    id: "amount", prompt: "How much money is held at this bank in total?",
     help: "Add all of this person's accounts at this bank, including interest. Money at another bank is counted separately.",
     options: [{ value: "under", label: "Below the threshold" }, { value: "equal", label: "Exactly at the threshold" }, { value: "over", label: "Above the threshold" }, unknownEn],
   },
   bank: {
-    id: "bank", number: 8, prompt: "Which bank is the money at?",
+    id: "bank", prompt: "Which bank is the money at?",
     help: "This does not change your result — it only means we can show you your bank's own published policy alongside the questions that follow.",
     options: bankOptions(
       "Another bank, or I'm not sure",
@@ -219,7 +219,7 @@ const unknownHi: Option = { value: "unknown", label: "मुझे अभी न
 
 const hi: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "यह दावा इनमें से किसके लिए है?",
+    id: "claiming", prompt: "यह दावा इनमें से किसके लिए है?",
     help: "",
     options: [
       { value: "deposit-account", label: "एक बैंक खाता, एक जमा, या दोनों", detail: "बचत, चालू, सावधि या आवर्ती।" },
@@ -227,12 +227,12 @@ const hi: Record<QuestionId, Question> = {
     ],
   },
   court: {
-    id: "court", number: 3, prompt: "क्या फ़िलहाल कोई अदालती आदेश बैंक को यह पैसा देने से रोक रहा है?",
+    id: "court", prompt: "क्या फ़िलहाल कोई अदालती आदेश बैंक को यह पैसा देने से रोक रहा है?",
     help: "यह केवल पैसे से जुड़ा कोई अदालती मामला होने से अलग है — यहाँ सिर्फ़ वह आदेश गिना जाता है जो भुगतान को स्पष्ट रूप से रोकता है। अगर यक़ीन न हो, तो बैंक से पूछें कि क्या उसे ऐसे किसी आदेश की जानकारी है।",
     options: [{ value: "no", label: "नहीं — ऐसा कोई आदेश नहीं है (चाहे मामला हो या न हो)" }, { value: "yes", label: "हाँ, एक अदालती आदेश भुगतान रोक रहा है" }, unknownHi],
   },
   nominee: {
-    id: "nominee", number: 2, prompt: "क्या इस खाते के लिए कोई पंजीकृत नामांकित व्यक्ति है?",
+    id: "nominee", prompt: "क्या इस खाते के लिए कोई पंजीकृत नामांकित व्यक्ति है?",
     help: "इस व्यक्ति को नामांकित व्यक्ति (नॉमिनी) कहा जाता है। बैंक के रिकॉर्ड जाँचें। संयुक्त खाते में, जीवित धारक 'either or survivor' निर्देश के तहत पात्र हो सकता है।",
     options: [
       { value: "yes", label: "हाँ, एक पंजीकृत नामांकित व्यक्ति है", detail: "एकल खाताधारक, या सभी संयुक्त जमाकर्ता, गुज़र चुके हैं।" },
@@ -241,27 +241,27 @@ const hi: Record<QuestionId, Question> = {
     ],
   },
   will: {
-    id: "will", number: 5, prompt: "क्या व्यक्ति ने वसीयत छोड़ी थी?",
+    id: "will", prompt: "क्या व्यक्ति ने वसीयत छोड़ी थी?",
     help: "वसीयत इस बात को बदल सकती है कि बैंक कौन से दस्तावेज़ माँगता है। अगर आपने जाँचा नहीं है, तो 'मुझे अभी नहीं पता' चुनें।",
     options: [{ value: "no", label: "कोई वसीयत नहीं छोड़ी गई" }, { value: "yes", label: "हाँ, एक वसीयत है" }, unknownHi],
   },
   heirs: {
-    id: "heirs", number: 4, prompt: "क्या विरासत पाने के हक़दार सभी लोग सहमत हैं?",
+    id: "heirs", prompt: "क्या विरासत पाने के हक़दार सभी लोग सहमत हैं?",
     help: "अगर परिवार के सदस्य इस बात पर असहमत हैं कि पैसा किसे मिलना चाहिए, तो मानक सूची लागू नहीं हो सकती। इस पर भरोसा करने से पहले सलाह लें।",
     options: [{ value: "agree", label: "हाँ, सभी सहमत हैं" }, { value: "dispute", label: "नहीं, परिवार के सदस्य असहमत हैं" }, unknownHi],
   },
   bankType: {
-    id: "bankType", number: 6, prompt: "यह किस तरह का बैंक है?",
+    id: "bankType", prompt: "यह किस तरह का बैंक है?",
     help: "आरबीआई की सीमा सहकारी बैंकों के लिए ₹5 लाख और अन्य बैंकों के लिए ₹15 लाख है। आपका बैंक इससे ऊँची सीमा रख सकता है, इसलिए शाखा से पुष्टि करने को कहें।",
     options: [{ value: "commercial", label: "एक सामान्य वाणिज्यिक बैंक", detail: "उदाहरण के लिए, एसबीआई, पीएनबी, एचडीएफ़सी बैंक या आईसीआईसीआई बैंक।" }, { value: "cooperative", label: "एक सहकारी बैंक" }, unknownHi],
   },
   amount: {
-    id: "amount", number: 7, prompt: "इस बैंक में कुल मिलाकर कितना पैसा है?",
+    id: "amount", prompt: "इस बैंक में कुल मिलाकर कितना पैसा है?",
     help: "इस बैंक में व्यक्ति के सभी खातों को ब्याज सहित जोड़ें। किसी अन्य बैंक का पैसा अलग से गिना जाता है।",
     options: [{ value: "under", label: "सीमा से कम" }, { value: "equal", label: "ठीक सीमा के बराबर" }, { value: "over", label: "सीमा से ज़्यादा" }, unknownHi],
   },
   bank: {
-    id: "bank", number: 8, prompt: "पैसा किस बैंक में है?",
+    id: "bank", prompt: "पैसा किस बैंक में है?",
     help: "इससे आपका नतीजा नहीं बदलता — इसका मतलब बस इतना है कि हम आपके बैंक की प्रकाशित नीति आगे के सवालों के साथ दिखा सकते हैं।",
     options: bankOptions(
       "कोई और बैंक, या मुझे ठीक से नहीं पता",
@@ -274,7 +274,7 @@ const unknownKn: Option = { value: "unknown", label: "ನನಗೆ ಇನ್ನ�
 
 const kn: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", number: 1, prompt: "ಈ ಹಕ್ಕು ಇವುಗಳಲ್ಲಿ ಯಾವುದಕ್ಕಾಗಿದೆ?",
+    id: "claiming", prompt: "ಈ ಹಕ್ಕು ಇವುಗಳಲ್ಲಿ ಯಾವುದಕ್ಕಾಗಿದೆ?",
     help: "",
     options: [
       { value: "deposit-account", label: "ಬ್ಯಾಂಕ್ ಖಾತೆ, ಠೇವಣಿ, ಅಥವಾ ಎರಡೂ", detail: "ಉಳಿತಾಯ, ಚಾಲ್ತಿ, ಸ್ಥಿರ ಅಥವಾ ಪುನರಾವರ್ತಿತ." },
@@ -282,12 +282,12 @@ const kn: Record<QuestionId, Question> = {
     ],
   },
   court: {
-    id: "court", number: 3, prompt: "ಈ ಹಣವನ್ನು ಪಾವತಿಸದಂತೆ ಬ್ಯಾಂಕನ್ನು ಪ್ರಸ್ತುತ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶ ತಡೆಯುತ್ತಿದೆಯೇ?",
+    id: "court", prompt: "ಈ ಹಣವನ್ನು ಪಾವತಿಸದಂತೆ ಬ್ಯಾಂಕನ್ನು ಪ್ರಸ್ತುತ ಯಾವುದೇ ನ್ಯಾಯಾಲಯದ ಆದೇಶ ತಡೆಯುತ್ತಿದೆಯೇ?",
     help: "ಇದು ಹಣದ ಬಗ್ಗೆ ಕೇವಲ ನ್ಯಾಯಾಲಯದ ಪ್ರಕರಣ ಇರುವುದಕ್ಕಿಂತ ಬೇರೆ — ಇಲ್ಲಿ ಪಾವತಿಯನ್ನು ನಿರ್ದಿಷ್ಟವಾಗಿ ತಡೆಯುವ ಆದೇಶ ಮಾತ್ರ ಎಣಿಕೆಯಾಗುತ್ತದೆ. ಖಚಿತವಿಲ್ಲದಿದ್ದರೆ, ಅಂತಹ ಆದೇಶದ ಬಗ್ಗೆ ಬ್ಯಾಂಕಿಗೆ ಗೊತ್ತಿದೆಯೇ ಎಂದು ಕೇಳಿ.",
     options: [{ value: "no", label: "ಇಲ್ಲ — ಅಂತಹ ಆದೇಶ ಇಲ್ಲ (ಪ್ರಕರಣ ಇರಲಿ ಅಥವಾ ಇಲ್ಲದಿರಲಿ)" }, { value: "yes", label: "ಹೌದು, ಒಂದು ನ್ಯಾಯಾಲಯದ ಆದೇಶ ಪಾವತಿಯನ್ನು ತಡೆಯುತ್ತಿದೆ" }, unknownKn],
   },
   nominee: {
-    id: "nominee", number: 2, prompt: "ಈ ಖಾತೆಗೆ ನೋಂದಾಯಿತ ನಾಮನಿರ್ದೇಶಿತರು ಇದ್ದಾರೆಯೇ?",
+    id: "nominee", prompt: "ಈ ಖಾತೆಗೆ ನೋಂದಾಯಿತ ನಾಮನಿರ್ದೇಶಿತರು ಇದ್ದಾರೆಯೇ?",
     help: "ಈ ವ್ಯಕ್ತಿಯನ್ನು ನಾಮನಿರ್ದೇಶಿತರು ಎಂದು ಕರೆಯಲಾಗುತ್ತದೆ. ಬ್ಯಾಂಕಿನ ದಾಖಲೆಗಳನ್ನು ಪರಿಶೀಲಿಸಿ. ಜಂಟಿ ಖಾತೆಯಲ್ಲಿ, ಜೀವಂತ ಇರುವ ಧಾರಕರು 'either or survivor' ಸೂಚನೆಯಡಿ ಅರ್ಹರಾಗಬಹುದು.",
     options: [
       { value: "yes", label: "ಹೌದು, ನೋಂದಾಯಿತ ನಾಮನಿರ್ದೇಶಿತರು ಇದ್ದಾರೆ", detail: "ಏಕೈಕ ಖಾತೆದಾರರು, ಅಥವಾ ಎಲ್ಲಾ ಜಂಟಿ ಠೇವಣಿದಾರರು, ಮರಣ ಹೊಂದಿದ್ದಾರೆ." },
@@ -296,27 +296,27 @@ const kn: Record<QuestionId, Question> = {
     ],
   },
   will: {
-    id: "will", number: 5, prompt: "ವ್ಯಕ್ತಿ ವಿಲ್ ಬಿಟ್ಟುಹೋಗಿದ್ದರೇ?",
+    id: "will", prompt: "ವ್ಯಕ್ತಿ ವಿಲ್ ಬಿಟ್ಟುಹೋಗಿದ್ದರೇ?",
     help: "ವಿಲ್ ಬ್ಯಾಂಕ್ ಯಾವ ದಾಖಲೆಗಳನ್ನು ಕೇಳುತ್ತದೆ ಎಂಬುದನ್ನು ಬದಲಾಯಿಸಬಹುದು. ನೀವು ಪರಿಶೀಲಿಸದಿದ್ದರೆ, 'ನನಗೆ ಇನ್ನೂ ಗೊತ್ತಿಲ್ಲ' ಆಯ್ಕೆಮಾಡಿ.",
     options: [{ value: "no", label: "ಯಾವುದೇ ವಿಲ್ ಬಿಟ್ಟಿಲ್ಲ" }, { value: "yes", label: "ಹೌದು, ಒಂದು ವಿಲ್ ಇದೆ" }, unknownKn],
   },
   heirs: {
-    id: "heirs", number: 4, prompt: "ಆಸ್ತಿ ಪಡೆಯಲು ಅರ್ಹರಾದ ಎಲ್ಲರೂ ಒಪ್ಪುತ್ತಾರೆಯೇ?",
+    id: "heirs", prompt: "ಆಸ್ತಿ ಪಡೆಯಲು ಅರ್ಹರಾದ ಎಲ್ಲರೂ ಒಪ್ಪುತ್ತಾರೆಯೇ?",
     help: "ಹಣ ಯಾರಿಗೆ ಸಿಗಬೇಕು ಎಂಬುದರ ಬಗ್ಗೆ ಕುಟುಂಬ ಸದಸ್ಯರು ಭಿನ್ನಾಭಿಪ್ರಾಯ ಹೊಂದಿದ್ದರೆ, ಪ್ರಮಾಣಿತ ಪಟ್ಟಿ ಅನ್ವಯಿಸದೇ ಇರಬಹುದು. ಇದನ್ನು ಅವಲಂಬಿಸುವ ಮೊದಲು ಸಲಹೆ ಪಡೆಯಿರಿ.",
     options: [{ value: "agree", label: "ಹೌದು, ಎಲ್ಲರೂ ಒಪ್ಪುತ್ತಾರೆ" }, { value: "dispute", label: "ಇಲ್ಲ, ಕುಟುಂಬ ಸದಸ್ಯರು ಭಿನ್ನಾಭಿಪ್ರಾಯ ಹೊಂದಿದ್ದಾರೆ" }, unknownKn],
   },
   bankType: {
-    id: "bankType", number: 6, prompt: "ಇದು ಯಾವ ರೀತಿಯ ಬ್ಯಾಂಕ್?",
+    id: "bankType", prompt: "ಇದು ಯಾವ ರೀತಿಯ ಬ್ಯಾಂಕ್?",
     help: "ಆರ್‌ಬಿಐ ಮಿತಿ ಸಹಕಾರಿ ಬ್ಯಾಂಕುಗಳಿಗೆ ₹5 ಲಕ್ಷ ಮತ್ತು ಇತರ ಬ್ಯಾಂಕುಗಳಿಗೆ ₹15 ಲಕ್ಷ. ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಹೆಚ್ಚಿನ ಮಿತಿಯನ್ನು ನಿಗದಿಪಡಿಸಿರಬಹುದು, ಆದ್ದರಿಂದ ಶಾಖೆಯನ್ನು ಖಚಿತಪಡಿಸಲು ಕೇಳಿ.",
     options: [{ value: "commercial", label: "ಒಂದು ಸಾಮಾನ್ಯ ವಾಣಿಜ್ಯ ಬ್ಯಾಂಕ್", detail: "ಉದಾಹರಣೆಗೆ, ಎಸ್‌ಬಿಐ, ಪಿಎನ್‌ಬಿ, ಎಚ್‌ಡಿಎಫ್‌ಸಿ ಬ್ಯಾಂಕ್ ಅಥವಾ ಐಸಿಐಸಿಐ ಬ್ಯಾಂಕ್." }, { value: "cooperative", label: "ಒಂದು ಸಹಕಾರಿ ಬ್ಯಾಂಕ್" }, unknownKn],
   },
   amount: {
-    id: "amount", number: 7, prompt: "ಈ ಬ್ಯಾಂಕಿನಲ್ಲಿ ಒಟ್ಟು ಎಷ್ಟು ಹಣವಿದೆ?",
+    id: "amount", prompt: "ಈ ಬ್ಯಾಂಕಿನಲ್ಲಿ ಒಟ್ಟು ಎಷ್ಟು ಹಣವಿದೆ?",
     help: "ಈ ಬ್ಯಾಂಕಿನಲ್ಲಿರುವ ಈ ವ್ಯಕ್ತಿಯ ಎಲ್ಲಾ ಖಾತೆಗಳನ್ನು ಬಡ್ಡಿ ಸೇರಿಸಿ ಒಟ್ಟುಗೂಡಿಸಿ. ಬೇರೆ ಬ್ಯಾಂಕಿನ ಹಣವನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ಎಣಿಸಲಾಗುತ್ತದೆ.",
     options: [{ value: "under", label: "ಮಿತಿಗಿಂತ ಕಡಿಮೆ" }, { value: "equal", label: "ಮಿತಿಗೆ ಸರಿಯಾಗಿ ಸಮ" }, { value: "over", label: "ಮಿತಿಗಿಂತ ಹೆಚ್ಚು" }, unknownKn],
   },
   bank: {
-    id: "bank", number: 8, prompt: "ಹಣ ಯಾವ ಬ್ಯಾಂಕಿನಲ್ಲಿದೆ?",
+    id: "bank", prompt: "ಹಣ ಯಾವ ಬ್ಯಾಂಕಿನಲ್ಲಿದೆ?",
     help: "ಇದು ನಿಮ್ಮ ಫಲಿತಾಂಶವನ್ನು ಬದಲಾಯಿಸುವುದಿಲ್ಲ — ಇದರರ್ಥ ನಿಮ್ಮ ಬ್ಯಾಂಕಿನ ಪ್ರಕಟಿತ ನೀತಿಯನ್ನು ಮುಂದಿನ ಪ್ರಶ್ನೆಗಳ ಜೊತೆ ತೋರಿಸಬಹುದು ಎಂದು ಮಾತ್ರ.",
     options: bankOptions(
       "ಬೇರೆ ಬ್ಯಾಂಕ್, ಅಥವಾ ನನಗೆ ಖಚಿತವಿಲ್ಲ",

@@ -75,10 +75,10 @@ export default async function Start({
   const entry = parseEntry(sp.entry);
   const link = (href: string) => withLang(withEntry(href, entry), locale);
 
-  // Over QUESTION_ORDER, not over every field of Answers: `bank` is now an
-  // answer too (see BANK_QUESTION), and a URL carrying nothing but ?bank=sbi
-  // is still a reader who has answered no question at all and belongs on the
-  // situation picker rather than in the middle of the wizard.
+  // Over QUESTION_ORDER, which includes `bank` (Q2) since 7 Sep 2026 evening.
+  // A URL carrying only ?bank=sbi therefore counts as fresh no longer: it is
+  // a real, contiguous answer now, so that reader lands on question one
+  // (claiming) rather than being sent to the situation picker.
   const isFresh = QUESTION_ORDER.every((id) => answers[id] === undefined);
 
   // A fresh visit meets the five situations, not question one.

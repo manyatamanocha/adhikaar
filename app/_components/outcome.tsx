@@ -88,10 +88,10 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
     if (gap.kind === "review") redirect(withLang("/needs-review" + carry, locale));
     if (gap.kind === "outcome" && gap.outcome !== id) redirect(withLang(OUTCOMES[gap.outcome].path + carry, locale));
   }
-  // Now an answer like any other (BANK_QUESTION), so it arrives validated
-  // against the bank table and a hand-edited ?bank=anything is dropped rather
-  // than rendered. Old links carrying ?bank= keep working: it is the same
-  // parameter name it always was.
+  // A normal member of QUESTION_ORDER since 7 Sep 2026 evening, so it arrives
+  // validated against the bank table and a hand-edited ?bank=anything is
+  // dropped rather than rendered. Old links carrying ?bank= keep working: it
+  // is the same parameter name it always was.
   const bankId = answers.bank;
 
   // Counter mode: the same URL, one parameter switched, so it stays a real
