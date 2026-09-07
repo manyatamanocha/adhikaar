@@ -16,9 +16,14 @@
  *
  * UDGAM is the only external service linked with a URL. udgam.rbi.org.in was
  * verified reachable (200) on 5 Sep 2026 and again before this page shipped.
- * The IEPF and branch-records entries carry no URL: an unverified link on a
- * page about finding a dead relative's money is worse than no link, and the
- * reader can reach both by name.
+ * The branch-records entry carries no URL: an unverified link on a page about
+ * finding a dead relative's money is worse than no link, and the reader can
+ * reach a branch by name.
+ *
+ * The IEPF entry (shares and dividends moved to the Investor Education and
+ * Protection Fund) was removed on 7 Sep 2026 at the user's request. Adhikaar
+ * is bank deposits only, and the entry pointed a reader at a wholly separate
+ * process this product cannot follow them into.
  */
 
 import Link from "next/link";
@@ -58,6 +63,17 @@ export default async function Where({
             {t.noSearch}
           </p>
 
+          {/* Above the options, not under them -- direct request, 7 Sep 2026.
+              A reader who picked the wrong door should find the way back
+              without scrolling past every option they did not want. */}
+          <Link
+            href={withLang("/start/find", locale)}
+            className="-my-2.5 mt-4 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
+          >
+            <span aria-hidden="true">&larr;</span>
+            {t.backToStart}
+          </Link>
+
           <ul className="mt-7 space-y-3">
             <li className="rounded-xl border border-rule bg-white p-5">
               <h2 className="display-md font-serif font-bold text-indigo-ink">
@@ -81,28 +97,14 @@ export default async function Where({
               </h2>
               <p className="body-fluid mt-1.5 leading-relaxed text-ink-soft">{t.portalWhat}</p>
             </li>
-
-            <li className="rounded-xl border border-rule bg-white p-5">
-              <h2 className="display-md font-serif font-bold text-indigo-ink">
-                {t.iepfName}
-              </h2>
-              <p className="body-fluid mt-1.5 leading-relaxed text-ink-soft">{t.iepfWhat}</p>
-            </li>
           </ul>
 
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule-faint pt-5">
-            <Link
-              href={withLang("/start/find", locale)}
-              className="-my-2.5 inline-flex items-center gap-2 py-2.5 text-[1rem] font-bold text-indigo"
-            >
-              <span aria-hidden="true">&larr;</span>
-              {t.backToStart}
-            </Link>
+          <div className="mt-8 border-t border-rule-faint pt-5">
             {/* entry=new, but claiming is NOT pre-filled here the way it is on
-                /start/find's "I know the bank" option. This page also points
-                at IEPF, which holds shares and dividends rather than deposits,
-                so question 1 stays as the out-of-scope gate for anyone who
-                found something that is not a bank account. */}
+                /start/find's "I know the bank" option. A reader searching for
+                an account they know nothing about may well surface something
+                that is not a bank deposit, so question 1 stays as the
+                out-of-scope gate. */}
             <Link
               href={withLang("/start?begin=1&entry=new", locale)}
               className="inline-flex min-h-11 items-center rounded-lg bg-saffron px-5 py-2.5 text-[1rem] font-bold text-white"

@@ -101,8 +101,6 @@ export type SituationsDict = {
     udgamHow: string;
     portalName: string;
     portalWhat: string;
-    iepfName: string;
-    iepfWhat: string;
     foundIt: string;
     backToStart: string;
   };
@@ -184,9 +182,6 @@ const en: SituationsDict = {
     portalName: "Your bank's own branch records",
     portalWhat:
       "UDGAM only lists deposits already classified as unclaimed. An account that has been dormant for less than ten years will not appear there — ask the branch directly instead.",
-    iepfName: "IEPF — shares and dividends transferred to the government",
-    iepfWhat:
-      "For company shares, dividends and matured deposits moved to the Investor Education and Protection Fund. A separate process from a bank claim.",
     foundIt: "Found an account? Start the claim →",
     backToStart: "Back to the start",
   },
@@ -268,9 +263,6 @@ const hi: SituationsDict = {
     portalName: "आपके अपने बैंक की शाखा के रिकॉर्ड",
     portalWhat:
       "UDGAM केवल उन्हीं जमाओं को दिखाता है जो पहले से बिना दावे की मानी गई हैं। दस साल से कम निष्क्रिय खाता वहाँ नहीं दिखेगा — उसके लिए सीधे शाखा से पूछें।",
-    iepfName: "IEPF — सरकार को हस्तांतरित शेयर और लाभांश",
-    iepfWhat:
-      "कंपनी के शेयर, लाभांश और परिपक्व जमाएँ जो निवेशक शिक्षा एवं संरक्षण कोष में चली गई हैं। यह बैंक दावे से अलग प्रक्रिया है।",
     foundIt: "खाता मिल गया? दावा शुरू करें →",
     backToStart: "शुरुआत पर वापस",
   },
@@ -352,9 +344,6 @@ const kn: SituationsDict = {
     portalName: "ನಿಮ್ಮ ಸ್ವಂತ ಬ್ಯಾಂಕಿನ ಶಾಖೆಯ ದಾಖಲೆಗಳು",
     portalWhat:
       "UDGAM ಈಗಾಗಲೇ ಹಕ್ಕು ಸಲ್ಲಿಸದವು ಎಂದು ಗುರುತಿಸಿದ ಠೇವಣಿಗಳನ್ನು ಮಾತ್ರ ತೋರಿಸುತ್ತದೆ. ಹತ್ತು ವರ್ಷಕ್ಕಿಂತ ಕಡಿಮೆ ನಿಷ್ಕ್ರಿಯವಾದ ಖಾತೆ ಅಲ್ಲಿ ಕಾಣಿಸುವುದಿಲ್ಲ — ಅದಕ್ಕಾಗಿ ನೇರವಾಗಿ ಶಾಖೆಯನ್ನು ಕೇಳಿ.",
-    iepfName: "IEPF — ಸರ್ಕಾರಕ್ಕೆ ವರ್ಗಾಯಿಸಿದ ಷೇರುಗಳು ಮತ್ತು ಲಾಭಾಂಶ",
-    iepfWhat:
-      "ಹೂಡಿಕೆದಾರರ ಶಿಕ್ಷಣ ಮತ್ತು ಸಂರಕ್ಷಣಾ ನಿಧಿಗೆ ಹೋದ ಕಂಪನಿ ಷೇರುಗಳು, ಲಾಭಾಂಶ ಮತ್ತು ಪಕ್ವವಾದ ಠೇವಣಿಗಳು. ಇದು ಬ್ಯಾಂಕ್ ಹಕ್ಕಿಗಿಂತ ಬೇರೆ ಪ್ರಕ್ರಿಯೆ.",
     foundIt: "ಖಾತೆ ಸಿಕ್ಕಿತೇ? ಹಕ್ಕು ಪ್ರಾರಂಭಿಸಿ →",
     backToStart: "ಪ್ರಾರಂಭಕ್ಕೆ ಹಿಂತಿರುಗಿ",
   },
