@@ -69,7 +69,29 @@ function arrivedVia(hasAnswersOnEntry: boolean): string {
 }
 
 /**
- * Journeys that resolve WITHOUT the seven questions.
+ * ─── The word "outcome" means three things, and they are not the same ───
+ *
+ * 1. A VERDICT — one of the eight OutcomeIds in lib/outcomes.ts. A legal
+ *    determination: the product read the facts and named the RBI route. Only
+ *    resolve() produces one, and `outcome_reached` fires only on these eight.
+ * 2. A COUNTED RESOLUTION — `actionable_result_viewed`, the North Star
+ *    numerator. The test is the NSM doc's, not this file's: the reader leaves
+ *    knowing what to do next. Eleven things pass it, not eight.
+ * 3. A GUARDRAIL CATEGORY — HONEST_EXIT_OUTCOMES in the metrics route. A
+ *    verdict whose honest answer is unwelcome. Verdicts only, deliberately.
+ *
+ * These coincided until 7 Sep 2026 only because the wizard was the sole route
+ * to a resolution. It no longer is. `resolution_source` on every
+ * `actionable_result_viewed` -- "verdict", "review" or "situation" -- is what
+ * keeps the three separable in the data rather than only in this comment.
+ *
+ * It matters because the `outcome` PROPERTY is not type-checked (track()'s
+ * props are Record<string, string|number|boolean>), so it now carries values
+ * that are not OutcomeIds and have no page in lib/outcomes.ts. Grouping by
+ * `outcome` alone shows eleven values where lib/outcomes.ts defines eight,
+ * with nothing to say which are determinations. Group by `resolution_source`.
+ *
+ * ─── Journeys that resolve WITHOUT the seven questions ───
  *
  * The wizard is one route to an answer, not the definition of one. The NSM
  * design doc (2026-09-06-north-star-metric-design.md §1) defines a claim-ready
@@ -217,6 +239,7 @@ export function Analytics() {
       track("actionable_result_viewed", {
         outcome: outcome.id,
         outcome_type: outcome.id === "unknown-nominee" ? "information_required" : "claim_route",
+        resolution_source: "verdict",
       });
       // Switching to the five-line version is a costly, deliberate act --
       // you do it because you are about to stand at a counter. Counts
@@ -241,7 +264,11 @@ export function Analytics() {
       // reach a claim route (a will, a restriction, a dispute flag, or an
       // unknown bank type/amount still needs confirming), but the page
       // still resolves a concrete next action -- go find out X.
-      track("actionable_result_viewed", { outcome: "needs-review", outcome_type: "information_required" });
+      track("actionable_result_viewed", {
+        outcome: "needs-review",
+        outcome_type: "information_required",
+        resolution_source: "review",
+      });
       return;
     }
 
@@ -253,6 +280,7 @@ export function Analytics() {
       track("actionable_result_viewed", {
         outcome: situation.outcome,
         outcome_type: situation.outcome_type,
+        resolution_source: "situation",
       });
     }
 

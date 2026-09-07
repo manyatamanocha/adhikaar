@@ -163,6 +163,31 @@ export async function GET() {
       .map((e) => String(e.properties["distinct_id"] ?? "")),
   ).size;
 
+  // Which of the three senses of "outcome" each claim-ready journey came from.
+  //
+  // Without this the North Star is a single number mixing legal determinations
+  // with situation-branch resolutions, and the §14 warning that part of its
+  // rise is definitional cannot be checked by anyone reading it -- which is
+  // this endpoint's entire reason for existing (see the header: the constraint
+  // is access, not analysis).
+  //
+  // Counted as DISTINCT JOURNEYS, like claimReadyJourneys. A journey that
+  // resolved twice by different routes -- a situation branch and then a
+  // verdict -- is counted under both, so these can sum to MORE than
+  // claimReadyJourneys. They are a decomposition of where answers come from,
+  // not mutually exclusive buckets.
+  //
+  // "unattributed" is every event recorded before 7 Sep 2026, when the
+  // property did not exist. It is not a fourth kind and will not grow.
+  const bySource: Record<string, Set<string>> = {};
+  for (const e of of("actionable_result_viewed")) {
+    const s = String(e.properties["resolution_source"] ?? "unattributed");
+    (bySource[s] ??= new Set()).add(String(e.properties["distinct_id"] ?? ""));
+  }
+  const claimReadyBySource = Object.fromEntries(
+    Object.entries(bySource).map(([s, ids]) => [s, ids.size]),
+  );
+
   // Per-question drop-off: how many journeys reached each step at all.
   const perStep: Record<string, number> = {};
   for (const e of of("question_answered")) {
@@ -207,6 +232,7 @@ export async function GET() {
       journeyStartRate: rate(started, landing),
       claimReadyJourneyRate: rate(claimReady, started),
       nextStepActionRate: rate(nextStep, claimReady),
+      claimReadyBySource,
     },
     guardrail: {
       honestExitRate: rate(honestExits, outcomeTotal),
