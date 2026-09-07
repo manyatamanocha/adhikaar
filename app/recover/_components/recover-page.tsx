@@ -9,7 +9,6 @@ import { Reveal } from "./reveal";
 import { HomeI18nProvider, useHomeT } from "./home-i18n";
 import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
-import { DOCS_T } from "@/lib/i18n-documents";
 import { ArrowRightIcon } from "./icons";
 
 /**
@@ -111,18 +110,12 @@ function Hero() {
               {t.hero.start}
               <ArrowRightIcon className="h-3 w-3" />
             </Link>
-            {/* Second door, added 6 Sep 2026. Plenty of people arrive wanting
-                only one thing -- the list of papers -- and are not ready to
-                answer seven questions to get it. Deliberately a quieter
-                secondary action, not a second orange button: the claim journey
-                is still the primary path, and /documents ends by offering it. */}
-            <Link
-              href={withLang("/documents", locale)}
-              className="inline-flex items-center gap-1.5 rounded border-2 border-[#16233F]/25 px-5 py-[0.5625rem] text-[0.75rem] font-bold text-[#16233F] transition-colors hover:border-[#16233F]/60 hover:bg-white/60"
-            >
-              {DOCS_T[locale].homeCta}
-              <ArrowRightIcon className="h-3 w-3" />
-            </Link>
+            {/* A second, quieter door to /documents stood here from 6 Sep 2026
+                until 8 Sep, for readers who wanted only the list of papers.
+                Removed on direct instruction: the hero makes one offer now.
+                /documents is not orphaned -- the /start opening screen still
+                carries it as "Need information on documents", one click behind
+                the button above. */}
           </Reveal>
 
         </div>

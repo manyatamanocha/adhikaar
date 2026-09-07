@@ -526,7 +526,12 @@ const en: HomeDict = {
     headline: "Money left behind shouldn't stay lost.",
     sub: "Adhikaar gives families a clear path for claiming a deceased person's bank deposits.",
     subBold: "No Login or Documents Upload Needed",
-    start: "Begin your claim journey today",
+    // Renamed 8 Sep 2026, on direct instruction. Matches the /start opening
+    // screen's own heading, "My Claim Process" (lib/i18n-situations.ts), so
+    // the button and the page it lands on name the same thing. `nav.start`,
+    // `tracker.cta` and `finalCta.cta` still carry the old wording; they
+    // belong to sections this page no longer renders.
+    start: "Start the Claim Process",
     seeHow: "See how it works",
     trustFree: "Free to use",
     trustSecure: "Secure",
@@ -1017,7 +1022,7 @@ const hi: HomeDict = {
     headline: "पीछे छूटा पैसा खोया नहीं रहना चाहिए।",
     sub: "अधिकार परिवारों को दिवंगत परिजन की बैंक जमा पर दावा करने का स्पष्ट रास्ता देता है।",
     subBold: "कोई लॉगिन या दस्तावेज़ अपलोड ज़रूरी नहीं",
-    start: "आज ही अपनी दावा यात्रा शुरू करें",
+    start: "दावा प्रक्रिया शुरू करें",
     seeHow: "देखें यह कैसे काम करता है",
     trustFree: "उपयोग मुफ़्त है",
     trustSecure: "सुरक्षित",
@@ -1508,7 +1513,7 @@ const kn: HomeDict = {
     headline: "ಉಳಿದ ಹಣ ಕಳೆದುಹೋಗಬಾರದು.",
     sub: "ಅಧಿಕಾರ್ ಕುಟುಂಬಗಳಿಗೆ ಮೃತ ವ್ಯಕ್ತಿಯ ಬ್ಯಾಂಕ್ ಠೇವಣಿ ಕ್ಲೈಮ್ ಮಾಡಲು ಸ್ಪಷ್ಟ ಮಾರ್ಗವನ್ನು ನೀಡುತ್ತದೆ.",
     subBold: "ಲಾಗಿನ್ ಅಥವಾ ದಾಖಲೆ ಅಪ್‌ಲೋಡ್ ಅಗತ್ಯವಿಲ್ಲ",
-    start: "ಇಂದೇ ನಿಮ್ಮ ಕ್ಲೈಮ್ ಪ್ರಯಾಣ ಪ್ರಾರಂಭಿಸಿ",
+    start: "ಹಕ್ಕಿನ ಪ್ರಕ್ರಿಯೆ ಪ್ರಾರಂಭಿಸಿ",
     seeHow: "ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ ನೋಡಿ",
     trustFree: "ಬಳಕೆ ಉಚಿತ",
     trustSecure: "ಸುರಕ್ಷಿತ",

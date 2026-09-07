@@ -28,8 +28,6 @@ import type { Locale } from "./i18n";
  */
 
 export type DocsDict = {
-  /** Label for the homepage entry link. */
-  homeCta: string;
   eyebrow: string;
   heading: string;
   sub: string;
@@ -69,7 +67,6 @@ export type DocsDict = {
 };
 
 const en: DocsDict = {
-  homeCta: "See what documents you'll need",
   eyebrow: "Before you go to the branch",
   heading: "What documents will the bank need?",
   sub: "There are two possible lists — one short, one longer. Which one is yours comes down to a single fact: was a nominee, or a surviving joint holder, named on the account?",
@@ -115,7 +112,6 @@ const en: DocsDict = {
 };
 
 const hi: DocsDict = {
-  homeCta: "देखें आपको कौन-से दस्तावेज़ चाहिए होंगे",
   eyebrow: "शाखा जाने से पहले",
   heading: "बैंक को कौन-से दस्तावेज़ चाहिए होंगे?",
   sub: "दो सूचियाँ हो सकती हैं — एक छोटी, एक बड़ी। आपकी कौन-सी है, यह एक बात से तय होता है: क्या खाते में नामांकित व्यक्ति या जीवित संयुक्त धारक दर्ज था?",
@@ -161,7 +157,6 @@ const hi: DocsDict = {
 };
 
 const kn: DocsDict = {
-  homeCta: "ನಿಮಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ ಎಂದು ನೋಡಿ",
   eyebrow: "ಶಾಖೆಗೆ ಹೋಗುವ ಮೊದಲು",
   heading: "ಬ್ಯಾಂಕಿಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ?",
   sub: "ಎರಡು ಪಟ್ಟಿಗಳು ಇರಬಹುದು — ಒಂದು ಚಿಕ್ಕದು, ಒಂದು ದೊಡ್ಡದು. ನಿಮ್ಮದು ಯಾವುದು ಎಂಬುದು ಒಂದೇ ಸಂಗತಿಯಿಂದ ನಿರ್ಧಾರವಾಗುತ್ತದೆ: ಖಾತೆಯಲ್ಲಿ ನಾಮನಿರ್ದೇಶಿತರು ಅಥವಾ ಉಳಿದ ಜಂಟಿ ಖಾತೆದಾರರು ದಾಖಲಾಗಿದ್ದರೇ?",
