@@ -1,7 +1,9 @@
 /**
- * Saathi -- Adhikaar's assistant. The product's first backend endpoint and
- * first network dependency beyond the Mixpanel SDK; everything else on this
- * site is server-rendered with no API routes.
+ * Saathi -- Adhikaar's assistant. Originally the product's first backend
+ * endpoint; /api/events, /api/metrics and /api/admin/login joined it on
+ * 7 Sep 2026 when analytics moved off Mixpanel onto this app's own
+ * first-party pipeline. Every other page on this site is still
+ * server-rendered with no API route of its own.
  *
  * PROVIDER: Groq, not Anthropic. This is a confirmed, explicit user decision
  * (free-tier for this first MVP) recorded in the vault's "landing cleanup

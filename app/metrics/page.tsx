@@ -2,10 +2,11 @@
  * The public metrics page.
  *
  * Deliberately login-free. Every number this product claims about itself
- * should be checkable by the person reading the claim, and Mixpanel's own
- * reports require an account on the project. This page is the answer to
- * "prove it" -- the same reason a metrics view was submitted alongside the
- * previous project's document.
+ * should be checkable by the person reading the claim -- and since 7 Sep
+ * 2026 that number comes straight from Adhikaar's own database, not a
+ * vendor's dashboard that would need a login of its own. This page is the
+ * answer to "prove it" -- the same reason a metrics view was submitted
+ * alongside the previous project's document.
  *
  * Nothing here is personal data. The route it reads returns aggregate counts
  * only: no identifiers, no URLs, no free text. It cannot leak a family's case

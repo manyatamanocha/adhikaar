@@ -103,7 +103,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         */}
         {/* Reads route changes to derive events. Suspended so it can never
             hold up the first paint of a page someone is reading at a counter,
-            and a no-op entirely when no Mixpanel token is configured. */}
+            and a no-op entirely on localhost (lib/analytics.ts's
+            isLocalDev()) or if /api/events itself is unreachable. */}
         <Suspense fallback={null}>
           <Analytics />
         </Suspense>

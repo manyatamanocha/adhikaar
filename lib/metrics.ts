@@ -155,9 +155,11 @@ export function aggregate(real: MixpanelEvent[], nowMs: number = Date.now()) {
 
   // ── Efficiency: Median Time to Resolution ──
   //
-  // No new instrumentation: Mixpanel stamps `time` on every event, so this is
-  // the gap between a journey's first start and its first resolution. Journeys
-  // missing either end are skipped rather than counted as zero.
+  // No new instrumentation: every event already carries a `time` property
+  // (mapRowsToEvents, lib/events.ts, stamps it from Supabase's created_at),
+  // so this is the gap between a journey's first start and its first
+  // resolution. Journeys missing either end are skipped rather than counted
+  // as zero.
   const firstAt = (name: string) => {
     const m = new Map<string, number>();
     for (const e of of(name)) {
