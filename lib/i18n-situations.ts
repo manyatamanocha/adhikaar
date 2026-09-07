@@ -110,7 +110,7 @@ const en: SituationsDict = {
   eyebrow: "Where to start",
   groupSpoken: "You have spoken to the bank",
   groupNotYet: "You have not been to the bank yet",
-  heading: "My Claim Journey",
+  heading: "My Claim Process",
   // "Not started the claim" is now framed as not knowing the PROCESS -- same
   // destination, the full wizard -- and repurposed for "don't know from where
   // to start" (unchanged: /start/find, the money-finding branch).
@@ -201,7 +201,7 @@ const hi: SituationsDict = {
   eyebrow: "कहाँ से शुरू करें",
   groupSpoken: "आप बैंक जा चुके हैं",
   groupNotYet: "आप अभी बैंक नहीं गए हैं",
-  heading: "मेरी दावा यात्रा",
+  heading: "मेरी दावा प्रक्रिया",
   notStarted: {
     label: "मुझे प्रक्रिया नहीं पता",
     detail: "आप अभी बैंक नहीं गए हैं, और आगे क्या होगा यह पक्का नहीं है।",
@@ -282,7 +282,7 @@ const kn: SituationsDict = {
   eyebrow: "ಎಲ್ಲಿಂದ ಪ್ರಾರಂಭಿಸಬೇಕು",
   groupSpoken: "ನೀವು ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿದ್ದೀರಿ",
   groupNotYet: "ನೀವು ಇನ್ನೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ",
-  heading: "ನನ್ನ ಹಕ್ಕಿನ ಪಯಣ",
+  heading: "ನನ್ನ ಹಕ್ಕಿನ ಪ್ರಕ್ರಿಯೆ",
   notStarted: {
     label: "ಪ್ರಕ್ರಿಯೆ ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
     detail: "ನೀವು ಇನ್ನೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ, ಮತ್ತು ಮುಂದೆ ಏನಾಗುತ್ತದೆ ಎಂದು ಖಚಿತವಿಲ್ಲ.",
