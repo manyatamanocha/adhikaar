@@ -10,10 +10,11 @@
  * so validation in parseAnswers() checks against the English set only.
  * Unchecked by a native speaker, same as the rest of the site.
  */
+import { BANKS } from "./banks";
 import type { Locale } from "./i18n";
 import type { OutcomeId } from "./outcomes";
 
-export type QuestionId = "claiming" | "court" | "nominee" | "will" | "heirs" | "bankType" | "amount";
+export type QuestionId = "claiming" | "court" | "nominee" | "will" | "heirs" | "bankType" | "amount" | "bank";
 export type Answers = Partial<{
   // "locker", "pension" and "minor" were members here until 7 Sep 2026 and
   // were never reachable: no option offered them and parseAnswers rejects any
@@ -28,6 +29,15 @@ export type Answers = Partial<{
   heirs: "agree" | "dispute" | "unknown";
   bankType: "commercial" | "cooperative" | "unknown";
   amount: "under" | "equal" | "over" | "unknown";
+  /**
+   * WHICH bank, by id from lib/banks.ts — or "other" for one we hold no
+   * verified row for. A free string rather than a literal union because the
+   * option list is generated from BANKS: adding a bank to the table must not
+   * mean editing a type here as well.
+   *
+   * Not a member of QUESTION_ORDER. See BANK_QUESTION below.
+   */
+  bank: string;
 }>;
 export type Option = { value: string; label: string; detail?: string; unsure?: boolean };
 export type Question = { id: QuestionId; number: number; prompt: string; help: string; options: Option[] };
@@ -85,7 +95,31 @@ export function parseEntry(raw: string | string[] | undefined): Entry | undefine
  * on the no-nominee path too. The two must always agree.
  */
 export const QUESTION_ORDER: QuestionId[] = ["claiming", "nominee", "court", "heirs", "will", "bankType", "amount"];
-export const TOTAL_QUESTIONS = QUESTION_ORDER.length;
+
+/**
+ * Which bank — asked last, and deliberately NOT a member of QUESTION_ORDER.
+ *
+ * bank-panel.tsx has always stated the rule this implements: the bank "is the
+ * reason the bank is asked last rather than first: it changes the evidence,
+ * never the verdict." So resolve() decides the outcome on the seven facts
+ * above and only then asks which bank it is, which means:
+ *
+ *   · every path asks it, including the ones that short-circuit at question
+ *     two (a registered nominee resolves under para 9 without ever reaching
+ *     bankType or amount), and
+ *   · no answer to it can move a reader to a different verdict. If it could,
+ *     a bank's own published policy would be deciding what the RBI requires,
+ *     which is backwards.
+ *
+ * It stays out of QUESTION_ORDER because answeredPrefix() reads a CONTIGUOUS
+ * prefix of that array: on the nominee path bankType and amount are never
+ * answered, so a bank answer sitting after them would fall outside the prefix
+ * and silently break Back, the progress counter and the analytics step number.
+ * parseAnswers, toQuery and previousAnswers therefore handle it by name.
+ */
+export const BANK_QUESTION: QuestionId = "bank";
+const ALL_QUESTION_IDS: QuestionId[] = [...QUESTION_ORDER, BANK_QUESTION];
+export const TOTAL_QUESTIONS = ALL_QUESTION_IDS.length;
 
 /**
  * How many questions this journey can still ask, at worst, from here.
@@ -117,6 +151,25 @@ export function maxRemainingQuestions(a: Answers, entry?: Entry): number {
 }
 
 const unknownEn: Option = { value: "unknown", label: "I don't know yet", unsure: true };
+
+/**
+ * The bank list, as options, generated from lib/banks.ts.
+ *
+ * Bank names are proper nouns and are not translated — only the "some other
+ * bank" escape is. Generated rather than written out three times so that
+ * adding a verified row to BANKS puts it in front of readers in all three
+ * languages without anyone remembering to.
+ *
+ * "other" is a real answer, not a refusal: it is what a co-operative bank or
+ * any of the ~1,500 banks outside our table gets, and it means the verdict
+ * shows the RBI rules alone rather than a guess at that bank's practice.
+ */
+function bankOptions(otherLabel: string, otherDetail: string): Option[] {
+  return [
+    ...BANKS.map((b) => ({ value: b.id, label: b.name, detail: b.short })),
+    { value: "other", label: otherLabel, detail: otherDetail, unsure: true },
+  ];
+}
 
 const en: Record<QuestionId, Question> = {
   claiming: {
@@ -173,6 +226,14 @@ const en: Record<QuestionId, Question> = {
     help: "Add all of this person's accounts at this bank, including interest. Money at another bank is counted separately.",
     options: [{ value: "under", label: "Below the threshold" }, { value: "equal", label: "Exactly at the threshold" }, { value: "over", label: "Above the threshold" }, unknownEn],
   },
+  bank: {
+    id: "bank", number: 8, prompt: "Which bank is the money at?",
+    help: "This does not change your result. It adds what your own bank has already published, in its own words — which is harder to argue with at a counter than a rule the officer has not read.",
+    options: bankOptions(
+      "Another bank, or I'm not sure",
+      "You will get the RBI rules, which apply to every bank.",
+    ),
+  },
 };
 
 const unknownHi: Option = { value: "unknown", label: "मुझे अभी नहीं पता", unsure: true };
@@ -219,6 +280,14 @@ const hi: Record<QuestionId, Question> = {
     id: "amount", number: 7, prompt: "इस बैंक में कुल मिलाकर कितना पैसा है?",
     help: "इस बैंक में व्यक्ति के सभी खातों को ब्याज सहित जोड़ें। किसी अन्य बैंक का पैसा अलग से गिना जाता है।",
     options: [{ value: "under", label: "सीमा से कम" }, { value: "equal", label: "ठीक सीमा के बराबर" }, { value: "over", label: "सीमा से ज़्यादा" }, unknownHi],
+  },
+  bank: {
+    id: "bank", number: 8, prompt: "पैसा किस बैंक में है?",
+    help: "इससे आपका नतीजा नहीं बदलता। यह आपके अपने बैंक की प्रकाशित नीति, उसी के शब्दों में, साथ जोड़ देता है — काउंटर पर उसे नकारना उस नियम से कहीं मुश्किल है जो अधिकारी ने पढ़ा ही न हो।",
+    options: bankOptions(
+      "कोई और बैंक, या मुझे ठीक से नहीं पता",
+      "आपको आरबीआई के नियम मिलेंगे, जो हर बैंक पर लागू होते हैं।",
+    ),
   },
 };
 
@@ -267,6 +336,14 @@ const kn: Record<QuestionId, Question> = {
     help: "ಈ ಬ್ಯಾಂಕಿನಲ್ಲಿರುವ ಈ ವ್ಯಕ್ತಿಯ ಎಲ್ಲಾ ಖಾತೆಗಳನ್ನು ಬಡ್ಡಿ ಸೇರಿಸಿ ಒಟ್ಟುಗೂಡಿಸಿ. ಬೇರೆ ಬ್ಯಾಂಕಿನ ಹಣವನ್ನು ಪ್ರತ್ಯೇಕವಾಗಿ ಎಣಿಸಲಾಗುತ್ತದೆ.",
     options: [{ value: "under", label: "ಮಿತಿಗಿಂತ ಕಡಿಮೆ" }, { value: "equal", label: "ಮಿತಿಗೆ ಸರಿಯಾಗಿ ಸಮ" }, { value: "over", label: "ಮಿತಿಗಿಂತ ಹೆಚ್ಚು" }, unknownKn],
   },
+  bank: {
+    id: "bank", number: 8, prompt: "ಹಣ ಯಾವ ಬ್ಯಾಂಕಿನಲ್ಲಿದೆ?",
+    help: "ಇದು ನಿಮ್ಮ ಫಲಿತಾಂಶವನ್ನು ಬದಲಾಯಿಸುವುದಿಲ್ಲ. ನಿಮ್ಮ ಸ್ವಂತ ಬ್ಯಾಂಕ್ ಈಗಾಗಲೇ ಪ್ರಕಟಿಸಿರುವುದನ್ನು, ಅದರದೇ ಮಾತುಗಳಲ್ಲಿ ಸೇರಿಸುತ್ತದೆ — ಅಧಿಕಾರಿ ಓದದ ನಿಯಮಕ್ಕಿಂತ ಅದನ್ನು ಕೌಂಟರ್‌ನಲ್ಲಿ ಅಲ್ಲಗಳೆಯುವುದು ಕಷ್ಟ.",
+    options: bankOptions(
+      "ಬೇರೆ ಬ್ಯಾಂಕ್, ಅಥವಾ ನನಗೆ ಖಚಿತವಿಲ್ಲ",
+      "ಪ್ರತಿ ಬ್ಯಾಂಕಿಗೂ ಅನ್ವಯಿಸುವ ಆರ್‌ಬಿಐ ನಿಯಮಗಳು ನಿಮಗೆ ಸಿಗುತ್ತವೆ.",
+    ),
+  },
 };
 
 export const QUESTIONS_BY_LOCALE: Record<Locale, Record<QuestionId, Question>> = { en, hi, kn };
@@ -312,7 +389,20 @@ export type Resolution =
 export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resolution {
   const ask = (id: QuestionId): Resolution => ({ kind: "question", question: questionFor(id, a, locale) });
   const review = (): Resolution => ({ kind: "review", carry: a });
-  const done = (outcome: OutcomeId): Resolution => ({ kind: "outcome", outcome, carry: a });
+  const done = (outcome: OutcomeId): Resolution => {
+    // The last question, and the only one asked AFTER the verdict is settled.
+    // `outcome` is already decided at this point and is passed through
+    // untouched whatever the reader answers -- see BANK_QUESTION.
+    //
+    // Not asked when it could only waste a screen:
+    //   · out-of-scope is not a bank-deposit claim at all, so no bank's
+    //     deposit policy applies to it, and
+    //   · every row in BANKS is a commercial bank, so a reader who has
+    //     already said "a co-operative bank" would be picking from a list
+    //     that cannot contain theirs.
+    if (!a.bank && outcome !== "out-of-scope" && a.bankType !== "cooperative") return ask("bank");
+    return { kind: "outcome", outcome, carry: a };
+  };
   if (!a.claiming) return ask("claiming");
   // deposit-fd and deposit-both are no longer offered as answers (question one
   // collapsed to a single deposit option on 7 Sep 2026) but are still honoured
@@ -347,17 +437,16 @@ export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resol
   // must not be read as a restriction, and must not be read as its absence
   // either.
   if (a.court && a.court !== "no") return review();
-  // 🔴 Asked on EVERY path, including nominee and survivorship -- closed 7 Sep
+  // 🔴 Asked on EVERY path, including nominee and survivorship — closed 7 Sep
   // 2026. It used to be asked only after the nominee short-circuit had already
-  // returned a verdict, which meant a registered nominee whose family is
-  // contesting the money reached "no succession certificate needed, whatever
-  // the amount" without ever being asked about the contest. Para 11(b)
-  // overrides para 9: where there are "contesting claims or dispute amongst
-  // the legal heir(s)" the bank requires probate, a letter of administration,
-  // a succession certificate or a court order. The verdict page carried
-  // DISPUTE_CAVEAT as a hard box throughout, so nobody was left without the
-  // warning -- but the headline was wrong for that reader, which is the part
-  // that gets read.
+  // been passed, which meant a registered nominee whose family is contesting
+  // the money reached "no succession certificate needed, whatever the amount"
+  // without ever being asked about the contest. Para 11(b) overrides para 9:
+  // where there are "contesting claims or dispute amongst the legal heir(s)"
+  // the bank requires probate, a letter of administration, a succession
+  // certificate or a court order. The verdict page carried DISPUTE_CAVEAT as a
+  // hard box throughout, so nobody was left without the warning — but the
+  // headline was wrong for that reader, which is the part that gets read.
   if (!a.heirs) return ask("heirs");
   // A dispute with no nominee is the /dispute page's own case. With a nominee
   // it is not: para 9 may still oblige the bank to pay the nominee, who then
@@ -404,7 +493,7 @@ const RETIRED_VALUES: Partial<Record<QuestionId, readonly string[]>> = {
 };
 export function parseAnswers(sp: Record<string, string | string[] | undefined>): Answers {
   const a: Answers = {};
-  for (const id of QUESTION_ORDER) {
+  for (const id of ALL_QUESTION_IDS) {
     const raw = sp[id];
     const v = Array.isArray(raw) ? raw[0] : raw;
     const known = QUESTIONS[id]?.options.some(o => o.value === v) || RETIRED_VALUES[id]?.includes(v!);
@@ -414,11 +503,23 @@ export function parseAnswers(sp: Record<string, string | string[] | undefined>):
 }
 export function toQuery(a: Answers): string {
   const q = new URLSearchParams();
-  for (const id of QUESTION_ORDER) if (a[id]) q.set(id, a[id]!);
+  // ALL_QUESTION_IDS, so `bank` rides in the query string like every other
+  // answer. That is what carries it onto the verdict, the printed sheet,
+  // /what-were-you-asked-for and /bank-refused without any of them being
+  // taught about it separately -- and `bank` is the parameter name those
+  // pages already read.
+  for (const id of ALL_QUESTION_IDS) if (a[id]) q.set(id, a[id]!);
   return q.size ? `?${q}` : "";
 }
 /** Changing an earlier answer invalidates later facts (especially bank/amount). */
 export function answerQuestion(a: Answers, id: QuestionId, value: string): Answers {
+  // The bank invalidates nothing: it is asked after the verdict is settled and
+  // changes only the evidence shown beside it. Re-answering it (tapping a
+  // different bank on the verdict page) therefore replaces just this field and
+  // leaves every fact answer standing. It is also not in QUESTION_ORDER, so
+  // the slice below would read indexOf() === -1 and silently drop the reader's
+  // last real answer.
+  if (id === BANK_QUESTION) return parseAnswers({ ...a, bank: value });
   // Filling a missing court check must not erase a scenario's known dispute
   // or nominee. Bank/amount is different: a new bank type invalidates a
   // previously selected numeric category, including old bookmarked URLs.
@@ -427,6 +528,13 @@ export function answerQuestion(a: Answers, id: QuestionId, value: string): Answe
   for (const key of QUESTION_ORDER.slice(0, QUESTION_ORDER.indexOf(id))) {
     if (a[key]) Object.assign(next, { [key]: a[key] });
   }
+  // The bank survives a changed fact, because it is not downstream of one --
+  // it names an institution, not a feature of the claim, and making someone
+  // re-pick their own bank because they corrected the nominee answer is pure
+  // friction. The exception is bankType: switching to "a co-operative bank"
+  // contradicts a picked row (every bank in the table is commercial), so that
+  // one drops it and the question is simply not asked again.
+  if (a.bank && id !== "bankType") next.bank = a.bank;
   return parseAnswers({ ...next, [id]: value });
 }
 /**
@@ -482,6 +590,17 @@ export function progressFor(a: Answers, entry?: Entry): { current: number; reach
   };
 }
 export function previousAnswers(a: Answers): Answers | null {
+  // The bank is always the last question asked, so it is always the first
+  // thing Back undoes. Reachable only from a hand-edited URL in practice --
+  // answering it resolves straight to the verdict, which has no Back link --
+  // but without this the reader would be sent back to a fact question while
+  // their bank answer stayed set, and resolve() would bounce them forward
+  // again to the same screen.
+  if (a.bank) {
+    const previous = { ...a };
+    delete previous.bank;
+    return previous;
+  }
   const answered = answeredPrefix(a);
   if (!answered.length) return null;
   const previous = { ...a };

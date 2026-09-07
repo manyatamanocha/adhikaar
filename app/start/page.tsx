@@ -33,6 +33,8 @@ import {
   progressFor,
   resolve,
   toQuery,
+  BANK_QUESTION,
+  QUESTION_ORDER,
   type Answers,
   type Entry,
   type Option,
@@ -42,21 +44,6 @@ import {
 export const metadata = {
   title: "Adhikaar — your claim guide",
 };
-
-/**
- * `bank` is deliberately NOT part of Answers/QUESTION_ORDER -- it never
- * changes the verdict logic, only which bank's own published policy is
- * checked against it afterwards (see lib/banks.ts's honesty rule). It rides
- * along on every wizard link the same way `lang` already does via withLang,
- * rather than becoming wizard state resolve() has to reason about.
- */
-function withBank(href: string, bankId: string | undefined): string {
-  if (!bankId) return href;
-  const [path, query] = href.split("?");
-  const q = new URLSearchParams(query ?? "");
-  q.set("bank", bankId);
-  return `${path}?${q}`;
-}
 
 /**
  * `entry` rides along the same way, and for the same reason: it is not an
@@ -85,11 +72,14 @@ export default async function Start({
   const locale = parseLocale(sp.lang);
   const t = HOME_T[locale].startPage;
   const answers = parseAnswers(sp);
-  const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
   const entry = parseEntry(sp.entry);
-  const link = (href: string) => withLang(withEntry(withBank(href, bankId), entry), locale);
+  const link = (href: string) => withLang(withEntry(href, entry), locale);
 
-  const isFresh = Object.values(answers).every((v) => v === undefined);
+  // Over QUESTION_ORDER, not over every field of Answers: `bank` is now an
+  // answer too (see BANK_QUESTION), and a URL carrying nothing but ?bank=sbi
+  // is still a reader who has answered no question at all and belongs on the
+  // situation picker rather than in the middle of the wizard.
+  const isFresh = QUESTION_ORDER.every((id) => answers[id] === undefined);
 
   // A fresh visit meets the five situations, not question one.
   //
@@ -162,18 +152,39 @@ export default async function Start({
             </p>
           )}
 
-          <ul className="mt-7 space-y-3">
-            {question.options.map((option) => (
-              <li key={option.value}>
-                <AnswerLink
-                  question={question}
-                  option={option}
-                  answers={answers}
-                  link={link}
-                />
-              </li>
-            ))}
-          </ul>
+          {/* Nine banks as nine full-height answer cards would be four
+              screens of scrolling on a phone, on the one question whose
+              answer the reader knows instantly and without reading. Named
+              things get a compact list; everything else keeps the cards,
+              where the detail line is doing real work. */}
+          {question.id === BANK_QUESTION ? (
+            <ul className="mt-7 grid gap-2.5 sm:grid-cols-2">
+              {question.options.map((option) => (
+                <li key={option.value}>
+                  <AnswerLink
+                    question={question}
+                    option={option}
+                    answers={answers}
+                    link={link}
+                    compact
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <ul className="mt-7 space-y-3">
+              {question.options.map((option) => (
+                <li key={option.value}>
+                  <AnswerLink
+                    question={question}
+                    option={option}
+                    answers={answers}
+                    link={link}
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
 
           <div className="mt-8 border-t border-rule-faint pt-5">
             {/* Precise, because it has to be. The answers are not stored and
@@ -504,17 +515,41 @@ function AnswerLink({
   option,
   answers,
   link,
+  compact = false,
 }: {
   question: Question;
   option: Option;
   answers: Answers;
-  /** Carries lang, bank and entry onto the next question. */
+  /** Carries lang and entry onto the next question. */
   link: (href: string) => string;
+  /** Tighter padding and no detail line — for a list of named things. */
+  compact?: boolean;
 }) {
   const next = answerQuestion(answers, question.id, option.value);
   const accent = option.unsure
     ? "border-accent-violet hover:shadow-[0_6px_24px_rgba(91,75,155,0.16)]"
     : "border-rule hover:border-indigo hover:shadow-[0_6px_24px_rgba(45,48,121,0.12)]";
+
+  if (compact) {
+    return (
+      <Link
+        href={link(`/start${toQuery(next)}`)}
+        className={`flex min-h-14 items-center justify-between gap-3 rounded-xl border-2 bg-white px-5 py-3.5 transition-all ${accent}`}
+      >
+        <span className="text-[1.0625rem] font-bold text-indigo-ink">
+          {option.label}
+        </span>
+        <span
+          aria-hidden="true"
+          className={`shrink-0 text-[1.125rem] font-bold ${
+            option.unsure ? "text-accent-violet" : "text-saffron-ink"
+          }`}
+        >
+          &rarr;
+        </span>
+      </Link>
+    );
+  }
 
   return (
     <Link

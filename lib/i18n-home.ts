@@ -338,6 +338,27 @@ export type HomeDict = {
     bankPickerBody: string;
     bankPickerAnotherBank: string;
     bankPickerSeeWhatWeHave: string;
+    /**
+     * The plain-language bank box at the top of the verdict.
+     *
+     * Deliberately separate from the bankPanel* strings below it, which are
+     * field labels for a reference table. These are whole sentences a reader
+     * can act on without decoding a label, and each one is built only from a
+     * NON-NULL field of lib/banks.ts — a null produces no sentence at all
+     * rather than a hedge, so the box never pads itself out with what we
+     * could not verify.
+     */
+    bankBoxEyebrow: string;
+    bankBoxNoSurety: (bankShort: string, limit: string) => string;
+    bankBoxSuretyAbove: (bankShort: string, limit: string) => string;
+    bankBoxLimitOnly: (bankShort: string, limit: string) => string;
+    bankBoxNoLimit: (bankShort: string) => string;
+    bankBoxForms: (bankShort: string, forms: string) => string;
+    bankBoxTurnaround: (bankShort: string, turnaround: string) => string;
+    bankBoxMoreDetails: (bankShort: string) => string;
+    bankBoxHide: string;
+    bankBoxChange: string;
+    bankBoxOtherBody: string;
     counterShorter: string;
     yourNextSteps: string;
     todayHeading: string;
@@ -786,7 +807,7 @@ const en: HomeDict = {
     bankPanelStaleBody: "This policy may have changed. Confirm with the bank before relying on it.",
     bankPanelConflictHeading: (bankShort) => `A documented gap between ${bankShort}'s policy and its branch practice`,
     bankGapHeading: (bankShort) => `${bankShort} may ask for more than the RBI rule requires`,
-    bankGapSeeDetail: "Full details below, under “More detail.”",
+    bankGapSeeDetail: "Full details above, under “More details.”",
     bankPanelThresholdLabel: (bankShort) => `${bankShort}'s own threshold`,
     bankPanelSuretyLabel: "Third-party surety below it",
     bankPanelSuretyNotRequired: "Says it is not to be insisted on",
@@ -808,6 +829,23 @@ const en: HomeDict = {
     bankPickerBody: "The answer above is the same at every commercial bank — that is what the RBI's Directions do. What changes is the evidence: we will add your bank's own published words to this page, so the officer is reading their employer, not us.",
     bankPickerAnotherBank: "Another bank? The RBI's rule above applies to it just the same. We have only compiled eight so far —",
     bankPickerSeeWhatWeHave: "see what we have and how it was checked",
+    bankBoxEyebrow: "Your bank",
+    bankBoxNoSurety: (bankShort, limit) =>
+      `${bankShort} says it settles these claims up to ${limit} without asking for a guarantor.`,
+    bankBoxSuretyAbove: (bankShort, limit) =>
+      `${bankShort} says a guarantor is required above ${limit}.`,
+    bankBoxLimitOnly: (bankShort, limit) =>
+      `${bankShort} publishes a limit of ${limit}. It has not said whether a guarantor is needed below it.`,
+    bankBoxNoLimit: (bankShort) =>
+      `${bankShort} has not published a limit of its own. The RBI's applies — ask the branch to confirm it in writing.`,
+    bankBoxForms: (bankShort, forms) => `Ask for the form ${bankShort} calls ${forms}.`,
+    bankBoxTurnaround: (bankShort, turnaround) =>
+      `${bankShort} says it settles a completed claim in ${turnaround}.`,
+    bankBoxMoreDetails: (bankShort) => `More details about ${bankShort}`,
+    bankBoxHide: "Hide",
+    bankBoxChange: "Not your bank?",
+    bankBoxOtherBody:
+      "We have no verified policy for that bank. Everything below is the RBI rule, which binds it the same as any other. If yours is in the list, tapping it adds its own published words to this page.",
     counterShorter: "At the counter now? Shorter version",
     yourNextSteps: "Your next steps",
     todayHeading: "What should you do today?",
@@ -1259,7 +1297,7 @@ const hi: HomeDict = {
     bankPanelStaleBody: "यह नीति बदल गई हो सकती है। इस पर भरोसा करने से पहले बैंक से पुष्टि करें।",
     bankPanelConflictHeading: (bankShort) => `${bankShort} की नीति और उसकी शाखा व्यवहार के बीच एक दर्ज अंतर`,
     bankGapHeading: (bankShort) => `${bankShort} RBI के नियम से ज़्यादा मांग सकता है`,
-    bankGapSeeDetail: "पूरी जानकारी नीचे “और विवरण” में।",
+    bankGapSeeDetail: "पूरी जानकारी ऊपर “और विवरण” में।",
     bankPanelThresholdLabel: (bankShort) => `${bankShort} की अपनी सीमा`,
     bankPanelSuretyLabel: "उससे नीचे तीसरे पक्ष की ज़मानत",
     bankPanelSuretyNotRequired: "कहता है कि इस पर ज़ोर नहीं दिया जाना चाहिए",
@@ -1281,6 +1319,23 @@ const hi: HomeDict = {
     bankPickerBody: "ऊपर दिया जवाब हर वाणिज्यिक बैंक में एक जैसा है — यही RBI के निर्देश करते हैं। जो बदलता है वह है सबूत: हम आपके बैंक के अपने प्रकाशित शब्द इस पन्ने में जोड़ेंगे, ताकि अधिकारी हमें नहीं, अपने नियोक्ता को पढ़ रहा हो।",
     bankPickerAnotherBank: "कोई अलग बैंक? ऊपर का RBI नियम उस पर भी वैसे ही लागू होता है। हमने अभी तक सिर्फ़ आठ जोड़े हैं —",
     bankPickerSeeWhatWeHave: "देखें हमारे पास क्या है और कैसे जाँचा गया",
+    bankBoxEyebrow: "आपका बैंक",
+    bankBoxNoSurety: (bankShort, limit) =>
+      `${bankShort} कहता है कि वह ${limit} तक के ऐसे दावे बिना ज़मानतदार माँगे निपटाता है।`,
+    bankBoxSuretyAbove: (bankShort, limit) =>
+      `${bankShort} कहता है कि ${limit} से ऊपर ज़मानतदार ज़रूरी है।`,
+    bankBoxLimitOnly: (bankShort, limit) =>
+      `${bankShort} ने ${limit} की सीमा प्रकाशित की है। उसने यह नहीं बताया कि इससे नीचे ज़मानतदार चाहिए या नहीं।`,
+    bankBoxNoLimit: (bankShort) =>
+      `${bankShort} ने अपनी कोई सीमा प्रकाशित नहीं की है। आरबीआई की सीमा लागू होती है — शाखा से लिखित में पुष्टि करने को कहें।`,
+    bankBoxForms: (bankShort, forms) => `वह फ़ॉर्म माँगें जिसे ${bankShort} ${forms} कहता है।`,
+    bankBoxTurnaround: (bankShort, turnaround) =>
+      `${bankShort} कहता है कि पूरा दावा वह ${turnaround} में निपटाता है।`,
+    bankBoxMoreDetails: (bankShort) => `${bankShort} के बारे में और विवरण`,
+    bankBoxHide: "छिपाएँ",
+    bankBoxChange: "आपका बैंक यह नहीं है?",
+    bankBoxOtherBody:
+      "उस बैंक की कोई जाँची हुई नीति हमारे पास नहीं है। नीचे जो कुछ है वह आरबीआई का नियम है, जो उस पर भी उतना ही लागू होता है। अगर आपका बैंक सूची में है, तो उसे चुनने पर उसके अपने प्रकाशित शब्द इस पन्ने में जुड़ जाएँगे।",
     counterShorter: "अभी काउंटर पर हैं? छोटा संस्करण",
     yourNextSteps: "आपके अगले कदम",
     todayHeading: "आज आपको क्या करना चाहिए?",
@@ -1732,7 +1787,7 @@ const kn: HomeDict = {
     bankPanelStaleBody: "ಈ ನೀತಿ ಬದಲಾಗಿರಬಹುದು. ಇದನ್ನು ಅವಲಂಬಿಸುವ ಮೊದಲು ಬ್ಯಾಂಕಿನೊಂದಿಗೆ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",
     bankPanelConflictHeading: (bankShort) => `${bankShort} ಯ ನೀತಿ ಮತ್ತು ಅದರ ಶಾಖಾ ಆಚರಣೆಯ ನಡುವಿನ ದಾಖಲಿತ ಅಂತರ`,
     bankGapHeading: (bankShort) => `${bankShort} RBI ನಿಯಮಕ್ಕಿಂತ ಹೆಚ್ಚಿನದನ್ನು ಕೇಳಬಹುದು`,
-    bankGapSeeDetail: "ಪೂರ್ಣ ವಿವರ ಕೆಳಗೆ “ಹೆಚ್ಚಿನ ವಿವರ”ದಲ್ಲಿ.",
+    bankGapSeeDetail: "ಪೂರ್ಣ ವಿವರ ಮೇಲೆ “ಹೆಚ್ಚಿನ ವಿವರ”ದಲ್ಲಿ.",
     bankPanelThresholdLabel: (bankShort) => `${bankShort} ಯ ಸ್ವಂತ ಮಿತಿ`,
     bankPanelSuretyLabel: "ಅದಕ್ಕಿಂತ ಕೆಳಗೆ ಮೂರನೇ ವ್ಯಕ್ತಿ ಜಾಮೀನು",
     bankPanelSuretyNotRequired: "ಇದನ್ನು ಒತ್ತಾಯಿಸಬಾರದು ಎಂದು ಹೇಳುತ್ತದೆ",
@@ -1754,6 +1809,23 @@ const kn: HomeDict = {
     bankPickerBody: "ಮೇಲಿನ ಉತ್ತರ ಪ್ರತಿ ವಾಣಿಜ್ಯ ಬ್ಯಾಂಕಿನಲ್ಲೂ ಒಂದೇ — ಇದೇ RBI ಯ ನಿರ್ದೇಶನಗಳು ಮಾಡುತ್ತವೆ. ಬದಲಾಗುವುದು ಸಾಕ್ಷ್ಯ: ನಾವು ನಿಮ್ಮ ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಪ್ರಕಟಿತ ಪದಗಳನ್ನು ಈ ಪುಟಕ್ಕೆ ಸೇರಿಸುತ್ತೇವೆ, ಇದರಿಂದ ಅಧಿಕಾರಿ ನಮ್ಮನ್ನಲ್ಲ, ತಮ್ಮ ಉದ್ಯೋಗದಾತರನ್ನು ಓದುತ್ತಿದ್ದಾರೆ.",
     bankPickerAnotherBank: "ಬೇರೆ ಬ್ಯಾಂಕ್? ಮೇಲಿನ RBI ನಿಯಮ ಅದಕ್ಕೂ ಅದೇ ರೀತಿ ಅನ್ವಯಿಸುತ್ತದೆ. ನಾವು ಇದುವರೆಗೆ ಎಂಟನ್ನು ಮಾತ್ರ ಸಂಗ್ರಹಿಸಿದ್ದೇವೆ —",
     bankPickerSeeWhatWeHave: "ನಮ್ಮ ಬಳಿ ಏನಿದೆ ಮತ್ತು ಅದನ್ನು ಹೇಗೆ ಪರಿಶೀಲಿಸಲಾಗಿದೆ ಎಂದು ನೋಡಿ",
+    bankBoxEyebrow: "ನಿಮ್ಮ ಬ್ಯಾಂಕ್",
+    bankBoxNoSurety: (bankShort, limit) =>
+      `${limit} ವರೆಗಿನ ಇಂತಹ ಹಕ್ಕುಗಳನ್ನು ಜಾಮೀನುದಾರರನ್ನು ಕೇಳದೆ ಇತ್ಯರ್ಥಪಡಿಸುವುದಾಗಿ ${bankShort} ಹೇಳುತ್ತದೆ.`,
+    bankBoxSuretyAbove: (bankShort, limit) =>
+      `${limit} ಮೇಲ್ಪಟ್ಟು ಜಾಮೀನುದಾರರು ಬೇಕು ಎಂದು ${bankShort} ಹೇಳುತ್ತದೆ.`,
+    bankBoxLimitOnly: (bankShort, limit) =>
+      `${bankShort} ${limit} ಮಿತಿಯನ್ನು ಪ್ರಕಟಿಸಿದೆ. ಅದಕ್ಕಿಂತ ಕಡಿಮೆಗೆ ಜಾಮೀನುದಾರರು ಬೇಕೇ ಎಂಬುದನ್ನು ಅದು ಹೇಳಿಲ್ಲ.`,
+    bankBoxNoLimit: (bankShort) =>
+      `${bankShort} ತನ್ನದೇ ಮಿತಿಯನ್ನು ಪ್ರಕಟಿಸಿಲ್ಲ. ಆರ್‌ಬಿಐ ಮಿತಿ ಅನ್ವಯಿಸುತ್ತದೆ — ಶಾಖೆಯಿಂದ ಲಿಖಿತವಾಗಿ ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.`,
+    bankBoxForms: (bankShort, forms) => `${bankShort} ${forms} ಎಂದು ಕರೆಯುವ ಫಾರ್ಮ್ ಕೇಳಿ.`,
+    bankBoxTurnaround: (bankShort, turnaround) =>
+      `ಪೂರ್ಣಗೊಂಡ ಹಕ್ಕನ್ನು ${turnaround} ಒಳಗೆ ಇತ್ಯರ್ಥಪಡಿಸುವುದಾಗಿ ${bankShort} ಹೇಳುತ್ತದೆ.`,
+    bankBoxMoreDetails: (bankShort) => `${bankShort} ಬಗ್ಗೆ ಹೆಚ್ಚಿನ ವಿವರ`,
+    bankBoxHide: "ಮರೆಮಾಡಿ",
+    bankBoxChange: "ಇದು ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಅಲ್ಲವೇ?",
+    bankBoxOtherBody:
+      "ಆ ಬ್ಯಾಂಕಿನ ಪರಿಶೀಲಿಸಿದ ನೀತಿ ನಮ್ಮ ಬಳಿ ಇಲ್ಲ. ಕೆಳಗಿನದೆಲ್ಲವೂ ಆರ್‌ಬಿಐ ನಿಯಮ, ಅದು ಆ ಬ್ಯಾಂಕಿಗೂ ಅಷ್ಟೇ ಅನ್ವಯಿಸುತ್ತದೆ. ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಪಟ್ಟಿಯಲ್ಲಿದ್ದರೆ, ಅದನ್ನು ಆಯ್ಕೆಮಾಡಿದರೆ ಅದರ ಸ್ವಂತ ಪ್ರಕಟಿತ ಮಾತುಗಳು ಈ ಪುಟಕ್ಕೆ ಸೇರುತ್ತವೆ.",
     counterShorter: "ಈಗ ಕೌಂಟರ್‌ನಲ್ಲಿದ್ದೀರಾ? ಚಿಕ್ಕ ಆವೃತ್ತಿ",
     yourNextSteps: "ನಿಮ್ಮ ಮುಂದಿನ ಹೆಜ್ಜೆಗಳು",
     todayHeading: "ಇಂದು ನೀವು ಏನು ಮಾಡಬೇಕು?",

@@ -33,8 +33,8 @@ import { formatDate } from "./bank-panel";
 import { DOCUMENTS, documentText, type DocId } from "@/lib/documents";
 import { OUTCOMES, outcomeText, type OutcomeId, type Outcome } from "@/lib/outcomes";
 import { parseHave, readiness, toggleHave } from "@/lib/readiness";
-import { parseAnswers, parseEntry, resolve, toQuery, type Answers } from "@/lib/wizard";
-import { BankPanel } from "./bank-panel";
+import { parseAnswers, parseEntry, resolve, toQuery, BANK_QUESTION, type Answers } from "@/lib/wizard";
+import { BankBox } from "./bank-panel";
 import { getBank, policyGapNotes } from "@/lib/banks";
 import { DeadlineTracker } from "./deadline-tracker";
 import { BeliefSurvey } from "./belief-survey";
@@ -64,11 +64,25 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
     // and dropping it here would send a "new" reader back to the court
     // question this path deliberately never asks.
     const carry = toQuery(answers) + (entry ? `${toQuery(answers) ? "&" : "?"}entry=${entry}` : "");
-    if (route.kind === "question") redirect(withLang("/start" + carry, locale));
+    // The bank question is the one unanswered question that must NOT bounce a
+    // reader out of their verdict. Every link this product has ever produced
+    // -- bookmarks, WhatsApp messages to a sibling, printed sheets -- carries
+    // answers but no bank, and sending all of them back into the wizard to
+    // collect one they were never asked for would break the thing that makes
+    // a verdict shareable. They get the verdict, with the bank picker sitting
+    // at the top of it. Every other unanswered question is still a real gap
+    // and still redirects.
+    if (route.kind === "question" && route.question.id !== BANK_QUESTION) {
+      redirect(withLang("/start" + carry, locale));
+    }
     if (route.kind === "review") redirect(withLang("/needs-review" + carry, locale));
     if (route.kind === "outcome" && route.outcome !== id) redirect(withLang(OUTCOMES[route.outcome].path + carry, locale));
   }
-  const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
+  // Now an answer like any other (BANK_QUESTION), so it arrives validated
+  // against the bank table and a hand-edited ?bank=anything is dropped rather
+  // than rendered. Old links carrying ?bank= keep working: it is the same
+  // parameter name it always was.
+  const bankId = answers.bank;
 
   // Counter mode: the same URL, one parameter switched, so it stays a real
   // link. Falls back to the full page for out-of-scope, which has no
@@ -119,6 +133,16 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
         <Verdict id={id} answers={answers} bankId={bankId} locale={locale} outcome={outcome} t={t} />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
+          {/* The bank sits at the top, above everything the verdict says
+              next, because it is the one thing on this page that is about
+              the counter the reader is actually going to stand at. It says
+              its piece in sentences and keeps the reference panel behind its
+              own button -- see BankBox. Only on a real journey: a verdict URL
+              opened with no answers is general guidance, and asking it which
+              bank would be asking about a claim nobody has described. */}
+          {hasAnswers && id !== "out-of-scope" && (
+            <BankBox bankId={bankId} hrefFor={hrefFor} t={t} />
+          )}
           <BankGapAlert bankId={bankId} t={t} />
           {courtUnasked && <CourtAssumption answers={answers} locale={locale} t={t} />}
           <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
@@ -147,6 +171,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               hrefFor={haveHrefFor}
               t={t}
               locale={locale}
+              bankId={bankId}
             />
           )}
 
@@ -176,13 +201,15 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
             <div className="mt-2">
               {hasAnswers && id !== "out-of-scope" && <AskedChecker answers={answers} locale={locale} t={t} />}
               <Evidence clauses={outcome.clauses} t={t} />
-              {id !== "out-of-scope" && (
-                <BankPanel bankId={bankId} hrefFor={hrefFor} t={t} />
-              )}
+              {/* The bank panel used to live here. It now sits inside BankBox
+                  at the top of the page, behind its own "More details about
+                  <bank>" button, so it is reached by a reader looking for
+                  their bank rather than by one scrolling past the escalation
+                  route and the deadline tracker to find it. */}
               {outcome.documents && <Tactics locale={locale} t={t} />}
               {outcome.tracker && <DeadlineTracker locale={locale} />}
               <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
-              <Escalation locale={locale} t={t} />
+              <Escalation locale={locale} t={t} answers={answers} />
               <SourceLine locale={locale} t={t} />
               {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} />}
             </div>
@@ -433,13 +460,17 @@ function Documents({
   hrefFor,
   t,
   locale,
+  bankId,
 }: {
   ids: DocId[];
   have: DocId[];
   hrefFor: (id: DocId) => string;
   t: VerdictText;
   locale: Locale;
+  /** Whose claim form to name, where we have verified what they call it. */
+  bankId?: string;
 }) {
+  const bank = bankId ? getBank(bankId) : undefined;
   return (
     <Section
       id="documents"
@@ -515,6 +546,33 @@ function Documents({
                   <p className="mt-3 text-[1rem] leading-relaxed text-ink">
                     <strong className="font-bold text-maroon">{t.noteLabel} </strong>
                     {doc.note}
+                  </p>
+                )}
+
+                {/* The one document whose NAME differs by bank. The RBI calls
+                    it Annex I-A; a counter clerk knows whatever their own
+                    employer prints on it, and asking for the wrong name is a
+                    wasted trip. Only rendered where the bank has published
+                    the names -- a null stays silent rather than guessing. */}
+                {id === "claim-form" && bank?.claimFormNames?.length && (
+                  <p className="mt-3 text-[1rem] leading-relaxed text-ink">
+                    <strong className="font-bold text-indigo">
+                      {t.bankBoxForms(bank.short, bank.claimFormNames.join(" · "))}
+                    </strong>
+                    {bank.claimFormUrl && (
+                      <>
+                        {" "}
+                        <a
+                          href={bank.claimFormUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          data-print="hide"
+                          className="font-bold text-link underline underline-offset-2"
+                        >
+                          {t.bankPanelFormLink}
+                        </a>
+                      </>
+                    )}
                   </p>
                 )}
               </div>
@@ -773,7 +831,7 @@ function Caveats({ caveats, id = "caveats", t }: { caveats: (typeof OUTCOMES)[Ou
 
 /* ------------------------------------------------------------------ */
 
-function Escalation({ locale, t }: { locale: ReturnType<typeof parseLocale>; t: VerdictText }) {
+function Escalation({ locale, t, answers }: { locale: ReturnType<typeof parseLocale>; t: VerdictText; answers: Answers }) {
   return (
     <section
       data-print="hide"
@@ -799,8 +857,11 @@ function Escalation({ locale, t }: { locale: ReturnType<typeof parseLocale>; t: 
         </a>{" "}
         · {ESCALATION.email} · {ESCALATION.post}
       </p>
+      {/* Carries the answers, and with them the bank: the full escalation
+          page can then name that bank's own published turnaround instead of
+          asking a reader who has already told us to tell us again. */}
       <Link
-        href={withLang("/bank-refused", locale)}
+        href={withLang(`/bank-refused${toQuery(answers)}`, locale)}
         className="mt-4 inline-flex items-center gap-2 text-[0.9375rem] font-bold text-link underline underline-offset-2"
       >
         {t.fullRouteCta}

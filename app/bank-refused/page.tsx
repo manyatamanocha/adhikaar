@@ -21,6 +21,8 @@ import { ComplaintLetter } from "../_components/complaint-letter";
 import { PrintButton } from "../_components/print-button";
 import { ESCALATION, ESCALATION_CAVEAT_BY_LOCALE } from "@/lib/rbi";
 import { HOME_T } from "@/lib/i18n-home";
+import { getBank } from "@/lib/banks";
+import { parseAnswers } from "@/lib/wizard";
 
 export const metadata = {
   title: "The bank refused — what to do next — Adhikaar",
@@ -29,9 +31,15 @@ export const metadata = {
 };
 
 export default async function BankRefusedPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
-  const locale = parseLocale((await searchParams).lang);
+  const sp = await searchParams;
+  const locale = parseLocale(sp.lang);
   const t = HOME_T[locale].bankRefusedPage;
-  const printLabel = HOME_T[locale].verdictPage.printButton;
+  const v = HOME_T[locale].verdictPage;
+  const printLabel = v.printButton;
+  // Validated through parseAnswers rather than read raw, so a hand-edited
+  // ?bank= cannot put an unverified name at the top of this page.
+  const bankId = parseAnswers(sp).bank;
+  const bank = bankId ? getBank(bankId) : undefined;
 
   const STEPS = [
     { title: t.step1Title, body: t.step1Body },
@@ -57,6 +65,46 @@ export default async function BankRefusedPage({ searchParams }: { searchParams: 
         </section>
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
+          {/* Whatever the reader already told the wizard travels here in the
+              query string, so a reader who arrives from their own verdict is
+              not asked to name their bank a second time. Silent for anyone
+              who reached this page from the front door with no answers --
+              the four steps below are the same for every bank either way. */}
+          {bank && (
+            <section className="mb-10 rounded-xl border-2 border-indigo bg-white p-6">
+              <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
+                {v.bankBoxEyebrow}
+              </p>
+              <h2 className="display-lg mt-1 font-serif font-bold text-indigo-ink">
+                {bank.name}
+              </h2>
+              {bank.turnaround && (
+                <p className="body-fluid mt-3 leading-relaxed text-ink">
+                  {v.bankBoxTurnaround(bank.short, bank.turnaround)}
+                </p>
+              )}
+              <ul
+                data-print="hide"
+                className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-rule-faint pt-4 text-[1rem]"
+              >
+                {bank.pageUrl && (
+                  <li>
+                    <a href={bank.pageUrl} target="_blank" rel="noreferrer" className="font-bold text-link underline underline-offset-2">
+                      {v.bankPanelPageLink}
+                    </a>
+                  </li>
+                )}
+                {bank.policyUrl && (
+                  <li>
+                    <a href={bank.policyUrl} target="_blank" rel="noreferrer" className="font-bold text-link underline underline-offset-2">
+                      {v.bankPanelPolicyLink}
+                    </a>
+                  </li>
+                )}
+              </ul>
+            </section>
+          )}
+
           <section>
             <h2 className="display-lg font-serif font-bold text-indigo-ink">
               {t.fourSteps}

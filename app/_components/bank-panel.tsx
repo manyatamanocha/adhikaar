@@ -17,6 +17,117 @@ import type { HomeDict } from "@/lib/i18n-home";
 
 type VerdictText = HomeDict["verdictPage"];
 
+/**
+ * The plain-language box at the TOP of the verdict, and the way into the
+ * reference panel below it.
+ *
+ * The panel that follows is a table of fields — correct, complete, and asking
+ * the reader to work out for themselves what "Surety: not required" means for
+ * the morning they are about to have. This says it in sentences instead, then
+ * puts the full panel behind one button for the reader who wants the source.
+ *
+ * Every sentence is generated from a NON-NULL field of lib/banks.ts. A null
+ * produces no sentence at all rather than a hedged one, so the box cannot pad
+ * itself out with things we did not verify — the honesty rule, applied to
+ * prose instead of to a table cell.
+ */
+export function BankBox({
+  bankId,
+  hrefFor,
+  t,
+}: {
+  bankId?: string;
+  hrefFor: (id: string) => string;
+  t: VerdictText;
+}) {
+  const bank = bankId && bankId !== "other" ? getBank(bankId) : undefined;
+
+  // No bank, or one we hold nothing verified for. The reader still gets the
+  // whole verdict — this only ever adds evidence to it.
+  if (!bank) {
+    return (
+      <section data-print="hide" className="mb-8">
+        {bankId === "other" && (
+          <p className="body-fluid mb-4 max-w-[68ch] leading-relaxed text-ink-soft">
+            {t.bankBoxOtherBody}
+          </p>
+        )}
+        <BankPicker hrefFor={hrefFor} t={t} />
+      </section>
+    );
+  }
+
+  const lines = plainPolicyLines(bank, t);
+
+  return (
+    <section className="mb-8 rounded-xl border-2 border-indigo bg-white p-6">
+      <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
+        {t.bankBoxEyebrow}
+      </p>
+      <h2 className="display-lg mt-1 font-serif font-bold text-indigo-ink">
+        {bank.name}
+      </h2>
+
+      <ul className="mt-4 space-y-2.5">
+        {lines.map((line) => (
+          <li key={line} className="body-fluid flex gap-3 leading-relaxed text-ink">
+            <span aria-hidden="true" className="mt-[0.55em] h-1.5 w-1.5 shrink-0 rounded-full bg-saffron" />
+            <span>{line}</span>
+          </li>
+        ))}
+      </ul>
+
+      {/* The full panel, one tap away rather than four screens down inside
+          the page's general "More detail" fold, where it was competing with
+          the escalation route and the deadline tracker for the same tap. */}
+      <details data-print="hide" className="group mt-5 border-t border-rule-faint pt-4">
+        <summary className="-my-2 flex cursor-pointer list-none items-center gap-2 py-2 [&::-webkit-details-marker]:hidden">
+          <span className="text-[1rem] font-bold text-link underline underline-offset-2">
+            <span className="group-open:hidden">{t.bankBoxMoreDetails(bank.short)}</span>
+            <span className="hidden group-open:inline">{t.bankBoxHide}</span>
+          </span>
+          <span aria-hidden="true" className="text-[0.875rem] font-bold text-saffron-ink group-open:rotate-180">
+            &darr;
+          </span>
+        </summary>
+        <BankPanel bankId={bank.id} hrefFor={hrefFor} t={t} />
+      </details>
+    </section>
+  );
+}
+
+/**
+ * The bank's published policy as sentences, in the order a claimant needs
+ * them: what it will settle without a guarantor, what to ask for at the
+ * counter, how long it says it takes.
+ */
+function plainPolicyLines(bank: Bank, t: VerdictText): string[] {
+  const lines: string[] = [];
+
+  if (bank.thresholdLabel) {
+    if (bank.noSuretyBelowThreshold === true) {
+      lines.push(t.bankBoxNoSurety(bank.short, bank.thresholdLabel));
+    } else if (bank.noSuretyBelowThreshold === false) {
+      lines.push(t.bankBoxSuretyAbove(bank.short, bank.thresholdLabel));
+    } else {
+      lines.push(t.bankBoxLimitOnly(bank.short, bank.thresholdLabel));
+    }
+  } else {
+    lines.push(t.bankBoxNoLimit(bank.short));
+  }
+
+  if (bank.claimFormNames?.length) {
+    lines.push(t.bankBoxForms(bank.short, bank.claimFormNames.join(" · ")));
+  }
+  if (bank.turnaround) {
+    lines.push(t.bankBoxTurnaround(bank.short, bank.turnaround));
+  }
+
+  return lines;
+}
+
+/* ------------------------------------------------------------------ */
+
 export function BankPanel({
   bankId,
   hrefFor,
