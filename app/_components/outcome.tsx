@@ -33,7 +33,7 @@ import { formatDate } from "./bank-panel";
 import { DOCUMENTS, documentText, type DocId } from "@/lib/documents";
 import { OUTCOMES, outcomeText, type OutcomeId, type Outcome } from "@/lib/outcomes";
 import { parseHave, readiness, toggleHave } from "@/lib/readiness";
-import { parseAnswers, parseEntry, resolve, toQuery, BANK_QUESTION, type Answers } from "@/lib/wizard";
+import { parseAnswers, parseEntry, resolve, toQuery, type Answers } from "@/lib/wizard";
 import { BankBox } from "./bank-panel";
 import { getBank, policyGapNotes } from "@/lib/banks";
 import { DeadlineTracker } from "./deadline-tracker";
@@ -65,14 +65,14 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
     // question this path deliberately never asks.
     const carry = toQuery(answers) + (entry ? `${toQuery(answers) ? "&" : "?"}entry=${entry}` : "");
     // The bank question is the one unanswered question that must NOT bounce a
-    // reader out of their verdict. Every link this product has ever produced
-    // -- bookmarks, WhatsApp messages to a sibling, printed sheets -- carries
-    // answers but no bank, and sending all of them back into the wizard to
-    // collect one they were never asked for would break the thing that makes
-    // a verdict shareable. They get the verdict, with the bank picker sitting
-    // at the top of it. Every other unanswered question is still a real gap
-    // and still redirects.
-    if (route.kind === "question" && route.question.id !== BANK_QUESTION) {
+    // reader out of their verdict -- reaching this branch means an old link
+    // (predating this redesign, or the brief "ask last" design that preceded
+    // it) carries every other answer but no bank. Sending it back into the
+    // wizard to collect one it was never asked for would break the thing that
+    // makes a verdict shareable. It gets the verdict, with the bank picker
+    // sitting at the top via BankBox. Every other unanswered question is
+    // still a real gap and still redirects.
+    if (route.kind === "question" && route.question.id !== "bank") {
       redirect(withLang("/start" + carry, locale));
     }
     if (route.kind === "review") redirect(withLang("/needs-review" + carry, locale));

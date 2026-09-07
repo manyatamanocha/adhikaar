@@ -24,6 +24,7 @@ import { OUTCOMES } from "@/lib/outcomes";
 import { SCENARIOS_BY_LOCALE, MORE_SCENARIOS_BY_LOCALE } from "@/lib/scenarios";
 import { parseLocale, withLang, type Locale } from "@/lib/i18n";
 import { HOME_T, type HomeDict } from "@/lib/i18n-home";
+import { BankSummary } from "../_components/bank-panel";
 import { SITUATIONS_T, type Situation } from "@/lib/i18n-situations";
 import {
   parseAnswers,
@@ -33,7 +34,6 @@ import {
   progressFor,
   resolve,
   toQuery,
-  BANK_QUESTION,
   QUESTION_ORDER,
   type Answers,
   type Entry,
@@ -113,6 +113,10 @@ export default async function Start({
 
   const { question } = step;
   const back = previousAnswers(answers);
+  // Cleared, not omitted: toQuery's `if (a[id])` guard already treats a
+  // falsy value as absent, so this reaches the bank question again without
+  // needing a second code path to "remove a key".
+  const changeHref = link(`/start${toQuery({ ...answers, bank: undefined })}`);
 
   return (
     <>
@@ -143,6 +147,16 @@ export default async function Start({
             {back ? t.backAQuestion : t.backToStart}
           </Link>
 
+          {/* Every screen from the bank question onward -- never on the bank
+              question screen itself (answers.bank is unset until it's
+              answered, and this page never renders past it in the same
+              request since resolve() would already have moved on). */}
+          {answers.bank && (
+            <div className="mt-4">
+              <BankSummary bankId={answers.bank} changeHref={changeHref} t={HOME_T[locale].verdictPage} />
+            </div>
+          )}
+
           <h1 className="display-lg mt-4 font-serif font-bold text-indigo-ink">
             {question.prompt}
           </h1>
@@ -157,7 +171,7 @@ export default async function Start({
               answer the reader knows instantly and without reading. Named
               things get a compact list; everything else keeps the cards,
               where the detail line is doing real work. */}
-          {question.id === BANK_QUESTION ? (
+          {question.id === "bank" ? (
             <ul className="mt-7 grid gap-2.5 sm:grid-cols-2">
               {question.options.map((option) => (
                 <li key={option.value}>
