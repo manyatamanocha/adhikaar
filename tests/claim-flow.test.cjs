@@ -268,12 +268,13 @@ test("all completed combinations uphold simplified eligibility", () => {
   for (const heirs of ["agree", "dispute", "unknown"])
   for (const bankType of ["commercial", "cooperative", "unknown"])
   for (const amount of ["under", "equal", "over", "unknown"]) {
-    // bank: "other" clears the separate bank question (see BANK_QUESTION in
-    // wizard.ts) so the sweep reaches an actual outcome for every commercial-
-    // bank combination too, not just the co-operative ones that skip it.
-    // Without this, resolve() returns kind:"question" (id "bank") for most of
-    // the sweep and this test's own favourable-count guard against a vacuous
-    // pass would itself pass vacuously on everything but co-operative rows.
+    // bank: "other" is answered up front here because bank is now the second
+    // question (right after claiming) -- every combo in this sweep needs it
+    // pre-filled or resolve() would stop and ask for it before ever reaching
+    // nominee, court, or any of the swept fields below. Without this, every
+    // single combination in the sweep would return kind:"question" (id
+    // "bank") and this test's own favourable-count guard against a vacuous
+    // pass would itself pass vacuously on the entire sweep, not just part of it.
     const a = { claiming: "deposit-account", court, nominee, will, heirs, bankType, amount, bank: "other" };
     const r = w.resolve(a);
     if (r.outcome === "under-threshold") {
@@ -360,9 +361,11 @@ test("progress total shrinks to the real worst case for the path taken", () => {
   // Bank is now the second question rather than the eighth (7 Sep 2026
   // evening, see the bank-question-earlier design spec).
   assert.equal(remaining({}), 8, "a fresh journey can still ask all eight");
-  // Five, not three: the nominee path now asks about a contested family
-  // (para 11(b) overrides para 9) as well as a court order, and then the bank
-  // question -- which every settled path asks, short-circuits included.
+  // Five, not three: this state has a nominee answer but no bank answer, and
+  // resolve() checks bank (Q2) before it ever looks at nominee -- so the bank
+  // question is still owed here, before a court order and a contested-family
+  // check (para 11(b) overrides para 9) get asked too. Three more questions
+  // on top of the two already answered (claiming, nominee).
   assert.equal(remaining({ claiming: "deposit-account", nominee: "yes" }), 5,
     "a registered nominee is five questions from an answer, not eight");
   assert.equal(remaining({ claiming: "deposit-account", nominee: "survivorship" }), 5,
