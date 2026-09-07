@@ -63,8 +63,8 @@ function NoticeBar() {
   const { t } = useHomeT();
   return (
     <div className="bg-[#16233F] px-4 py-2 text-center text-[0.875rem] text-[#D8DEEA]">
-      <span className="block">{t.notice.pre}</span>
-      <strong className="block font-semibold text-[#F0B892]">{t.notice.strong}</strong>
+      <span>{t.notice.pre} </span>
+      <strong className="font-semibold text-[#F0B892]">{t.notice.strong}</strong>
     </div>
   );
 }
