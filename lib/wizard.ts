@@ -35,7 +35,10 @@ export type Answers = Partial<{
    * option list is generated from BANKS: adding a bank to the table must not
    * mean editing a type here as well.
    *
-   * Not a member of QUESTION_ORDER. See BANK_QUESTION below.
+   * The second member of QUESTION_ORDER, asked right after `claiming` — the
+   * earliest point common to every branch. It never changes the verdict; see
+   * resolve()'s comment at its bank gate for why it is asked this early
+   * anyway.
    */
   bank: string;
 }>;
@@ -94,32 +97,8 @@ export function parseEntry(raw: string | string[] | undefined): Entry | undefine
  * heirs has to sit before will here, and resolve() has to ask it before will
  * on the no-nominee path too. The two must always agree.
  */
-export const QUESTION_ORDER: QuestionId[] = ["claiming", "nominee", "court", "heirs", "will", "bankType", "amount"];
-
-/**
- * Which bank — asked last, and deliberately NOT a member of QUESTION_ORDER.
- *
- * bank-panel.tsx has always stated the rule this implements: the bank "is the
- * reason the bank is asked last rather than first: it changes the evidence,
- * never the verdict." So resolve() decides the outcome on the seven facts
- * above and only then asks which bank it is, which means:
- *
- *   · every path asks it, including the ones that short-circuit at question
- *     two (a registered nominee resolves under para 9 without ever reaching
- *     bankType or amount), and
- *   · no answer to it can move a reader to a different verdict. If it could,
- *     a bank's own published policy would be deciding what the RBI requires,
- *     which is backwards.
- *
- * It stays out of QUESTION_ORDER because answeredPrefix() reads a CONTIGUOUS
- * prefix of that array: on the nominee path bankType and amount are never
- * answered, so a bank answer sitting after them would fall outside the prefix
- * and silently break Back, the progress counter and the analytics step number.
- * parseAnswers, toQuery and previousAnswers therefore handle it by name.
- */
-export const BANK_QUESTION: QuestionId = "bank";
-const ALL_QUESTION_IDS: QuestionId[] = [...QUESTION_ORDER, BANK_QUESTION];
-export const TOTAL_QUESTIONS = ALL_QUESTION_IDS.length;
+export const QUESTION_ORDER: QuestionId[] = ["claiming", "bank", "nominee", "court", "heirs", "will", "bankType", "amount"];
+export const TOTAL_QUESTIONS = QUESTION_ORDER.length;
 
 /**
  * How many questions this journey can still ask, at worst, from here.
@@ -369,10 +348,21 @@ const THRESHOLD_LABEL = {
   kn: { cooperative: "₹5 ಲಕ್ಷ", other: "₹15 ಲಕ್ಷ" },
 } as const;
 
+/**
+ * §2.8 of the bank-question-earlier design spec: every bank in BANKS is
+ * commercial, so naming one at Q2 already answers Q7 (`bankType`). This
+ * fills that gap without ever overriding an EXPLICIT answer -- a reader who
+ * somehow has both a named bank and an answered bankType (e.g. an old URL)
+ * keeps what they answered.
+ */
+export function effectiveBankType(a: Answers): Answers["bankType"] {
+  return a.bankType ?? (a.bank && a.bank !== "other" ? "commercial" : undefined);
+}
+
 export function questionFor(id: QuestionId, a: Answers, locale: Locale = "en"): Question {
   const questions = QUESTIONS_BY_LOCALE[locale];
   if (id !== "amount") return questions[id];
-  const limit = a.bankType === "cooperative" ? THRESHOLD_LABEL[locale].cooperative : THRESHOLD_LABEL[locale].other;
+  const limit = effectiveBankType(a) === "cooperative" ? THRESHOLD_LABEL[locale].cooperative : THRESHOLD_LABEL[locale].other;
   const labelFor = AMOUNT_LIMIT_LABEL[locale];
   return {
     ...questions.amount, help: questions.amount.help + AMOUNT_LIMIT_NOTE[locale],
@@ -389,20 +379,7 @@ export type Resolution =
 export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resolution {
   const ask = (id: QuestionId): Resolution => ({ kind: "question", question: questionFor(id, a, locale) });
   const review = (): Resolution => ({ kind: "review", carry: a });
-  const done = (outcome: OutcomeId): Resolution => {
-    // The last question, and the only one asked AFTER the verdict is settled.
-    // `outcome` is already decided at this point and is passed through
-    // untouched whatever the reader answers -- see BANK_QUESTION.
-    //
-    // Not asked when it could only waste a screen:
-    //   · out-of-scope is not a bank-deposit claim at all, so no bank's
-    //     deposit policy applies to it, and
-    //   · every row in BANKS is a commercial bank, so a reader who has
-    //     already said "a co-operative bank" would be picking from a list
-    //     that cannot contain theirs.
-    if (!a.bank && outcome !== "out-of-scope" && a.bankType !== "cooperative") return ask("bank");
-    return { kind: "outcome", outcome, carry: a };
-  };
+  const done = (outcome: OutcomeId): Resolution => ({ kind: "outcome", outcome, carry: a });
   if (!a.claiming) return ask("claiming");
   // deposit-fd and deposit-both are no longer offered as answers (question one
   // collapsed to a single deposit option on 7 Sep 2026) but are still honoured
@@ -410,6 +387,15 @@ export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resol
   // out there as bookmarks and links sent to siblings; dropping these would
   // turn one into a wrong "out of scope" verdict on reopening.
   if (a.claiming !== "deposit-account" && a.claiming !== "deposit-fd" && a.claiming !== "deposit-both") return done("out-of-scope");
+  // Asked second, right after claiming -- the earliest point common to every
+  // branch, moved here 7 Sep 2026 evening (superseding the "ask last" design
+  // shipped earlier the same day). It STILL never changes the verdict: every
+  // rule below this line is exactly what it was before the move. It is asked
+  // this early so the reader's own bank's published policy can show alongside
+  // every question that follows, not just at the final page. Skipped only
+  // when no bank's policy could apply: out-of-scope is handled above this
+  // line already, so reaching here means it is a real deposit claim.
+  if (!a.bank) return ask("bank");
   if (!a.nominee) return ask("nominee");
   if (a.nominee === "unknown") return done("unknown-nominee");
   // Court gates every outcome below and must be asked before ANY other
@@ -464,8 +450,13 @@ export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resol
   if (a.heirs === "unknown") return review();
   if (!a.will) return ask("will");
   if (a.will !== "no") return review();
-  if (!a.bankType) return ask("bankType");
-  if (a.bankType === "unknown") return review();
+  // Skipped when the bank named at Q2 already tells us the type (§2.8):
+  // effectiveBankType infers "commercial" for any of the 8 named banks, since
+  // every row in BANKS is commercial. Only "another bank / not sure" (and an
+  // old URL with no bank at all, which cannot reach this line -- the bank
+  // gate above already caught it) still needs this asked.
+  if (!effectiveBankType(a)) return ask("bankType");
+  if (effectiveBankType(a) === "unknown") return review();
   if (!a.amount) return ask("amount");
   // Para 10 opens with "less than"; 10(a) says "up to". At equality, confirm.
   if (a.amount === "unknown" || a.amount === "equal") return review();
@@ -493,7 +484,7 @@ const RETIRED_VALUES: Partial<Record<QuestionId, readonly string[]>> = {
 };
 export function parseAnswers(sp: Record<string, string | string[] | undefined>): Answers {
   const a: Answers = {};
-  for (const id of ALL_QUESTION_IDS) {
+  for (const id of QUESTION_ORDER) {
     const raw = sp[id];
     const v = Array.isArray(raw) ? raw[0] : raw;
     const known = QUESTIONS[id]?.options.some(o => o.value === v) || RETIRED_VALUES[id]?.includes(v!);
@@ -503,23 +494,13 @@ export function parseAnswers(sp: Record<string, string | string[] | undefined>):
 }
 export function toQuery(a: Answers): string {
   const q = new URLSearchParams();
-  // ALL_QUESTION_IDS, so `bank` rides in the query string like every other
-  // answer. That is what carries it onto the verdict, the printed sheet,
-  // /what-were-you-asked-for and /bank-refused without any of them being
-  // taught about it separately -- and `bank` is the parameter name those
-  // pages already read.
-  for (const id of ALL_QUESTION_IDS) if (a[id]) q.set(id, a[id]!);
+  // QUESTION_ORDER, so `bank` rides in the query string like every other
+  // answer -- it is one now, not a value carried alongside them.
+  for (const id of QUESTION_ORDER) if (a[id]) q.set(id, a[id]!);
   return q.size ? `?${q}` : "";
 }
 /** Changing an earlier answer invalidates later facts (especially bank/amount). */
 export function answerQuestion(a: Answers, id: QuestionId, value: string): Answers {
-  // The bank invalidates nothing: it is asked after the verdict is settled and
-  // changes only the evidence shown beside it. Re-answering it (tapping a
-  // different bank on the verdict page) therefore replaces just this field and
-  // leaves every fact answer standing. It is also not in QUESTION_ORDER, so
-  // the slice below would read indexOf() === -1 and silently drop the reader's
-  // last real answer.
-  if (id === BANK_QUESTION) return parseAnswers({ ...a, bank: value });
   // Filling a missing court check must not erase a scenario's known dispute
   // or nominee. Bank/amount is different: a new bank type invalidates a
   // previously selected numeric category, including old bookmarked URLs.
@@ -528,13 +509,6 @@ export function answerQuestion(a: Answers, id: QuestionId, value: string): Answe
   for (const key of QUESTION_ORDER.slice(0, QUESTION_ORDER.indexOf(id))) {
     if (a[key]) Object.assign(next, { [key]: a[key] });
   }
-  // The bank survives a changed fact, because it is not downstream of one --
-  // it names an institution, not a feature of the claim, and making someone
-  // re-pick their own bank because they corrected the nominee answer is pure
-  // friction. The exception is bankType: switching to "a co-operative bank"
-  // contradicts a picked row (every bank in the table is commercial), so that
-  // one drops it and the question is simply not asked again.
-  if (a.bank && id !== "bankType") next.bank = a.bank;
   return parseAnswers({ ...next, [id]: value });
 }
 /**
@@ -590,17 +564,6 @@ export function progressFor(a: Answers, entry?: Entry): { current: number; reach
   };
 }
 export function previousAnswers(a: Answers): Answers | null {
-  // The bank is always the last question asked, so it is always the first
-  // thing Back undoes. Reachable only from a hand-edited URL in practice --
-  // answering it resolves straight to the verdict, which has no Back link --
-  // but without this the reader would be sent back to a fact question while
-  // their bank answer stayed set, and resolve() would bounce them forward
-  // again to the same screen.
-  if (a.bank) {
-    const previous = { ...a };
-    delete previous.bank;
-    return previous;
-  }
   const answered = answeredPrefix(a);
   if (!answered.length) return null;
   const previous = { ...a };
