@@ -23,28 +23,58 @@ import { RecoverFooter } from "../recover/_components/footer";
 export const metadata = {
   title: "Adhikaar — how the product is performing",
   description:
-    "Live usage metrics for Adhikaar: claim-ready journeys, the funnel, and the honest-exit guardrail. No login required.",
+    "Live usage metrics for Adhikaar: resolved journeys, the funnel by entry door, and three guardrails. No login required.",
 };
 
 export const revalidate = 300;
 
+/**
+ * ⚠️ This type is hand-written against /api/metrics' response, not derived
+ * from it, so TypeScript cannot catch a field the route renames. It went
+ * stale exactly that way on 7 Sep 2026, when the North Star was renamed and
+ * this page kept reading `weeklyClaimReadyJourneys` off a body that no longer
+ * had one. If you change a field name in lib/metrics.ts's return, change it
+ * here in the same commit and load the page once.
+ */
 type Metrics = {
   window: { from: string; to: string };
-  northStar: { weeklyClaimReadyJourneys: number };
+  northStar: { weeklyResolvedJourneys: number };
+  omtm: {
+    metric: string;
+    resolutionRate: number | null;
+    cohortStarted: number;
+    cohortResolved: number;
+  };
   funnel: {
     landingVisitors: number;
     journeysStarted: number;
-    claimReadyJourneys: number;
+    resolvedJourneys: number;
     showingIntent: number;
     journeyStartRate: number | null;
-    claimReadyJourneyRate: number | null;
+    resolutionRate: number | null;
     nextStepActionRate: number | null;
+    nextStepEligibleJourneys: number;
+    resolvedBySource: Record<string, number>;
+    startedByBranch: Record<string, number>;
+    resolvedByBranch: Record<string, number>;
+    resolutionRateByBranch: Record<string, number | null>;
   };
-  guardrail: {
+  guardrails: {
     honestExitRate: number | null;
     honestExits: number;
-    outcomesReached: number;
+    journeysReachingOutcome: number;
+    situationResolutionShare: number | null;
+    staleCitationShare: number | null;
+    journeysCitingABank: number;
+    rulesVerifiedOn: string;
+    rulesStale: boolean;
   };
+  validation: {
+    beliefCorrectionRate: number | null;
+    beliefResponses: number;
+    beliefBase: string;
+  };
+  efficiency: { medianTimeToResolutionSeconds: number | null };
   perQuestion: Record<string, number>;
   outcomes: Record<string, number>;
   arrivedVia: Record<string, number>;
@@ -57,6 +87,42 @@ function pct(v: number | null): string {
   return v === null ? "—" : `${v}%`;
 }
 
+/**
+ * The five doors, in the reader's words rather than the event's.
+ * "unattributed" is every journey started before `branch` existed.
+ */
+const BRANCH_LABELS: Record<string, string> = {
+  new: "Have not started the claim",
+  started: "Already started the claim",
+  asked: "Bank asked for something",
+  refused: "Bank refused or delayed",
+  find: "Do not know where the money is",
+  shared: "Opened a shared link",
+  unattributed: "Before this was recorded",
+};
+
+/**
+ * Does this body have the shape this page renders?
+ *
+ * `res.ok` is not enough. A 200 carrying an OLDER shape is the realistic
+ * failure -- the fetch above is cached for `revalidate` seconds, so across a
+ * deploy that renames a field there is a window where a stale body is served
+ * to new code. That happened on 7 Sep 2026 and threw a 500 on the one page
+ * whose entire job is to let a reader check the product's claims.
+ *
+ * A missing section is treated exactly like an unreachable endpoint: the
+ * designed empty state, which says plainly that nothing could be fetched.
+ * That is this page's own rule -- report nothing rather than a number it
+ * cannot stand behind -- applied to its own contract.
+ */
+function isCurrentShape(body: unknown): body is Metrics {
+  if (typeof body !== "object" || body === null) return false;
+  const b = body as Record<string, unknown>;
+  return ["northStar", "omtm", "funnel", "guardrails", "validation", "efficiency"].every(
+    (k) => typeof b[k] === "object" && b[k] !== null,
+  );
+}
+
 async function getMetrics(): Promise<Metrics | null> {
   const base = process.env.VERCEL_PROJECT_PRODUCTION_URL
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
@@ -64,7 +130,8 @@ async function getMetrics(): Promise<Metrics | null> {
   try {
     const res = await fetch(`${base}/api/metrics`, { next: { revalidate } });
     if (!res.ok) return null;
-    return (await res.json()) as Metrics;
+    const body: unknown = await res.json();
+    return isCurrentShape(body) ? body : null;
   } catch {
     return null;
   }
@@ -107,12 +174,25 @@ export default async function MetricsPage() {
                     North Star · last 7 days
                   </p>
                   <p className="display-xl mt-1 font-serif font-bold text-indigo-ink">
-                    {m.northStar.weeklyClaimReadyJourneys}
+                    {m.northStar.weeklyResolvedJourneys}
                   </p>
                   <p className="body-fluid mt-1 text-ink-soft">
-                    Weekly Claim-Ready Journeys — journeys reaching a complete,
-                    actionable claim path. A count, not a rate: helping 600 of
-                    1,000 families is more families helped than 80 of 100.
+                    Weekly Resolved Journeys — journeys that received a valid,
+                    situation-appropriate resolution, whether that is a claim
+                    route or a clear answer about what to establish next. A
+                    count, not a rate: helping 600 of 1,000 families is more
+                    families helped than 80 of 100.
+                  </p>
+                  <p className="mt-3 border-t border-rule-faint pt-3 text-[0.9375rem] text-ink-soft">
+                    <span className="font-bold text-indigo-ink">
+                      This quarter&rsquo;s one metric — {m.omtm.metric}:{" "}
+                      {pct(m.omtm.resolutionRate)}
+                    </span>{" "}
+                    · {m.omtm.cohortResolved} of {m.omtm.cohortStarted} journeys
+                    that started in this window went on to resolve. It stays the
+                    metric that matters even while it reads “—”; insufficient
+                    data is the honest answer, not a reason to report a
+                    different number.
                   </p>
                   {/* Stated rather than left to be discovered. Someone who
                       opens this expecting live figures and sees a low number
@@ -150,11 +230,11 @@ export default async function MetricsPage() {
                       <tr className="border-b border-rule-faint">
                         <td className="py-2.5 pr-4">Journeys started</td>
                         <td className="py-2.5 pr-4 font-bold">{m.funnel.journeysStarted}</td>
-                        <td className="py-2.5">{pct(m.funnel.claimReadyJourneyRate)}</td>
+                        <td className="py-2.5">{pct(m.funnel.resolutionRate)}</td>
                       </tr>
                       <tr className="border-b border-rule-faint bg-white/60">
-                        <td className="py-2.5 pr-4 font-bold">★ Claim-ready journeys</td>
-                        <td className="py-2.5 pr-4 font-bold">{m.funnel.claimReadyJourneys}</td>
+                        <td className="py-2.5 pr-4 font-bold">★ Resolved journeys</td>
+                        <td className="py-2.5 pr-4 font-bold">{m.funnel.resolvedJourneys}</td>
                         <td className="py-2.5">{pct(m.funnel.nextStepActionRate)}</td>
                       </tr>
                       <tr>
@@ -166,6 +246,13 @@ export default async function MetricsPage() {
                   </table>
                 </div>
                 <p className="mt-3 text-[0.9375rem] text-ink-faint">
+                  The last rate divides by the {m.funnel.nextStepEligibleJourneys}{" "}
+                  journeys that had something to act on. A resolution that points
+                  at an official search tool has no printable sheet or counter
+                  mode, so counting it as a failure to act would penalise the
+                  product for a page working exactly as designed.
+                </p>
+                <p className="mt-3 text-[0.9375rem] text-ink-faint">
                   Claim initiation and successful claims sit below this funnel
                   and are deliberately not measurable here: the product keeps no
                   account and no record of a claim, so it cannot see what happens
@@ -174,22 +261,157 @@ export default async function MetricsPage() {
                 </p>
               </section>
 
+              {Object.keys(m.funnel.startedByBranch).length > 0 && (
+                <section className="mt-10">
+                  <h2 className="display-md font-serif font-bold text-indigo-ink">
+                    By the door people came in through
+                  </h2>
+                  <p className="body-fluid mt-2 max-w-[62ch] text-ink-soft">
+                    One resolution rate across five different journeys hides
+                    which of them works. A reader holding a demand from a bank
+                    and a reader who does not know where the money is are not
+                    the same problem.
+                  </p>
+                  <div className="mt-4 overflow-x-auto">
+                    <table className="w-full border-collapse text-left">
+                      <thead>
+                        <tr className="border-b-2 border-rule">
+                          <th className="py-2 pr-4 text-[0.9375rem] font-bold">Door</th>
+                          <th className="py-2 pr-4 text-[0.9375rem] font-bold">Started</th>
+                          <th className="py-2 pr-4 text-[0.9375rem] font-bold">Resolved</th>
+                          <th className="py-2 text-[0.9375rem] font-bold">Rate</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-[1rem]">
+                        {Object.entries(m.funnel.startedByBranch)
+                          .sort(([, a], [, b]) => b - a)
+                          .map(([branch, n]) => (
+                            <tr key={branch} className="border-b border-rule-faint">
+                              <td className="py-2.5 pr-4">{BRANCH_LABELS[branch] ?? branch}</td>
+                              <td className="py-2.5 pr-4 font-bold">{n}</td>
+                              <td className="py-2.5 pr-4 font-bold">
+                                {m.funnel.resolvedByBranch[branch] ?? 0}
+                              </td>
+                              <td className="py-2.5">
+                                {pct(m.funnel.resolutionRateByBranch[branch] ?? null)}
+                              </td>
+                            </tr>
+                          ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
+              )}
+
               <section className="mt-10">
                 <h2 className="display-md font-serif font-bold text-indigo-ink">
-                  Guardrail — Honest-Exit Rate
+                  Guardrails
+                </h2>
+                <p className="body-fluid mt-2 max-w-[62ch] text-ink-soft">
+                  Three checks that a rising North Star is real. Each answers a
+                  different way the number could look good while the product got
+                  worse.
+                </p>
+
+                <div className="mt-5 space-y-4">
+                  <div className="actionbox">
+                    <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
+                      Honest-Exit Rate · are we still telling the unwelcome truth
+                    </p>
+                    <p className="display-md mt-1 font-serif font-bold text-indigo-ink">
+                      {pct(m.guardrails.honestExitRate)}
+                    </p>
+                    <p className="body-fluid mt-1 max-w-[62ch] text-ink-soft">
+                      {m.guardrails.honestExits} of{" "}
+                      {m.guardrails.journeysReachingOutcome} journeys reaching a
+                      verdict ended in a dispute, above-threshold,
+                      already-in-court or out-of-scope one. The North Star could
+                      be inflated by telling people what they want to hear. If
+                      resolved journeys rise while this falls, the product is
+                      manufacturing false confidence — a reason to review the
+                      logic, not to celebrate.
+                    </p>
+                  </div>
+
+                  <div className="actionbox">
+                    <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
+                      Situation Resolution Share · is the number growing by
+                      delivery or by definition
+                    </p>
+                    <p className="display-md mt-1 font-serif font-bold text-indigo-ink">
+                      {pct(m.guardrails.situationResolutionShare)}
+                    </p>
+                    <p className="body-fluid mt-1 max-w-[62ch] text-ink-soft">
+                      The share of resolutions that came from a situation branch
+                      rather than a verdict. The guardrail above cannot see this:
+                      it reads verdicts only, so it would not notice the cheapest
+                      way to raise a resolution count, which is to declare more
+                      pages resolutions. There is deliberately no target — a high
+                      share is not bad, because those resolutions are real value.
+                      What matters is the move. If it climbs while verdicts stay
+                      flat, ask whether the traffic changed or the definition did.
+                    </p>
+                  </div>
+
+                  <div className="actionbox">
+                    <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
+                      Stale Citation Share · is the evidence still true
+                    </p>
+                    <p className="display-md mt-1 font-serif font-bold text-indigo-ink">
+                      {pct(m.guardrails.staleCitationShare)}
+                    </p>
+                    <p className="body-fluid mt-1 max-w-[62ch] text-ink-soft">
+                      Of the {m.guardrails.journeysCitingABank} journeys that
+                      cited a specific bank&rsquo;s published policy, the share
+                      citing a record more than six months past its last check.
+                      The bank-by-bank table is the part of this product that
+                      decays without anyone touching it.
+                    </p>
+                    <p className="mt-2 text-[0.9375rem] text-ink-faint">
+                      The RBI clauses were last checked against the notification
+                      on {m.guardrails.rulesVerifiedOn} —{" "}
+                      {m.guardrails.rulesStale
+                        ? "now past their window and due a re-read."
+                        : "still within their window."}{" "}
+                      They carry one date for the whole set, because they were
+                      verified in a single pass.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <section className="mt-10">
+                <h2 className="display-md font-serif font-bold text-indigo-ink">
+                  Is the belief actually being corrected?
                 </h2>
                 <p className="display-md mt-2 font-serif font-bold text-indigo-ink">
-                  {pct(m.guardrail.honestExitRate)}
+                  {pct(m.validation.beliefCorrectionRate)}
                 </p>
                 <p className="body-fluid mt-2 max-w-[62ch] text-ink-soft">
-                  {m.guardrail.honestExits} of {m.guardrail.outcomesReached}{" "}
-                  journeys ended in a dispute, above-threshold, already-in-court
-                  or out-of-scope verdict. This exists because the North Star
-                  could be inflated by telling people what they want to hear. If
-                  claim-ready journeys rise while this falls, the product is
-                  manufacturing false confidence — that is a reason to review the
-                  logic, not to celebrate.
+                  Of {m.validation.beliefResponses} people who answered, the
+                  share who arrived believing they needed a succession
+                  certificate. That belief is the thing the product exists to
+                  correct, and it cannot be inferred from behaviour, so it is
+                  the one question the site asks.
                 </p>
+                <p className="mt-2 text-[0.9375rem] text-ink-faint">
+                  Base: {m.validation.beliefBase}. The question only appears
+                  where the answer is good news — asking someone who genuinely
+                  does need a certificate whether they expected to would measure
+                  nothing.
+                </p>
+                {m.efficiency.medianTimeToResolutionSeconds !== null && (
+                  <p className="body-fluid mt-4 text-ink-soft">
+                    <span className="font-bold text-indigo-ink">
+                      Median time to resolution:{" "}
+                      {Math.round(m.efficiency.medianTimeToResolutionSeconds / 60)}{" "}
+                      min
+                    </span>{" "}
+                    · from entering a branch to receiving an answer. This should
+                    be minutes. A correct answer that takes twenty minutes to
+                    extract has still failed the person asking.
+                  </p>
+                )}
               </section>
 
               {Object.keys(m.perQuestion).length > 0 && (
