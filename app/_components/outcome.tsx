@@ -33,7 +33,7 @@ import { formatDate } from "./bank-panel";
 import { DOCUMENTS, documentText, type DocId } from "@/lib/documents";
 import { OUTCOMES, outcomeText, type OutcomeId, type Outcome } from "@/lib/outcomes";
 import { parseHave, readiness, toggleHave } from "@/lib/readiness";
-import { parseAnswers, resolve, toQuery, type Answers } from "@/lib/wizard";
+import { parseAnswers, parseEntry, resolve, toQuery, type Answers } from "@/lib/wizard";
 import { BankPanel } from "./bank-panel";
 import { getBank, policyGapNotes } from "@/lib/banks";
 import { DeadlineTracker } from "./deadline-tracker";
@@ -52,11 +52,21 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   const outcome = outcomeText(id, locale);
   const t = HOME_T[locale].verdictPage;
   const hasAnswers = Object.values(answers).some(Boolean);
+  const entry = parseEntry(sp.entry);
+  // The court question is not put to a reader who has not been to the bank
+  // (lib/wizard.ts's Entry), so this verdict was reached without it. Para
+  // 8(ii) still binds the bank, so the assumption is stated on the verdict
+  // itself, as a hard caveat -- which is to say it never folds and it prints.
+  const courtUnasked = entry === "new" && !answers.court && id !== "out-of-scope";
   if (hasAnswers && id !== "already-in-court") {
-    const route = resolve(answers);
-    if (route.kind === "question") redirect(withLang("/start" + toQuery(answers), locale));
-    if (route.kind === "review") redirect(withLang("/needs-review" + toQuery(answers), locale));
-    if (route.kind === "outcome" && route.outcome !== id) redirect(withLang(OUTCOMES[route.outcome].path + toQuery(answers), locale));
+    const route = resolve(answers, "en", entry);
+    // `entry` is appended by hand rather than by toQuery: it is not an answer,
+    // and dropping it here would send a "new" reader back to the court
+    // question this path deliberately never asks.
+    const carry = toQuery(answers) + (entry ? `${toQuery(answers) ? "&" : "?"}entry=${entry}` : "");
+    if (route.kind === "question") redirect(withLang("/start" + carry, locale));
+    if (route.kind === "review") redirect(withLang("/needs-review" + carry, locale));
+    if (route.kind === "outcome" && route.outcome !== id) redirect(withLang(OUTCOMES[route.outcome].path + carry, locale));
   }
   const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
 
@@ -110,6 +120,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
           <BankGapAlert bankId={bankId} t={t} />
+          {courtUnasked && <CourtAssumption answers={answers} locale={locale} t={t} />}
           <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
           <Steps steps={outcome.steps} t={t} />
           <TodayBox outcome={id} t={t} answers={answers} locale={locale} hasDocuments={!!outcome.documents} />
@@ -699,6 +710,35 @@ function Tactics({ locale, t }: { locale: Locale; t: VerdictText }) {
 }
 
 /* ------------------------------------------------------------------ 6 */
+
+/**
+ * The one condition this verdict was not able to check.
+ *
+ * A reader who has not been to the bank is not asked whether a court has
+ * restrained payment (lib/wizard.ts's Entry). Para 8(ii) does not stop
+ * applying because we stopped asking, so the verdict says so itself rather
+ * than reading as a settled answer.
+ *
+ * Wearing `.hardbox` is the whole point: hard caveats never fold and always
+ * print, so this cannot be collapsed away and cannot be dropped from the sheet
+ * that reaches a counter. The action link goes back to the wizard WITHOUT
+ * `entry`, which is what makes resolve() put the court question after all.
+ */
+function CourtAssumption({ answers, locale, t }: { answers: Answers; locale: Locale; t: VerdictText }) {
+  return (
+    <div className="hardbox mb-8">
+      <p className="display-md font-serif font-bold text-maroon">{t.courtAssumptionTitle}</p>
+      <p className="body-fluid mt-2 max-w-[68ch]">{t.courtAssumptionBody}</p>
+      <Link
+        href={withLang("/start" + toQuery(answers), locale)}
+        data-print="hide"
+        className="-my-2.5 mt-2 inline-block py-2.5 text-[1rem] font-bold text-link underline underline-offset-2"
+      >
+        {t.courtAssumptionAction}
+      </Link>
+    </div>
+  );
+}
 
 function Caveats({ caveats, id = "caveats", t }: { caveats: (typeof OUTCOMES)[OutcomeId]["caveats"]; id?: string; t: VerdictText }) {
   if (!caveats.length) return null;

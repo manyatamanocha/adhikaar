@@ -98,8 +98,13 @@ export default async function Where({
               <span aria-hidden="true">&larr;</span>
               {t.backToStart}
             </Link>
+            {/* entry=new, but claiming is NOT pre-filled here the way it is on
+                /start/find's "I know the bank" option. This page also points
+                at IEPF, which holds shares and dividends rather than deposits,
+                so question 1 stays as the out-of-scope gate for anyone who
+                found something that is not a bank account. */}
             <Link
-              href={withLang("/start?begin=1", locale)}
+              href={withLang("/start?begin=1&entry=new", locale)}
               className="inline-flex min-h-11 items-center rounded-lg bg-saffron px-5 py-2.5 text-[1rem] font-bold text-white"
             >
               {t.foundIt}

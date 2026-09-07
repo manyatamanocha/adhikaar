@@ -52,6 +52,43 @@ test("nominees and survivors still require a court check but not the no-nominee 
     assert.equal(w.resolve({ claiming: "deposit-account", nominee, court: "no", heirs: "dispute" }).kind, "review");
   }
 });
+/**
+ * The "not been to the bank yet" entry drops the court QUESTION, never the
+ * court GATE.
+ *
+ * Direct decision, 7 Sep 2026: a reader who is not sure the money even exists
+ * cannot answer whether a judge has restrained its payment. What must not
+ * follow is a verdict that quietly assumes the answer -- para 8(ii) still bars
+ * a bank from settling where it knows of a restraining order. So an ANSWERED
+ * restriction has to keep stopping the flow on this entry exactly as it does
+ * on every other, and the assumption has to reach the reader on the verdict
+ * (outcome.tsx's CourtAssumption, rendered on `!answers.court`).
+ */
+test("the not-been-to-the-bank entry skips the court question but not the court gate", () => {
+  const start = { claiming: "deposit-account", nominee: "yes" };
+  // Asked on every other entry...
+  assert.equal(w.resolve(start).question.id, "court");
+  // ...and not on this one, which goes straight to the verdict.
+  assert.equal(w.resolve(start, "en", "new").outcome, "nominee");
+  // The gate survives: a restriction the reader volunteers still wins, and so
+  // does a heir dispute arriving from a scenario card.
+  assert.equal(w.resolve({ ...start, court: "yes" }, "en", "new").kind, "review");
+  assert.equal(w.resolve({ ...start, court: "unknown" }, "en", "new").kind, "review");
+  assert.equal(w.resolve({ ...start, heirs: "dispute" }, "en", "new").kind, "review");
+  // Out of scope still exits before anything else, entry or no entry.
+  assert.equal(w.resolve({ claiming: "other" }, "en", "new").outcome, "out-of-scope");
+  // No-nominee still walks its own questions; only court is dropped.
+  assert.equal(w.resolve({ claiming: "deposit-account", nominee: "no" }, "en", "new").question.id, "will");
+  assert.equal(
+    w.resolve({ claiming: "deposit-account", nominee: "no", will: "no", heirs: "agree", bankType: "commercial", amount: "under" }, "en", "new").outcome,
+    "under-threshold",
+  );
+  // Only the literal string counts -- anything else is a normal journey.
+  assert.equal(w.parseEntry("new"), "new");
+  for (const junk of ["started", "", undefined, "1"]) assert.equal(w.parseEntry(junk), undefined);
+  // The progress bar must not keep counting a question this path never asks.
+  assert.ok(w.progressFor(start, "new").reachable < w.progressFor(start).reachable);
+});
 test("missing facts are asked again, including old bookmarked results", () => {
   for (const key of Object.keys(base)) {
     const a = { ...base };

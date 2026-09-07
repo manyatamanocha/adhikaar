@@ -282,6 +282,14 @@ export type HomeDict = {
   verdictPage: {
     generalGuidanceLabel: string;
     checkSituationFirst: string;
+    /**
+     * Shown only where the court-order question was never put to the reader
+     * -- the "not been to the bank yet" entry. A hard caveat: it does not
+     * fold and it prints. See lib/wizard.ts's Entry.
+     */
+    courtAssumptionTitle: string;
+    courtAssumptionBody: string;
+    courtAssumptionAction: string;
     askedCheckerHeading: string;
     askedCheckerBody: string;
     askedCheckerCta: string;
@@ -748,6 +756,10 @@ const en: HomeDict = {
   verdictPage: {
     generalGuidanceLabel: "General guidance — your eligibility has not been checked.",
     checkSituationFirst: "Check your situation first.",
+    courtAssumptionTitle: "This assumes no court has stopped the payment",
+    courtAssumptionBody:
+      "A bank must not settle a claim where it knows of a court order restraining payment (paragraph 8(ii)). We have not asked you about one, because you told us nobody has been to the bank yet. If a court has restrained this account, the route above does not apply.",
+    courtAssumptionAction: "There is a court order — tell us",
     askedCheckerHeading: "Were you asked for something that is not on this list?",
     askedCheckerBody: "Tick what the branch actually demanded — a surety, a family tree, an affidavit, witnesses — and we will show you which of them the RBI prescribes for your situation and which it does not, with the paragraph number for each.",
     askedCheckerCta: "Check what you were asked for",
@@ -1217,6 +1229,10 @@ const hi: HomeDict = {
   verdictPage: {
     generalGuidanceLabel: "सामान्य मार्गदर्शन — आपकी पात्रता की जाँच अभी नहीं हुई है।",
     checkSituationFirst: "पहले अपनी स्थिति जाँचें।",
+    courtAssumptionTitle: "यह मानकर चला गया है कि किसी अदालत ने भुगतान नहीं रोका है",
+    courtAssumptionBody:
+      "अगर बैंक को भुगतान रोकने वाले किसी अदालती आदेश की जानकारी है, तो वह दावा निपटा नहीं सकता (पैराग्राफ 8(ii))। हमने आपसे इसके बारे में नहीं पूछा, क्योंकि आपने बताया कि अभी कोई बैंक नहीं गया है। अगर किसी अदालत ने इस खाते पर रोक लगाई है, तो ऊपर बताया रास्ता लागू नहीं होता।",
+    courtAssumptionAction: "अदालती आदेश है — हमें बताएँ",
     askedCheckerHeading: "क्या आपसे कुछ ऐसा माँगा गया जो इस सूची में नहीं है?",
     askedCheckerBody: "शाखा ने वाक़ई क्या-क्या माँगा टिक करें — ज़मानत, परिवार-वृक्ष, शपथ-पत्र, गवाह — और हम दिखाएँगे कि इनमें से RBI आपकी स्थिति के लिए क्या तय करता है और क्या नहीं, हर एक के पैराग्राफ नंबर सहित।",
     askedCheckerCta: "आपसे क्या माँगा गया, जाँचें",
@@ -1686,6 +1702,10 @@ const kn: HomeDict = {
   verdictPage: {
     generalGuidanceLabel: "ಸಾಮಾನ್ಯ ಮಾರ್ಗದರ್ಶನ — ನಿಮ್ಮ ಅರ್ಹತೆಯನ್ನು ಇನ್ನೂ ಪರಿಶೀಲಿಸಲಾಗಿಲ್ಲ.",
     checkSituationFirst: "ಮೊದಲು ನಿಮ್ಮ ಸ್ಥಿತಿಯನ್ನು ಪರಿಶೀಲಿಸಿ.",
+    courtAssumptionTitle: "ಯಾವುದೇ ನ್ಯಾಯಾಲಯ ಪಾವತಿಯನ್ನು ತಡೆದಿಲ್ಲ ಎಂದು ಇದು ಭಾವಿಸುತ್ತದೆ",
+    courtAssumptionBody:
+      "ಪಾವತಿಯನ್ನು ತಡೆಯುವ ನ್ಯಾಯಾಲಯದ ಆದೇಶದ ಬಗ್ಗೆ ಬ್ಯಾಂಕಿಗೆ ತಿಳಿದಿದ್ದರೆ, ಅದು ಹಕ್ಕನ್ನು ಇತ್ಯರ್ಥಪಡಿಸಬಾರದು (ಪ್ಯಾರಾಗ್ರಾಫ್ 8(ii)). ಇನ್ನೂ ಯಾರೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ ಎಂದು ನೀವು ತಿಳಿಸಿದ್ದರಿಂದ ನಾವು ಇದರ ಬಗ್ಗೆ ಕೇಳಲಿಲ್ಲ. ನ್ಯಾಯಾಲಯವು ಈ ಖಾತೆಯನ್ನು ತಡೆಹಿಡಿದಿದ್ದರೆ, ಮೇಲಿನ ಮಾರ್ಗ ಅನ್ವಯಿಸುವುದಿಲ್ಲ.",
+    courtAssumptionAction: "ನ್ಯಾಯಾಲಯದ ಆದೇಶವಿದೆ — ನಮಗೆ ತಿಳಿಸಿ",
     askedCheckerHeading: "ಈ ಪಟ್ಟಿಯಲ್ಲಿಲ್ಲದ ಏನನ್ನಾದರೂ ನಿಮ್ಮಿಂದ ಕೇಳಲಾಗಿತ್ತೇ?",
     askedCheckerBody: "ಶಾಖೆ ನಿಜವಾಗಿಯೂ ಏನು ಕೇಳಿತು ಎಂದು ಟಿಕ್ ಮಾಡಿ — ಜಾಮೀನು, ಕುಟುಂಬ ವೃಕ್ಷ, ಅಫಿಡವಿಟ್, ಸಾಕ್ಷಿಗಳು — ಮತ್ತು ಇವುಗಳಲ್ಲಿ RBI ನಿಮ್ಮ ಸ್ಥಿತಿಗೆ ಯಾವುದನ್ನು ನಿಗದಿಪಡಿಸುತ್ತದೆ ಮತ್ತು ಯಾವುದನ್ನು ಇಲ್ಲ ಎಂದು ನಾವು ತೋರಿಸುತ್ತೇವೆ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ.",
     askedCheckerCta: "ನಿಮ್ಮಿಂದ ಏನು ಕೇಳಲಾಗಿತ್ತು ಎಂದು ಪರಿಶೀಲಿಸಿ",

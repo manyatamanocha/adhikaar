@@ -32,7 +32,17 @@ export default async function Find({
   const locale = parseLocale(sp.lang);
   const t = SITUATIONS_T[locale].find;
   const options = [
-    { ...t.knowBank, href: "/start?begin=1" },
+    // claiming=deposit-account is pre-filled, not asked. This reader has just
+    // said they found the deposit and know the bank; putting "Is this money in
+    // a bank account or deposit?" to them on the very next screen asked them
+    // to re-answer what they had answered one click earlier. The value is the
+    // same one question 1 would have set, so nothing downstream can tell the
+    // difference -- and `other` (the out-of-scope exit) is still reachable by
+    // anyone who came through a door that does not already assert a deposit.
+    //
+    // entry=new: nobody on this path has been to a counter, so the
+    // court-order question is not put to them -- see lib/wizard.ts's Entry.
+    { ...t.knowBank, href: "/start?entry=new&claiming=deposit-account" },
     { ...t.dontKnowWhere, href: "/start/find/where" },
   ];
 

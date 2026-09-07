@@ -27,12 +27,14 @@ import { HOME_T, type HomeDict } from "@/lib/i18n-home";
 import { SITUATIONS_T, type Situation } from "@/lib/i18n-situations";
 import {
   parseAnswers,
+  parseEntry,
   answerQuestion,
   previousAnswers,
   progressFor,
   resolve,
   toQuery,
   type Answers,
+  type Entry,
   type Option,
   type Question,
 } from "@/lib/wizard";
@@ -56,6 +58,24 @@ function withBank(href: string, bankId: string | undefined): string {
   return `${path}?${q}`;
 }
 
+/**
+ * `entry` rides along the same way, and for the same reason: it is not an
+ * answer to any question, so toQuery() must not serialise it and
+ * previousAnswers() must not be able to delete it.
+ *
+ * It has to survive all the way to the verdict page, not just to the end of
+ * the wizard -- OutcomePage re-runs resolve() to reject hand-edited URLs, and
+ * without `entry` there it would decide the court question was still owed and
+ * bounce the reader back to a question this path never asks.
+ */
+function withEntry(href: string, entry: Entry | undefined): string {
+  if (!entry) return href;
+  const [path, query] = href.split("?");
+  const q = new URLSearchParams(query ?? "");
+  q.set("entry", entry);
+  return `${path}?${q}`;
+}
+
 export default async function Start({
   searchParams,
 }: {
@@ -66,6 +86,8 @@ export default async function Start({
   const t = HOME_T[locale].startPage;
   const answers = parseAnswers(sp);
   const bankId = typeof sp.bank === "string" ? sp.bank : undefined;
+  const entry = parseEntry(sp.entry);
+  const link = (href: string) => withLang(withEntry(withBank(href, bankId), entry), locale);
 
   const isFresh = Object.values(answers).every((v) => v === undefined);
 
@@ -91,12 +113,12 @@ export default async function Start({
     return <ScenarioPicker locale={locale} t={t} />;
   }
 
-  const step = resolve(answers, locale);
-  if (step.kind === "review") redirect(withLang(withBank("/needs-review" + toQuery(step.carry), bankId), locale));
+  const step = resolve(answers, locale, entry);
+  if (step.kind === "review") redirect(link("/needs-review" + toQuery(step.carry)));
 
   // A verdict is a page of its own, at its own URL. The wizard never renders one.
   if (step.kind === "outcome") {
-    redirect(withLang(withBank(OUTCOMES[step.outcome].path + toQuery(step.carry), bankId), locale));
+    redirect(link(OUTCOMES[step.outcome].path + toQuery(step.carry)));
   }
 
   const { question } = step;
@@ -108,7 +130,7 @@ export default async function Start({
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
-          <Progress {...progressFor(answers)} t={t} />
+          <Progress {...progressFor(answers, entry)} t={t} />
           <p className="mt-3 text-[1rem] font-semibold text-ink-soft">{t.timeEstimate}</p>
 
           {/* Above the question, not under the options -- direct request,
@@ -120,7 +142,7 @@ export default async function Start({
               sitting between a question and its answers breaks the one
               adjacency on this screen that has to stay tight. */}
           <Link
-            href={withLang(back ? withBank(`/start${toQuery(back)}`, bankId) : "/", locale)}
+            href={back ? link(`/start${toQuery(back)}`) : withLang("/", locale)}
             // 23px of link is not a thumb target. The padding is cancelled by
             // the negative margin, so this is a hit-area change, not a layout
             // one -- and Back is the control a confused tester reaches for
@@ -147,8 +169,7 @@ export default async function Start({
                   question={question}
                   option={option}
                   answers={answers}
-                  locale={locale}
-                  bankId={bankId}
+                  link={link}
                 />
               </li>
             ))}
@@ -212,8 +233,10 @@ function SituationPicker({ locale }: { locale: Locale }) {
   ];
   const notYet: (Situation & { href: string })[] = [
     // The wizard's own door. `begin=1` rather than a bare /start, which would
-    // land back here.
-    { ...t.notStarted, href: "/start?begin=1" },
+    // land back here. `entry=new` marks the reader as someone who has not been
+    // to a counter, which is what drops the court-order question -- see
+    // lib/wizard.ts's Entry.
+    { ...t.notStarted, href: "/start?begin=1&entry=new" },
     { ...t.dontKnow, href: "/start/find" },
   ];
 
@@ -480,14 +503,13 @@ function AnswerLink({
   question,
   option,
   answers,
-  locale,
-  bankId,
+  link,
 }: {
   question: Question;
   option: Option;
   answers: Answers;
-  locale: Locale;
-  bankId?: string;
+  /** Carries lang, bank and entry onto the next question. */
+  link: (href: string) => string;
 }) {
   const next = answerQuestion(answers, question.id, option.value);
   const accent = option.unsure
@@ -496,7 +518,7 @@ function AnswerLink({
 
   return (
     <Link
-      href={withLang(withBank(`/start${toQuery(next)}`, bankId), locale)}
+      href={link(`/start${toQuery(next)}`)}
       className={`group flex items-start gap-4 rounded-xl border-2 bg-white p-5 transition-all ${accent}`}
     >
       <span className="flex-1">
