@@ -255,6 +255,63 @@ a {
   background: var(--color-mist);
 }
 
+/* The verdict page's below-the-fold tabs (OutcomeTabs in outcome.tsx) --
+   Documents / Your bank / The law / If refused / More -- are five radio
+   inputs and nothing else: no JavaScript, no React state, the checked one is
+   the browser's own, same rule the file's <details> folds already run on.
+   Fixed, explicit rules per tab rather than Tailwind's peer/peer-checked
+   sugar, because that sugar needs a STATIC class name in the source text to
+   compile -- Tailwind scans the file as plain text, so a class built at
+   runtime from a template literal (`peer-checked/${tab.key}:block`) is
+   invisible to that scan and the rule would silently never exist. There are
+   exactly five, named, fixed tabs, so writing five explicit rules costs
+   nothing a data-driven approach would have saved. */
+.outcome-tab-panel {
+  display: none;
+}
+.outcome-tabs:has(#tab-documents:checked) [data-tab-panel="documents"],
+.outcome-tabs:has(#tab-bank:checked) [data-tab-panel="bank"],
+.outcome-tabs:has(#tab-law:checked) [data-tab-panel="law"],
+.outcome-tabs:has(#tab-refused:checked) [data-tab-panel="refused"],
+.outcome-tabs:has(#tab-more:checked) [data-tab-panel="more"] {
+  display: block;
+}
+.outcome-tabs:has(#tab-documents:checked) [data-tab-label="documents"],
+.outcome-tabs:has(#tab-bank:checked) [data-tab-label="bank"],
+.outcome-tabs:has(#tab-law:checked) [data-tab-label="law"],
+.outcome-tabs:has(#tab-refused:checked) [data-tab-label="refused"],
+.outcome-tabs:has(#tab-more:checked) [data-tab-label="more"] {
+  border-color: var(--color-indigo);
+  background: var(--color-indigo);
+  color: #fff;
+}
+/* The actual <input type="radio"> is visually hidden (`sr-only`: clipped, not
+   `display:none`, so it stays in the tab order and a screen reader still
+   reads it as a radio group) -- so the focus ring that matters is drawn on
+   its label instead, via the same has() pattern, when the hidden input
+   itself has keyboard focus. */
+.outcome-tabs:has(#tab-documents:focus-visible) [data-tab-label="documents"],
+.outcome-tabs:has(#tab-bank:focus-visible) [data-tab-label="bank"],
+.outcome-tabs:has(#tab-law:focus-visible) [data-tab-label="law"],
+.outcome-tabs:has(#tab-refused:focus-visible) [data-tab-label="refused"],
+.outcome-tabs:has(#tab-more:focus-visible) [data-tab-label="more"] {
+  outline: 2px solid var(--color-indigo);
+  outline-offset: 2px;
+}
+
+/* One gap the radio group can't cover on its own: a link INTO a specific tab
+   from elsewhere on the page (TodayBox's "I'm ready to proceed" jumps to
+   #documents; an old bookmark or shared link may still carry #documents or
+   #evidence) has to show that tab's panel even when a DIFFERENT tab's radio
+   is the one currently checked. `:has(:target)` answers that generically:
+   whichever panel contains the element the URL's `#fragment` actually points
+   at -- regardless of nesting depth -- is forced visible, on top of (not
+   instead of) the ordinary checked-tab behaviour above. No per-anchor special
+   case to keep in sync by hand. */
+.outcome-tab-panel:has(:target) {
+  display: block !important;
+}
+
 /* ---------------------------------------------------------------------------
    PRINT — the counter sheet.
    The page IS the artifact. Everything here exists so that Ctrl+P produces
@@ -295,6 +352,15 @@ a {
   }
 
   [data-print="only"] {
+    display: block !important;
+  }
+
+  /* The verdict page's tabs (Documents / Your bank / The law / If refused /
+     More) are the same idea as the <details> rule above, for a CSS-only radio
+     tab strip instead of a fold: on screen one panel shows at a time; on paper
+     every panel prints, whichever was open when Ctrl+P was pressed. The tab
+     strip itself is [data-print="hide"] already. */
+  .outcome-tab-panel {
     display: block !important;
   }
 

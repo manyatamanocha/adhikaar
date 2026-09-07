@@ -4,11 +4,24 @@
  * Always in this order, so the second page a user reads is already familiar:
  *
  *   1. THE ANSWER      plain words, largest type, above the fold
- *   2. WHAT TO DO      numbered, each step something a person can actually do
- *   3. WHAT TO BRING   the documents, with real cost and real time
- *   4. THE EVIDENCE    the RBI's own sentences, quoted, numbered, linked
- *   5. AT THE COUNTER  the four procedural tactics
- *   6. THE CAVEATS     hard ones boxed and uncollapsible
+ *   2. THE CONDITIONS  anything that qualifies the answer -- a bank-specific
+ *                      gap, an unasked court question, the hard caveats --
+ *                      seen before anyone acts on the headline above them
+ *   3. WHAT TO DO      numbered, each step something a person can actually do
+ *   4. WHAT TO BRING   the documents, with real cost and real time
+ *   5. YOUR BANK       its own published policy, in its own words -- reached
+ *                      right after the core path, not competing with it
+ *   6. THE EVIDENCE    the RBI's own sentences, quoted, numbered, linked
+ *   7. AT THE COUNTER  the four procedural tactics
+ *
+ * The bank panel moved from directly after the answer to here on 8 Sep
+ * 2026 -- promoted above the fold on 7 Sep so a bank-specific gap would not
+ * be missed, it had pulled a whole reference section (a quoted policy line,
+ * a threshold table, form names, four external links) in front of every
+ * caveat, every step and the document checklist itself. A reader got the
+ * verdict and then, before being told what to do about it, read a different
+ * institution's webpage. `BankGapAlert` -- the short, safety-critical part
+ * of that panel -- stays up top; the long reference table does not.
  *
  * Two rules run through the whole file:
  *
@@ -143,87 +156,126 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
         <Verdict id={id} answers={answers} bankId={bankId} locale={locale} outcome={outcome} t={t} />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
-          {/* The bank sits at the top, above everything the verdict says
-              next, because it is the one thing on this page that is about
-              the counter the reader is actually going to stand at. It says
-              its piece in sentences and keeps the reference panel behind its
-              own button -- see BankBox. Only on a real journey: a verdict URL
-              opened with no answers is general guidance, and asking it which
-              bank would be asking about a claim nobody has described. */}
-          {hasAnswers && id !== "out-of-scope" && (
-            <BankBox bankId={bankId} hrefFor={hrefFor} t={t} />
-          )}
+          {/* TOP -- everything that qualifies the headline above, then what
+              to do about it. A bank-specific gap, an unasked court question
+              and the hard caveats all come before a single word of
+              instruction: each is a condition on the verdict, not reference
+              material for later, so a reader has seen every reason the
+              answer might not simply apply before reaching a step that
+              assumes it does. */}
           <BankGapAlert bankId={bankId} t={t} />
           {courtUnasked && <CourtAssumption answers={answers} locale={locale} t={t} />}
           <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
           <Steps steps={outcome.steps} t={t} />
-          <TodayBox outcome={id} t={t} answers={answers} locale={locale} hasDocuments={!!outcome.documents} />
-          {/* Promoted out of the (folded) Documents section per advisor review:
-              this was the single most useful sentence on the page and it was
-              hidden behind a "Show" tap. The full checklist stays folded below
-              — this is only the one-line summary and the "start today" call. */}
+
+          {/* The one line this page most needs above the fold, restated:
+              not the full readiness sentence (that lives with the checklist
+              itself, in the Documents tab, where it can react to what the
+              reader has ticked) -- just enough to name the number and point
+              down. `href="#documents"` both scrolls AND, via the
+              `:has(:target)` rule in globals.css, forces the Documents tab
+              open even though nothing has been clicked yet. */}
           {outcome.documents && (
-            <div className="mt-8">
-              <ReadinessBox ids={outcome.documents} have={have} t={t} locale={locale} />
-              <a
-                href="#documents"
-                data-print="hide"
-                className="mt-2 inline-block text-[0.9375rem] font-bold text-link underline underline-offset-2"
-              >
-                {t.seeFullChecklist}
+            <p className="actionbox mt-8 body-fluid">
+              <a href="#documents" className="font-bold text-link underline underline-offset-2">
+                {t.documentsPointer(outcome.documents.length)}
               </a>
-            </div>
-          )}
-          {outcome.documents && (
-            <Documents
-              ids={outcome.documents}
-              have={have}
-              hrefFor={haveHrefFor}
-              t={t}
-              locale={locale}
-              bankId={bankId}
-            />
+            </p>
           )}
 
-          {/* The core path ends here: answer, steps, checklist. Repeating
-              Print/Counter-mode right after the checklist — not just once,
-              up in the header, before the reader has seen what to bring —
-              gives an explicit "you're done, do this now" moment before
-              anything else on the page competes for attention. Everything
-              below is reference material for later (the counter, an
-              appeal, a bank comparison), not part of what to do right now. */}
+          {/* The core path ends here: answer, conditions, steps. Repeating
+              Print/Counter-mode right after -- not just once, up in the
+              header, before the reader has seen any of the above -- gives an
+              explicit "you're done, do this now" moment before the tabs
+              below compete for attention. Everything in them is reference
+              material for later (the checklist itself, the bank, the RBI's
+              exact wording, an appeal), not part of deciding what to do. */}
           <DoneBand id={id} answers={answers} bankId={bankId} outcome={outcome} t={t} locale={locale} />
 
-          <details className="group mt-10 border-t-2 border-rule pt-6">
-            <summary className="-my-2 flex cursor-pointer list-none items-center gap-2 py-2 [&::-webkit-details-marker]:hidden">
-              <span className="display-lg font-serif font-bold text-indigo-ink">
-                {t.moreDetailTitle}
-              </span>
-              <span
-                aria-hidden="true"
-                className="shrink-0 text-[0.875rem] font-bold uppercase tracking-[0.08em] text-saffron-ink"
-              >
-                <span className="group-open:hidden">{t.show}</span>
-                <span className="hidden group-open:inline">{t.hide}</span>
-              </span>
-            </summary>
-            <p className="body-fluid mt-2 max-w-[68ch] text-ink-soft">{t.moreDetailNote}</p>
-            <div className="mt-2">
-              {hasAnswers && id !== "out-of-scope" && <AskedChecker answers={answers} locale={locale} t={t} />}
-              <Evidence clauses={outcome.clauses} t={t} />
-              {/* The bank panel used to live here. It now sits inside BankBox
-                  at the top of the page, behind its own "More details about
-                  <bank>" button, so it is reached by a reader looking for
-                  their bank rather than by one scrolling past the escalation
-                  route and the deadline tracker to find it. */}
-              {outcome.documents && <Tactics locale={locale} t={t} />}
-              {outcome.tracker && <DeadlineTracker locale={locale} />}
-              <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
-              <Escalation locale={locale} t={t} answers={answers} />
-              <SourceLine locale={locale} t={t} />
-              {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} />}
-            </div>
-          </details>
+          {/* TodayBox's own CTA points at #documents when this outcome has a
+              checklist and #evidence when it doesn't (unknown-nominee is the
+              one exception -- it points back into the wizard instead). Placed
+              here, once, and dropped into whichever tab below is ALSO the
+              default for this outcome -- not always "documents" -- so a
+              no-checklist outcome (over-threshold, dispute, already-in-court,
+              out-of-scope) never strands it inside a tab literally labelled
+              "Documents" that a reader would have no reason to open. */}
+          {(() => {
+            const todayBox = (
+              <TodayBox outcome={id} t={t} answers={answers} locale={locale} hasDocuments={!!outcome.documents} />
+            );
+            const defaultTab: OutcomeTabKey = outcome.documents ? "documents" : "law";
+            return (
+              <OutcomeTabs
+                defaultTab={defaultTab}
+                tabs={[
+                  {
+                    key: "documents",
+                    label: t.tabDocuments,
+                    content: (
+                      <>
+                        {defaultTab === "documents" && todayBox}
+                        {outcome.documents && (
+                          <div className="mt-8">
+                            <ReadinessBox ids={outcome.documents} have={have} t={t} locale={locale} />
+                          </div>
+                        )}
+                        {outcome.documents && (
+                          <Documents
+                            ids={outcome.documents}
+                            have={have}
+                            hrefFor={haveHrefFor}
+                            t={t}
+                            locale={locale}
+                            bankId={bankId}
+                          />
+                        )}
+                      </>
+                    ),
+                  },
+                  {
+                    key: "bank",
+                    label: t.tabBank,
+                    // Its own tab even for a claim with no bank picked yet --
+                    // BankBox falls back to the picker in that case, same as
+                    // it always has, rather than the tab silently
+                    // disappearing.
+                    hidden: !hasAnswers || id === "out-of-scope",
+                    content: <BankBox bankId={bankId} hrefFor={hrefFor} t={t} />,
+                  },
+                  {
+                    key: "law",
+                    label: t.tabLaw,
+                    content: (
+                      <>
+                        {defaultTab === "law" && todayBox}
+                        <Evidence clauses={outcome.clauses} t={t} />
+                        {outcome.documents && <Tactics locale={locale} t={t} />}
+                      </>
+                    ),
+                  },
+                  {
+                    key: "refused",
+                    label: t.tabRefused,
+                    content: <Escalation locale={locale} t={t} answers={answers} />,
+                  },
+                  {
+                    key: "more",
+                    label: t.tabMore,
+                    content: (
+                      <>
+                        {hasAnswers && id !== "out-of-scope" && <AskedChecker answers={answers} locale={locale} t={t} />}
+                        {outcome.tracker && <DeadlineTracker locale={locale} />}
+                        <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
+                        <SourceLine locale={locale} t={t} />
+                        {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} />}
+                      </>
+                    ),
+                  },
+                ]}
+              />
+            );
+          })()}
         </div>
       </main>
 
@@ -397,6 +449,75 @@ function DoneBand({
         </Link>
       )}
       <p className="text-[0.9375rem] text-ink-soft">{t.printNote}</p>
+    </div>
+  );
+}
+
+/**
+ * Five radio inputs and nothing else -- the same "the browser owns the
+ * open/closed state, not us" rule the file's <details> folds already run on.
+ * All visibility runs on `:has()` in globals.css, keyed on the five fixed ids
+ * below (`#tab-documents` etc.) and the `data-tab-panel`/`data-tab-label`
+ * attributes: no React state, no client component, works with JavaScript off
+ * exactly like a native radio group does. `defaultChecked` sets which one
+ * starts selected as an uncontrolled DOM attribute, present in the
+ * server-rendered HTML itself, not something JS establishes after the fact.
+ *
+ * This could not have been Tailwind's own peer/peer-checked utilities:
+ * those need a STATIC class name in the file's own text to compile, and a
+ * name built at runtime from `tab.key` is invisible to that scan -- the
+ * rule would silently never make it into the generated stylesheet. Plain
+ * hand-written CSS, against five fixed and named tabs, has no such limit.
+ *
+ * The actual `<input>` is `sr-only` -- clipped, not `display:none`, so it
+ * stays in the tab order and a screen reader still reads it as a radio
+ * group -- and its own `role="radiogroup"` wrapper needs no further ARIA:
+ * that IS what this is.
+ */
+type OutcomeTabKey = "documents" | "bank" | "law" | "refused" | "more";
+type OutcomeTab = {
+  key: OutcomeTabKey;
+  label: string;
+  /** Omits the tab and its panel entirely -- not merely hides it. Only
+   * "bank" ever sets this, when no bank is picked or the claim is
+   * out of scope. */
+  hidden?: boolean;
+  content: React.ReactNode;
+};
+
+function OutcomeTabs({ defaultTab, tabs }: { defaultTab: OutcomeTabKey; tabs: OutcomeTab[] }) {
+  const visible = tabs.filter((tab) => !tab.hidden);
+  return (
+    <div className="outcome-tabs mt-10 border-t-2 border-rule pt-6">
+      {visible.map((tab) => (
+        <input
+          key={tab.key}
+          type="radio"
+          name="outcome-tab"
+          id={`tab-${tab.key}`}
+          defaultChecked={tab.key === defaultTab}
+          className="sr-only"
+        />
+      ))}
+
+      <div role="radiogroup" data-print="hide" className="flex flex-wrap gap-2">
+        {visible.map((tab) => (
+          <label
+            key={tab.key}
+            htmlFor={`tab-${tab.key}`}
+            data-tab-label={tab.key}
+            className="cursor-pointer rounded-pill border-2 border-rule px-4 py-2 text-[0.9375rem] font-bold text-ink-soft transition-colors hover:border-indigo/50"
+          >
+            {tab.label}
+          </label>
+        ))}
+      </div>
+
+      {visible.map((tab) => (
+        <div key={tab.key} data-tab-panel={tab.key} className="outcome-tab-panel mt-6">
+          {tab.content}
+        </div>
+      ))}
     </div>
   );
 }

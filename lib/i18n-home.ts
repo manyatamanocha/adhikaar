@@ -420,6 +420,19 @@ export type HomeDict = {
     moreDetailTitle: string;
     moreDetailNote: string;
     numberWords: string[];
+    /**
+     * The one-line pointer from the top of the page down into the Documents
+     * tab. Fixed regardless of tick state -- it names the total the claim
+     * needs, not what is still missing, so it stays true whether the reader
+     * has ticked nothing yet or everything.
+     */
+    documentsPointer: (n: number) => string;
+    /** The five tabs below the core path. Short: they sit on one row on a phone. */
+    tabDocuments: string;
+    tabBank: string;
+    tabLaw: string;
+    tabRefused: string;
+    tabMore: string;
     counterModeLabel: string;
     seeFullPageInstead: string;
     whatToSay: string;
@@ -915,6 +928,12 @@ const en: HomeDict = {
     hide: "Hide",
     moreDetailTitle: "More detail",
     moreDetailNote: "The RBI's exact wording, your bank's own policy, procedural tips, the deadline tracker and the escalation route — useful, but not what you need to do first.",
+    documentsPointer: (n) => `You'll need ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n} documents for this claim`,
+    tabDocuments: "Documents",
+    tabBank: "Your bank",
+    tabLaw: "The law",
+    tabRefused: "If refused",
+    tabMore: "More",
     numberWords: ["zero", "one", "two", "three", "four", "five", "six", "seven"],
     counterModeLabel: "Counter mode",
     seeFullPageInstead: "See the full page instead",
@@ -1407,6 +1426,12 @@ const hi: HomeDict = {
     numberWords: ["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"],
     moreDetailTitle: "और विवरण",
     moreDetailNote: "बैंक को दिखाने वाला सबूत, बैंक का अपना पन्ना, आगे की कार्रवाई का रास्ता और बाक़ी शर्तें — सब यहीं हैं, बस मोड़ी हुई हैं ताकि पन्ना अभी क्या करना है, उस पर खुले।",
+    documentsPointer: (n) => `इस दावे के लिए आपको ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} दस्तावेज़ों की ज़रूरत होगी`,
+    tabDocuments: "दस्तावेज़",
+    tabBank: "आपका बैंक",
+    tabLaw: "नियम",
+    tabRefused: "अगर मना करें",
+    tabMore: "और",
     counterModeLabel: "काउंटर मोड",
     seeFullPageInstead: "इसके बजाय पूरा पन्ना देखें",
     whatToSay: "क्या कहना है",
@@ -1898,6 +1923,12 @@ const kn: HomeDict = {
     numberWords: ["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"],
     moreDetailTitle: "ಹೆಚ್ಚಿನ ವಿವರ",
     moreDetailNote: "ಬ್ಯಾಂಕಿಗೆ ತೋರಿಸಬೇಕಾದ ಸಾಕ್ಷ್ಯ, ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಪುಟ, ಮುಂದುವರಿಕೆ ಮಾರ್ಗ ಮತ್ತು ಇತರ ಷರತ್ತುಗಳು — ಎಲ್ಲವೂ ಇನ್ನೂ ಇಲ್ಲಿವೆ, ಈಗ ಏನು ಮಾಡಬೇಕು ಎಂಬುದರ ಮೇಲೆ ಪುಟ ತೆರೆಯುವಂತೆ ಮಡಚಲಾಗಿದೆ.",
+    documentsPointer: (n) => `ಈ ಹಕ್ಕಿಗಾಗಿ ನಿಮಗೆ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ`,
+    tabDocuments: "ದಾಖಲೆಗಳು",
+    tabBank: "ನಿಮ್ಮ ಬ್ಯಾಂಕ್",
+    tabLaw: "ನಿಯಮ",
+    tabRefused: "ನಿರಾಕರಿಸಿದರೆ",
+    tabMore: "ಇನ್ನಷ್ಟು",
     counterModeLabel: "ಕೌಂಟರ್ ಮೋಡ್",
     seeFullPageInstead: "ಬದಲಿಗೆ ಪೂರ್ಣ ಪುಟವನ್ನು ನೋಡಿ",
     whatToSay: "ಏನು ಹೇಳಬೇಕು",
