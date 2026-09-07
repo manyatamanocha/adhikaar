@@ -363,7 +363,7 @@ export function SaathiWidget() {
         type="button"
         onClick={toggleOpen}
         aria-label={open ? "Close Saathi" : "Open Saathi, Adhikaar's assistant"}
-        className="group relative flex cursor-pointer items-center gap-[0.6rem] rounded-full bg-gradient-to-b from-[#F5DFAE] to-[#E4BC72] py-[0.45rem] pl-[0.45rem] pr-[1.2rem] shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_12px_29px_rgba(22,35,63,0.28)] transition-transform hover:-translate-y-1 sm:gap-[0.9rem] sm:py-[0.6rem] sm:pl-[0.6rem] sm:pr-[1.5rem] sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.6),0_19px_48px_rgba(22,35,63,0.28)]"
+        className="group relative flex cursor-pointer items-center gap-[0.6rem] rounded-full bg-gradient-to-b from-[#D3DAF2] to-[#A6B4E0] py-[0.45rem] pl-[0.45rem] pr-[1.2rem] shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_12px_29px_rgba(22,35,63,0.28)] transition-transform hover:-translate-y-1 sm:gap-[0.9rem] sm:py-[0.6rem] sm:pl-[0.6rem] sm:pr-[1.5rem] sm:shadow-[inset_0_1px_0_rgba(255,255,255,0.65),0_19px_48px_rgba(22,35,63,0.28)]"
       >
         {/* The attention ring -- a soft terracotta pulse behind the avatar,
             expanding and fading on a slow loop. Only while the panel is
