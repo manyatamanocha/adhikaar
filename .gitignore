@@ -54,3 +54,8 @@ design/extracted/
 
 .vercel
 .env*
+
+# Supabase CLI's local cache -- project ref, resolved versions, a pooler URL
+# with no credential in it. Machine-local, churns on every CLI call, not
+# portable across sessions.
+supabase/.temp/
