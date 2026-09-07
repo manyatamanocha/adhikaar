@@ -359,6 +359,8 @@ export type HomeDict = {
     bankBoxHide: string;
     bankBoxChange: string;
     bankBoxOtherBody: string;
+    /** The collapsed wizard-screen summary (BankSummary) for bank: "other" or an unrecognised id — shorter than bankBoxOtherBody, which has room for a full paragraph on the verdict page. */
+    bankSummaryUnverified: string;
     counterShorter: string;
     yourNextSteps: string;
     todayHeading: string;
@@ -846,6 +848,7 @@ const en: HomeDict = {
     bankBoxChange: "Not your bank?",
     bankBoxOtherBody:
       "We have no verified policy for that bank. Everything below is the RBI rule, which binds it the same as any other. If yours is in the list, tapping it adds its own published words to this page.",
+    bankSummaryUnverified: "We hold no verified policy for this bank.",
     counterShorter: "At the counter now? Shorter version",
     yourNextSteps: "Your next steps",
     todayHeading: "What should you do today?",
@@ -1336,6 +1339,7 @@ const hi: HomeDict = {
     bankBoxChange: "आपका बैंक यह नहीं है?",
     bankBoxOtherBody:
       "उस बैंक की कोई जाँची हुई नीति हमारे पास नहीं है। नीचे जो कुछ है वह आरबीआई का नियम है, जो उस पर भी उतना ही लागू होता है। अगर आपका बैंक सूची में है, तो उसे चुनने पर उसके अपने प्रकाशित शब्द इस पन्ने में जुड़ जाएँगे।",
+    bankSummaryUnverified: "इस बैंक की कोई जाँची हुई नीति हमारे पास नहीं है।",
     counterShorter: "अभी काउंटर पर हैं? छोटा संस्करण",
     yourNextSteps: "आपके अगले कदम",
     todayHeading: "आज आपको क्या करना चाहिए?",
@@ -1826,6 +1830,7 @@ const kn: HomeDict = {
     bankBoxChange: "ಇದು ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಅಲ್ಲವೇ?",
     bankBoxOtherBody:
       "ಆ ಬ್ಯಾಂಕಿನ ಪರಿಶೀಲಿಸಿದ ನೀತಿ ನಮ್ಮ ಬಳಿ ಇಲ್ಲ. ಕೆಳಗಿನದೆಲ್ಲವೂ ಆರ್‌ಬಿಐ ನಿಯಮ, ಅದು ಆ ಬ್ಯಾಂಕಿಗೂ ಅಷ್ಟೇ ಅನ್ವಯಿಸುತ್ತದೆ. ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಪಟ್ಟಿಯಲ್ಲಿದ್ದರೆ, ಅದನ್ನು ಆಯ್ಕೆಮಾಡಿದರೆ ಅದರ ಸ್ವಂತ ಪ್ರಕಟಿತ ಮಾತುಗಳು ಈ ಪುಟಕ್ಕೆ ಸೇರುತ್ತವೆ.",
+    bankSummaryUnverified: "ಈ ಬ್ಯಾಂಕಿನ ಪರಿಶೀಲಿಸಿದ ನೀತಿ ನಮ್ಮ ಬಳಿ ಇಲ್ಲ.",
     counterShorter: "ಈಗ ಕೌಂಟರ್‌ನಲ್ಲಿದ್ದೀರಾ? ಚಿಕ್ಕ ಆವೃತ್ತಿ",
     yourNextSteps: "ನಿಮ್ಮ ಮುಂದಿನ ಹೆಜ್ಜೆಗಳು",
     todayHeading: "ಇಂದು ನೀವು ಏನು ಮಾಡಬೇಕು?",
