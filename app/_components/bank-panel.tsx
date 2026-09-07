@@ -97,6 +97,70 @@ export function BankBox({
 }
 
 /**
+ * The collapsed line shown on every wizard question screen from Q2 onward
+ * (once bank is answered) -- app/start/page.tsx.
+ *
+ * Deliberately ONE level, not two: BankBox on the verdict page nests a full
+ * BankPanel behind its own "More details" disclosure, because that page has
+ * room for the whole reference table. This is a wizard screen mid-journey —
+ * it gets the same plain-language sentences BankBox opens with, and nothing
+ * more. The full table stays exclusive to the verdict, where it belongs
+ * alongside the RBI clause it is being weighed against.
+ */
+export function BankSummary({
+  bankId,
+  changeHref,
+  t,
+}: {
+  bankId: string;
+  /** Where "change" navigates -- the same URL with `bank` cleared, landing back on the bank question. */
+  changeHref: string;
+  t: VerdictText;
+}) {
+  const bank = bankId !== "other" ? getBank(bankId) : undefined;
+
+  if (!bank) {
+    return (
+      <p data-print="hide" className="mb-5 text-[0.9375rem] text-ink-soft">
+        <span className="font-bold text-ink">{t.bankBoxEyebrow}:</span>{" "}
+        {t.bankSummaryUnverified}{" "}
+        <Link href={changeHref} className="font-bold text-link underline underline-offset-2">
+          {t.bankBoxChange}
+        </Link>
+      </p>
+    );
+  }
+
+  const lines = plainPolicyLines(bank, t);
+
+  return (
+    <details data-print="hide" className="group mb-5 rounded-lg border border-rule bg-white">
+      <summary className="-my-1 flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-2.5 [&::-webkit-details-marker]:hidden">
+        <span className="text-[0.9375rem] font-bold text-indigo-ink">
+          {t.bankBoxEyebrow}: {bank.name}
+        </span>
+        <span aria-hidden="true" className="shrink-0 text-[0.8125rem] font-bold text-saffron-ink transition-transform group-open:rotate-180">
+          &darr;
+        </span>
+      </summary>
+      <div className="border-t border-rule-faint px-4 py-3">
+        <ul className="space-y-2">
+          {lines.map((line) => (
+            <li key={line} className="flex gap-2.5 text-[0.9rem] leading-relaxed text-ink">
+              <span aria-hidden="true" className="mt-[0.5em] h-1.5 w-1.5 shrink-0 rounded-full bg-saffron" />
+              <span>{line}</span>
+            </li>
+          ))}
+        </ul>
+        <Link href={changeHref} className="mt-3 inline-block text-[0.875rem] font-bold text-link underline underline-offset-2">
+          {t.bankBoxChange}
+        </Link>
+      </div>
+    </details>
+  );
+}
+
+/**
  * The bank's published policy as sentences, in the order a claimant needs
  * them: what it will settle without a guarantor, what to ask for at the
  * counter, how long it says it takes.
