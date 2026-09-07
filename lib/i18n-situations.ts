@@ -110,25 +110,35 @@ const en: SituationsDict = {
   eyebrow: "Where to start",
   groupSpoken: "You have spoken to the bank",
   groupNotYet: "You have not been to the bank yet",
-  heading: "What best describes your situation?",
+  heading: "My Claim Journey",
+  // "Not started the claim" is now framed as not knowing the PROCESS -- same
+  // destination, the full wizard -- and repurposed for "don't know from where
+  // to start" (unchanged: /start/find, the money-finding branch).
   notStarted: {
-    label: "I have not started the claim",
-    detail: "Nobody has been to the bank yet, or you have only been told what to expect.",
+    label: "I do not know the process",
+    detail: "You have not been to the bank yet, and are not sure what happens next.",
   },
   alreadyStarted: {
-    label: "I've already started the claim",
+    label: "I have started the process",
     detail: "You have been to the bank — documents submitted, waiting, or something has gone wrong.",
   },
+  // Repurposed 7 Sep 2026: was "The bank asked for something I don't
+  // understand" -> /what-were-you-asked-for. That page is still reachable
+  // from /start/started's own menu; this slot now points at the standalone
+  // document checklist instead.
   askedFor: {
-    label: "The bank asked for something I don't understand",
-    detail: "A succession certificate, a surety or bond, an affidavit, a genealogy, a legal-heir certificate.",
+    label: "Need information on documents",
+    detail: "See exactly which documents your claim needs, and what the RBI actually requires.",
   },
+  // Repurposed 7 Sep 2026: was "The bank refused or delayed the claim" ->
+  // /bank-refused, also still reachable from /start/started. This slot is
+  // now the genuine catch-all for anything the other four do not cover.
   refused: {
-    label: "The bank refused or delayed the claim",
-    detail: "No answer, repeated visits, or a flat refusal.",
+    label: "Others",
+    detail: "Not covered above? Write to us directly.",
   },
   dontKnow: {
-    label: "I don't know where to begin",
+    label: "I do not know from where to start",
     detail: "You are not sure the money exists, or where it is held.",
   },
 
@@ -191,22 +201,22 @@ const hi: SituationsDict = {
   eyebrow: "कहाँ से शुरू करें",
   groupSpoken: "आप बैंक जा चुके हैं",
   groupNotYet: "आप अभी बैंक नहीं गए हैं",
-  heading: "आपकी स्थिति इनमें से किससे मिलती है?",
+  heading: "मेरी दावा यात्रा",
   notStarted: {
-    label: "मैंने अभी दावा शुरू नहीं किया है",
-    detail: "अभी तक कोई बैंक नहीं गया, या आपको केवल बताया गया है कि क्या होगा।",
+    label: "मुझे प्रक्रिया नहीं पता",
+    detail: "आप अभी बैंक नहीं गए हैं, और आगे क्या होगा यह पक्का नहीं है।",
   },
   alreadyStarted: {
-    label: "मैंने दावा शुरू कर दिया है",
+    label: "मैंने प्रक्रिया शुरू कर दी है",
     detail: "आप बैंक जा चुके हैं — दस्तावेज़ जमा हैं, इंतज़ार है, या कुछ गड़बड़ हुई है।",
   },
   askedFor: {
-    label: "बैंक ने कुछ ऐसा माँगा जो मुझे समझ नहीं आया",
-    detail: "उत्तराधिकार प्रमाणपत्र, ज़मानत या बॉन्ड, शपथपत्र, वंशावली, विधिक वारिस प्रमाणपत्र।",
+    label: "दस्तावेज़ों की जानकारी चाहिए",
+    detail: "देखें आपके दावे के लिए कौन से दस्तावेज़ चाहिए, और आरबीआई असल में क्या माँगता है।",
   },
   refused: {
-    label: "बैंक ने दावा ठुकरा दिया या टाल रहा है",
-    detail: "कोई जवाब नहीं, बार-बार चक्कर, या साफ़ इनकार।",
+    label: "अन्य",
+    detail: "ऊपर की सूची में नहीं है? सीधे हमें लिखें।",
   },
   dontKnow: {
     label: "मुझे नहीं पता कहाँ से शुरू करूँ",
@@ -272,22 +282,22 @@ const kn: SituationsDict = {
   eyebrow: "ಎಲ್ಲಿಂದ ಪ್ರಾರಂಭಿಸಬೇಕು",
   groupSpoken: "ನೀವು ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿದ್ದೀರಿ",
   groupNotYet: "ನೀವು ಇನ್ನೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ",
-  heading: "ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಯನ್ನು ಇವುಗಳಲ್ಲಿ ಯಾವುದು ಸರಿಯಾಗಿ ವಿವರಿಸುತ್ತದೆ?",
+  heading: "ನನ್ನ ಹಕ್ಕಿನ ಪಯಣ",
   notStarted: {
-    label: "ನಾನು ಇನ್ನೂ ಹಕ್ಕು ಸಲ್ಲಿಸಲು ಪ್ರಾರಂಭಿಸಿಲ್ಲ",
-    detail: "ಇನ್ನೂ ಯಾರೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ, ಅಥವಾ ಏನಾಗುತ್ತದೆ ಎಂದು ಮಾತ್ರ ಹೇಳಲಾಗಿದೆ.",
+    label: "ಪ್ರಕ್ರಿಯೆ ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
+    detail: "ನೀವು ಇನ್ನೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ, ಮತ್ತು ಮುಂದೆ ಏನಾಗುತ್ತದೆ ಎಂದು ಖಚಿತವಿಲ್ಲ.",
   },
   alreadyStarted: {
-    label: "ನಾನು ಈಗಾಗಲೇ ಹಕ್ಕು ಸಲ್ಲಿಸಲು ಪ್ರಾರಂಭಿಸಿದ್ದೇನೆ",
+    label: "ನಾನು ಪ್ರಕ್ರಿಯೆ ಪ್ರಾರಂಭಿಸಿದ್ದೇನೆ",
     detail: "ನೀವು ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿದ್ದೀರಿ — ದಾಖಲೆ ಸಲ್ಲಿಸಿದೆ, ಕಾಯುತ್ತಿದೆ, ಅಥವಾ ಏನೋ ತಪ್ಪಾಗಿದೆ.",
   },
   askedFor: {
-    label: "ಬ್ಯಾಂಕ್ ನನಗೆ ಅರ್ಥವಾಗದ ಏನನ್ನೋ ಕೇಳಿತು",
-    detail: "ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ, ಜಾಮೀನು ಅಥವಾ ಬಾಂಡ್, ಪ್ರಮಾಣಪತ್ರ, ವಂಶಾವಳಿ, ಕಾನೂನುಬದ್ಧ ವಾರಸು ಪ್ರಮಾಣಪತ್ರ.",
+    label: "ದಾಖಲೆಗಳ ಬಗ್ಗೆ ಮಾಹಿತಿ ಬೇಕು",
+    detail: "ನಿಮ್ಮ ಹಕ್ಕಿಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು, ಮತ್ತು ಆರ್‌ಬಿಐ ನಿಜವಾಗಿ ಏನು ಕೇಳುತ್ತದೆ ಎಂದು ನೋಡಿ.",
   },
   refused: {
-    label: "ಬ್ಯಾಂಕ್ ಹಕ್ಕನ್ನು ನಿರಾಕರಿಸಿತು ಅಥವಾ ವಿಳಂಬ ಮಾಡಿತು",
-    detail: "ಉತ್ತರವಿಲ್ಲ, ಪದೇ ಪದೇ ಭೇಟಿ, ಅಥವಾ ಸ್ಪಷ್ಟ ನಿರಾಕರಣೆ.",
+    label: "ಇತರೆ",
+    detail: "ಮೇಲಿನದರಲ್ಲಿ ಇಲ್ಲದ್ದೇ? ನೇರವಾಗಿ ನಮಗೆ ಬರೆಯಿರಿ.",
   },
   dontKnow: {
     label: "ಎಲ್ಲಿಂದ ಪ್ರಾರಂಭಿಸಬೇಕೆಂದು ನನಗೆ ಗೊತ್ತಿಲ್ಲ",

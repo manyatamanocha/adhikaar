@@ -207,48 +207,41 @@ export default async function Start({
 /* ------------------------------------------------------------------ */
 
 /**
- * The opening screen — five situations, one of which is true of every reader.
+ * The opening screen — "My Claim Journey", five situations in one flat list.
  *
- * Each option is something the reader KNOWS happened, never a judgement about
- * which stage they are in: "did the bank ask you for something you didn't
- * understand" is a memory; "are you in the claim process" is an opinion. The
- * five are mutually exclusive by construction, which is what lets them sit
- * flat on one screen instead of nesting.
+ * Redesigned 7 Sep 2026 at direct request, replacing the two-group layout
+ * below (kept in git history) with a single ungrouped list and a simplified
+ * label set. Two destinations that used to have their own front-door slot --
+ * /what-were-you-asked-for (a specific bank demand, checked against the
+ * RBI's list) and /bank-refused (the escalation route) -- lost their slot
+ * here but did NOT lose their door: both are still one click away from
+ * "I have started the process" (/start/started's own menu already offers
+ * them, and always has -- see that page's own comment on why it repeats
+ * these on purpose). This screen's two new slots, "Need information on
+ * documents" and "Others", point at /documents and /contact respectively.
  *
- * Two of these destinations — /what-were-you-asked-for and /bank-refused —
- * are fully written pages that have never had a front door. The third,
- * /already-in-court, is reached one level in, from the "already started"
- * menu.
+ * Each option is still something the reader KNOWS happened or wants, not a
+ * judgement about which stage they are in, and the five stay mutually
+ * exclusive by construction -- "Others" is the deliberate exception, an
+ * honest catch-all rather than a sixth guess at what else someone might mean.
  */
 function SituationPicker({ locale }: { locale: Locale }) {
   const t = SITUATIONS_T[locale];
 
-  // Ordered by who actually arrives, not by chronology. PRODUCT.md's primary
-  // user has ALREADY been to a bank and is holding a demand -- usually for a
-  // succession certificate -- so that situation takes the first slot and the
-  // extra weight. The first draft put "I have not started" first, which gave
-  // the strongest position on the page to the case the product is least
-  // often used for.
-  //
-  // `lead` is the one row that is a filled card. Everything else is a rule-
-  // separated row: five equal cards gave the product no opinion about which
-  // door most people need, and pushed the last two below the fold on a phone,
-  // which is the primary device.
-  const spoken: (Situation & { href: string; lead?: boolean })[] = [
-    // Express lanes. These two also appear inside "already started" -- a
-    // reader who identifies by their problem rather than by their stage gets
-    // there in one click instead of two, and neither route is wrong.
-    { ...t.askedFor, href: "/what-were-you-asked-for", lead: true },
-    { ...t.refused, href: "/bank-refused" },
-    { ...t.alreadyStarted, href: "/start/started" },
-  ];
-  const notYet: (Situation & { href: string })[] = [
+  // Order given directly, 7 Sep 2026 -- not the previous "who actually
+  // arrives most" weighting. `lead` is dropped along with it: five equal
+  // rows, no filled card, since nothing here is being emphasised over
+  // anything else by design.
+  const options: (Situation & { href: string })[] = [
+    { ...t.dontKnow, href: "/start/find" },
     // The wizard's own door. `begin=1` rather than a bare /start, which would
-    // land back here. `entry=new` marks the reader as someone who has not been
-    // to a counter, which is what drops the court-order question -- see
+    // land back here. `entry=new` marks the reader as someone who has not
+    // been to a counter, which is what drops the court-order question -- see
     // lib/wizard.ts's Entry.
     { ...t.notStarted, href: "/start?begin=1&entry=new" },
-    { ...t.dontKnow, href: "/start/find" },
+    { ...t.alreadyStarted, href: "/start/started" },
+    { ...t.askedFor, href: "/documents" },
+    { ...t.refused, href: "/contact" },
   ];
 
   return (
@@ -259,14 +252,7 @@ function SituationPicker({ locale }: { locale: Locale }) {
           <h1 className="display-lg font-serif font-bold text-indigo-ink">
             {t.heading}
           </h1>
-
-          {/* "Not been yet" first -- direct request, 7 Sep 2026. It is the
-              chronological start of the journey, and it holds the two doors a
-              reader who has no idea what happens next needs to find without
-              first reading three rows about a bank conversation they have not
-              had. */}
-          <SituationGroup label={t.groupNotYet} options={notYet} locale={locale} />
-          <SituationGroup label={t.groupSpoken} options={spoken} locale={locale} />
+          <SituationGroup options={options} locale={locale} />
         </div>
       </main>
       <RecoverFooter />
@@ -274,28 +260,30 @@ function SituationPicker({ locale }: { locale: Locale }) {
   );
 }
 
+/**
+ * `label` and `lead` are unused since the 7 Sep flattening -- the type keeps
+ * them because SituationGroup's card styling still branches on `lead`, kept
+ * rather than deleted in case a future screen wants a two-tier list again.
+ * No current caller sets either.
+ */
 function SituationGroup({
   label,
   options,
   locale,
 }: {
-  label: string;
+  label?: string;
   options: (Situation & { href: string; lead?: boolean })[];
   locale: Locale;
 }) {
   return (
     <section className="mt-8">
-      <h2 className="text-[0.875rem] font-bold uppercase tracking-[0.14em] text-ink-faint">
-        {label}
-      </h2>
-      {/* Every option is its own box -- direct instruction, 7 Sep. An earlier
-          pass set the non-leading options as rule-separated rows to save
-          vertical space on a phone; as built they read as a bare list rather
-          than as five things you choose between. The hierarchy now comes from
-          the leading card's heavier border and larger type, not from taking
-          the others' boxes away, and the padding is kept tighter than the
-          original so all five still fit one phone screen. */}
-      <ul className="mt-3 space-y-2.5">
+      {label && (
+        <h2 className="text-[0.875rem] font-bold uppercase tracking-[0.14em] text-ink-faint">
+          {label}
+        </h2>
+      )}
+      {/* Every option is its own box -- direct instruction, 7 Sep. */}
+      <ul className={`space-y-2.5 ${label ? "mt-3" : ""}`}>
         {options.map((option) => (
           <li key={option.href}>
             <Link
