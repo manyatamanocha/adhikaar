@@ -734,7 +734,7 @@ const en: HomeDict = {
     everyCellStrong: "Every cell is read or blank.",
     everyCellBody:
       "Nothing here is inferred. Where a bank has not published a figure we leave it empty and say so, rather than filling it with the RBI floor and letting you believe it is that bank's own number. A checked row is worth more than a guessed one.",
-    emptyRowHeading: "An empty row is itself a finding",
+    emptyRowHeading: "You should know",
     emptyRowBefore:
       "Since 31 March 2026 a bank has been required to publish its board-approved deceased-claim policy and its document checklist. We could not find one for",
     emptyRowAfter:
@@ -1238,7 +1238,7 @@ const hi: HomeDict = {
     everyCellStrong: "हर सेल या तो पढ़ी गई है या ख़ाली है।",
     everyCellBody:
       "यहाँ कुछ भी अनुमान से नहीं भरा गया। जहाँ किसी बैंक ने कोई आँकड़ा प्रकाशित नहीं किया, वहाँ हमने उसे ख़ाली छोड़ा और यह बताया, बजाय इसके कि आरबीआई की सीमा भरकर आपको यह विश्वास दिलाएँ कि यह उसी बैंक का अपना आँकड़ा है। एक जाँची गई पंक्ति एक अनुमानित पंक्ति से बेहतर है।",
-    emptyRowHeading: "एक ख़ाली पंक्ति भी अपने आप में एक निष्कर्ष है",
+    emptyRowHeading: "आपको यह जानना चाहिए",
     emptyRowBefore:
       "31 मार्च 2026 से हर बैंक के लिए अपनी बोर्ड-अनुमोदित दिवंगत-दावा नीति और दस्तावेज़ सूची प्रकाशित करना ज़रूरी है। हमें इसके लिए कोई नीति नहीं मिली:",
     emptyRowAfter:
@@ -1742,7 +1742,7 @@ const kn: HomeDict = {
     everyCellStrong: "ಪ್ರತಿ ಸೆಲ್ ಒಂದೋ ಓದಲಾಗಿದೆ ಅಥವಾ ಖಾಲಿ ಇದೆ.",
     everyCellBody:
       "ಇಲ್ಲಿ ಏನೂ ಊಹಿಸಿ ತುಂಬಿಲ್ಲ. ಒಂದು ಬ್ಯಾಂಕ್ ಒಂದು ಅಂಕಿ ಪ್ರಕಟಿಸದಿದ್ದಲ್ಲಿ, ಅದನ್ನು ಖಾಲಿ ಬಿಟ್ಟು ಹಾಗೆಂದು ಹೇಳುತ್ತೇವೆ, ಆರ್‌ಬಿಐ ಮಿತಿಯನ್ನು ತುಂಬಿ ಅದು ಆ ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಸಂಖ್ಯೆ ಎಂದು ನಿಮಗೆ ನಂಬಿಸುವ ಬದಲು. ಒಂದು ಪರಿಶೀಲಿಸಿದ ಸಾಲು ಊಹಿಸಿದ ಹಲವು ಸಾಲುಗಳಿಗಿಂತ ಉತ್ತಮ.",
-    emptyRowHeading: "ಖಾಲಿ ಸಾಲು ಕೂಡ ಒಂದು ಸಂಶೋಧನೆಯೇ",
+    emptyRowHeading: "ನೀವು ಇದನ್ನು ತಿಳಿದಿರಬೇಕು",
     emptyRowBefore:
       "31 ಮಾರ್ಚ್ 2026 ರಿಂದ ಪ್ರತಿ ಬ್ಯಾಂಕ್ ತನ್ನ ಬೋರ್ಡ್-ಅನುಮೋದಿತ ದಿವಂಗತ-ಹಕ್ಕು ನೀತಿ ಮತ್ತು ದಾಖಲೆ ಪಟ್ಟಿಯನ್ನು ಪ್ರಕಟಿಸಬೇಕು. ಇವರಿಗೆ ನಮಗೆ ಅದು ಸಿಗಲಿಲ್ಲ:",
     emptyRowAfter:
