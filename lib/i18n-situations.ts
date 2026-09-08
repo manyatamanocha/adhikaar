@@ -54,10 +54,17 @@ export type SituationsDict = {
    */
   groupSpoken: string;
   groupNotYet: string;
-  /** The five options. */
+  /**
+   * Two full-weight options (notStarted, alreadyStarted) plus two demoted to
+   * small links below them (refused, dontKnow) -- see app/start/page.tsx's
+   * SituationPicker. `askedFor` was removed entirely 8 Sep 2026: it pointed
+   * at /documents, which the homepage already links directly, and its label
+   * ("Need information on documents") collided with started.askedFor's very
+   * different, personalised page just one click deeper. Cutting it removed a
+   * redundant door and a real point of confusion in the same move.
+   */
   notStarted: Situation;
   alreadyStarted: Situation;
-  askedFor: Situation;
   refused: Situation;
   dontKnow: Situation;
 
@@ -65,10 +72,12 @@ export type SituationsDict = {
    * /start/started — the "already started" menu.
    *
    * `notSubmitted` and `inCourt` are the two entries that exist nowhere else.
-   * `askedFor` and `refused` repeat the top-level options deliberately: the
-   * opening screen serves a reader who identifies by their PROBLEM, this menu
-   * serves one who identifies by their STAGE, and both must reach the same
-   * page. A reader is never wrong here, only one screen slower.
+   * `askedFor` is the personalised RBI-comparison tool and has no other door
+   * at all since the top-level slot was cut. `refused` repeats the top-level
+   * catch-all: the opening screen serves a reader who identifies by their
+   * PROBLEM, this menu serves one who identifies by their STAGE, and both
+   * must reach the same page. A reader is never wrong here, only one screen
+   * slower.
    */
   started: {
     eyebrow: string;
@@ -123,14 +132,6 @@ const en: SituationsDict = {
   alreadyStarted: {
     label: "I have started the process",
     detail: "You have been to the bank — documents submitted, waiting, or something has gone wrong.",
-  },
-  // Repurposed 7 Sep 2026: was "The bank asked for something I don't
-  // understand" -> /what-were-you-asked-for. That page is still reachable
-  // from /start/started's own menu; this slot now points at the standalone
-  // document checklist instead.
-  askedFor: {
-    label: "Need information on documents",
-    detail: "See exactly which documents your claim needs, and what the RBI actually requires.",
   },
   // Repurposed 7 Sep 2026: was "The bank refused or delayed the claim" ->
   // /bank-refused, also still reachable from /start/started. This slot is
@@ -212,10 +213,6 @@ const hi: SituationsDict = {
     label: "मैंने प्रक्रिया शुरू कर दी है",
     detail: "आप बैंक जा चुके हैं — दस्तावेज़ जमा हैं, इंतज़ार है, या कुछ गड़बड़ हुई है।",
   },
-  askedFor: {
-    label: "दस्तावेज़ों की जानकारी चाहिए",
-    detail: "देखें आपके दावे के लिए कौन से दस्तावेज़ चाहिए, और आरबीआई असल में क्या माँगता है।",
-  },
   refused: {
     label: "अन्य",
     detail: "ऊपर की सूची में नहीं है? सीधे हमें लिखें।",
@@ -292,10 +289,6 @@ const kn: SituationsDict = {
   alreadyStarted: {
     label: "ನಾನು ಪ್ರಕ್ರಿಯೆ ಪ್ರಾರಂಭಿಸಿದ್ದೇನೆ",
     detail: "ನೀವು ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿದ್ದೀರಿ — ದಾಖಲೆ ಸಲ್ಲಿಸಿದೆ, ಕಾಯುತ್ತಿದೆ, ಅಥವಾ ಏನೋ ತಪ್ಪಾಗಿದೆ.",
-  },
-  askedFor: {
-    label: "ದಾಖಲೆಗಳ ಬಗ್ಗೆ ಮಾಹಿತಿ ಬೇಕು",
-    detail: "ನಿಮ್ಮ ಹಕ್ಕಿಗೆ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕು, ಮತ್ತು ಆರ್‌ಬಿಐ ನಿಜವಾಗಿ ಏನು ಕೇಳುತ್ತದೆ ಎಂದು ನೋಡಿ.",
   },
   refused: {
     label: "ಇತರೆ",

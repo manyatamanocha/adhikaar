@@ -21,7 +21,6 @@ import { redirect } from "next/navigation";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { OUTCOMES } from "@/lib/outcomes";
-import { SCENARIOS_BY_LOCALE, MORE_SCENARIOS_BY_LOCALE } from "@/lib/scenarios";
 import { parseLocale, withLang, type Locale } from "@/lib/i18n";
 import { HOME_T, type HomeDict } from "@/lib/i18n-home";
 import { BankSummary } from "../_components/bank-panel";
@@ -94,13 +93,6 @@ export default async function Start({
   // every link already shared or bookmarked lands exactly where it used to.
   if (isFresh && sp.begin !== "1") {
     return <SituationPicker locale={locale} />;
-  }
-
-  // The scenario-card picker, kept at ?cards=1. It has been unreachable since
-  // 6 Sep -- that string appears nowhere else in the codebase but a comment --
-  // and the situation picker above now does its job from the front door.
-  if (isFresh && sp.cards === "1") {
-    return <ScenarioPicker locale={locale} t={t} />;
   }
 
   const step = resolve(answers, locale, entry);
@@ -221,46 +213,44 @@ export default async function Start({
 /* ------------------------------------------------------------------ */
 
 /**
- * The opening screen — "My Claim Journey", five situations in one flat list.
+ * The opening screen — "My Claim Journey".
  *
- * Redesigned 7 Sep 2026 at direct request, replacing the two-group layout
- * below (kept in git history) with a single ungrouped list and a simplified
- * label set. Two destinations that used to have their own front-door slot --
- * /what-were-you-asked-for (a specific bank demand, checked against the
- * RBI's list) and /bank-refused (the escalation route) -- lost their slot
- * here but did NOT lose their door: both are still one click away from
- * "I have started the process" (/start/started's own menu already offers
- * them, and always has -- see that page's own comment on why it repeats
- * these on purpose). This screen's two new slots, "Need information on
- * documents" and "Others", point at /documents and /contact respectively.
+ * Two real situations, full-weight, plus two smaller links underneath.
+ *
+ * Cut down 8 Sep 2026 from the 7 Sep evening version's flat list of five
+ * equal cards, per direct request that the front door itself had become
+ * "a lot and confusing." "Need information on documents" -> /documents was
+ * removed outright: the homepage already links /documents directly, so the
+ * card was a second door to a page one click away, and its label collided
+ * with started.askedFor's very different, personalised RBI-comparison tool
+ * one level deeper. The other two survivors, "I don't know where to start"
+ * (a static links page, no personalisation -- the rebuild spec itself calls
+ * it unresearched) and "Others" (an explicit catch-all, never a situation),
+ * are demoted from cards to plain links rather than cut, since both still
+ * need a door somewhere.
  *
  * Each option is still something the reader KNOWS happened or wants, not a
- * judgement about which stage they are in, and the five stay mutually
- * exclusive by construction -- "Others" is the deliberate exception, an
- * honest catch-all rather than a sixth guess at what else someone might mean.
+ * judgement about which stage they are in.
  */
 function SituationPicker({ locale }: { locale: Locale }) {
   const t = SITUATIONS_T[locale];
 
-  // Order given directly, 7 Sep 2026 -- not the previous "who actually
-  // arrives most" weighting. `lead` is dropped along with it: five equal
-  // rows, no filled card, since nothing here is being emphasised over
-  // anything else by design.
-  const options: (Situation & { href: string })[] = [
-    // Goes straight to the search page now, not the two-way fork -- the
-    // fork's content turned out to just restate Q1 rather than address the
-    // actual problem this option names ("I don't know where the money is").
-    // /start/find/where already serves exactly that reader. /start/find
-    // itself is now unreachable from this screen (still works if visited
-    // directly) -- 7 Sep 2026 evening, see the bank-question-earlier spec §2.11.
-    { ...t.dontKnow, href: "/start/find/where" },
+  const primary: (Situation & { href: string })[] = [
     // The wizard's own door. `begin=1` rather than a bare /start, which would
     // land back here. `entry=new` marks the reader as someone who has not
     // been to a counter, which is what drops the court-order question -- see
     // lib/wizard.ts's Entry.
     { ...t.notStarted, href: "/start?begin=1&entry=new" },
     { ...t.alreadyStarted, href: "/start/started" },
-    { ...t.askedFor, href: "/documents" },
+  ];
+
+  const secondary: (Situation & { href: string })[] = [
+    // Goes straight to the search page, not the two-way fork -- the fork's
+    // content turned out to just restate Q1 rather than address the actual
+    // problem this option names ("I don't know where the money is").
+    // /start/find/where already serves exactly that reader. /start/find
+    // itself is now dead code, removed 8 Sep 2026.
+    { ...t.dontKnow, href: "/start/find/where" },
     { ...t.refused, href: "/contact" },
   ];
 
@@ -272,7 +262,20 @@ function SituationPicker({ locale }: { locale: Locale }) {
           <h1 className="display-lg font-serif font-bold text-indigo-ink">
             {t.heading}
           </h1>
-          <SituationGroup options={options} locale={locale} />
+          <SituationGroup options={primary} locale={locale} />
+          <ul className="mt-5 space-y-1.5">
+            {secondary.map((option) => (
+              <li key={option.href} className="text-[0.9375rem] leading-relaxed">
+                <Link
+                  href={withLang(option.href, locale)}
+                  className="font-bold text-indigo underline underline-offset-2"
+                >
+                  {option.label}
+                </Link>
+                <span className="text-ink-faint"> — {option.detail}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </main>
       <RecoverFooter />
@@ -339,100 +342,6 @@ function SituationGroup({
         ))}
       </ul>
     </section>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-
-/**
- * The recognition front door — shown before the four legal-shaped
- * questions, so most people can find themselves in one line rather than
- * parsing "What are you claiming?" first. Every card is a real URL into
- * the same wizard/outcome machinery; nothing here is a shortcut around it.
- */
-function ScenarioPicker({ locale, t }: { locale: Locale; t: HomeDict["startPage"] }) {
-  const scenarios = SCENARIOS_BY_LOCALE[locale];
-  return (
-    <>
-      <RecoverNav />
-
-      <main className="flex-1 bg-mist">
-        <div className="shell max-w-[760px] py-8 sm:py-12">
-          <p className="text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-saffron-ink">
-            {t.eyebrow}
-          </p>
-          <h1 className="display-lg mt-2.5 font-serif font-bold text-indigo-ink">
-            {t.heading}
-          </h1>
-          <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">
-            {t.sub}
-          </p>
-          <p className="mt-3 text-[1.05rem] font-semibold text-indigo-ink">
-            {t.timeEstimate}
-          </p>
-
-          <ul className="mt-7 space-y-3">
-            {scenarios.map((s) => (
-              <li key={s.label}>
-                <Link
-                  href={withLang(s.href, locale)}
-                  className="group flex items-start gap-4 rounded-xl border-2 border-rule bg-white p-5 transition-all hover:border-indigo hover:shadow-[0_6px_24px_rgba(45,48,121,0.12)]"
-                >
-                  <span className="flex-1">
-                    <span className="display-md block font-serif font-bold text-indigo-ink">
-                      {s.label}
-                    </span>
-                    {s.detail && (
-                      <span className="body-fluid mt-1.5 block leading-relaxed text-ink-soft">
-                        {s.detail}
-                      </span>
-                    )}
-                  </span>
-                  <span
-                    aria-hidden="true"
-                    className="mt-1 shrink-0 text-[1.25rem] font-bold text-saffron-ink"
-                  >
-                    &rarr;
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <div className="mt-8 border-t border-rule-faint pt-5">
-            <details open>
-              <summary className="cursor-pointer text-[1rem] font-bold text-indigo underline underline-offset-2">
-                {t.somethingElse}
-              </summary>
-              <ul className="mt-4 space-y-3">
-                {MORE_SCENARIOS_BY_LOCALE[locale].map((s) => (
-                  <li key={s.label}>
-                    <Link href={withLang(s.href, locale)} className="group flex items-start gap-4 rounded-xl border border-rule bg-white p-4 transition-colors hover:border-indigo">
-                      <span className="flex-1">
-                        <span className="display-md block font-bold text-indigo-ink">{s.label}</span>
-                        {s.detail && <span className="mt-1 block text-[1.13rem] leading-relaxed text-ink-soft">{s.detail}</span>}
-                      </span>
-                      <span aria-hidden="true" className="text-lg font-bold text-saffron-ink">→</span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </details>
-          </div>
-
-          <div className="mt-5">
-            <Link
-              href={withLang("/start", locale)}
-              className="-my-2.5 inline-block py-2.5 text-[1rem] font-bold text-indigo underline underline-offset-2"
-            >
-              {t.noneOfThese}
-            </Link>
-          </div>
-        </div>
-      </main>
-
-      <RecoverFooter />
-    </>
   );
 }
 

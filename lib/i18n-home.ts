@@ -236,13 +236,8 @@ export type HomeDict = {
     mostAsked: string;
   };
 
-  /** /start -- the scenario picker's own static text. Wizard questions live in lib/wizard.ts (its own per-locale QUESTIONS_BY_LOCALE), scenario cards in lib/scenarios.ts (SCENARIOS_BY_LOCALE) -- both separate from this dictionary since they are structured data, not simple strings. */
+  /** /start -- the wizard screen's own static text. Question content lives in lib/wizard.ts (its own per-locale QUESTIONS_BY_LOCALE); the opening situation-picker screen has its own dictionary, lib/i18n-situations.ts. */
   startPage: {
-    eyebrow: string;
-    heading: string;
-    sub: string;
-    somethingElse: string;
-    noneOfThese: string;
     questionOf: (current: number, total: number) => string;
     /**
      * Shown once the reader's own answers have ruled questions out, so the
@@ -754,11 +749,6 @@ const en: HomeDict = {
   },
 
   startPage: {
-    eyebrow: "Where should we start?",
-    heading: "Which of these sounds like your situation?",
-    sub: "Pick whichever is closest — you can change any answer as you go.",
-    somethingElse: "More situations",
-    noneOfThese: "None of these — answer a few short questions instead",
     questionOf: (current, total) => `Step ${current} of ${total}`,
     questionsRuledOut: (n) => n === 1 ? "1 no longer applies to you" : `${n} no longer apply to you`,
     lastQuestion: "Last question for your situation",
@@ -1251,11 +1241,6 @@ const hi: HomeDict = {
   },
 
   startPage: {
-    eyebrow: "हम कहाँ से शुरू करें?",
-    heading: "इनमें से कौन-सी आपकी स्थिति जैसी लगती है?",
-    sub: "जो सबसे क़रीब लगे उसे चुनें — आप कोई भी जवाब बाद में बदल सकते हैं।",
-    somethingElse: "अन्य स्थितियाँ",
-    noneOfThese: "इनमें से कोई नहीं — इसके बजाय कुछ छोटे सवालों के जवाब दें",
     questionOf: (current, total) => `${total} में से चरण ${current}`,
     questionsRuledOut: (n) => `${n} सवाल अब आप पर लागू नहीं होते`,
     lastQuestion: "आपकी स्थिति के लिए आख़िरी सवाल",
@@ -1748,11 +1733,6 @@ const kn: HomeDict = {
   },
 
   startPage: {
-    eyebrow: "ನಾವು ಎಲ್ಲಿಂದ ಪ್ರಾರಂಭಿಸಬೇಕು?",
-    heading: "ಇವುಗಳಲ್ಲಿ ಯಾವುದು ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಯಂತೆ ಕಾಣುತ್ತದೆ?",
-    sub: "ಹತ್ತಿರವಾದದ್ದನ್ನು ಆರಿಸಿ — ನೀವು ಯಾವುದೇ ಉತ್ತರವನ್ನು ನಂತರ ಬದಲಾಯಿಸಬಹುದು.",
-    somethingElse: "ಇತರ ಸಂದರ್ಭಗಳು",
-    noneOfThese: "ಇವುಗಳಲ್ಲಿ ಯಾವುದೂ ಇಲ್ಲ — ಬದಲಿಗೆ ಕೆಲವು ಸಣ್ಣ ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ",
     questionOf: (current, total) => `${total} ರಲ್ಲಿ ಹಂತ ${current}`,
     questionsRuledOut: (n) => `${n} ಪ್ರಶ್ನೆಗಳು ಇನ್ನು ನಿಮಗೆ ಅನ್ವಯಿಸುವುದಿಲ್ಲ`,
     lastQuestion: "ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಗೆ ಕೊನೆಯ ಪ್ರಶ್ನೆ",
