@@ -72,15 +72,16 @@ export function BanksPage() {
                   {missing.map((b) => b.short).join(", ")}
                 </strong>
                 {t.banksPage.emptyRowAfter}
+                {pageOnly.length > 0 && (
+                  <>
+                    {" "}
+                    <strong className="font-bold">
+                      {pageOnly.map((b) => b.short).join(" and ")}
+                    </strong>{" "}
+                    {t.banksPage.pageOnlyAfter}
+                  </>
+                )}
               </p>
-              {pageOnly.length > 0 && (
-                <p className="body-fluid mt-3 max-w-[70ch] leading-relaxed text-[#16233F]">
-                  <strong className="font-bold">
-                    {pageOnly.map((b) => b.short).join(" and ")}
-                  </strong>{" "}
-                  {t.banksPage.pageOnlyAfter}
-                </p>
-              )}
             </div>
           )}
 
