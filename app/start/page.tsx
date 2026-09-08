@@ -193,11 +193,27 @@ export default async function Start({
           )}
 
           <div className="mt-8 border-t border-rule-faint pt-5">
+            {/* Escape hatch for a doubt that can surface on any question, not
+                just "bank" -- same copy and destination as the front door's
+                demoted "I don't know where the money is" link. Placed here,
+                below the answers, not beside Back: inserting it near Back
+                would push every question's actual options further down the
+                screen on a phone, for a link almost nobody needs on any
+                given visit. */}
+            <p className="text-[0.9375rem] leading-relaxed">
+              <Link
+                href={withLang("/start/find/where", locale)}
+                className="font-bold text-indigo underline underline-offset-2"
+              >
+                {SITUATIONS_T[locale].dontKnow.label}
+              </Link>
+              <span className="text-ink-faint"> — {SITUATIONS_T[locale].dontKnow.detail}</span>
+            </p>
             {/* Precise, because it has to be. The answers are not stored and
                 nothing here identifies anyone — but we do count which branch
                 of the law people land on, and saying "sent nowhere" would be
                 a lie on the one page that cannot afford one. */}
-            <p className="text-[0.9375rem] text-ink-faint">
+            <p className="mt-3 text-[0.9375rem] text-ink-faint">
               {t.privacyNote}
               <Link href={withLang("/privacy", locale)} className="ml-1 underline">{t.privacyLink}</Link>
             </p>
@@ -215,7 +231,7 @@ export default async function Start({
 /**
  * The opening screen — "My Claim Journey".
  *
- * Two real situations, full-weight, plus two smaller links underneath.
+ * Three real situations, full-weight, plus one smaller link underneath.
  *
  * Cut down 8 Sep 2026 from the 7 Sep evening version's flat list of five
  * equal cards, per direct request that the front door itself had become
@@ -224,10 +240,15 @@ export default async function Start({
  * card was a second door to a page one click away, and its label collided
  * with started.askedFor's very different, personalised RBI-comparison tool
  * one level deeper. The other two survivors, "I don't know where to start"
- * (a static links page, no personalisation -- the rebuild spec itself calls
- * it unresearched) and "Others" (an explicit catch-all, never a situation),
- * are demoted from cards to plain links rather than cut, since both still
- * need a door somewhere.
+ * and "Others" (an explicit catch-all, never a situation), were both
+ * demoted from cards to plain links rather than cut.
+ *
+ * 🔴 Re-promoted 9 Sep 2026, on direct request: "I don't know where the
+ * money is" back to a full card alongside the other two -- it is a real,
+ * common situation (the primary research base's own spine quote is "no
+ * website that can give them a list," a family who does not yet know where
+ * to look), not a secondary catch-all like "Others" beside it. That one
+ * stays a small link.
  *
  * Each option is still something the reader KNOWS happened or wants, not a
  * judgement about which stage they are in.
@@ -242,15 +263,14 @@ function SituationPicker({ locale }: { locale: Locale }) {
     // lib/wizard.ts's Entry.
     { ...t.notStarted, href: "/start?begin=1&entry=new" },
     { ...t.alreadyStarted, href: "/start/started" },
+    // Goes straight to the search page, not a two-way fork -- an earlier
+    // fork's content turned out to just restate Q1 rather than address the
+    // actual problem this option names. /start/find/where already serves
+    // exactly that reader.
+    { ...t.dontKnow, href: "/start/find/where" },
   ];
 
   const secondary: (Situation & { href: string })[] = [
-    // Goes straight to the search page, not the two-way fork -- the fork's
-    // content turned out to just restate Q1 rather than address the actual
-    // problem this option names ("I don't know where the money is").
-    // /start/find/where already serves exactly that reader. /start/find
-    // itself is now dead code, removed 8 Sep 2026.
-    { ...t.dontKnow, href: "/start/find/where" },
     { ...t.refused, href: "/contact" },
   ];
 
