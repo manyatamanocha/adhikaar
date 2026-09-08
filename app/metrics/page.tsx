@@ -332,7 +332,7 @@ export default async function MetricsPage() {
                 <h2 className="mt-8 text-xl font-bold">Checks on our guidance</h2>
                 <div className="mt-4 grid gap-4 lg:grid-cols-3">
                   <Guardrail label="Cases needing a different route" question="What counts here?" value={pct(m.guardrails.honestExitRate)}>
-                    {m.guardrails.honestExits} of {m.guardrails.journeysReachingOutcome} journeys reaching a verdict involved a dispute, an above-threshold claim, a court case, or an unsupported asset. Changes in this share need context.
+                    {m.guardrails.honestExits} of {m.guardrails.journeysReachingOutcome} journeys reaching a verdict or a review page involved a dispute, an above-threshold claim, a court case, an unsupported asset, or an unresolved detail needing confirmation. Changes in this share need context.
                   </Guardrail>
                   <Guardrail label="Answers from situation pages" question="Where did the answer come from?" value={pct(m.guardrails.situationResolutionShare)}>
                     The share of answers provided by situation pages instead of claim verdict pages. This helps us see which kind of help people used.

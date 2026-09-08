@@ -35,10 +35,16 @@ export type MixpanelEvent = {
 /**
  * Verdicts where the honest answer is "this is not straightforward".
  *
- * `needs-review` belongs here and was missed on the first pass: a court
- * restriction, a will, or a flagged dispute sending someone to a lawyer is
- * exactly the unwelcome truth this guardrail exists to protect. Omitting it
- * made the guardrail under-count the thing it measures.
+ * `needs-review` belongs here: a court restriction, a will, or a flagged
+ * dispute sending someone to a lawyer is exactly the unwelcome truth this
+ * guardrail exists to protect. It was ADDED to this set on a first pass that
+ * believed that was the whole fix -- it was not. `/needs-review` never fires
+ * `outcome_reached` (it fires `actionable_result_viewed` with
+ * `resolution_source: "review"` instead -- see analytics.tsx), and the
+ * guardrail below read this set against `outcome_reached` alone, so
+ * "needs-review" sat in the set unable to ever match anything. Fixed 9 Sep
+ * 2026 by widening the event source the set is read against, not by
+ * touching the set itself -- see the guardrail below.
  *
  * `confirm-details` is the same outcome under its old route name, kept so
  * events recorded before the 6 Sep rename still count.
@@ -201,9 +207,25 @@ export function aggregate(real: MixpanelEvent[], nowMs: number = Date.now()) {
   //
   // Was events over events, which is not comparable to anything else in this
   // response and double-counts a journey that reloaded a verdict page.
-  const outcomeJourneys = idsOf("outcome_reached");
+  //
+  // 🔴 Fixed 9 Sep 2026: both halves used to be built from `outcome_reached`
+  // alone, which /needs-review never fires. HONEST_EXIT_OUTCOMES already
+  // listed "needs-review" -- added specifically because omitting it
+  // under-counts this guardrail -- but a value in that set can only ever
+  // match an event whose stream actually carries it, and outcome_reached
+  // never does for a review. The set membership was right; the event source
+  // filtered against it was wrong. needs-review (a court restriction, an
+  // unconfirmed will, a flagged dispute) is arguably the single population
+  // this guardrail most exists to catch, so the miss was not a rounding
+  // error -- it made the guardrail blind to the outcome most likely to be
+  // the one worth hiding. Both halves now also read the review-resolution
+  // events /needs-review actually fires.
+  const reviewEvents = of("actionable_result_viewed").filter(
+    (e) => String(e.properties["resolution_source"] ?? "") === "review",
+  );
+  const outcomeJourneys = new Set([...idsOf("outcome_reached"), ...reviewEvents.map(idFor)]);
   const honestJourneys = new Set(
-    of("outcome_reached")
+    [...of("outcome_reached"), ...reviewEvents]
       .filter((e) => HONEST_EXIT_OUTCOMES.has(String(e.properties["outcome"] ?? "")))
       .map(idFor),
   );

@@ -149,6 +149,29 @@ test("Honest-Exit Rate counts journeys, not events", () => {
   assert.equal(guardrails.honestExitRate, 50);
 });
 
+/**
+ * The bug this pins: HONEST_EXIT_OUTCOMES has always listed "needs-review",
+ * but /needs-review never fires outcome_reached -- only
+ * actionable_result_viewed with resolution_source "review" (see
+ * analytics.tsx). Reading the set against outcome_reached alone therefore
+ * let "needs-review" sit in the set unable to ever match anything: a review
+ * journey was invisible to BOTH halves of this guardrail, not merely
+ * undercounted in the numerator. needs-review (a court restriction, an
+ * unconfirmed will, a flagged dispute) is arguably the single population
+ * this guardrail most exists to catch.
+ */
+test("Honest-Exit Rate counts a needs-review journey in both halves", () => {
+  const { guardrails } = aggregate([
+    ev("outcome_reached", "a", { outcome: "nominee" }),
+    ev("actionable_result_viewed", "b", { outcome: "needs-review", resolution_source: "review" }),
+    // Reloading the review page twice is still one journey.
+    ev("actionable_result_viewed", "b", { outcome: "needs-review", resolution_source: "review" }),
+  ], NOW);
+  assert.equal(guardrails.journeysReachingOutcome, 2, "the review journey must sit in the denominator");
+  assert.equal(guardrails.honestExits, 1, "and count as a hard case in the numerator");
+  assert.equal(guardrails.honestExitRate, 50);
+});
+
 test("Situation Resolution Share sees numerator inflation that Honest-Exit cannot", () => {
   const events = [
     ev("outcome_reached", "a", { outcome: "nominee" }),
