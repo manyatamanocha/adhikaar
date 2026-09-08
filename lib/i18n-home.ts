@@ -215,6 +215,8 @@ export type HomeDict = {
     policyNothingFound: string;
     policyDocument: string;
     policyPageOnly: string;
+    /** Cell()'s generic blank-value fallback -- any unverified figure in the table, not policy-specific. */
+    cellNotPublished: string;
     formLink: string;
     confirmStale: string;
     whatEachSaysHeading: string;
@@ -753,6 +755,7 @@ const en: HomeDict = {
     policyNothingFound: "Nothing found",
     policyDocument: "Policy document",
     policyPageOnly: "A claims page, no policy document",
+    cellNotPublished: "Not published",
     formLink: "Its form",
     confirmStale: "Confirm before relying on this",
     whatEachSaysHeading: "What each one actually says",
@@ -1257,6 +1260,7 @@ const hi: HomeDict = {
     policyNothingFound: "कुछ नहीं मिला",
     policyDocument: "नीति दस्तावेज़",
     policyPageOnly: "एक जानकारी पन्ना, कोई नीति दस्तावेज़ नहीं",
+    cellNotPublished: "प्रकाशित नहीं",
     formLink: "इसका फ़ॉर्म",
     confirmStale: "इस पर भरोसा करने से पहले पुष्टि करें",
     whatEachSaysHeading: "हर बैंक असल में क्या कहता है",
@@ -1761,6 +1765,7 @@ const kn: HomeDict = {
     policyNothingFound: "ಏನೂ ಸಿಗಲಿಲ್ಲ",
     policyDocument: "ನೀತಿ ದಾಖಲೆ",
     policyPageOnly: "ಒಂದು ಮಾಹಿತಿ ಪುಟ, ನೀತಿ ದಾಖಲೆ ಇಲ್ಲ",
+    cellNotPublished: "ಪ್ರಕಟಿಸಲಾಗಿಲ್ಲ",
     formLink: "ಇದರ ಫಾರ್ಮ್",
     confirmStale: "ಇದನ್ನು ನಂಬುವ ಮೊದಲು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ",
     whatEachSaysHeading: "ಪ್ರತಿ ಬ್ಯಾಂಕ್ ನಿಜವಾಗಿ ಏನು ಹೇಳುತ್ತದೆ",

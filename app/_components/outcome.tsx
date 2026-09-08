@@ -113,7 +113,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   if (hasAnswers && sp.mode === "counter" && id in COUNTER_SCRIPT) {
     return (
       <>
-        <RecoverNav />
+        <RecoverNav locale={locale} />
         <main className="flex-1">
           <CounterMode id={id} answers={answers} locale={locale} />
         </main>
@@ -133,7 +133,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   if (id === "out-of-scope") {
     return (
       <>
-        <RecoverNav />
+        <RecoverNav locale={locale} />
         <main className="flex-1">
           <Verdict id={id} answers={answers} bankId={bankId} locale={locale} outcome={outcome} t={t} />
           <OutOfScopeOptions locale={locale} t={t} />
@@ -170,7 +170,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
 
   return (
     <>
-      <RecoverNav />
+      <RecoverNav locale={locale} />
 
       <main className="flex-1">
         {!hasAnswers && <div className="shell max-w-[860px] py-5"><p className="body-fluid"><strong>{t.generalGuidanceLabel}</strong> <Link href={withLang("/start", locale)} className="text-link underline">{t.checkSituationFirst}</Link></p></div>}

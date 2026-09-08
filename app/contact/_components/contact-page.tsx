@@ -23,7 +23,7 @@ export function ContactPage() {
   return (
     <HomeI18nProvider value={{ t, locale }}>
       <div lang={locale} className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
-        <RecoverNav />
+        <RecoverNav locale={locale} />
         <Body />
         <RecoverFooter />
       </div>

@@ -50,7 +50,7 @@ export default async function BankRefusedPage({ searchParams }: { searchParams: 
 
   return (
     <>
-      <RecoverNav />
+      <RecoverNav locale={locale} />
 
       <main className="flex-1" lang={locale}>
         <section className="bg-blush border-b-4 border-maroon">

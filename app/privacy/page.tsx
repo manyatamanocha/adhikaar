@@ -17,7 +17,7 @@ export default async function PrivacyPage({
   const t = HOME_T[locale].privacyPage;
 
   return <>
-    <RecoverNav />
+    <RecoverNav locale={locale} />
     <main className="shell max-w-[860px] flex-1 py-10 sm:py-14" lang={locale}>
       <h1 className="display-xl font-serif font-bold text-indigo-ink">{t.heading}</h1>
       <p className="mt-3 text-ink-soft">{t.updated}</p>

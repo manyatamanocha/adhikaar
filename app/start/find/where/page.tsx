@@ -47,7 +47,7 @@ export default async function Where({
 
   return (
     <>
-      <RecoverNav />
+      <RecoverNav locale={locale} />
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
           <p className="text-[0.875rem] font-bold uppercase tracking-[0.16em] text-saffron-ink">

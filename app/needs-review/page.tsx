@@ -57,7 +57,7 @@ export default async function ConfirmDetails({ searchParams }: {
   // from. Otherwise, target the first genuinely re-askable field.
   const nextAskable = blocked ? undefined : steps.find(s => s.href);
   return <>
-    <RecoverNav />
+    <RecoverNav locale={locale} />
     <main className="shell max-w-[860px] flex-1 py-10 sm:py-14" lang={locale}>
       <h1 className="display-xl font-serif font-bold text-indigo-ink">{restricted ? t.headingRestricted : will ? t.headingWill : t.headingDefault}</h1>
       <p className="body-fluid mt-5 text-ink-soft">{t.sub}</p>

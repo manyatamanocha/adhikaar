@@ -45,7 +45,7 @@ export function RecoverPage() {
     <HomeI18nProvider value={{ t, locale }}>
       <div lang={locale} className="bg-[#FAF5EC] text-[#16233F] antialiased selection:bg-[#E2653B]/20 selection:text-[#16233F]">
         <NoticeBar />
-        <RecoverNav />
+        <RecoverNav locale={locale} />
         <main>
           <Hero />
           <StatsOverlap />

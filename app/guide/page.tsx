@@ -86,7 +86,7 @@ export default async function Guide({
 
   return (
     <HomeLocaleProvider locale={lang}>
-      <RecoverNav />
+      <RecoverNav locale={lang} />
 
       <main className="flex-1 bg-paper">
         <Hero lang={lang} />

@@ -67,7 +67,7 @@ export default async function Page({
 
   return (
     <>
-      <RecoverNav />
+      <RecoverNav locale={locale} />
 
       <main className="flex-1" lang={locale}>
         <section className="bg-indigo">

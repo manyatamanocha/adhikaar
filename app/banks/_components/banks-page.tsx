@@ -39,7 +39,7 @@ export function BanksPage() {
   return (
     <HomeI18nProvider value={{ t, locale }}>
       <div className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
-        <RecoverNav />
+        <RecoverNav locale={locale} />
 
         <main className="mx-auto max-w-[1920px] px-5 py-8 sm:px-8 sm:py-12">
           <div className="max-w-[900px]">
@@ -127,7 +127,7 @@ export function BanksPage() {
                       </span>
                     </Td>
                     <Td>
-                      <Cell value={bank.thresholdLabel} />
+                      <Cell value={bank.thresholdLabel} notPublished={t.banksPage.cellNotPublished} />
                     </Td>
                     <Td>
                       <Cell
@@ -138,6 +138,7 @@ export function BanksPage() {
                               ? t.banksPage.suretyNotRequired
                               : t.banksPage.suretyRequired
                         }
+                        notPublished={t.banksPage.cellNotPublished}
                       />
                     </Td>
                     <Td>
@@ -170,7 +171,7 @@ export function BanksPage() {
                           {t.banksPage.formLink}
                         </a>
                       ) : (
-                        <Cell value={null} />
+                        <Cell value={null} notPublished={t.banksPage.cellNotPublished} />
                       )}
                     </Td>
                     <Td>
@@ -352,10 +353,10 @@ function Td({
 }
 
 /** A blank cell reads as a blank cell — never as a plausible figure. */
-function Cell({ value }: { value: string | null }) {
+function Cell({ value, notPublished }: { value: string | null; notPublished: string }) {
   return value ? (
     <span className="text-[#16233F]">{value}</span>
   ) : (
-    <span className="italic text-[#B84E1E]">Not published</span>
+    <span className="italic text-[#B84E1E]">{notPublished}</span>
   );
 }

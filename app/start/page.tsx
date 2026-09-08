@@ -112,7 +112,7 @@ export default async function Start({
 
   return (
     <>
-      <RecoverNav />
+      <RecoverNav locale={locale} />
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
@@ -268,7 +268,7 @@ function SituationPicker({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <RecoverNav />
+      <RecoverNav locale={locale} />
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[680px] py-8 sm:py-12">
           <h1 className="display-lg font-serif font-bold text-indigo-ink">

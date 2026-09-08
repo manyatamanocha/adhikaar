@@ -4,12 +4,45 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { LeafMark } from "./brand";
-import { LOCALES, LOCALE_LABEL, withLang } from "@/lib/i18n";
+import { LOCALES, LOCALE_LABEL, withLang, type Locale } from "@/lib/i18n";
+import { HOME_T } from "@/lib/i18n-home";
 import { useHomeT } from "./home-i18n";
 
-/** Shared, responsive navigation. Native select supports keyboard and touch. */
-export function RecoverNav() {
-  return <Suspense fallback={<header data-print="hide" className="bg-[#FAF5EC] p-5"><Link href="/" className="font-serif text-3xl font-bold">Adhikaar</Link><nav aria-label="Quick links" className="mt-4 flex flex-wrap gap-6"><Link href="/start">Claim Guide</Link><Link href="/banks">Bank policies</Link><Link href="/faq">FAQs</Link><Link href="/contact">Contact</Link></nav></header>}><Navigation /></Suspense>;
+/**
+ * Shared, responsive navigation. Native select supports keyboard and touch.
+ *
+ * `locale` is optional and only affects the Suspense FALLBACK below --
+ * Navigation itself always reads its own locale from useSearchParams() once
+ * mounted, so the two can never disagree once hydrated. The fallback exists
+ * because locale lives only in the URL's `?lang=` query param, never a
+ * cookie (lib/i18n.ts), so the server rendering this fallback has no other
+ * way to know it -- a caller that already computed `locale` server-side
+ * (nearly every page does, via parseLocale(sp.lang)) should pass it through
+ * so the very first paint is in the reader's language, not a hardcoded
+ * English flash before the client hook resolves.
+ */
+export function RecoverNav({ locale }: { locale?: Locale } = {}) {
+  const l = locale ?? "en";
+  const t = HOME_T[l];
+  return (
+    <Suspense
+      fallback={
+        <header data-print="hide" className="bg-[#FAF5EC] p-5">
+          <Link href={withLang("/", l)} className="font-serif text-3xl font-bold">Adhikaar</Link>
+          <nav aria-label="Quick links" className="mt-4 flex flex-wrap gap-6">
+            <Link href={withLang("/start", l)}>{t.nav.claimGuide}</Link>
+            <Link href={withLang("/banks", l)}>
+              {l === "hi" ? "बैंक की नीतियाँ" : l === "kn" ? "ಬ್ಯಾಂಕ್ ನೀತಿಗಳು" : "Bank policies"}
+            </Link>
+            <Link href={withLang("/faq", l)}>{t.nav.faq}</Link>
+            <Link href={withLang("/contact", l)}>{t.nav.contact}</Link>
+          </nav>
+        </header>
+      }
+    >
+      <Navigation />
+    </Suspense>
+  );
 }
 
 function Navigation() {
@@ -36,7 +69,7 @@ function Navigation() {
         <div aria-hidden="true" className="hidden lg:block" />
         <Link href={withLang("/", locale)} className="flex min-w-0 flex-col items-center">
           <span className="flex items-center gap-2">
-            <LeafMark className="h-6 w-6 shrink-0 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
+            <LeafMark className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-12 lg:w-12" />
             <span className="font-serif text-[1.1875rem] font-bold leading-tight sm:text-[1.5625rem] lg:text-[1.875rem]">Adhikaar</span>
           </span>
           <span className="mt-1 block max-w-[20rem] translate-x-4 text-center text-[0.625rem] text-[#6B6255] sm:max-w-[24rem] sm:text-[0.6875rem] lg:text-[0.75rem]">

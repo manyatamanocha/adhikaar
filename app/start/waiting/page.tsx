@@ -46,7 +46,7 @@ export default async function Waiting({ searchParams }: { searchParams: Promise<
   const title = answer === "yes" ? t.confirmed : answer === "no" ? t.missing : t.unknown;
   const body = answer === "yes" ? t.confirmedBody : answer === "no" ? t.missingBody : t.unknownBody;
   return <>
-    <RecoverNav />
+    <RecoverNav locale={locale} />
     <main className="shell max-w-[760px] flex-1 py-8 sm:py-12" lang={locale}>
       <Link href={withLang("/start/started", locale)} className="inline-flex min-h-11 items-center font-bold text-indigo underline">{t.back}</Link>
       <h1 className="display-lg mt-5 font-serif font-bold text-indigo-ink">{answer ? title : t.title}</h1>

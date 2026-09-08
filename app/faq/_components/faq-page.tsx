@@ -37,7 +37,7 @@ export function FaqPage() {
   return (
     <HomeI18nProvider value={{ t, locale }}>
       <div lang={locale} className="min-h-screen bg-[#FAF5EC] text-[#16233F] antialiased">
-        <RecoverNav />
+        <RecoverNav locale={locale} />
         <Body faqs={FAQS_BY_LOCALE[locale]} mostAsked={t.faqPage.mostAsked} heading={t.faqPage.heading} />
         <RecoverFooter />
       </div>
