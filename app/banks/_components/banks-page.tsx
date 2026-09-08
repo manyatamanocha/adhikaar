@@ -62,11 +62,17 @@ export function BanksPage() {
           </div>
 
           {missing.length > 0 && (
-            <div className="mt-6 rounded-2xl border-2 border-[#B84E1E] bg-[#FBEAE3] p-6">
+            <div className="mt-6 max-w-[900px] rounded-2xl border-2 border-[#B84E1E] bg-[#FBEAE3] p-6">
               <h2 className="display-md font-serif font-bold text-[#B84E1E]">
                 {t.banksPage.emptyRowHeading}
               </h2>
-              <p className="body-fluid mt-2 max-w-[70ch] leading-relaxed text-[#16233F]">
+              {/* No max-w-[70ch] here, unlike most body text on the site --
+                  the box itself is already capped at 900px (matching the
+                  page's own content column above it), so an additional
+                  narrower cap on the text inside it double-constrained the
+                  paragraph: short, ragged lines floating inside a box with
+                  visible empty space down its right side. One cap, not two. */}
+              <p className="body-fluid mt-2 leading-relaxed text-[#16233F]">
                 {t.banksPage.emptyRowBefore}{" "}
                 <strong className="font-bold">
                   {missing.map((b) => b.short).join(", ")}

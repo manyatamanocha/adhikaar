@@ -728,7 +728,7 @@ const en: HomeDict = {
 
   banksPage: {
     eyebrow: "Bank-by-bank",
-    heading: "The rule is the same everywhere. The practice is not.",
+    heading: "How each bank compares",
     sub: "This is each bank's own published practice on top of the RBI's floor, read from their own pages — including where they publish nothing at all.",
     cta: "Start your claim journey today",
     everyCellStrong: "Every cell is read or blank.",
@@ -1232,7 +1232,7 @@ const hi: HomeDict = {
 
   banksPage: {
     eyebrow: "बैंक के अनुसार",
-    heading: "नियम हर जगह एक जैसा है। व्यवहार नहीं।",
+    heading: "हर बैंक की तुलना",
     sub: "यह हर बैंक की अपनी प्रकाशित प्रक्रिया है, आरबीआई की न्यूनतम सीमा के ऊपर, उनके अपने पन्नों से ली गई — जिसमें वे मामले भी शामिल हैं जहाँ वे कुछ भी प्रकाशित नहीं करते।",
     cta: "आज ही अपना दावा शुरू करें",
     everyCellStrong: "हर सेल या तो पढ़ी गई है या ख़ाली है।",
@@ -1736,7 +1736,7 @@ const kn: HomeDict = {
 
   banksPage: {
     eyebrow: "ಬ್ಯಾಂಕ್-ವಾರು",
-    heading: "ನಿಯಮ ಎಲ್ಲೆಡೆ ಒಂದೇ. ಆಚರಣೆ ಅಲ್ಲ.",
+    heading: "ಪ್ರತಿ ಬ್ಯಾಂಕಿನ ಹೋಲಿಕೆ",
     sub: "ಇದು ಆರ್‌ಬಿಐ ನ ಕನಿಷ್ಠ ಮಿತಿಯ ಮೇಲೆ ಪ್ರತಿ ಬ್ಯಾಂಕ್‌ನ ಸ್ವಂತ ಪ್ರಕಟಿತ ಆಚರಣೆ, ಅವರ ಸ್ವಂತ ಪುಟಗಳಿಂದ ಪಡೆಯಲಾಗಿದೆ — ಏನನ್ನೂ ಪ್ರಕಟಿಸದಿರುವ ಸಂದರ್ಭಗಳನ್ನೂ ಒಳಗೊಂಡಂತೆ.",
     cta: "ಇಂದೇ ನಿಮ್ಮ ಹಕ್ಕು ಪ್ರಾರಂಭಿಸಿ",
     everyCellStrong: "ಪ್ರತಿ ಸೆಲ್ ಒಂದೋ ಓದಲಾಗಿದೆ ಅಥವಾ ಖಾಲಿ ಇದೆ.",
