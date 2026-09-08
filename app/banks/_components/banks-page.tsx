@@ -205,13 +205,13 @@ export function BanksPage() {
                   )}
 
                   {bank.suretyQuote && (
-                    <blockquote className="mt-3 border-l-4 border-[#E2653B] pl-4 font-serif text-[1.0625rem] leading-[1.6] text-[#16233F]">
+                    <blockquote className="mt-3 border-l-2 border-[#EFE7D8] pl-4 font-serif text-[1.0625rem] leading-[1.6] text-[#16233F]">
                       &ldquo;{bank.suretyQuote}&rdquo;
                     </blockquote>
                   )}
 
                   {bank.turnaround && (
-                    <blockquote className="mt-3 border-l-4 border-[#E2653B] pl-4 font-serif text-[1.0625rem] leading-[1.6] text-[#16233F]">
+                    <blockquote className="mt-3 border-l-2 border-[#EFE7D8] pl-4 font-serif text-[1.0625rem] leading-[1.6] text-[#16233F]">
                       &ldquo;{bank.turnaround}&rdquo;
                     </blockquote>
                   )}
