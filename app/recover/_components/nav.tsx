@@ -65,11 +65,11 @@ function Navigation() {
   ];
   return (
     <header data-print="hide" className="bg-[#FAF5EC] text-[#16233F]" lang={locale}>
-      <div className="mx-auto flex max-w-[1920px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr]">
+      <div className="mx-auto flex max-w-[1920px] flex-wrap items-center justify-between gap-4 px-5 pt-4 pb-7 sm:px-8 sm:pb-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:pb-9">
         <div aria-hidden="true" className="hidden lg:block" />
         <Link href={withLang("/", locale)} className="flex min-w-0 flex-col items-center">
-          <AdhikaarMark className="h-9 w-auto sm:h-12 lg:h-14" />
-          <span className="mt-1 block max-w-[20rem] text-center text-[0.625rem] text-[#6B6255] sm:max-w-[24rem] sm:text-[0.6875rem] lg:text-[0.75rem]">
+          <AdhikaarMark className="h-12 w-auto sm:h-16 lg:h-20" />
+          <span className="mt-1.5 block max-w-[20rem] text-center text-[0.625rem] text-[#6B6255] sm:max-w-[24rem] sm:text-[0.6875rem] lg:text-[0.75rem]">
             The counter companion for deceased-bank claims in India
           </span>
         </Link>
