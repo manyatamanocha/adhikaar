@@ -275,7 +275,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
                         {outcome.tracker && <DeadlineTracker locale={locale} />}
                         <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
                         <SourceLine locale={locale} t={t} />
-                        {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} />}
+                        {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} t={t} />}
                       </>
                     ),
                   },

@@ -441,6 +441,20 @@ export type HomeDict = {
     noFixedListGood: string;
     noFixedListHard: string;
     counterFooter: string;
+    /**
+     * BeliefSurvey (belief-survey.tsx) -- the one question the site asks
+     * that is not part of the answer itself. Shown only on good-news
+     * verdicts, before the reader has read the explanation, so it has its
+     * own question, three button labels and three distinct replies.
+     */
+    beliefQuestion: string;
+    beliefNote: string;
+    beliefYes: string;
+    beliefNo: string;
+    beliefUnsure: string;
+    beliefReplyYes: string;
+    beliefReplyNo: string;
+    beliefReplyUnsure: string;
   };
   privacyPage: {
     heading: string;
@@ -942,6 +956,14 @@ const en: HomeDict = {
     noFixedListGood: "No fixed document list applies to this situation — see the full page for what to ask the branch.",
     noFixedListHard: "There is no closed list here. See the full page for what may genuinely be required and why.",
     counterFooter: "Adhikaar — an independent public-information tool, not affiliated with the RBI or any bank. Information, not legal advice.",
+    beliefQuestion: "Before you read this, did you think you needed a succession certificate?",
+    beliefNote: "One tap. It is the only thing we ask, and it is not stored against you.",
+    beliefYes: "Yes, I thought I did",
+    beliefNo: "No, I knew I did not",
+    beliefUnsure: "I had no idea",
+    beliefReplyYes: "That is exactly why this page exists. Most people are told the same thing, and the rule changed on 31 March 2026.",
+    beliefReplyNo: "Good — you were ahead of most people. The rest of this page is the evidence to hand across the counter.",
+    beliefReplyUnsure: "Fair enough. The paragraphs below are the part to show the bank.",
   },
   privacyPage: {
     heading: "Privacy",
@@ -1438,6 +1460,14 @@ const hi: HomeDict = {
     noFixedListGood: "इस स्थिति पर कोई तय दस्तावेज़ सूची लागू नहीं होती — शाखा से क्या पूछें, इसके लिए पूरा पन्ना देखें।",
     noFixedListHard: "यहाँ कोई बंद सूची नहीं है। वाक़ई क्या ज़रूरी हो सकता है और क्यों, इसके लिए पूरा पन्ना देखें।",
     counterFooter: "अधिकार — एक स्वतंत्र सार्वजनिक-जानकारी उपकरण, RBI या किसी बैंक से संबद्ध नहीं। जानकारी, क़ानूनी सलाह नहीं।",
+    beliefQuestion: "इसे पढ़ने से पहले, क्या आपको लगता था कि आपको उत्तराधिकार प्रमाणपत्र की ज़रूरत है?",
+    beliefNote: "बस एक टैप। हम सिर्फ़ यही पूछते हैं, और यह आपके नाम दर्ज नहीं होता।",
+    beliefYes: "हाँ, मुझे लगता था",
+    beliefNo: "नहीं, मुझे पहले से पता था",
+    beliefUnsure: "मुझे कुछ अंदाज़ा नहीं था",
+    beliefReplyYes: "इसीलिए यह पेज बनाया गया है। ज़्यादातर लोगों को यही बताया जाता है, और यह नियम 31 मार्च 2026 को बदल गया।",
+    beliefReplyNo: "अच्छा — आप ज़्यादातर लोगों से आगे थे। इस पेज का बाक़ी हिस्सा वह सबूत है जो काउंटर पर दिखाना है।",
+    beliefReplyUnsure: "कोई बात नहीं। नीचे दिए पैराग्राफ़ वही हिस्सा हैं जो बैंक को दिखाने हैं।",
   },
   privacyPage: {
     heading: "गोपनीयता",
@@ -1934,6 +1964,14 @@ const kn: HomeDict = {
     noFixedListGood: "ಈ ಸ್ಥಿತಿಗೆ ಯಾವುದೇ ನಿಗದಿತ ದಾಖಲೆ ಪಟ್ಟಿ ಅನ್ವಯಿಸುವುದಿಲ್ಲ — ಶಾಖೆಗೆ ಏನು ಕೇಳಬೇಕು ಎಂಬುದಕ್ಕೆ ಪೂರ್ಣ ಪುಟವನ್ನು ನೋಡಿ.",
     noFixedListHard: "ಇಲ್ಲಿ ಯಾವುದೇ ಮುಚ್ಚಿದ ಪಟ್ಟಿ ಇಲ್ಲ. ನಿಜವಾಗಿಯೂ ಏನು ಬೇಕಾಗಬಹುದು ಮತ್ತು ಏಕೆ ಎಂಬುದಕ್ಕೆ ಪೂರ್ಣ ಪುಟವನ್ನು ನೋಡಿ.",
     counterFooter: "ಅಧಿಕಾರ್ — ಒಂದು ಸ್ವತಂತ್ರ ಸಾರ್ವಜನಿಕ-ಮಾಹಿತಿ ಸಾಧನ, RBI ಅಥವಾ ಯಾವುದೇ ಬ್ಯಾಂಕಿನೊಂದಿಗೆ ಸಂಬಂಧ ಹೊಂದಿಲ್ಲ. ಮಾಹಿತಿ, ಕಾನೂನು ಸಲಹೆ ಅಲ್ಲ.",
+    beliefQuestion: "ಇದನ್ನು ಓದುವ ಮೊದಲು, ನಿಮಗೆ ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಬೇಕು ಎಂದು ನೀವು ಭಾವಿಸಿದ್ದಿರಾ?",
+    beliefNote: "ಒಂದೇ ಟ್ಯಾಪ್. ನಾವು ಕೇಳುವುದು ಇದೊಂದೇ, ಮತ್ತು ಇದು ನಿಮ್ಮ ಹೆಸರಿನಡಿ ದಾಖಲಾಗುವುದಿಲ್ಲ.",
+    beliefYes: "ಹೌದು, ನಾನು ಹಾಗೆ ಭಾವಿಸಿದ್ದೆ",
+    beliefNo: "ಇಲ್ಲ, ನನಗೆ ಮೊದಲೇ ಗೊತ್ತಿತ್ತು",
+    beliefUnsure: "ನನಗೆ ಏನೂ ಗೊತ್ತಿರಲಿಲ್ಲ",
+    beliefReplyYes: "ಇದೇ ಕಾರಣಕ್ಕೆ ಈ ಪುಟ ಇರುವುದು. ಹೆಚ್ಚಿನ ಜನರಿಗೆ ಇದೇ ಹೇಳಲಾಗುತ್ತದೆ, ಮತ್ತು ಈ ನಿಯಮ 31 ಮಾರ್ಚ್ 2026 ರಂದು ಬದಲಾಯಿತು.",
+    beliefReplyNo: "ಚೆನ್ನಾಗಿದೆ — ನೀವು ಹೆಚ್ಚಿನ ಜನರಿಗಿಂತ ಮುಂದಿದ್ದಿರಿ. ಈ ಪುಟದ ಉಳಿದ ಭಾಗ ಕೌಂಟರ್‌ನಲ್ಲಿ ತೋರಿಸಬೇಕಾದ ಸಾಕ್ಷ್ಯ.",
+    beliefReplyUnsure: "ಪರವಾಗಿಲ್ಲ. ಕೆಳಗಿನ ಪ್ಯಾರಾಗ್ರಾಫ್‌ಗಳೇ ಬ್ಯಾಂಕಿಗೆ ತೋರಿಸಬೇಕಾದ ಭಾಗ.",
   },
   privacyPage: {
     heading: "ಗೌಪ್ಯತೆ",

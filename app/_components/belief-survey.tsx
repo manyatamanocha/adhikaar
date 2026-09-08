@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { track } from "@/lib/analytics";
+import type { HomeDict } from "@/lib/i18n-home";
 
 /**
  * The one survey question.
@@ -22,7 +23,7 @@ import { track } from "@/lib/analytics";
  * 3. It records an answer and nothing else. No follow-up, no email field, no
  *    "tell us more". One tap, then it gets out of the way.
  */
-export function BeliefSurvey({ outcome }: { outcome: string }) {
+export function BeliefSurvey({ outcome, t }: { outcome: string; t: HomeDict["verdictPage"] }) {
   const [answered, setAnswered] = useState<string | null>(null);
 
   const answer = (value: "yes" | "no" | "unsure") => {
@@ -37,11 +38,7 @@ export function BeliefSurvey({ outcome }: { outcome: string }) {
         className="mt-8 rounded-xl border border-rule bg-mist p-5"
       >
         <p className="body-fluid text-ink">
-          {answered === "yes"
-            ? "That is exactly why this page exists. Most people are told the same thing, and the rule changed on 31 March 2026."
-            : answered === "no"
-              ? "Good — you were ahead of most people. The rest of this page is the evidence to hand across the counter."
-              : "Fair enough. The paragraphs below are the part to show the bank."}
+          {answered === "yes" ? t.beliefReplyYes : answered === "no" ? t.beliefReplyNo : t.beliefReplyUnsure}
         </p>
       </aside>
     );
@@ -53,17 +50,17 @@ export function BeliefSurvey({ outcome }: { outcome: string }) {
       className="mt-8 rounded-xl border border-rule bg-mist p-5"
     >
       <p className="body-fluid font-bold text-indigo-ink">
-        Before you read this, did you think you needed a succession certificate?
+        {t.beliefQuestion}
       </p>
       <p className="mt-1 text-[0.9375rem] text-ink-soft">
-        One tap. It is the only thing we ask, and it is not stored against you.
+        {t.beliefNote}
       </p>
       <div className="mt-3 flex flex-wrap gap-2.5">
         {(
           [
-            ["yes", "Yes, I thought I did"],
-            ["no", "No, I knew I did not"],
-            ["unsure", "I had no idea"],
+            ["yes", t.beliefYes],
+            ["no", t.beliefNo],
+            ["unsure", t.beliefUnsure],
           ] as const
         ).map(([value, label]) => (
           <button
