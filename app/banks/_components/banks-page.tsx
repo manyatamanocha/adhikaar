@@ -49,7 +49,7 @@ export function BanksPage() {
             <h1 className="display-xl mt-2 font-serif font-bold tracking-[-0.01em] text-[#16233F]">
               {t.banksPage.heading}
             </h1>
-            <p className="lede-fluid mt-3 max-w-[64ch] leading-relaxed text-[#5B5344]">
+            <p className="lede-fluid mt-3 leading-relaxed text-[#5B5344]">
               {t.banksPage.sub}
             </p>
             <Link
