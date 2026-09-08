@@ -90,7 +90,7 @@ function Hero() {
         className="pointer-events-none absolute right-[8%] top-0 z-0 h-auto w-[82%] max-w-none object-contain object-right opacity-[0.154] mix-blend-multiply [-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_78%,transparent_100%)] [mask-image:linear-gradient(to_right,transparent_0%,black_20%,black_78%,transparent_100%)] sm:w-[70%] lg:w-[62%]"
       />
       <div className="relative z-10 mx-auto max-w-[1920px] px-5 sm:px-8">
-        <div className="max-w-[70rem]">
+        <div className="max-w-[70rem] sm:ml-6 lg:ml-14">
           <p className="text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
             {t.hero.eyebrow}
           </p>
@@ -105,10 +105,10 @@ function Hero() {
           <Reveal delay={80} className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href={withLang("/start", locale)}
-              className="inline-flex items-center gap-1.5 rounded bg-[#E2653B] px-5 py-2.5 text-[0.75rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
+              className="inline-flex items-center gap-2 rounded bg-[#E2653B] px-8 py-4 text-[1rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
             >
               {t.hero.start}
-              <ArrowRightIcon className="h-3 w-3" />
+              <ArrowRightIcon className="h-4 w-4" />
             </Link>
             {/* A second, quieter door to /documents stood here from 6 Sep 2026
                 until 8 Sep, for readers who wanted only the list of papers.
