@@ -61,11 +61,6 @@ export function BanksPage() {
             </Link>
           </div>
 
-          <div className="body-fluid mt-8 rounded-2xl border-2 border-[#16233F] bg-white p-6 leading-relaxed">
-            <strong className="font-bold">{t.banksPage.everyCellStrong}</strong>{" "}
-            {t.banksPage.everyCellBody}
-          </div>
-
           {missing.length > 0 && (
             <div className="mt-6 rounded-2xl border-2 border-[#B84E1E] bg-[#FBEAE3] p-6">
               <h2 className="display-md font-serif font-bold text-[#B84E1E]">

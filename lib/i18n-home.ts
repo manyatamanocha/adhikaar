@@ -729,7 +729,7 @@ const en: HomeDict = {
   banksPage: {
     eyebrow: "Bank-by-bank",
     heading: "The rule is the same everywhere. The practice is not.",
-    sub: "The RBI sets a floor and every bank builds its own practice on top. This is what each bank publishes about deceased claims, read from their own pages — including where they publish nothing at all.",
+    sub: "This is each bank's own published practice on top of the RBI's floor, read from their own pages — including where they publish nothing at all.",
     cta: "Start your claim journey today",
     everyCellStrong: "Every cell is read or blank.",
     everyCellBody:
@@ -1233,7 +1233,7 @@ const hi: HomeDict = {
   banksPage: {
     eyebrow: "बैंक के अनुसार",
     heading: "नियम हर जगह एक जैसा है। व्यवहार नहीं।",
-    sub: "आरबीआई एक न्यूनतम सीमा तय करता है, और हर बैंक उस पर अपनी प्रक्रिया बनाता है। यह वही है जो हर बैंक दिवंगत दावों के बारे में अपने पन्नों पर प्रकाशित करता है — जिसमें वे मामले भी शामिल हैं जहाँ वे कुछ भी प्रकाशित नहीं करते।",
+    sub: "यह हर बैंक की अपनी प्रकाशित प्रक्रिया है, आरबीआई की न्यूनतम सीमा के ऊपर, उनके अपने पन्नों से ली गई — जिसमें वे मामले भी शामिल हैं जहाँ वे कुछ भी प्रकाशित नहीं करते।",
     cta: "आज ही अपना दावा शुरू करें",
     everyCellStrong: "हर सेल या तो पढ़ी गई है या ख़ाली है।",
     everyCellBody:
@@ -1737,7 +1737,7 @@ const kn: HomeDict = {
   banksPage: {
     eyebrow: "ಬ್ಯಾಂಕ್-ವಾರು",
     heading: "ನಿಯಮ ಎಲ್ಲೆಡೆ ಒಂದೇ. ಆಚರಣೆ ಅಲ್ಲ.",
-    sub: "ಆರ್‌ಬಿಐ ಒಂದು ಕನಿಷ್ಠ ಮಿತಿಯನ್ನು ನಿಗದಿಪಡಿಸುತ್ತದೆ, ಮತ್ತು ಪ್ರತಿ ಬ್ಯಾಂಕ್ ಅದರ ಮೇಲೆ ತನ್ನದೇ ಆದ ಆಚರಣೆಯನ್ನು ನಿರ್ಮಿಸುತ್ತದೆ. ಇದು ಪ್ರತಿ ಬ್ಯಾಂಕ್ ದಿವಂಗತ ಹಕ್ಕುಗಳ ಬಗ್ಗೆ ತಮ್ಮ ಸ್ವಂತ ಪುಟಗಳಲ್ಲಿ ಪ್ರಕಟಿಸುವುದು — ಏನನ್ನೂ ಪ್ರಕಟಿಸದಿರುವ ಸಂದರ್ಭಗಳನ್ನೂ ಒಳಗೊಂಡಂತೆ.",
+    sub: "ಇದು ಆರ್‌ಬಿಐ ನ ಕನಿಷ್ಠ ಮಿತಿಯ ಮೇಲೆ ಪ್ರತಿ ಬ್ಯಾಂಕ್‌ನ ಸ್ವಂತ ಪ್ರಕಟಿತ ಆಚರಣೆ, ಅವರ ಸ್ವಂತ ಪುಟಗಳಿಂದ ಪಡೆಯಲಾಗಿದೆ — ಏನನ್ನೂ ಪ್ರಕಟಿಸದಿರುವ ಸಂದರ್ಭಗಳನ್ನೂ ಒಳಗೊಂಡಂತೆ.",
     cta: "ಇಂದೇ ನಿಮ್ಮ ಹಕ್ಕು ಪ್ರಾರಂಭಿಸಿ",
     everyCellStrong: "ಪ್ರತಿ ಸೆಲ್ ಒಂದೋ ಓದಲಾಗಿದೆ ಅಥವಾ ಖಾಲಿ ಇದೆ.",
     everyCellBody:
