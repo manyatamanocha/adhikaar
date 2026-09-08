@@ -152,7 +152,7 @@ function bankOptions(otherLabel: string, otherDetail: string): Option[] {
 
 const en: Record<QuestionId, Question> = {
   claiming: {
-    id: "claiming", prompt: "The claim is for which of the following?",
+    id: "claiming", prompt: "What are you claiming?",
     help: "",
     options: [
       // One answer, not three. "A bank account", "a bank deposit" and "both"
@@ -172,27 +172,27 @@ const en: Record<QuestionId, Question> = {
     ],
   },
   court: {
-    id: "court", prompt: "Is there a court order currently stopping the bank from paying this money?",
-    help: "This is different from simply having a court case about the money — only an order that specifically stops payment counts here. If you're not sure, ask the bank whether it knows of one.",
-    options: [{ value: "no", label: "No — there's no such order (whether or not there's a case)" }, { value: "yes", label: "Yes, a court order is stopping payment" }, unknownEn],
+    id: "court", prompt: "Has a court stopped the bank from paying?",
+    help: "A court case alone does not mean payment is stopped. Choose yes only for an order stopping payment. If unsure, ask the bank.",
+    options: [{ value: "no", label: "No such order is known" }, { value: "yes", label: "Yes, a court order stops payment" }, unknownEn],
   },
   nominee: {
-    id: "nominee", prompt: "Is there a registered nominee for this account?",
-    help: "This person is called a nominee. Check the bank's records. For a joint account, a surviving holder may qualify under an 'either or survivor' instruction.",
+    id: "nominee", prompt: "Who is named to receive the money?",
+    help: "A nominee is someone named in the bank's records to receive the money after death. A joint account may instead let a surviving holder receive it.",
     options: [
       { value: "yes", label: "Yes, there is a registered nominee", detail: "The sole account holder, or all joint depositors, have died." },
-      { value: "survivorship", label: "A joint holder survives", detail: "The account says 'either or survivor' or similar words." },
-      { value: "no", label: "No one was named, and no joint-holder instruction applies" }, unknownEn,
+      { value: "survivorship", label: "A joint account holder is alive", detail: "The account says 'either or survivor' or similar words." },
+      { value: "no", label: "Neither applies", detail: "No registered nominee and no instruction allowing a surviving joint holder to receive the money." }, unknownEn,
     ],
   },
   will: {
     id: "will", prompt: "Did the person leave a will?",
-    help: "A will can change which documents the bank asks for. If you have not checked, choose 'I don't know yet'.",
+    help: "A will sets out who should inherit. Choose 'I don't know yet' if you have not checked.",
     options: [{ value: "no", label: "No will was left" }, { value: "yes", label: "Yes, there is a will" }, unknownEn],
   },
   heirs: {
     id: "heirs", prompt: "Does everyone entitled to inherit agree?",
-    help: "If family members disagree about who should receive the money, the standard checklist may not apply. Get advice before relying on it.",
+    help: "Include everyone with a right to inherit, not just the person making the claim. If you are unsure who that includes, choose 'I don't know yet'.",
     options: [{ value: "agree", label: "Yes, everyone agrees" }, { value: "dispute", label: "No, family members disagree" }, unknownEn],
   },
   bankType: {
@@ -207,7 +207,7 @@ const en: Record<QuestionId, Question> = {
   },
   bank: {
     id: "bank", prompt: "Which bank is the money at?",
-    help: "This does not change your result — it only means we can show you your bank's own published policy alongside the questions that follow.",
+    help: "Choose the bank holding the money. We can then show its published policy and skip the bank-type question when we know the answer.",
     options: bankOptions(
       "Another bank, or I'm not sure",
       "You will get the RBI rules, which apply to every bank.",

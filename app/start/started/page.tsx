@@ -38,14 +38,15 @@ export default async function Started({
   const sp = await searchParams;
   const locale = parseLocale(sp.lang);
   const t = SITUATIONS_T[locale].started;
+  const waiting = {
+    en: { label: "Waiting for the bank", detail: "I submitted papers and want to know what to check next." },
+    hi: { label: "बैंक के जवाब का इंतज़ार", detail: "मैंने काग़ज़ जमा किए हैं। अब क्या जाँचूँ?" },
+    kn: { label: "ಬ್ಯಾಂಕಿನ ಉತ್ತರಕ್ಕಾಗಿ ಕಾಯುತ್ತಿದ್ದೇನೆ", detail: "ದಾಖಲೆ ಸಲ್ಲಿಸಿದ್ದೇನೆ. ಮುಂದೆ ಏನು ಪರಿಶೀಲಿಸಬೇಕು?" },
+  }[locale];
   const options: (Situation & { href: string })[] = [
     { ...t.notSubmitted, href: "/start?begin=1" },
+    { ...waiting, href: "/start/waiting" },
     { ...t.askedFor, href: "/what-were-you-asked-for" },
-    // A submitted claim still waiting belongs here too, named in this
-    // option's own description. Its dedicated flow -- the four questions
-    // around para 31's fifteen days -- is the next thing to build; until it
-    // exists, the escalation page is the right destination rather than a
-    // menu entry pointing nowhere.
     { ...t.refused, href: "/bank-refused" },
     { ...t.inCourt, href: "/already-in-court" },
   ];

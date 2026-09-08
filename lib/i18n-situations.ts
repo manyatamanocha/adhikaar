@@ -119,51 +119,51 @@ const en: SituationsDict = {
   eyebrow: "Where to start",
   groupSpoken: "You have spoken to the bank",
   groupNotYet: "You have not been to the bank yet",
-  heading: "My Claim Process",
+  heading: "Where are you with the claim?",
   // "Not started the claim" is now framed as not knowing the PROCESS -- same
   // destination, the full wizard. "Don't know from where to start" (dontKnow,
   // below) points straight at /start/find/where since 7 Sep 2026 evening --
   // /start/find, the old two-way fork, is bypassed (still works if visited
   // directly, just has no inbound link from here any more).
   notStarted: {
-    label: "I do not know the process",
-    detail: "You have not been to the bank yet, and are not sure what happens next.",
+    label: "I'm starting a claim",
+    detail: "I have not been to the bank yet. Help me understand the steps and documents.",
   },
   alreadyStarted: {
-    label: "I have started the process",
-    detail: "You have been to the bank — documents submitted, waiting, or something has gone wrong.",
+    label: "I've already started",
+    detail: "I have spoken to the bank. Help me with what comes next.",
   },
   // Repurposed 7 Sep 2026: was "The bank refused or delayed the claim" ->
   // /bank-refused, also still reachable from /start/started. This slot is
   // now the genuine catch-all for anything the other four do not cover.
   refused: {
-    label: "Others",
+    label: "Need other help?",
     detail: "Not covered above? Write to us directly.",
   },
   dontKnow: {
-    label: "I do not know from where to start",
+    label: "I don't know where the money is",
     detail: "You are not sure the money exists, or where it is held.",
   },
 
   started: {
     eyebrow: "Already started",
-    heading: "Where are you now?",
-    sub: "You will not be asked to repeat anything that does not change your answer.",
+    heading: "What do you need help with now?",
+    sub: "Choose the closest option. We will ask only what we need to guide you.",
     notSubmitted: {
-      label: "I have not submitted documents yet",
-      detail: "The bank knows about the death, but nothing has been handed in.",
+      label: "Preparing my documents",
+      detail: "Help me check what to bring before I submit the claim.",
     },
     askedFor: {
-      label: "The bank asked for extra documents",
-      detail: "Check what was demanded against what the RBI actually permits.",
+      label: "Understanding a bank request",
+      detail: "The bank asked for a document or surety. Help me check it.",
     },
     refused: {
-      label: "The bank refused, delayed, or has gone quiet",
-      detail: "Including a claim submitted and still waiting.",
+      label: "The bank refused my claim",
+      detail: "Help me understand how to raise a complaint.",
     },
     inCourt: {
-      label: "I have started a court case",
-      detail: "Proceedings are already under way over this money.",
+      label: "An existing court case",
+      detail: "Help me prepare questions for my lawyer.",
     },
     back: "Back to the start",
   },
@@ -206,7 +206,7 @@ const hi: SituationsDict = {
   groupNotYet: "आप अभी बैंक नहीं गए हैं",
   heading: "मेरी दावा प्रक्रिया",
   notStarted: {
-    label: "मुझे प्रक्रिया नहीं पता",
+    label: "मैं दावा शुरू कर रहा हूँ",
     detail: "आप अभी बैंक नहीं गए हैं, और आगे क्या होगा यह पक्का नहीं है।",
   },
   alreadyStarted: {
@@ -218,13 +218,13 @@ const hi: SituationsDict = {
     detail: "ऊपर की सूची में नहीं है? सीधे हमें लिखें।",
   },
   dontKnow: {
-    label: "मुझे नहीं पता कहाँ से शुरू करूँ",
+    label: "मुझे नहीं पता पैसा कहाँ है",
     detail: "आपको यक़ीन नहीं कि पैसा है, या वह कहाँ रखा है।",
   },
 
   started: {
     eyebrow: "पहले से शुरू",
-    heading: "आप अभी कहाँ हैं?",
+    heading: "अभी आपको किस बात में मदद चाहिए?",
     sub: "जो बात आपके जवाब को नहीं बदलती, वह दोबारा नहीं पूछी जाएगी।",
     notSubmitted: {
       label: "मैंने अभी दस्तावेज़ जमा नहीं किए",
@@ -235,8 +235,8 @@ const hi: SituationsDict = {
       detail: "जो माँगा गया उसे RBI की अनुमति से मिलाकर देखें।",
     },
     refused: {
-      label: "बैंक ने इनकार किया, देरी की, या चुप है",
-      detail: "जमा किया हुआ दावा जो अब भी लंबित है, वह भी इसमें शामिल है।",
+      label: "बैंक ने मेरा दावा अस्वीकार किया",
+      detail: "शिकायत करने के तरीके में मदद चाहिए।",
     },
     inCourt: {
       label: "मैंने अदालत में मामला शुरू कर दिया है",
@@ -283,7 +283,7 @@ const kn: SituationsDict = {
   groupNotYet: "ನೀವು ಇನ್ನೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ",
   heading: "ನನ್ನ ಹಕ್ಕಿನ ಪ್ರಕ್ರಿಯೆ",
   notStarted: {
-    label: "ಪ್ರಕ್ರಿಯೆ ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
+    label: "ನಾನು ಹಕ್ಕು ಸಲ್ಲಿಸಲು ಪ್ರಾರಂಭಿಸುತ್ತಿದ್ದೇನೆ",
     detail: "ನೀವು ಇನ್ನೂ ಬ್ಯಾಂಕಿಗೆ ಹೋಗಿಲ್ಲ, ಮತ್ತು ಮುಂದೆ ಏನಾಗುತ್ತದೆ ಎಂದು ಖಚಿತವಿಲ್ಲ.",
   },
   alreadyStarted: {
@@ -295,13 +295,13 @@ const kn: SituationsDict = {
     detail: "ಮೇಲಿನದರಲ್ಲಿ ಇಲ್ಲದ್ದೇ? ನೇರವಾಗಿ ನಮಗೆ ಬರೆಯಿರಿ.",
   },
   dontKnow: {
-    label: "ಎಲ್ಲಿಂದ ಪ್ರಾರಂಭಿಸಬೇಕೆಂದು ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
+    label: "ಹಣ ಎಲ್ಲಿದೆ ಎಂದು ನನಗೆ ಗೊತ್ತಿಲ್ಲ",
     detail: "ಹಣ ಇದೆಯೇ, ಅಥವಾ ಎಲ್ಲಿದೆ ಎಂಬ ಬಗ್ಗೆ ನಿಮಗೆ ಖಚಿತವಿಲ್ಲ.",
   },
 
   started: {
     eyebrow: "ಈಗಾಗಲೇ ಪ್ರಾರಂಭವಾಗಿದೆ",
-    heading: "ನೀವು ಈಗ ಎಲ್ಲಿದ್ದೀರಿ?",
+    heading: "ಈಗ ನಿಮಗೆ ಯಾವ ಸಹಾಯ ಬೇಕು?",
     sub: "ನಿಮ್ಮ ಉತ್ತರವನ್ನು ಬದಲಾಯಿಸದ ಯಾವುದನ್ನೂ ಮತ್ತೆ ಕೇಳಲಾಗುವುದಿಲ್ಲ.",
     notSubmitted: {
       label: "ನಾನು ಇನ್ನೂ ದಾಖಲೆಗಳನ್ನು ಸಲ್ಲಿಸಿಲ್ಲ",
@@ -312,8 +312,8 @@ const kn: SituationsDict = {
       detail: "ಕೇಳಿದ್ದನ್ನು RBI ವಾಸ್ತವವಾಗಿ ಅನುಮತಿಸುವುದರೊಂದಿಗೆ ಹೋಲಿಸಿ ನೋಡಿ.",
     },
     refused: {
-      label: "ಬ್ಯಾಂಕ್ ನಿರಾಕರಿಸಿತು, ವಿಳಂಬ ಮಾಡಿತು, ಅಥವಾ ಸುಮ್ಮನಿದೆ",
-      detail: "ಸಲ್ಲಿಸಿದ ನಂತರ ಇನ್ನೂ ಕಾಯುತ್ತಿರುವ ಹಕ್ಕೂ ಇದರಲ್ಲಿ ಸೇರಿದೆ.",
+      label: "ಬ್ಯಾಂಕ್ ನನ್ನ ಹಕ್ಕನ್ನು ನಿರಾಕರಿಸಿದೆ",
+      detail: "ದೂರು ನೀಡುವ ವಿಧಾನ ತಿಳಿಯಲು ಸಹಾಯ ಬೇಕು.",
     },
     inCourt: {
       label: "ನಾನು ನ್ಯಾಯಾಲಯದ ಪ್ರಕರಣ ಪ್ರಾರಂಭಿಸಿದ್ದೇನೆ",
