@@ -85,7 +85,7 @@ type Metrics = {
 
 function funnelWidth(value: number, first: number): string {
   if (!first) return "0%";
-  return (Math.max(4, Math.round((value / first) * 100))).toString() + "%";
+  return (Math.min(100, Math.max(0, (value / first) * 100))).toString() + "%";
 }
 
 function MetricCard({
@@ -233,351 +233,120 @@ async function getMetrics(): Promise<Metrics | null> {
 
 export default async function MetricsPage() {
   const m = await getMetrics();
-
+  const stages = m ? [
+    { label: "Visited the website", value: m.funnel.landingVisitors, note: "Opened the home page.", color: "bg-[#5967A8]" },
+    { label: "Started a journey", value: m.funnel.journeysStarted, note: "Began looking for help.", color: "bg-[#7263A5]" },
+    { label: "Reached an answer", value: m.funnel.resolvedJourneys, note: "Got a claim route or learned what to check next.", color: "bg-[#246F61]" },
+    { label: "Chose a next step", value: m.funnel.showingIntent, note: "Printed a guide, opened counter mode, or clicked to continue.", color: "bg-[#B84B28]" },
+  ] : [];
+  const scale = Math.max(1, ...stages.map(s => s.value));
   return (
     <>
       <RecoverNav />
-      <main className="flex-1 bg-mist">
-        <div className="shell max-w-[1180px] py-8 sm:py-12">
-          <section className="mb-8 overflow-hidden rounded-3xl bg-[#16233F] px-6 py-7 text-white shadow-[0_18px_50px_rgba(22,35,63,0.18)] sm:px-9 sm:py-9">
-            <p className="text-[0.75rem] font-bold uppercase tracking-[0.16em] text-[#F0B892]">
-              Adhikaar / product pulse
+      <main className="flex-1 bg-[#F5F3EE] text-[#16233F]">
+        <div className="mx-auto max-w-[1180px] px-5 py-8 sm:px-8 sm:py-12">
+          <header className="rounded-3xl bg-[#16233F] p-6 text-white sm:p-9">
+            <p className="text-sm font-bold uppercase tracking-widest text-[#F0B892]">Adhikaar · Our progress</p>
+            <h1 className="mt-3 font-serif text-4xl font-bold leading-tight sm:text-5xl">Are we making claims easier?</h1>
+            <p className="mt-4 text-base leading-7 text-white/85 sm:text-lg">
+              Follow the journey from visiting Adhikaar to finding a next step.
+              These numbers show how the website is being used. They do not tell us whether a bank paid a claim.
             </p>
-            <h1 className="mt-2 font-serif text-[2.35rem] font-bold leading-tight sm:text-[3.25rem]">
-              Is the claim journey helping?
-            </h1>
-            <p className="mt-3 max-w-[58ch] text-[1.05rem] leading-relaxed text-white/75">
-              A clear view of who starts, who gets an answer, and where the journey needs work.
-            </p>
-            <p className="mt-7 text-[0.8125rem] text-white/55">
-              Aggregate counts only · no names, URLs, messages or account information
-            </p>
-          </section>
-          <p className="hidden text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-saffron-ink">
-            Product metrics
-          </p>
-          <h1 className="hidden display-lg mt-2 font-serif font-bold text-indigo-ink">
-            How Adhikaar is performing
-          </h1>
-          <p className="hidden body-fluid mt-3 max-w-[62ch] text-ink-soft">
-            Live figures, no sign-in. Aggregate counts only — this page never
-            receives an identifier, a URL, or anything a family typed.
-          </p>
-
+            {m && <p className="mt-5 inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>}
+          </header>
           {!m ? (
-            <div className="actionbox mt-8">
-              <p className="text-[1.0625rem] font-bold text-indigo-ink">
-                Metrics are unavailable right now.
-              </p>
-              <p className="body-fluid mt-2 text-ink-soft">
-                The figures could not be fetched. This page reports nothing
-                rather than showing a number it cannot stand behind.
-              </p>
-            </div>
+            <section className="mt-6 rounded-2xl border border-rule bg-white p-8">
+              <h2 className="text-2xl font-bold">We couldn’t load the numbers.</h2>
+              <p className="mt-3 text-lg text-ink-soft">Please try again later. Missing data does not mean nobody used Adhikaar.</p>
+              <a href="/metrics" className="mt-5 inline-flex min-h-11 items-center rounded-full bg-indigo px-6 py-3 font-bold text-white">Try again</a>
+            </section>
           ) : (
             <>
-              <section className="mt-8 grid gap-4 lg:grid-cols-[1.4fr_1fr_1fr]">
-                <MetricCard
-                  label="North Star · last 7 days"
-                  value={String(m.northStar.weeklyResolvedJourneys)}
-                  accent="saffron"
-                  note="Weekly resolved journeys: people who received a valid, situation-appropriate answer."
-                />
-                <MetricCard
-                  label="This quarter’s metric"
-                  value={pct(m.omtm.resolutionRate)}
-                  note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys went on to resolve."}
-                />
-                <MetricCard
-                  label="Showing intent to act"
-                  value={pct(m.funnel.nextStepActionRate)}
-                  accent="violet"
-                  note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " resolved journeys took a next step."}
-                />
+              <section aria-label="The main numbers" className="mt-6 grid gap-4 md:grid-cols-3">
+                <MetricCard label="Answers reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron"
+                  note="Journeys that reached a clear answer or next step in the last 7 days. This is our main measure of progress." />
+                <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)}
+                  note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
+                <MetricCard label="Chose a next step" value={pct(m.funnel.nextStepActionRate)} accent="violet"
+                  note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " journeys with an available action used it."} />
+              </section>
+              <p className="mt-3 text-sm leading-6 text-ink-soft">A dash (—) means there is not enough data to calculate a percentage. We count journeys; one person can start more than one.</p>
+
+              <section className="mt-8 rounded-3xl border border-rule bg-white p-6 sm:p-8">
+                <h2 className="font-serif text-3xl font-bold">The journey, step by step</h2>
+                <p className="mt-2 text-base leading-7 text-ink-soft">Longer bars mean more activity at that step.</p>
+                <ol className="mt-6 space-y-6">
+                  {stages.map((s, i) => (
+                    <li key={s.label} className="flex gap-3 sm:gap-5">
+                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F0EDE5] font-bold" aria-hidden="true">{i + 1}</span>
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-baseline justify-between gap-3"><h3 className="text-lg font-bold">{s.label}</h3><span className="text-2xl font-bold tabular-nums">{s.value.toLocaleString("en-IN")}</span></div>
+                        <div aria-hidden="true" className="mt-2 h-3 overflow-hidden rounded-full bg-[#EFEEE9]"><div className={"h-full rounded-full " + s.color} style={{ width: funnelWidth(s.value, scale) }} /></div>
+                        <p className="mt-2 text-base leading-6 text-ink-soft">{s.note}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+                <details className="mt-6 border-t border-rule pt-4">
+                  <summary className="cursor-pointer py-2 font-semibold">How to read these numbers</summary>
+                  <p className="mt-2 leading-7 text-ink-soft">Some journeys begin from a shared link, without visiting the home page. These totals are not all the same group moving through each step. The action percentage only includes journeys with an available action; opening an official search resource may not offer a printable guide.</p>
+                </details>
               </section>
 
-              <section className="mt-10 hidden">
-                <div className="actionbox">
-                  <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
-                    North Star · last 7 days
-                  </p>
-                  <p className="display-xl mt-1 font-serif font-bold text-indigo-ink">
-                    {m.northStar.weeklyResolvedJourneys}
-                  </p>
-                  <p className="body-fluid mt-1 text-ink-soft">
-                    Weekly Resolved Journeys — journeys that received a valid,
-                    situation-appropriate resolution, whether that is a claim
-                    route or a clear answer about what to establish next. A
-                    count, not a rate: helping 600 of 1,000 families is more
-                    families helped than 80 of 100.
-                  </p>
-                  <p className="mt-3 border-t border-rule-faint pt-3 text-[0.9375rem] text-ink-soft">
-                    <span className="font-bold text-indigo-ink">
-                      This quarter&rsquo;s one metric — {m.omtm.metric}:{" "}
-                      {pct(m.omtm.resolutionRate)}
-                    </span>{" "}
-                    · {m.omtm.cohortResolved} of {m.omtm.cohortStarted} journeys
-                    that started in this window went on to resolve. It stays the
-                    metric that matters even while it reads “—”; insufficient
-                    data is the honest answer, not a reason to report a
-                    different number.
-                  </p>
-                  {/* Stated rather than left to be discovered. Someone who
-                      opens this expecting live figures and sees a low number
-                      should know whether they are looking at "nothing
-                      happened" or "the last hour has not landed yet" — the
-                      same distinction the "—" rule makes elsewhere. */}
-                  <p className="mt-2 text-[0.9375rem] text-ink-faint">
-                    Figures update hourly. Usage from the past hour may not
-                    appear yet — this reads from an export that trails live
-                    traffic, so a low number here can mean “not yet counted”
-                    rather than “did not happen”.
-                  </p>
+              <section className="mt-8">
+                <h2 className="font-serif text-3xl font-bold">What did people need help with?</h2>
+                <p className="mt-2 leading-7 text-ink-soft">See how each starting situation led to an answer.</p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  {Object.entries(m.funnel.startedByBranch).sort(([,a],[,b]) => b-a).map(([key,n]) => (
+                    <article key={key} className="rounded-2xl border border-rule bg-white p-5">
+                      <h3 className="text-lg font-bold">{BRANCH_LABELS[key] ?? "Other starting situation"}</h3>
+                      <p className="mt-3 text-base text-ink-soft"><strong className="text-indigo-ink">{m.funnel.resolvedByBranch[key] ?? 0}</strong> of {n} journeys reached an answer.</p>
+                      <div aria-hidden="true" className="mt-3 h-2 overflow-hidden rounded-full bg-[#EFEEE9]"><div className="h-full rounded-full bg-[#246F61]" style={{ width: funnelWidth(m.funnel.resolvedByBranch[key] ?? 0,n) }} /></div>
+                      <p className="mt-2 text-sm text-ink-soft">{pct(m.funnel.resolutionRateByBranch[key] ?? null)} reached an answer</p>
+                    </article>
+                  ))}
                 </div>
+                {Object.keys(m.funnel.startedByBranch).length === 0 && <p className="mt-4 rounded-2xl bg-white p-6 text-ink-soft">No starting situations have been recorded yet.</p>}
               </section>
 
-              <section className="mt-10">
-                <h2 className="display-md font-serif font-bold text-indigo-ink">
-                  The funnel
-                </h2>
-                <div className="mt-4 overflow-x-auto">
-                  <table className="w-full border-collapse text-left">
-                    <thead>
-                      <tr className="border-b-2 border-rule">
-                        <th className="py-2 pr-4 text-[0.9375rem] font-bold">Stage</th>
-                        <th className="py-2 pr-4 text-[0.9375rem] font-bold">Journeys</th>
-                        <th className="py-2 text-[0.9375rem] font-bold">Rate to next</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-[1rem]">
-                      <tr className="border-b border-rule-faint">
-                        <td className="py-2.5 pr-4"><span>Landing visitors</span><span className="mt-1 block h-2 rounded-full bg-[#5967A8]" style={{ width: funnelWidth(m.funnel.landingVisitors, m.funnel.landingVisitors) }} /></td>
-                        <td className="py-2.5 pr-4 font-bold">{m.funnel.landingVisitors}</td>
-                        <td className="py-2.5">{pct(m.funnel.journeyStartRate)}</td>
-                      </tr>
-                      <tr className="border-b border-rule-faint">
-                        <td className="py-2.5 pr-4"><span>Journeys started</span><span className="mt-1 block h-2 rounded-full bg-[#5967A8]" style={{ width: funnelWidth(m.funnel.journeysStarted, m.funnel.landingVisitors) }} /></td>
-                        <td className="py-2.5 pr-4 font-bold">{m.funnel.journeysStarted}</td>
-                        <td className="py-2.5">{pct(m.funnel.resolutionRate)}</td>
-                      </tr>
-                      <tr className="border-b border-rule-faint bg-white/60">
-                        <td className="py-2.5 pr-4 font-bold">★ Resolved journeys</td>
-                        <td className="py-2.5 pr-4 font-bold">{m.funnel.resolvedJourneys}</td>
-                        <td className="py-2.5">{pct(m.funnel.nextStepActionRate)}</td>
-                      </tr>
-                      <tr>
-                        <td className="py-2.5 pr-4"><span>Showing intent to act</span><span className="mt-1 block h-2 rounded-full bg-[#5967A8]" style={{ width: funnelWidth(m.funnel.showingIntent, m.funnel.landingVisitors) }} /></td>
-                        <td className="py-2.5 pr-4 font-bold">{m.funnel.showingIntent}</td>
-                        <td className="py-2.5">—</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <p className="mt-3 text-[0.9375rem] text-ink-faint">
-                  The last rate divides by the {m.funnel.nextStepEligibleJourneys}{" "}
-                  journeys that had something to act on. A resolution that points
-                  at an official search tool has no printable sheet or counter
-                  mode, so counting it as a failure to act would penalise the
-                  product for a page working exactly as designed.
-                </p>
-                <p className="mt-3 text-[0.9375rem] text-ink-faint">
-                  Claim initiation and successful claims sit below this funnel
-                  and are deliberately not measurable here: the product keeps no
-                  account and no record of a claim, so it cannot see what happens
-                  after the tab closes. Those two can only come from follow-up
-                  research.
-                </p>
-              </section>
-
-              {Object.keys(m.funnel.startedByBranch).length > 0 && (
-                <section className="mt-10">
-                  <h2 className="display-md font-serif font-bold text-indigo-ink">
-                    By the door people came in through
-                  </h2>
-                  <p className="body-fluid mt-2 max-w-[62ch] text-ink-soft">
-                    One resolution rate across five different journeys hides
-                    which of them works. A reader holding a demand from a bank
-                    and a reader who does not know where the money is are not
-                    the same problem.
-                  </p>
-                  <div className="mt-4 overflow-x-auto">
-                    <table className="w-full border-collapse text-left">
-                      <thead>
-                        <tr className="border-b-2 border-rule">
-                          <th className="py-2 pr-4 text-[0.9375rem] font-bold">Door</th>
-                          <th className="py-2 pr-4 text-[0.9375rem] font-bold">Started</th>
-                          <th className="py-2 pr-4 text-[0.9375rem] font-bold">Resolved</th>
-                          <th className="py-2 text-[0.9375rem] font-bold">Rate</th>
-                        </tr>
-                      </thead>
-                      <tbody className="text-[1rem]">
-                        {Object.entries(m.funnel.startedByBranch)
-                          .sort(([, a], [, b]) => b - a)
-                          .map(([branch, n]) => (
-                            <tr key={branch} className="border-b border-rule-faint">
-                              <td className="py-2.5 pr-4">{BRANCH_LABELS[branch] ?? branch}</td>
-                              <td className="py-2.5 pr-4 font-bold">{n}</td>
-                              <td className="py-2.5 pr-4 font-bold">
-                                {m.funnel.resolvedByBranch[branch] ?? 0}
-                              </td>
-                              <td className="py-2.5">
-                                {pct(m.funnel.resolutionRateByBranch[branch] ?? null)}
-                              </td>
-                            </tr>
-                          ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </section>
-              )}
-
-              <section className="mt-10">
-                <h2 className="display-md font-serif font-bold text-indigo-ink">
-                  Guardrails
-                </h2>
-                <p className="body-fluid mt-2 max-w-[62ch] text-ink-soft">
-                  Three checks that a rising North Star is real — each answers a
-                  different way the number could look good while the product got
-                  worse.
-                </p>
-
-                {/* One row, so the three numbers can be read against each
-                    other at a glance -- they are three checks on the same
-                    claim, and stacked full-width, each behind a paragraph,
-                    they read as three unrelated sections. No argument is cut:
-                    each sits behind its own ⓘ. See Guardrail. */}
-                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  <Guardrail
-                    label="Honest-Exit Rate"
-                    question="Are we still telling the unwelcome truth?"
-                    value={pct(m.guardrails.honestExitRate)}
-                  >
-                    {m.guardrails.honestExits} of{" "}
-                    {m.guardrails.journeysReachingOutcome} journeys reaching a
-                    verdict ended in a dispute, above-threshold, already-in-court
-                    or out-of-scope one. The North Star could be inflated by
-                    telling people what they want to hear. If resolved journeys
-                    rise while this falls, the product is manufacturing false
-                    confidence — a reason to review the logic, not to celebrate.
-                  </Guardrail>
-
-                  <Guardrail
-                    label="Situation Resolution Share"
-                    question="Is the number growing by delivery or by definition?"
-                    value={pct(m.guardrails.situationResolutionShare)}
-                  >
-                    The share of resolutions that came from a situation branch
-                    rather than a verdict. The Honest-Exit Rate cannot see this:
-                    it reads verdicts only, so it would not notice the cheapest
-                    way to raise a resolution count, which is to declare more
-                    pages resolutions. There is deliberately no target — a high
-                    share is not bad, because those resolutions are real value.
-                    What matters is the move. If it climbs while verdicts stay
-                    flat, ask whether the traffic changed or the definition did.
-                  </Guardrail>
-
-                  <Guardrail
-                    label="Stale Citation Share"
-                    question="Is the evidence still true?"
-                    value={pct(m.guardrails.staleCitationShare)}
-                  >
-                    Of the {m.guardrails.journeysCitingABank} journeys that cited
-                    a specific bank&rsquo;s published policy, the share citing a
-                    record more than six months past its last check. The
-                    bank-by-bank table is the part of this product that decays
-                    without anyone touching it.
-                  </Guardrail>
-                </div>
-
-                {/* Provenance while fresh, a real warning once it is not.
-                    Out of the Stale Citation tile and under the row since the
-                    tiles went side by side: it is a standing fact about the
-                    whole RBI clause set, carrying its own date, not a reading
-                    of that percentage -- and inside a tile it would have been
-                    the one line of body text in a row of bare numbers. */}
-                {m.guardrails.rulesStale ? (
-                  <p className="mt-4 max-w-[62ch] text-[0.9375rem] font-bold text-maroon">
-                    The RBI clauses are past their check window — last read
-                    against the notification on {m.guardrails.rulesVerifiedOn},
-                    and due a re-read.
-                  </p>
-                ) : (
-                  <p className="mt-4 text-[0.9375rem] text-ink-faint">
-                    RBI clauses last checked {m.guardrails.rulesVerifiedOn}.
-                  </p>
-                )}
-              </section>
-
-              <section className="mt-10">
-                <h2 className="display-md font-serif font-bold text-indigo-ink">
-                  Is the belief actually being corrected?
-                </h2>
-                <p className="display-md mt-2 font-serif font-bold text-indigo-ink">
-                  {pct(m.validation.beliefCorrectionRate)}
-                </p>
-                <p className="body-fluid mt-2 max-w-[62ch] text-ink-soft">
-                  Of {m.validation.beliefResponses} people who answered, the
-                  share who arrived believing they needed a succession
-                  certificate. That belief is the thing the product exists to
-                  correct, and it cannot be inferred from behaviour, so it is
-                  the one question the site asks.
-                </p>
-                <p className="mt-2 text-[0.9375rem] text-ink-faint">
-                  Base: {m.validation.beliefBase}. The question only appears
-                  where the answer is good news — asking someone who genuinely
-                  does need a certificate whether they expected to would measure
-                  nothing.
-                </p>
-                {m.efficiency.medianTimeToResolutionSeconds !== null && (
-                  <p className="body-fluid mt-4 text-ink-soft">
-                    <span className="font-bold text-indigo-ink">
-                      Median time to resolution:{" "}
-                      {Math.round(m.efficiency.medianTimeToResolutionSeconds / 60)}{" "}
-                      min
-                    </span>{" "}
-                    · from entering a branch to receiving an answer. This should
-                    be minutes. A correct answer that takes twenty minutes to
-                    extract has still failed the person asking.
-                  </p>
-                )}
-              </section>
-
-              {Object.keys(m.perQuestion).length > 0 && (
-                <section className="mt-10">
-                  <h2 className="display-md font-serif font-bold text-indigo-ink">
-                    Where the journey leaks
-                  </h2>
-                  <p className="body-fluid mt-2 max-w-[62ch] text-ink-soft">
-                    Answers recorded at each step. A whole-funnel drop-off number
-                    would only restate the rate above; this locates the question
-                    that actually loses people.
-                  </p>
-                  <ul className="mt-4 space-y-1.5">
-                    {Object.entries(m.perQuestion)
-                      .sort(([a], [b]) => Number(a) - Number(b))
-                      .map(([step, n]) => (
-                        <li key={step} className="flex items-baseline gap-3 text-[1rem]">
-                          <span className="w-[6.5rem] shrink-0 text-ink-soft">
-                            Question {step}
-                          </span>
-                          <span className="font-bold text-indigo-ink">{n}</span>
-                        </li>
-                      ))}
+              <details className="mt-8 rounded-2xl border border-rule bg-white p-6">
+                <summary className="cursor-pointer py-2 text-xl font-bold">A closer look: questions, feedback and quality</summary>
+                <section className="mt-6">
+                  <h2 className="text-xl font-bold">Which questions were answered?</h2>
+                  <p className="mt-2 leading-7 text-ink-soft">Some journeys finish early. Fewer answers at a later question do not always mean people gave up.</p>
+                  <ul className="mt-3 divide-y divide-rule">
+                    {Object.entries(m.perQuestion).sort(([a],[b]) => Number(a)-Number(b)).map(([step,n]) => <li key={step} className="flex justify-between gap-4 py-3"><span>Question {step}</span><strong>{n} recorded</strong></li>)}
                   </ul>
+                  {!Object.keys(m.perQuestion).length && <p className="mt-3 text-ink-soft">No question activity recorded yet.</p>}
                 </section>
-              )}
-
-              <section className="mt-10 border-t border-rule-faint pt-5">
-                <p className="text-[0.9375rem] text-ink-faint">
-                  Window {m.window.from} to {m.window.to} ·{" "}
-                  {m.dataQuality.eventsConsidered} events counted · refreshed
-                  every 5 minutes.
-                </p>
-                <p className="mt-2 text-[0.9375rem] text-ink-faint">
-                  Rates with no denominator render “—” rather than 0%. Nothing
-                  measurable and nothing working are different claims.
-                </p>
-              </section>
+                <section className="mt-6">
+                  <h2 className="text-xl font-bold">How long did an answer take?</h2>
+                  <p className="mt-2 text-2xl font-bold">{m.efficiency.medianTimeToResolutionSeconds === null ? "Not enough data yet" : Math.round(m.efficiency.medianTimeToResolutionSeconds) + " seconds"}</p>
+                  <p className="mt-2 leading-7 text-ink-soft">The middle time across recorded journeys, from entering a situation to reaching an answer.</p>
+                </section>
+                <section className="mt-6">
+                  <h2 className="text-xl font-bold">What did people expect?</h2>
+                  <p className="mt-2 text-2xl font-bold">{pct(m.validation.beliefCorrectionRate)}</p>
+                  <p className="mt-2 leading-7 text-ink-soft">Among {m.validation.beliefResponses} survey responses, this share expected to need a succession certificate. This measures their starting belief; it does not prove that their belief changed. Survey base: {m.validation.beliefBase}.</p>
+                </section>
+                <h2 className="mt-8 text-xl font-bold">Checks on our guidance</h2>
+                <div className="mt-4 grid gap-4 lg:grid-cols-3">
+                  <Guardrail label="Cases needing a different route" question="What counts here?" value={pct(m.guardrails.honestExitRate)}>
+                    {m.guardrails.honestExits} of {m.guardrails.journeysReachingOutcome} journeys reaching a verdict involved a dispute, an above-threshold claim, a court case, or an unsupported asset. Changes in this share need context.
+                  </Guardrail>
+                  <Guardrail label="Answers from situation pages" question="Where did the answer come from?" value={pct(m.guardrails.situationResolutionShare)}>
+                    The share of answers provided by situation pages instead of claim verdict pages. This helps us see which kind of help people used.
+                  </Guardrail>
+                  <Guardrail label="Bank sources due for review" question="How recently were sources checked?" value={pct(m.guardrails.staleCitationShare)}>
+                    Of {m.guardrails.journeysCitingABank} journeys citing a bank policy, this share used a source last checked more than six months ago.
+                  </Guardrail>
+                </div>
+                <p className={"mt-4 leading-7 " + (m.guardrails.rulesStale ? "font-bold text-maroon" : "text-ink-soft")}>RBI sources last checked: {m.guardrails.rulesVerifiedOn}.{m.guardrails.rulesStale ? " They are due for another review." : ""}</p>
+              </details>
+              <footer className="mt-6 text-sm leading-6 text-ink-soft">
+                <p>{m.dataQuality.eventsConsidered.toLocaleString("en-IN")} events counted · Figures refresh every 5 minutes.</p>
+                <p>Only totals are shown here. No names, account details or chat messages.</p>
+              </footer>
             </>
           )}
         </div>
