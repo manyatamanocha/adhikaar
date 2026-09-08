@@ -83,6 +83,36 @@ type Metrics = {
   generatedAt: string;
 };
 
+function funnelWidth(value: number, first: number): string {
+  if (!first) return "0%";
+  return (Math.max(4, Math.round((value / first) * 100))).toString() + "%";
+}
+
+function MetricCard({
+  label,
+  value,
+  note,
+  accent = "plain",
+}: {
+  label: string;
+  value: string;
+  note: string;
+  accent?: "plain" | "saffron" | "violet";
+}) {
+  const accents = {
+    plain: "border-rule bg-white",
+    saffron: "border-[#E8B36D] bg-[#FFF7E8]",
+    violet: "border-[#BDB4E2] bg-[#F5F2FC]",
+  } as const;
+  return (
+    <article className={"rounded-2xl border-2 p-5 " + accents[accent]}>
+      <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">{label}</p>
+      <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">{value}</p>
+      <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-soft">{note}</p>
+    </article>
+  );
+}
+
 /** A rate, or an em dash. Never 0% standing in for "nothing has happened yet". */
 function pct(v: number | null): string {
   return v === null ? "—" : `${v}%`;
@@ -208,14 +238,28 @@ export default async function MetricsPage() {
     <>
       <RecoverNav />
       <main className="flex-1 bg-mist">
-        <div className="shell max-w-[860px] py-10 sm:py-14">
-          <p className="text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-saffron-ink">
+        <div className="shell max-w-[1180px] py-8 sm:py-12">
+          <section className="mb-8 overflow-hidden rounded-3xl bg-[#16233F] px-6 py-7 text-white shadow-[0_18px_50px_rgba(22,35,63,0.18)] sm:px-9 sm:py-9">
+            <p className="text-[0.75rem] font-bold uppercase tracking-[0.16em] text-[#F0B892]">
+              Adhikaar / product pulse
+            </p>
+            <h1 className="mt-2 font-serif text-[2.35rem] font-bold leading-tight sm:text-[3.25rem]">
+              Is the claim journey helping?
+            </h1>
+            <p className="mt-3 max-w-[58ch] text-[1.05rem] leading-relaxed text-white/75">
+              A clear view of who starts, who gets an answer, and where the journey needs work.
+            </p>
+            <p className="mt-7 text-[0.8125rem] text-white/55">
+              Aggregate counts only · no names, URLs, messages or account information
+            </p>
+          </section>
+          <p className="hidden text-[0.8125rem] font-bold uppercase tracking-[0.14em] text-saffron-ink">
             Product metrics
           </p>
-          <h1 className="display-lg mt-2 font-serif font-bold text-indigo-ink">
+          <h1 className="hidden display-lg mt-2 font-serif font-bold text-indigo-ink">
             How Adhikaar is performing
           </h1>
-          <p className="body-fluid mt-3 max-w-[62ch] text-ink-soft">
+          <p className="hidden body-fluid mt-3 max-w-[62ch] text-ink-soft">
             Live figures, no sign-in. Aggregate counts only — this page never
             receives an identifier, a URL, or anything a family typed.
           </p>
@@ -232,7 +276,27 @@ export default async function MetricsPage() {
             </div>
           ) : (
             <>
-              <section className="mt-8">
+              <section className="mt-8 grid gap-4 lg:grid-cols-[1.4fr_1fr_1fr]">
+                <MetricCard
+                  label="North Star · last 7 days"
+                  value={String(m.northStar.weeklyResolvedJourneys)}
+                  accent="saffron"
+                  note="Weekly resolved journeys: people who received a valid, situation-appropriate answer."
+                />
+                <MetricCard
+                  label="This quarter’s metric"
+                  value={pct(m.omtm.resolutionRate)}
+                  note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys went on to resolve."}
+                />
+                <MetricCard
+                  label="Showing intent to act"
+                  value={pct(m.funnel.nextStepActionRate)}
+                  accent="violet"
+                  note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " resolved journeys took a next step."}
+                />
+              </section>
+
+              <section className="mt-10 hidden">
                 <div className="actionbox">
                   <p className="text-[0.8125rem] font-bold uppercase tracking-[0.12em] text-saffron-ink">
                     North Star · last 7 days
@@ -287,12 +351,12 @@ export default async function MetricsPage() {
                     </thead>
                     <tbody className="text-[1rem]">
                       <tr className="border-b border-rule-faint">
-                        <td className="py-2.5 pr-4">Landing visitors</td>
+                        <td className="py-2.5 pr-4"><span>Landing visitors</span><span className="mt-1 block h-2 rounded-full bg-[#5967A8]" style={{ width: funnelWidth(m.funnel.landingVisitors, m.funnel.landingVisitors) }} /></td>
                         <td className="py-2.5 pr-4 font-bold">{m.funnel.landingVisitors}</td>
                         <td className="py-2.5">{pct(m.funnel.journeyStartRate)}</td>
                       </tr>
                       <tr className="border-b border-rule-faint">
-                        <td className="py-2.5 pr-4">Journeys started</td>
+                        <td className="py-2.5 pr-4"><span>Journeys started</span><span className="mt-1 block h-2 rounded-full bg-[#5967A8]" style={{ width: funnelWidth(m.funnel.journeysStarted, m.funnel.landingVisitors) }} /></td>
                         <td className="py-2.5 pr-4 font-bold">{m.funnel.journeysStarted}</td>
                         <td className="py-2.5">{pct(m.funnel.resolutionRate)}</td>
                       </tr>
@@ -302,7 +366,7 @@ export default async function MetricsPage() {
                         <td className="py-2.5">{pct(m.funnel.nextStepActionRate)}</td>
                       </tr>
                       <tr>
-                        <td className="py-2.5 pr-4">Showing intent to act</td>
+                        <td className="py-2.5 pr-4"><span>Showing intent to act</span><span className="mt-1 block h-2 rounded-full bg-[#5967A8]" style={{ width: funnelWidth(m.funnel.showingIntent, m.funnel.landingVisitors) }} /></td>
                         <td className="py-2.5 pr-4 font-bold">{m.funnel.showingIntent}</td>
                         <td className="py-2.5">—</td>
                       </tr>
