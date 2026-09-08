@@ -420,13 +420,6 @@ export type HomeDict = {
     moreDetailTitle: string;
     moreDetailNote: string;
     numberWords: string[];
-    /**
-     * The one-line pointer from the top of the page down into the Documents
-     * tab. Fixed regardless of tick state -- it names the total the claim
-     * needs, not what is still missing, so it stays true whether the reader
-     * has ticked nothing yet or everything.
-     */
-    documentsPointer: (n: number) => string;
     /** The five tabs below the core path. Short: they sit on one row on a phone. */
     tabDocuments: string;
     tabBank: string;
@@ -494,6 +487,7 @@ export type HomeDict = {
     tickHeading: string;
     tickedRemove: string;
     tickedSelect: string;
+    whyLabel: string;
     comparingAgainst: string;
     confirmRouteFirst: string;
     changeAnswers: string;
@@ -887,8 +881,8 @@ const en: HomeDict = {
     cost: "Cost",
     howLong: "How long",
     noteLabel: "Note.",
-    readinessNeed: (n) => `You'll need ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n} documents for this claim.`,
-    readinessNoLongWait: "None of them has a long wait — tick off what you already have below.",
+    readinessNeed: (n) => `None of your ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n} documents has a long wait —`,
+    readinessNoLongWait: "tick off what you already have below.",
     readinessStartTodayLongest: (names) => `Start today: ${names} — it takes the longest of anything on this list, and everything else can be done while you wait for it.`,
     readinessHaveAll: (n) => `You have all ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n}.`,
     readinessTakeToBranch: "Take them to the branch together and ask for written acknowledgement of the claim on the day you hand them over. The bank has fifteen days from a complete claim.",
@@ -928,7 +922,6 @@ const en: HomeDict = {
     hide: "Hide",
     moreDetailTitle: "More detail",
     moreDetailNote: "The RBI's exact wording, your bank's own policy, procedural tips, the deadline tracker and the escalation route — useful, but not what you need to do first.",
-    documentsPointer: (n) => `You'll need ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n} documents for this claim`,
     tabDocuments: "Documents",
     tabBank: "Your bank",
     tabLaw: "The law",
@@ -996,6 +989,7 @@ const en: HomeDict = {
     tickHeading: "Tick what the branch demanded",
     tickedRemove: "Ticked. Select to remove.",
     tickedSelect: "Select to tick.",
+    whyLabel: "Why it's needed:",
     comparingAgainst: "Comparing against the list for",
     confirmRouteFirst: "Confirm the claim route first, including any will, court restriction, dispute and applicable bank threshold. Until then, this page cannot judge the bank's document requests for your situation.",
     changeAnswers: "Change your answers",
@@ -1384,8 +1378,8 @@ const hi: HomeDict = {
     cost: "लागत",
     howLong: "कितना समय",
     noteLabel: "नोट।",
-    readinessNeed: (n) => `इस दावे के लिए आपको ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} दस्तावेज़ चाहिए होंगे।`,
-    readinessNoLongWait: "इनमें से किसी में लंबा इंतज़ार नहीं है — नीचे जो आपके पास पहले से है उसे टिक करें।",
+    readinessNeed: (n) => `आपके ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} दस्तावेज़ों में से किसी में भी लंबा इंतज़ार नहीं है —`,
+    readinessNoLongWait: "नीचे जो आपके पास पहले से है उसे टिक करें।",
     readinessStartTodayLongest: (names) => `आज शुरू करें: ${names} — इस सूची में सबसे ज़्यादा समय यही लेता है, और बाक़ी सब इसका इंतज़ार करते हुए किया जा सकता है।`,
     readinessHaveAll: (n) => `आपके पास सभी ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} हैं।`,
     readinessTakeToBranch: "इन्हें साथ लेकर शाखा जाएँ और जिस दिन जमा करें उसी दिन दावे की लिखित पावती माँगें। पूरे दावे के बाद बैंक के पास पंद्रह दिन हैं।",
@@ -1426,7 +1420,6 @@ const hi: HomeDict = {
     numberWords: ["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"],
     moreDetailTitle: "और विवरण",
     moreDetailNote: "बैंक को दिखाने वाला सबूत, बैंक का अपना पन्ना, आगे की कार्रवाई का रास्ता और बाक़ी शर्तें — सब यहीं हैं, बस मोड़ी हुई हैं ताकि पन्ना अभी क्या करना है, उस पर खुले।",
-    documentsPointer: (n) => `इस दावे के लिए आपको ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} दस्तावेज़ों की ज़रूरत होगी`,
     tabDocuments: "दस्तावेज़",
     tabBank: "आपका बैंक",
     tabLaw: "नियम",
@@ -1493,6 +1486,7 @@ const hi: HomeDict = {
     tickHeading: "शाखा ने क्या माँगा, टिक करें",
     tickedRemove: "टिक किया गया। हटाने के लिए चुनें।",
     tickedSelect: "टिक करने के लिए चुनें।",
+    whyLabel: "यह क्यों चाहिए:",
     comparingAgainst: "इसकी सूची से तुलना कर रहे हैं",
     confirmRouteFirst: "पहले दावे का रास्ता तय करें, जिसमें कोई वसीयत, न्यायालयीन रोक, विवाद और लागू बैंक सीमा शामिल है। तब तक, यह पन्ना आपकी स्थिति के लिए बैंक की दस्तावेज़ माँगों का आकलन नहीं कर सकता।",
     changeAnswers: "अपने जवाब बदलें",
@@ -1881,8 +1875,8 @@ const kn: HomeDict = {
     cost: "ವೆಚ್ಚ",
     howLong: "ಎಷ್ಟು ಸಮಯ",
     noteLabel: "ಸೂಚನೆ.",
-    readinessNeed: (n) => `ಈ ಹಕ್ಕಿಗಾಗಿ ನಿಮಗೆ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ.`,
-    readinessNoLongWait: "ಇವುಗಳಲ್ಲಿ ಯಾವುದಕ್ಕೂ ದೀರ್ಘ ಕಾಯುವಿಕೆ ಇಲ್ಲ — ಕೆಳಗೆ ನಿಮ್ಮ ಬಳಿ ಈಗಾಗಲೇ ಇರುವುದನ್ನು ಟಿಕ್ ಮಾಡಿ.",
+    readinessNeed: (n) => `ನಿಮ್ಮ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ದಾಖಲೆಗಳಲ್ಲಿ ಯಾವುದಕ್ಕೂ ದೀರ್ಘ ಕಾಯುವಿಕೆ ಇಲ್ಲ —`,
+    readinessNoLongWait: "ಕೆಳಗೆ ನಿಮ್ಮ ಬಳಿ ಈಗಾಗಲೇ ಇರುವುದನ್ನು ಟಿಕ್ ಮಾಡಿ.",
     readinessStartTodayLongest: (names) => `ಇಂದೇ ಪ್ರಾರಂಭಿಸಿ: ${names} — ಈ ಪಟ್ಟಿಯಲ್ಲಿ ಇದು ಅತಿ ಹೆಚ್ಚು ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ, ಮತ್ತು ಇದಕ್ಕಾಗಿ ಕಾಯುತ್ತಿರುವಾಗ ಉಳಿದೆಲ್ಲವನ್ನೂ ಮಾಡಬಹುದು.`,
     readinessHaveAll: (n) => `ನಿಮ್ಮ ಬಳಿ ಎಲ್ಲಾ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ಇವೆ.`,
     readinessTakeToBranch: "ಇವುಗಳನ್ನು ಒಟ್ಟಿಗೆ ಶಾಖೆಗೆ ತೆಗೆದುಕೊಂಡು ಹೋಗಿ ಮತ್ತು ಒಪ್ಪಿಸಿದ ದಿನವೇ ಹಕ್ಕಿನ ಲಿಖಿತ ಸ್ವೀಕೃತಿ ಕೇಳಿ. ಪೂರ್ಣ ಹಕ್ಕಿನ ನಂತರ ಬ್ಯಾಂಕಿಗೆ ಹದಿನೈದು ದಿನಗಳಿವೆ.",
@@ -1923,7 +1917,6 @@ const kn: HomeDict = {
     numberWords: ["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"],
     moreDetailTitle: "ಹೆಚ್ಚಿನ ವಿವರ",
     moreDetailNote: "ಬ್ಯಾಂಕಿಗೆ ತೋರಿಸಬೇಕಾದ ಸಾಕ್ಷ್ಯ, ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಪುಟ, ಮುಂದುವರಿಕೆ ಮಾರ್ಗ ಮತ್ತು ಇತರ ಷರತ್ತುಗಳು — ಎಲ್ಲವೂ ಇನ್ನೂ ಇಲ್ಲಿವೆ, ಈಗ ಏನು ಮಾಡಬೇಕು ಎಂಬುದರ ಮೇಲೆ ಪುಟ ತೆರೆಯುವಂತೆ ಮಡಚಲಾಗಿದೆ.",
-    documentsPointer: (n) => `ಈ ಹಕ್ಕಿಗಾಗಿ ನಿಮಗೆ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ`,
     tabDocuments: "ದಾಖಲೆಗಳು",
     tabBank: "ನಿಮ್ಮ ಬ್ಯಾಂಕ್",
     tabLaw: "ನಿಯಮ",
@@ -1990,6 +1983,7 @@ const kn: HomeDict = {
     tickHeading: "ಶಾಖೆ ಏನು ಕೇಳಿತು ಎಂದು ಟಿಕ್ ಮಾಡಿ",
     tickedRemove: "ಟಿಕ್ ಮಾಡಲಾಗಿದೆ. ತೆಗೆದುಹಾಕಲು ಆಯ್ಕೆಮಾಡಿ.",
     tickedSelect: "ಟಿಕ್ ಮಾಡಲು ಆಯ್ಕೆಮಾಡಿ.",
+    whyLabel: "ಇದು ಏಕೆ ಬೇಕು:",
     comparingAgainst: "ಇದರ ಪಟ್ಟಿಯೊಂದಿಗೆ ಹೋಲಿಸಲಾಗುತ್ತಿದೆ",
     confirmRouteFirst: "ಮೊದಲು ಹಕ್ಕಿನ ಮಾರ್ಗವನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ, ಯಾವುದೇ ಉಯಿಲು, ನ್ಯಾಯಾಲಯದ ನಿರ್ಬಂಧ, ವಿವಾದ ಮತ್ತು ಅನ್ವಯವಾಗುವ ಬ್ಯಾಂಕ್ ಮಿತಿ ಸೇರಿ. ಅಲ್ಲಿಯವರೆಗೆ, ಈ ಪುಟ ನಿಮ್ಮ ಸ್ಥಿತಿಗೆ ಬ್ಯಾಂಕಿನ ದಾಖಲೆ ಬೇಡಿಕೆಗಳನ್ನು ನಿರ್ಣಯಿಸಲಾಗುವುದಿಲ್ಲ.",
     changeAnswers: "ನಿಮ್ಮ ಉತ್ತರಗಳನ್ನು ಬದಲಾಯಿಸಿ",

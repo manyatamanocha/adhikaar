@@ -98,7 +98,7 @@ export default async function Page({
                       href={hrefFor(id)}
                       className={`flex items-start gap-3 rounded-xl border-2 p-4 transition-colors ${
                         on
-                          ? "border-indigo bg-indigo/6"
+                          ? "rounded-b-none border-indigo bg-indigo/6"
                           : "border-rule bg-white hover:border-indigo/50"
                       }`}
                     >
@@ -129,6 +129,22 @@ export default async function Page({
                         {on ? t.tickedRemove : t.tickedSelect}
                       </span>
                     </Link>
+                    {/* Explained the moment it's ticked -- no separate question
+                        about whether an explanation is wanted, no waiting for
+                        the route to be confirmed below. A reader who ticked a
+                        word they don't recognise gets the answer right there. */}
+                    {on && (
+                      <div className="rounded-b-xl border-2 border-t-0 border-indigo bg-white p-4 text-[0.9375rem] leading-relaxed">
+                        <p className="text-ink">{doc.what}</p>
+                        <p className="mt-1.5 text-ink">
+                          <span className="font-bold text-ink-soft">{t.whyLabel} </span>
+                          {doc.why}
+                        </p>
+                        <p className="mt-1.5 text-ink-soft">
+                          {doc.from} · {doc.cost} · {doc.time}
+                        </p>
+                      </div>
+                    )}
                   </li>
                 );
               })}

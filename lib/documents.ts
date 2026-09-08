@@ -56,6 +56,20 @@ export type ClaimDoc = {
   leadDays: number;
   /** One line on what it is, for someone who has never heard of it. */
   what: string;
+  /**
+   * What the document is FOR — the purpose, never the legitimacy of the demand.
+   *
+   * This distinction is load-bearing. `prescribed` is para 10(a)'s list, so it
+   * is the wrong flag to write this against: an indemnity bond is prescribed
+   * there and forbidden by para 9 for a nominee. A `why` that said "the bank
+   * needs this" would have the product endorsing, in plain language, a demand
+   * the badge beside it calls an overreach.
+   *
+   * So this answers "why does anyone ask for this at all", which is true in
+   * every situation. Whether THIS bank may ask YOU for it is the judgement in
+   * lib/asked.ts, and it stays there.
+   */
+  why: string;
   /** Shown when the bank asks for something it should not. */
   note?: string;
   /** Start this one first — it is the long pole. */
@@ -75,6 +89,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     leadDays: 0,
     what:
       "The form that starts the claim. There are two versions: one if a nominee was registered, one if not. Ask for the right one by name.",
+    why:
+      "Nothing moves until this is filed. It tells the bank who died, which accounts you mean, and who is asking for the money.",
   },
 
   "death-certificate": {
@@ -87,6 +103,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     leadDays: 14,
     what:
       "The registered certificate of death. Get several certified copies — every institution wants to keep its own.",
+    why:
+      "It is the bank's proof that the account holder has died. Every other step depends on it.",
     note: "Deaths must be registered within 21 days. After a year it needs a court order.",
   },
 
@@ -100,6 +118,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     time: "Immediate",
     leadDays: 0,
     what: "Proof of who you are. This is about you, not the person who died.",
+    why:
+      "The bank has to be sure the person collecting the money is the person named in the claim.",
   },
 
   "indemnity-bond": {
@@ -113,6 +133,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     leadDays: 0,
     what:
       "Your written undertaking to cover the bank if a rival claim appears later. You sign it. It is not the same as a surety.",
+    why:
+      "It protects the bank in case someone else later shows up claiming the same money — not because you are doubted.",
     note:
       "This is you signing for yourself. A bank asking a THIRD PERSON to stand as surety below the threshold is asking for something different — and para 10(a) says it shall not be obtained.",
   },
@@ -130,6 +152,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     leadDays: 7,
     what:
       "The other heirs confirming they do not object to the money being released to you. Needed only where there are other heirs.",
+    why:
+      "It shows the bank the family agrees, so it does not have to referee who gets the money.",
   },
 
   "legal-heir-certificate": {
@@ -148,6 +172,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     leadDays: 45,
     what:
       "Para 10(a) accepts EITHER a revenue officer's certificate naming the legal heirs, OR a declaration about who the heirs are made by an independent person the bank accepts. Neither is a succession certificate, and neither comes from a court. Ask the bank whether it will take the declaration — it often can, and it is much faster.",
+    why:
+      "It tells the bank, in writing, who the legal heirs are — so it knows who it is allowed to pay.",
     note:
       "The certificate is online in some states only, and its timelines are service targets, not guarantees. If it will take six weeks, ask about the declaration before you start queueing.",
     startFirst: true,
@@ -164,6 +190,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     leadDays: 3,
     what:
       "The alternative to a legal heir certificate. Para 10(a) accepts either. If the certificate will take six weeks, ask the bank whether it will take this instead — it often can.",
+    why:
+      "Same purpose as the certificate above: it tells the bank who the legal heirs are, just faster.",
   },
 
   "succession-certificate": {
@@ -176,6 +204,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     leadDays: 210,
     what:
       "A civil court proceeding — a petition, notice to every heir, a newspaper advertisement inviting objections, and hearings at which you must prove the accounts exist.",
+    why:
+      "A court settles who the heirs are when the amount is large or the family disagrees, so the bank is protected even if someone contests it later.",
     note:
       "Below the threshold with no nominee, para 10(a) requires the bank to settle on the six documents above. Para 10(b) reserves this for claims at or above the threshold, and para 11(b) for cases where the heirs are in dispute.",
   },
@@ -190,6 +220,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     leadDays: 0,
     what:
       "A person other than you who guarantees the claim. Different from the indemnity bond you sign yourself.",
+    why:
+      "A branch that has not confirmed a simpler paper trail sometimes wants a second person on the hook as backup cover — which is exactly what the indemnity bond above already is, from you.",
     note:
       "Para 10(a): \"No bond of surety from a third-party shall be obtained in case of claims up to the threshold limit.\"",
   },
@@ -203,6 +235,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     time: "—",
     leadDays: 0,
     what: "Branches sometimes ask for two people to attend and sign.",
+    why:
+      "The branch wants someone other than you to confirm the claim in person, as an extra check.",
     note:
       "Witnesses are not among the six documents para 10(a) lists for the simplified procedure.",
   },
@@ -216,7 +250,9 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     cost: "Varies",
     time: "Weeks",
     leadDays: 21,
-    what: "A genealogy establishing the family line.",
+    what: "A family tree, showing how everyone is related going back a generation or two.",
+    why:
+      "Some local authorities use it to work out who the heirs are — the same purpose the legal heir certificate above already serves.",
     note:
       "Not among the six documents para 10(a) lists. What it lists is a legal heir certificate OR a declaration regarding heirs — Annex I-E.",
   },
@@ -229,7 +265,9 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     cost: "₹100–500",
     time: "Days",
     leadDays: 3,
-    what: "A sworn statement.",
+    what: "A written statement you swear is true, in front of a notary or magistrate.",
+    why:
+      "It puts a fact on record under oath — for example, who the heirs are — without a full court case.",
     note:
       "Para 10(b) mentions an affidavit sworn before an official as an option for claims AT OR ABOVE the threshold. It is not in the para 10(a) list for claims below it.",
   },
@@ -243,6 +281,8 @@ export const DOCUMENTS: Record<DocId, ClaimDoc> = {
     time: "Many months",
     leadDays: 210,
     what: "A court certifying a will and the executor's authority.",
+    why:
+      "It proves the will is genuine and confirms who has the legal authority to carry it out.",
     note:
       "Para 9 says the bank shall not insist on this where there is a nominee or survivor, irrespective of the amount. Para 11(b) requires it where the heirs are in dispute.",
   },

@@ -168,21 +168,6 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
           <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
           <Steps steps={outcome.steps} t={t} />
 
-          {/* The one line this page most needs above the fold, restated:
-              not the full readiness sentence (that lives with the checklist
-              itself, in the Documents tab, where it can react to what the
-              reader has ticked) -- just enough to name the number and point
-              down. `href="#documents"` both scrolls AND, via the
-              `:has(:target)` rule in globals.css, forces the Documents tab
-              open even though nothing has been clicked yet. */}
-          {outcome.documents && (
-            <p className="actionbox mt-8 body-fluid">
-              <a href="#documents" className="font-bold text-link underline underline-offset-2">
-                {t.documentsPointer(outcome.documents.length)}
-              </a>
-            </p>
-          )}
-
           {/* The core path ends here: answer, conditions, steps. Repeating
               Print/Counter-mode right after -- not just once, up in the
               header, before the reader has seen any of the above -- gives an
