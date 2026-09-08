@@ -421,6 +421,17 @@ export type HomeDict = {
     tabLaw: string;
     tabRefused: string;
     tabMore: string;
+    /**
+     * out-of-scope's own two-option screen, replacing the generic verdict
+     * machinery (steps, caveats, tabs, evidence) that page used to run
+     * through -- none of that applies to a claim this product does not
+     * cover. Just the verdict, then a door back to the two things a reader
+     * here might actually want.
+     */
+    outOfScopeDocumentsCta: string;
+    outOfScopeDocumentsDetail: string;
+    outOfScopeStartCta: string;
+    outOfScopeStartDetail: string;
     counterModeLabel: string;
     seeFullPageInstead: string;
     whatToSay: string;
@@ -917,6 +928,10 @@ const en: HomeDict = {
     tabLaw: "The law",
     tabRefused: "If refused",
     tabMore: "More",
+    outOfScopeDocumentsCta: "See what documents are usually needed",
+    outOfScopeDocumentsDetail: "A general reference checklist, drawn from the same rules this site uses for bank deposits.",
+    outOfScopeStartCta: "I want to start the claim process",
+    outOfScopeStartDetail: "If this is actually a bank account, deposit or fixed deposit, answer a few questions to get your route.",
     numberWords: ["zero", "one", "two", "three", "four", "five", "six", "seven"],
     counterModeLabel: "Counter mode",
     seeFullPageInstead: "See the full page instead",
@@ -1410,6 +1425,10 @@ const hi: HomeDict = {
     tabLaw: "नियम",
     tabRefused: "अगर मना करें",
     tabMore: "और",
+    outOfScopeDocumentsCta: "आमतौर पर किन दस्तावेज़ों की ज़रूरत होती है, देखें",
+    outOfScopeDocumentsDetail: "एक सामान्य संदर्भ सूची, उन्हीं नियमों से ली गई है जो यह साइट बैंक जमा के लिए इस्तेमाल करती है।",
+    outOfScopeStartCta: "मैं दावे की प्रक्रिया शुरू करना चाहता/चाहती हूँ",
+    outOfScopeStartDetail: "अगर यह वाक़ई एक बैंक खाता, जमा या सावधि जमा है, तो अपना रास्ता जानने के लिए कुछ सवालों के जवाब दें।",
     counterModeLabel: "काउंटर मोड",
     seeFullPageInstead: "इसके बजाय पूरा पन्ना देखें",
     whatToSay: "क्या कहना है",
@@ -1902,6 +1921,10 @@ const kn: HomeDict = {
     tabLaw: "ನಿಯಮ",
     tabRefused: "ನಿರಾಕರಿಸಿದರೆ",
     tabMore: "ಇನ್ನಷ್ಟು",
+    outOfScopeDocumentsCta: "ಸಾಮಾನ್ಯವಾಗಿ ಯಾವ ದಾಖಲೆಗಳು ಬೇಕಾಗುತ್ತವೆ ಎಂದು ನೋಡಿ",
+    outOfScopeDocumentsDetail: "ಇದೇ ಸೈಟ್ ಬ್ಯಾಂಕ್ ಠೇವಣಿಗಳಿಗೆ ಬಳಸುವ ಅದೇ ನಿಯಮಗಳಿಂದ ಪಡೆದ ಒಂದು ಸಾಮಾನ್ಯ ಉಲ್ಲೇಖ ಪಟ್ಟಿ.",
+    outOfScopeStartCta: "ನಾನು ಹಕ್ಕು ಪ್ರಕ್ರಿಯೆ ಪ್ರಾರಂಭಿಸಲು ಬಯಸುತ್ತೇನೆ",
+    outOfScopeStartDetail: "ಇದು ನಿಜವಾಗಿಯೂ ಬ್ಯಾಂಕ್ ಖಾತೆ, ಠೇವಣಿ ಅಥವಾ ಸ್ಥಿರ ಠೇವಣಿಯಾಗಿದ್ದರೆ, ನಿಮ್ಮ ಮಾರ್ಗವನ್ನು ಪಡೆಯಲು ಕೆಲವು ಪ್ರಶ್ನೆಗಳಿಗೆ ಉತ್ತರಿಸಿ.",
     counterModeLabel: "ಕೌಂಟರ್ ಮೋಡ್",
     seeFullPageInstead: "ಬದಲಿಗೆ ಪೂರ್ಣ ಪುಟವನ್ನು ನೋಡಿ",
     whatToSay: "ಏನು ಹೇಳಬೇಕು",

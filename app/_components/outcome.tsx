@@ -122,6 +122,27 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
     );
   }
 
+  // out-of-scope gets its own, much smaller page -- direct request, 9 Sep
+  // 2026. Every generic outcome mechanism below (hard caveats, steps, the
+  // tabs, evidence, escalation) exists to help someone act on a resolved
+  // bank-deposit route; a reader here has none, and running them through
+  // that machinery anyway produced a page that read as advice for a claim
+  // this product cannot resolve. The verdict stays -- "this is outside what
+  // we cover" is still the answer -- followed only by the two things a
+  // reader in this situation might actually want next.
+  if (id === "out-of-scope") {
+    return (
+      <>
+        <RecoverNav />
+        <main className="flex-1">
+          <Verdict id={id} answers={answers} bankId={bankId} locale={locale} outcome={outcome} t={t} />
+          <OutOfScopeOptions locale={locale} t={t} />
+        </main>
+        <RecoverFooter />
+      </>
+    );
+  }
+
   // Which documents the reader already has. Constrained to this claim's own
   // list, so a hand-edited URL cannot claim one that does not apply.
   const have = parseHave(sp.have, outcome.documents ?? []);
@@ -224,8 +245,9 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
                     // Its own tab even for a claim with no bank picked yet --
                     // BankBox falls back to the picker in that case, same as
                     // it always has, rather than the tab silently
-                    // disappearing.
-                    hidden: !hasAnswers || id === "out-of-scope",
+                    // disappearing. out-of-scope never reaches this code at
+                    // all now -- it returns its own, much smaller page above.
+                    hidden: !hasAnswers,
                     content: <BankBox bankId={bankId} hrefFor={hrefFor} t={t} />,
                   },
                   {
@@ -249,7 +271,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
                     label: t.tabMore,
                     content: (
                       <>
-                        {hasAnswers && id !== "out-of-scope" && <AskedChecker answers={answers} locale={locale} t={t} />}
+                        {hasAnswers && <AskedChecker answers={answers} locale={locale} t={t} />}
                         {outcome.tracker && <DeadlineTracker locale={locale} />}
                         <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
                         <SourceLine locale={locale} t={t} />
@@ -362,36 +384,45 @@ function Verdict({
           {outcome.goodNews && !Object.values(answers).some(Boolean) ? t.whenRouteApplies : outcome.verdict}
         </h1>
 
-        <p
-          className={`lede-fluid mt-5 max-w-[62ch] ${
-            good ? "text-white/90" : "text-ink"
-          }`}
-        >
-          {outcome.summary}
-        </p>
-
-        <div
-          data-print="hide"
-          className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
-        >
-          <PrintButton label={t.printButton} />
-          {Object.values(answers).some(Boolean) && id in COUNTER_SCRIPT && (
-            <Link
-              href={withLang(counterHref(outcome.path, answers, bankId), locale)}
-              className={`inline-flex items-center gap-2 rounded-pill border-2 px-6 py-3 text-[1.0625rem] font-bold transition-colors ${
-                good
-                  ? "border-white/40 text-white hover:bg-white/10"
-                  : "border-indigo text-indigo-ink hover:bg-indigo/8"
-              }`}
-            >
-              {t.counterShorter}
-              <span aria-hidden="true">&rarr;</span>
-            </Link>
-          )}
-          <p className={`text-[0.9375rem] ${good ? "text-white/70" : "text-ink-soft"}`}>
-            {t.printNote}
+        {outcome.summary && (
+          <p
+            className={`lede-fluid mt-5 max-w-[62ch] ${
+              good ? "text-white/90" : "text-ink"
+            }`}
+          >
+            {outcome.summary}
           </p>
-        </div>
+        )}
+
+        {/* Nothing to print here -- there is no checklist or clause to carry
+            to a counter for a claim this product does not resolve. Print and
+            Counter-mode both exist for the sheet handed across a bank
+            counter, and out-of-scope is the one outcome that never produces
+            one. */}
+        {id !== "out-of-scope" && (
+          <div
+            data-print="hide"
+            className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
+          >
+            <PrintButton label={t.printButton} />
+            {Object.values(answers).some(Boolean) && id in COUNTER_SCRIPT && (
+              <Link
+                href={withLang(counterHref(outcome.path, answers, bankId), locale)}
+                className={`inline-flex items-center gap-2 rounded-pill border-2 px-6 py-3 text-[1.0625rem] font-bold transition-colors ${
+                  good
+                    ? "border-white/40 text-white hover:bg-white/10"
+                    : "border-indigo text-indigo-ink hover:bg-indigo/8"
+                }`}
+              >
+                {t.counterShorter}
+                <span aria-hidden="true">&rarr;</span>
+              </Link>
+            )}
+            <p className={`text-[0.9375rem] ${good ? "text-white/70" : "text-ink-soft"}`}>
+              {t.printNote}
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
@@ -434,6 +465,48 @@ function DoneBand({
         </Link>
       )}
       <p className="text-[0.9375rem] text-ink-soft">{t.printNote}</p>
+    </div>
+  );
+}
+
+/**
+ * out-of-scope's entire body: two doors, nothing else. Same card language as
+ * the situation picker (app/start/page.tsx's SituationGroup) rather than
+ * anything from the generic outcome machinery -- this reader was never on a
+ * resolved route, so nothing here should look like the end of one.
+ */
+function OutOfScopeOptions({ locale, t }: { locale: Locale; t: VerdictText }) {
+  const options = [
+    { href: "/documents", label: t.outOfScopeDocumentsCta, detail: t.outOfScopeDocumentsDetail },
+    { href: "/start?begin=1", label: t.outOfScopeStartCta, detail: t.outOfScopeStartDetail },
+  ];
+  return (
+    <div className="shell max-w-[860px] py-10 sm:py-12">
+      <ul className="space-y-3">
+        {options.map((option) => (
+          <li key={option.href}>
+            <Link
+              href={withLang(option.href, locale)}
+              className="group flex items-center gap-4 rounded-xl border-2 border-rule bg-white p-5 transition-all hover:border-indigo hover:shadow-[0_6px_24px_rgba(45,48,121,0.12)]"
+            >
+              <span className="flex-1">
+                <span className="display-md block font-serif font-bold text-indigo-ink">
+                  {option.label}
+                </span>
+                <span className="body-fluid mt-1.5 block leading-relaxed text-ink-soft">
+                  {option.detail}
+                </span>
+              </span>
+              <span
+                aria-hidden="true"
+                className="shrink-0 text-[1.25rem] font-bold text-saffron-ink transition-transform group-hover:translate-x-0.5"
+              >
+                &rarr;
+              </span>
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

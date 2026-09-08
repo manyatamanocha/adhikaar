@@ -285,8 +285,7 @@ export const OUTCOMES: Record<OutcomeId, Outcome> = {
     id: "out-of-scope",
     path: "/out-of-scope",
     verdict: "This is outside what we cover.",
-    summary:
-      "This MVP guides adults claiming a deceased adult's bank deposits. Lockers, safe custody, pensions, government savings schemes and other assets need separate procedures. Do not use the deposit checklist for them.",
+    summary: "",
     goodNews: false,
     steps: [
       "For a locker or articles in safe custody, ask the bank for its deceased-hirer access and inventory procedure under paragraphs 16–26 of the RBI directions.",
@@ -482,8 +481,7 @@ const hiOutcomeText: Record<OutcomeId, OutcomeText> = {
   },
   "out-of-scope": {
     verdict: "यह हमारे दायरे से बाहर है।",
-    summary:
-      "यह MVP वयस्कों को एक मृत वयस्क के बैंक जमा के दावे में मार्गदर्शन देता है। लॉकर, सुरक्षित अभिरक्षा, पेंशन, सरकारी बचत योजनाएँ और अन्य संपत्तियों के लिए अलग प्रक्रियाएँ चाहिए। इनके लिए जमा-राशि वाली सूची का उपयोग न करें।",
+    summary: "",
     steps: [
       "लॉकर या सुरक्षित अभिरक्षा में रखी वस्तुओं के लिए, बैंक से RBI निर्देशों के पैराग्राफ 16–26 के तहत मृत किरायेदार पहुँच और सूची प्रक्रिया माँगें।",
       "सरकारी या पारिवारिक पेंशन: मृतक के अपने विभाग या कोषागार कार्यालय से, संबंधित राज्य या केंद्रीय पेंशन नियमों के तहत।",
@@ -612,8 +610,7 @@ const knOutcomeText: Record<OutcomeId, OutcomeText> = {
   },
   "out-of-scope": {
     verdict: "ಇದು ನಾವು ಒಳಗೊಳ್ಳುವುದರ ಹೊರಗಿದೆ.",
-    summary:
-      "ಈ MVP ಮೃತ ವಯಸ್ಕರ ಬ್ಯಾಂಕ್ ಠೇವಣಿಗಳನ್ನು ಪಡೆಯುವ ವಯಸ್ಕರಿಗೆ ಮಾರ್ಗದರ್ಶನ ನೀಡುತ್ತದೆ. ಲಾಕರ್‌ಗಳು, ಸುರಕ್ಷಿತ ಸಂರಕ್ಷಣೆ, ಪಿಂಚಣಿಗಳು, ಸರ್ಕಾರಿ ಉಳಿತಾಯ ಯೋಜನೆಗಳು ಮತ್ತು ಇತರ ಆಸ್ತಿಗಳಿಗೆ ಪ್ರತ್ಯೇಕ ಕಾರ್ಯವಿಧಾನಗಳು ಬೇಕಾಗುತ್ತವೆ. ಠೇವಣಿ ಪಟ್ಟಿಯನ್ನು ಅವುಗಳಿಗೆ ಬಳಸಬೇಡಿ.",
+    summary: "",
     steps: [
       "ಲಾಕರ್ ಅಥವಾ ಸುರಕ್ಷಿತ ಸಂರಕ್ಷಣೆಯಲ್ಲಿನ ವಸ್ತುಗಳಿಗಾಗಿ, RBI ನಿರ್ದೇಶನಗಳ ಪ್ಯಾರಾಗ್ರಾಫ್ 16–26 ರ ಅಡಿಯಲ್ಲಿ ಮೃತ ಬಾಡಿಗೆದಾರರ ಪ್ರವೇಶ ಮತ್ತು ದಾಸ್ತಾನು ಕಾರ್ಯವಿಧಾನವನ್ನು ಬ್ಯಾಂಕಿನಿಂದ ಕೇಳಿ.",
       "ಸರ್ಕಾರಿ ಅಥವಾ ಕುಟುಂಬ ಪಿಂಚಣಿ: ಮೃತರ ಸ್ವಂತ ಇಲಾಖೆ ಅಥವಾ ಖಜಾನೆ ಕಚೇರಿಯಿಂದ, ಸಂಬಂಧಿತ ರಾಜ್ಯ ಅಥವಾ ಕೇಂದ್ರ ಪಿಂಚಣಿ ನಿಯಮಗಳ ಅಡಿಯಲ್ಲಿ.",
