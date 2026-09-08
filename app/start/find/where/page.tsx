@@ -92,13 +92,13 @@ export default async function Where({
               >
                 udgam.rbi.org.in
               </a>
-            </li>
 
-            <li className="rounded-xl border border-rule bg-white p-5">
-              <h2 className="display-md font-serif font-bold text-indigo-ink">
-                {t.portalName}
-              </h2>
-              <p className="body-fluid mt-1.5 leading-relaxed text-ink-soft">{t.portalWhat}</p>
+              <div className="mt-4 border-t border-rule-faint pt-4">
+                <h2 className="display-md font-serif font-bold text-indigo-ink">
+                  {t.portalName}
+                </h2>
+                <p className="body-fluid mt-1.5 leading-relaxed text-ink-soft">{t.portalWhat}</p>
+              </div>
             </li>
           </ul>
 

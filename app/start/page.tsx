@@ -209,14 +209,6 @@ export default async function Start({
               </Link>
               <span className="text-ink-faint"> — {SITUATIONS_T[locale].dontKnow.detail}</span>
             </p>
-            {/* Precise, because it has to be. The answers are not stored and
-                nothing here identifies anyone — but we do count which branch
-                of the law people land on, and saying "sent nowhere" would be
-                a lie on the one page that cannot afford one. */}
-            <p className="mt-3 text-[0.9375rem] text-ink-faint">
-              {t.privacyNote}
-              <Link href={withLang("/privacy", locale)} className="ml-1 underline">{t.privacyLink}</Link>
-            </p>
           </div>
         </div>
       </main>
