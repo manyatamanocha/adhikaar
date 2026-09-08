@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { LeafMark } from "./brand";
+import { AdhikaarMark } from "./brand";
 import { LOCALES, LOCALE_LABEL, withLang, type Locale } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
 import { useHomeT } from "./home-i18n";
@@ -68,11 +68,8 @@ function Navigation() {
       <div className="mx-auto flex max-w-[1920px] flex-wrap items-center justify-between gap-4 px-5 py-4 sm:px-8 lg:grid lg:grid-cols-[1fr_auto_1fr]">
         <div aria-hidden="true" className="hidden lg:block" />
         <Link href={withLang("/", locale)} className="flex min-w-0 flex-col items-center">
-          <span className="flex items-center gap-2">
-            <LeafMark className="h-10 w-10 shrink-0 sm:h-11 sm:w-11 lg:h-12 lg:w-12" />
-            <span className="font-serif text-[1.1875rem] font-bold leading-tight sm:text-[1.5625rem] lg:text-[1.875rem]">Adhikaar</span>
-          </span>
-          <span className="mt-1 block max-w-[20rem] translate-x-4 text-center text-[0.625rem] text-[#6B6255] sm:max-w-[24rem] sm:text-[0.6875rem] lg:text-[0.75rem]">
+          <AdhikaarMark className="h-9 w-auto sm:h-12 lg:h-14" />
+          <span className="mt-1 block max-w-[20rem] text-center text-[0.625rem] text-[#6B6255] sm:max-w-[24rem] sm:text-[0.6875rem] lg:text-[0.75rem]">
             The counter companion for deceased-bank claims in India
           </span>
         </Link>
