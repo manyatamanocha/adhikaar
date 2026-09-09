@@ -68,7 +68,10 @@ function Navigation() {
       <div className="mx-auto flex max-w-[1920px] flex-wrap items-center justify-between gap-4 px-5 pt-4 pb-7 sm:px-8 sm:pb-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:pb-9">
         <div aria-hidden="true" className="hidden lg:block" />
         <Link href={withLang("/", locale)} className="flex min-w-0 flex-col items-center">
-          <AdhikaarMark className="h-12 w-auto sm:h-16 lg:h-20" />
+          <span className="flex items-center gap-3">
+            <AdhikaarMark className="h-12 w-12 shrink-0 sm:h-16 sm:w-16 lg:h-20 lg:w-20" />
+            <span className="font-serif text-[1.1875rem] font-bold leading-tight sm:text-[1.5625rem] lg:text-[1.875rem]">Adhikaar</span>
+          </span>
           <span className="mt-1.5 block max-w-[20rem] text-center text-[0.625rem] text-[#6B6255] sm:max-w-[24rem] sm:text-[0.6875rem] lg:text-[0.75rem]">
             The counter companion for deceased-bank claims in India
           </span>

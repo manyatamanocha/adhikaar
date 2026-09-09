@@ -30,8 +30,13 @@ function FooterContent() {
       <div className="mx-auto max-w-[1920px] px-5 sm:px-8">
         <div className="flex flex-col items-start gap-4 pb-6">
           <Link href={withLang("/", locale)} className="flex items-center gap-2.5">
-            <AdhikaarMark className="h-[1.875rem] w-auto shrink-0" />
-            <span className="block text-[0.8125rem] text-[#6B6255]">{t.tagline}</span>
+            <AdhikaarMark className="h-9 w-9 shrink-0" />
+            <span className="leading-tight">
+              <span className="block font-serif text-[1rem] font-bold text-[#16233F]">
+                Adhikaar
+              </span>
+              <span className="block text-[0.8125rem] text-[#6B6255]">{t.tagline}</span>
+            </span>
           </Link>
           <p>{t.footer.madeFor}</p>
         </div>
