@@ -60,9 +60,6 @@ export function UniqueUsersCard() {
           </button>
         ))}
       </div>
-      <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-soft">
-        Distinct people, by a browser identifier, in the selected window.
-      </p>
     </article>
   );
 }
