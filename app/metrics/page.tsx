@@ -95,12 +95,17 @@ function funnelWidth(value: number, first: number): string {
 
 function MetricCard({
   label,
+  about,
   value,
   note,
   accent = "plain",
   breakdown,
 }: {
   label: string;
+  /** One plain sentence naming the CONCEPT this card tracks, distinct from
+   * `note` below -- `note` reports what these specific numbers say, `about`
+   * says what the metric is even asking in the first place. */
+  about: string;
   value: string;
   note: string;
   accent?: "plain" | "saffron" | "violet";
@@ -117,11 +122,12 @@ function MetricCard({
   return (
     <article className={"rounded-2xl border-2 p-5 " + accents[accent]}>
       <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">{label}</p>
+      <p className="mt-1 text-[0.9375rem] leading-snug text-ink-soft">{about}</p>
       <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">{value}</p>
       {breakdown && breakdown.to > 0 && (
         <p className="mt-1 flex items-center gap-1.5 text-[0.9375rem] font-bold tabular-nums text-ink-soft">
           <span>{breakdown.from.toLocaleString("en-IN")}</span>
-          <span aria-hidden="true">→</span>
+          <ArrowRightIcon className="h-3 w-3 shrink-0 text-ink-faint" />
           <span>{breakdown.to.toLocaleString("en-IN")}</span>
         </p>
       )}
