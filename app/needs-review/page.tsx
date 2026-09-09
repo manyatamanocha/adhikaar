@@ -5,7 +5,7 @@ import { parseAnswers, toQuery, QUESTIONS_BY_LOCALE, QUESTION_ORDER, answerQuest
 import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
 import { NOTIFICATION } from "@/lib/rbi";
-import { NextStepButton } from "../_components/next-step-button";
+import { FeedbackWidget } from "../_components/feedback-widget";
 
 export const metadata = { title: "Confirm your claim details — Adhikaar", robots: { index: false } };
 
@@ -16,7 +16,6 @@ export default async function ConfirmDetails({ searchParams }: {
   const a = parseAnswers(sp);
   const locale = parseLocale(sp.lang);
   const t = HOME_T[locale].confirmDetailsPage;
-  const knowAnswerNow = HOME_T[locale].verdictPage.knowAnswerNow;
   const QUESTIONS = QUESTIONS_BY_LOCALE[locale];
   const restricted = a.court === "yes";
   const will = a.will === "yes";
@@ -39,8 +38,6 @@ export default async function ConfirmDetails({ searchParams }: {
   // resolve() dies at the court check first. So the only correct fix is:
   // once ANY confirmed blocker is present, there is nothing left to ask.
   // This case needs a lawyer, not another trip through the wizard.
-  const disputeConfirmed = a.heirs === "dispute" && a.nominee !== "no";
-  const blocked = restricted || (will && a.nominee === "no") || disputeConfirmed;
   const steps: { text: string; href?: string }[] = [
     ...(a.court !== "no" ? [{ text: restricted ? t.stepRestrictedYes : t.stepRestrictedAsk, href: restricted ? undefined : startWithout("court") }] : []),
     ...(a.will !== "no" && a.nominee === "no" ? [{ text: will ? t.stepWillYes : t.stepWillAsk, href: will ? undefined : startWithout("will") }] : []),
@@ -52,10 +49,6 @@ export default async function ConfirmDetails({ searchParams }: {
     // fixable by looking the figure up and coming back.
     ...(a.amount === "unknown" || a.amount === "equal" || !a.amount ? [{ text: t.stepAmountUnknown, href: a.amount === "equal" ? undefined : startWithout("amount") }] : []),
   ];
-  // No button at all once a confirmed blocker exists -- no other field's
-  // answer changes the outcome, so there is nothing left to "come back"
-  // from. Otherwise, target the first genuinely re-askable field.
-  const nextAskable = blocked ? undefined : steps.find(s => s.href);
   return <>
     <RecoverNav locale={locale} />
     <main className="shell max-w-[860px] flex-1 py-10 sm:py-14" lang={locale}>
@@ -63,9 +56,6 @@ export default async function ConfirmDetails({ searchParams }: {
       <p className="body-fluid mt-5 text-ink-soft">{t.sub}</p>
       <h2 className="display-md mt-8 font-serif font-bold">{t.whatToDoNext}</h2>
       <ol className="body-fluid mt-4 list-decimal space-y-4 pl-6">{steps.map(s => <li key={s.text}>{s.text}</li>)}</ol>
-      {nextAskable && (
-        <NextStepButton href={nextAskable.href!} label={knowAnswerNow} outcomeType="information_required" />
-      )}
       <h2 className="display-md mt-8 font-serif font-bold">{t.reviewAnswers}</h2>
       <ul className="body-fluid mt-4 space-y-3">{QUESTION_ORDER.filter(id => a[id]).map(id => {
         // `bank` never affects the verdict, so changing it must not discard
@@ -83,6 +73,12 @@ export default async function ConfirmDetails({ searchParams }: {
       })}</ul>
       <p className="body-fluid mt-4"><Link className="text-link underline" href={withLang("/start", locale)}>{t.startAgain}</Link></p>
       <p className="mt-8 text-ink-soft">{t.disclaimer} <a href={NOTIFICATION.url} target="_blank" rel="noreferrer" className="underline">{t.readDirections}</a></p>
+      <FeedbackWidget
+        question={HOME_T[locale].verdictPage.feedbackQuestion}
+        yes={HOME_T[locale].verdictPage.feedbackYes}
+        no={HOME_T[locale].verdictPage.feedbackNo}
+        thanks={HOME_T[locale].verdictPage.feedbackThanks}
+      />
     </main>
     <RecoverFooter />
   </>;

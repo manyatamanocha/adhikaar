@@ -197,8 +197,6 @@ export type HomeDict = {
     heading: string;
     sub: string;
     cta: string;
-    everyCellStrong: string;
-    everyCellBody: string;
     emptyRowHeading: string;
     emptyRowBefore: string;
     emptyRowAfter: string;
@@ -358,11 +356,18 @@ export type HomeDict = {
     bankBoxOtherBody: string;
     /** The collapsed wizard-screen summary (BankSummary) for bank: "other" or an unrecognised id — shorter than bankBoxOtherBody, which has room for a full paragraph on the verdict page. */
     bankSummaryUnverified: string;
-    counterShorter: string;
     yourNextSteps: string;
     todayHeading: string;
-    readyToProceed: string;
-    knowAnswerNow: string;
+    exportEmailButton: string;
+    exportEmailPlaceholder: string;
+    exportEmailSend: string;
+    exportEmailSending: string;
+    exportEmailSuccess: string;
+    exportEmailError: string;
+    feedbackQuestion: string;
+    feedbackYes: string;
+    feedbackNo: string;
+    feedbackThanks: string;
     todayAction: {
       nomineeOrSurvivorship: string;
       underThreshold: string;
@@ -733,9 +738,6 @@ const en: HomeDict = {
     heading: "How each bank compares",
     sub: "This is each bank's own published practice on top of the RBI's floor, read from their own pages — including where they publish nothing at all.",
     cta: "Start your claim journey today",
-    everyCellStrong: "Every cell is read or blank.",
-    everyCellBody:
-      "Nothing here is inferred. Where a bank has not published a figure we leave it empty and say so, rather than filling it with the RBI floor and letting you believe it is that bank's own number. A checked row is worth more than a guessed one.",
     emptyRowHeading: "You should know",
     emptyRowBefore:
       "Since 31 March 2026 a bank has been required to publish its board-approved deceased-claim policy and its document checklist. We could not find one for",
@@ -879,11 +881,18 @@ const en: HomeDict = {
     bankBoxOtherBody:
       "We have no verified policy for that bank. Everything below is the RBI rule, which binds it the same as any other. If yours is in the list, tapping it adds its own published words to this page.",
     bankSummaryUnverified: "We hold no verified policy for this bank.",
-    counterShorter: "At the counter now? Shorter version",
+    exportEmailButton: "Export to email",
+    exportEmailPlaceholder: "you@example.com",
+    exportEmailSend: "Send",
+    exportEmailSending: "Sending…",
+    exportEmailSuccess: "Sent. Check your inbox.",
+    exportEmailError: "Could not send that email. Please try again.",
+    feedbackQuestion: "Was this helpful?",
+    feedbackYes: "Yes",
+    feedbackNo: "No",
+    feedbackThanks: "Thanks for letting us know.",
     yourNextSteps: "Your next steps",
     todayHeading: "What should you do today?",
-    readyToProceed: "I'm ready to proceed",
-    knowAnswerNow: "I know the answer now",
     todayAction: {
       nomineeOrSurvivorship: "Ask the bank for the deceased-customer claim form, and take the death certificate and your ID.",
       underThreshold: "Ask the bank for its simplified deceased-deposit claim form and confirm the total balance at that bank.",
@@ -1238,9 +1247,6 @@ const hi: HomeDict = {
     heading: "हर बैंक की तुलना",
     sub: "यह हर बैंक की अपनी प्रकाशित प्रक्रिया है, आरबीआई की न्यूनतम सीमा के ऊपर, उनके अपने पन्नों से ली गई — जिसमें वे मामले भी शामिल हैं जहाँ वे कुछ भी प्रकाशित नहीं करते।",
     cta: "आज ही अपना दावा शुरू करें",
-    everyCellStrong: "हर सेल या तो पढ़ी गई है या ख़ाली है।",
-    everyCellBody:
-      "यहाँ कुछ भी अनुमान से नहीं भरा गया। जहाँ किसी बैंक ने कोई आँकड़ा प्रकाशित नहीं किया, वहाँ हमने उसे ख़ाली छोड़ा और यह बताया, बजाय इसके कि आरबीआई की सीमा भरकर आपको यह विश्वास दिलाएँ कि यह उसी बैंक का अपना आँकड़ा है। एक जाँची गई पंक्ति एक अनुमानित पंक्ति से बेहतर है।",
     emptyRowHeading: "आपको यह जानना चाहिए",
     emptyRowBefore:
       "31 मार्च 2026 से हर बैंक के लिए अपनी बोर्ड-अनुमोदित दिवंगत-दावा नीति और दस्तावेज़ सूची प्रकाशित करना ज़रूरी है। हमें इसके लिए कोई नीति नहीं मिली:",
@@ -1384,11 +1390,18 @@ const hi: HomeDict = {
     bankBoxOtherBody:
       "उस बैंक की कोई जाँची हुई नीति हमारे पास नहीं है। नीचे जो कुछ है वह आरबीआई का नियम है, जो उस पर भी उतना ही लागू होता है। अगर आपका बैंक सूची में है, तो उसे चुनने पर उसके अपने प्रकाशित शब्द इस पन्ने में जुड़ जाएँगे।",
     bankSummaryUnverified: "इस बैंक की कोई जाँची हुई नीति हमारे पास नहीं है।",
-    counterShorter: "अभी काउंटर पर हैं? छोटा संस्करण",
+    exportEmailButton: "ईमेल पर भेजें",
+    exportEmailPlaceholder: "you@example.com",
+    exportEmailSend: "भेजें",
+    exportEmailSending: "भेजा जा रहा है…",
+    exportEmailSuccess: "भेज दिया गया। अपना इनबॉक्स देखें।",
+    exportEmailError: "यह ईमेल नहीं भेजा जा सका। कृपया दोबारा कोशिश करें।",
+    feedbackQuestion: "क्या यह सहायक था?",
+    feedbackYes: "हाँ",
+    feedbackNo: "नहीं",
+    feedbackThanks: "बताने के लिए धन्यवाद।",
     yourNextSteps: "आपके अगले कदम",
     todayHeading: "आज आपको क्या करना चाहिए?",
-    readyToProceed: "मैं आगे बढ़ने के लिए तैयार हूँ",
-    knowAnswerNow: "अब मुझे जवाब पता है",
     todayAction: {
       nomineeOrSurvivorship: "बैंक से दिवंगत-ग्राहक दावा फ़ॉर्म माँगें, और मृत्यु प्रमाणपत्र व अपना पहचान पत्र साथ ले जाएँ।",
       underThreshold: "बैंक से उसका सरलीकृत दिवंगत-जमा दावा फ़ॉर्म माँगें और उस बैंक में कुल शेष राशि की पुष्टि करें।",
@@ -1743,9 +1756,6 @@ const kn: HomeDict = {
     heading: "ಪ್ರತಿ ಬ್ಯಾಂಕಿನ ಹೋಲಿಕೆ",
     sub: "ಇದು ಆರ್‌ಬಿಐ ನ ಕನಿಷ್ಠ ಮಿತಿಯ ಮೇಲೆ ಪ್ರತಿ ಬ್ಯಾಂಕ್‌ನ ಸ್ವಂತ ಪ್ರಕಟಿತ ಆಚರಣೆ, ಅವರ ಸ್ವಂತ ಪುಟಗಳಿಂದ ಪಡೆಯಲಾಗಿದೆ — ಏನನ್ನೂ ಪ್ರಕಟಿಸದಿರುವ ಸಂದರ್ಭಗಳನ್ನೂ ಒಳಗೊಂಡಂತೆ.",
     cta: "ಇಂದೇ ನಿಮ್ಮ ಹಕ್ಕು ಪ್ರಾರಂಭಿಸಿ",
-    everyCellStrong: "ಪ್ರತಿ ಸೆಲ್ ಒಂದೋ ಓದಲಾಗಿದೆ ಅಥವಾ ಖಾಲಿ ಇದೆ.",
-    everyCellBody:
-      "ಇಲ್ಲಿ ಏನೂ ಊಹಿಸಿ ತುಂಬಿಲ್ಲ. ಒಂದು ಬ್ಯಾಂಕ್ ಒಂದು ಅಂಕಿ ಪ್ರಕಟಿಸದಿದ್ದಲ್ಲಿ, ಅದನ್ನು ಖಾಲಿ ಬಿಟ್ಟು ಹಾಗೆಂದು ಹೇಳುತ್ತೇವೆ, ಆರ್‌ಬಿಐ ಮಿತಿಯನ್ನು ತುಂಬಿ ಅದು ಆ ಬ್ಯಾಂಕಿನ ಸ್ವಂತ ಸಂಖ್ಯೆ ಎಂದು ನಿಮಗೆ ನಂಬಿಸುವ ಬದಲು. ಒಂದು ಪರಿಶೀಲಿಸಿದ ಸಾಲು ಊಹಿಸಿದ ಹಲವು ಸಾಲುಗಳಿಗಿಂತ ಉತ್ತಮ.",
     emptyRowHeading: "ನೀವು ಇದನ್ನು ತಿಳಿದಿರಬೇಕು",
     emptyRowBefore:
       "31 ಮಾರ್ಚ್ 2026 ರಿಂದ ಪ್ರತಿ ಬ್ಯಾಂಕ್ ತನ್ನ ಬೋರ್ಡ್-ಅನುಮೋದಿತ ದಿವಂಗತ-ಹಕ್ಕು ನೀತಿ ಮತ್ತು ದಾಖಲೆ ಪಟ್ಟಿಯನ್ನು ಪ್ರಕಟಿಸಬೇಕು. ಇವರಿಗೆ ನಮಗೆ ಅದು ಸಿಗಲಿಲ್ಲ:",
@@ -1889,11 +1899,18 @@ const kn: HomeDict = {
     bankBoxOtherBody:
       "ಆ ಬ್ಯಾಂಕಿನ ಪರಿಶೀಲಿಸಿದ ನೀತಿ ನಮ್ಮ ಬಳಿ ಇಲ್ಲ. ಕೆಳಗಿನದೆಲ್ಲವೂ ಆರ್‌ಬಿಐ ನಿಯಮ, ಅದು ಆ ಬ್ಯಾಂಕಿಗೂ ಅಷ್ಟೇ ಅನ್ವಯಿಸುತ್ತದೆ. ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಪಟ್ಟಿಯಲ್ಲಿದ್ದರೆ, ಅದನ್ನು ಆಯ್ಕೆಮಾಡಿದರೆ ಅದರ ಸ್ವಂತ ಪ್ರಕಟಿತ ಮಾತುಗಳು ಈ ಪುಟಕ್ಕೆ ಸೇರುತ್ತವೆ.",
     bankSummaryUnverified: "ಈ ಬ್ಯಾಂಕಿನ ಪರಿಶೀಲಿಸಿದ ನೀತಿ ನಮ್ಮ ಬಳಿ ಇಲ್ಲ.",
-    counterShorter: "ಈಗ ಕೌಂಟರ್‌ನಲ್ಲಿದ್ದೀರಾ? ಚಿಕ್ಕ ಆವೃತ್ತಿ",
+    exportEmailButton: "ಇಮೇಲ್‌ಗೆ ಕಳುಹಿಸಿ",
+    exportEmailPlaceholder: "you@example.com",
+    exportEmailSend: "ಕಳುಹಿಸಿ",
+    exportEmailSending: "ಕಳುಹಿಸಲಾಗುತ್ತಿದೆ…",
+    exportEmailSuccess: "ಕಳುಹಿಸಲಾಗಿದೆ. ನಿಮ್ಮ ಇನ್‌ಬಾಕ್ಸ್ ಪರಿಶೀಲಿಸಿ.",
+    exportEmailError: "ಆ ಇಮೇಲ್ ಕಳುಹಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ.",
+    feedbackQuestion: "ಇದು ಸಹಾಯಕವಾಗಿತ್ತೇ?",
+    feedbackYes: "ಹೌದು",
+    feedbackNo: "ಇಲ್ಲ",
+    feedbackThanks: "ತಿಳಿಸಿದ್ದಕ್ಕೆ ಧನ್ಯವಾದಗಳು.",
     yourNextSteps: "ನಿಮ್ಮ ಮುಂದಿನ ಹೆಜ್ಜೆಗಳು",
     todayHeading: "ಇಂದು ನೀವು ಏನು ಮಾಡಬೇಕು?",
-    readyToProceed: "ನಾನು ಮುಂದುವರಿಯಲು ಸಿದ್ಧ",
-    knowAnswerNow: "ಈಗ ನನಗೆ ಉತ್ತರ ಗೊತ್ತಿದೆ",
     todayAction: {
       nomineeOrSurvivorship: "ಬ್ಯಾಂಕಿನಿಂದ ದಿವಂಗತ-ಗ್ರಾಹಕ ಹಕ್ಕು ಫಾರ್ಮ್ ಕೇಳಿ, ಮತ್ತು ಮರಣ ಪ್ರಮಾಣಪತ್ರ ಹಾಗೂ ನಿಮ್ಮ ಗುರುತಿನ ಚೀಟಿಯನ್ನು ತೆಗೆದುಕೊಂಡು ಹೋಗಿ.",
       underThreshold: "ಬ್ಯಾಂಕಿನಿಂದ ಅದರ ಸರಳೀಕೃತ ದಿವಂಗತ-ಠೇವಣಿ ಹಕ್ಕು ಫಾರ್ಮ್ ಕೇಳಿ ಮತ್ತು ಆ ಬ್ಯಾಂಕಿನಲ್ಲಿನ ಒಟ್ಟು ಬ್ಯಾಲೆನ್ಸ್ ಅನ್ನು ಖಚಿತಪಡಿಸಿಕೊಳ್ಳಿ.",

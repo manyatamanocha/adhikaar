@@ -27,7 +27,7 @@ test("isValidEventName accepts every real event name", () => {
   const real = [
     "flow_started", "question_answered", "outcome_reached", "demand_checked",
     "readiness_checked", "bank_selected", "sheet_printed", "survey_answered",
-    "landing_viewed", "counter_mode_opened", "actionable_result_viewed", "next_step_intent",
+    "landing_viewed", "actionable_result_viewed", "exported_to_email", "feedback_helpful",
   ];
   for (const name of real) assert.equal(isValidEventName(name), true, name);
 });

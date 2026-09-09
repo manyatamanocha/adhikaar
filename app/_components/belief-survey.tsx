@@ -23,7 +23,12 @@ import type { HomeDict } from "@/lib/i18n-home";
  * 3. It records an answer and nothing else. No follow-up, no email field, no
  *    "tell us more". One tap, then it gets out of the way.
  */
-export function BeliefSurvey({ outcome, t }: { outcome: string; t: HomeDict["verdictPage"] }) {
+type BeliefSurveyText = Pick<
+  HomeDict["verdictPage"],
+  "beliefQuestion" | "beliefNote" | "beliefYes" | "beliefNo" | "beliefUnsure" | "beliefReplyYes" | "beliefReplyNo" | "beliefReplyUnsure"
+>;
+
+export function BeliefSurvey({ outcome, t }: { outcome: string; t: BeliefSurveyText }) {
   const [answered, setAnswered] = useState<string | null>(null);
 
   const answer = (value: "yes" | "no" | "unsure") => {

@@ -287,10 +287,6 @@ export function Analytics() {
         outcome_type: outcome.id === "unknown-nominee" ? "information_required" : "claim_route",
         resolution_source: "verdict",
       });
-      // Switching to the five-line version is a costly, deliberate act --
-      // you do it because you are about to stand at a counter. Counts
-      // toward Next-Step Action Rate alongside printing.
-      if (sp.mode === "counter") track("counter_mode_opened", { outcome: outcome.id });
       if (sp.bank) track("bank_selected", { bank: sp.bank, outcome: outcome.id });
       if (sp.have) {
         // How many of the required documents they say they hold, and how many

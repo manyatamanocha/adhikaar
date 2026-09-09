@@ -59,9 +59,9 @@ export const EVENT_NAMES = [
   "sheet_printed",
   "survey_answered",
   "landing_viewed",
-  "counter_mode_opened",
   "actionable_result_viewed",
-  "next_step_intent",
+  "exported_to_email",
+  "feedback_helpful",
 ] as const;
 
 export type EventName = (typeof EVENT_NAMES)[number];
@@ -89,14 +89,17 @@ export type EventName = (typeof EVENT_NAMES)[number];
  * else. For a once-per-lifetime product, that is the closest thing to a
  * retention signal we can honestly have.
  *
- * `counter_mode_opened` — opened the five-line version meant for standing
- * at a bank counter.
+ * `exported_to_email` — the stronger downstream signal, alongside
+ * `sheet_printed`: the reader produced a copy of their verdict to carry
+ * elsewhere. There is deliberately no "I'm ready to proceed" button anymore
+ * -- whether someone actually acts at a bank counter happens outside this
+ * app and was never ours to claim. Print and export-to-email are the two
+ * real acts of intent left; Numerator of Next-Step Action Rate together with
+ * `sheet_printed`, denominator is `actionable_result_viewed`.
  *
- * `next_step_intent` — the stronger downstream signal: did the reader feel
- * ready to act on what they were just shown, not just view it. Fired when
- * "I'm ready to proceed" (claim_route) or "I know the answer now"
- * (information_required) is clicked. Numerator of Next-Step Intent Rate;
- * denominator is `actionable_result_viewed`.
+ * `feedback_helpful` — "was this helpful?" on the verdict page. `helpful`
+ * (boolean) is the only property. A satisfaction signal, not an action --
+ * never counted toward Next-Step Action Rate.
  */
 
 /**

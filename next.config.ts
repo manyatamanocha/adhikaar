@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // @sparticuz/chromium ships a real Chromium binary; puppeteer-core loads it
+  // by path at runtime rather than importing it as JS. Bundling either would
+  // corrupt the binary, so both stay external -- Next.js requires this list
+  // explicitly rather than inferring it from the packages themselves.
+  serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
   async redirects() {
     return [
       { source: "/recover", destination: "/", permanent: true },

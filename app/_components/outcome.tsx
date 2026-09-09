@@ -40,7 +40,8 @@ import { parseLocale, withLang } from "@/lib/i18n";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
 import { PrintButton } from "./print-button";
-import { NextStepButton } from "./next-step-button";
+import { ExportEmailButton } from "./export-email-button";
+import { FeedbackWidget } from "./feedback-widget";
 import { CLAUSES, NOTIFICATION, RULES_VERIFIED_ON, TACTICS_BY_LOCALE, ESCALATION, ESCALATION_CAVEAT_BY_LOCALE } from "@/lib/rbi";
 import { formatDate } from "./bank-panel";
 import { DOCUMENTS, documentText, type DocId } from "@/lib/documents";
@@ -51,8 +52,6 @@ import { BankBox } from "./bank-panel";
 import { getBank, policyGapNotes } from "@/lib/banks";
 import { DeadlineTracker } from "./deadline-tracker";
 import { BeliefSurvey } from "./belief-survey";
-import { CounterMode } from "./counter-mode";
-import { COUNTER_SCRIPT } from "@/lib/counter";
 import { HOME_T, type HomeDict } from "@/lib/i18n-home";
 import type { Locale } from "@/lib/i18n";
 
@@ -107,21 +106,6 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
   // is the same parameter name it always was.
   const bankId = answers.bank;
 
-  // Counter mode: the same URL, one parameter switched, so it stays a real
-  // link. Falls back to the full page for out-of-scope, which has no
-  // counter script.
-  if (hasAnswers && sp.mode === "counter" && id in COUNTER_SCRIPT) {
-    return (
-      <>
-        <RecoverNav locale={locale} />
-        <main className="flex-1">
-          <CounterMode id={id} answers={answers} locale={locale} />
-        </main>
-        <RecoverFooter />
-      </>
-    );
-  }
-
   // out-of-scope gets its own, much smaller page -- direct request, 9 Sep
   // 2026. Every generic outcome mechanism below (hard caveats, steps, the
   // tabs, evidence, escalation) exists to help someone act on a resolved
@@ -135,8 +119,11 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
       <>
         <RecoverNav locale={locale} />
         <main className="flex-1">
-          <Verdict id={id} answers={answers} bankId={bankId} locale={locale} outcome={outcome} t={t} />
+          <Verdict id={id} answers={answers} outcome={outcome} t={t} />
           <OutOfScopeOptions locale={locale} t={t} />
+          <div className="shell max-w-[860px]">
+            <FeedbackWidget question={t.feedbackQuestion} yes={t.feedbackYes} no={t.feedbackNo} thanks={t.feedbackThanks} />
+          </div>
         </main>
         <RecoverFooter />
       </>
@@ -174,7 +161,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
 
       <main className="flex-1">
         {!hasAnswers && <div className="shell max-w-[860px] py-5"><p className="body-fluid"><strong>{t.generalGuidanceLabel}</strong> <Link href={withLang("/start", locale)} className="text-link underline">{t.checkSituationFirst}</Link></p></div>}
-        <Verdict id={id} answers={answers} bankId={bankId} locale={locale} outcome={outcome} t={t} />
+        <Verdict id={id} answers={answers} outcome={outcome} t={t} />
 
         <div className="shell max-w-[860px] py-10 sm:py-12">
           {/* TOP -- everything that qualifies the headline above, then what
@@ -196,7 +183,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               below compete for attention. Everything in them is reference
               material for later (the checklist itself, the bank, the RBI's
               exact wording, an appeal), not part of deciding what to do. */}
-          <DoneBand id={id} answers={answers} bankId={bankId} outcome={outcome} t={t} locale={locale} />
+          <DoneBand outcome={outcome} t={t} />
 
           {/* TodayBox's own CTA points at #documents when this outcome has a
               checklist and #evidence when it doesn't (unknown-nominee is the
@@ -208,7 +195,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               "Documents" that a reader would have no reason to open. */}
           {(() => {
             const todayBox = (
-              <TodayBox outcome={id} t={t} answers={answers} locale={locale} hasDocuments={!!outcome.documents} />
+              <TodayBox outcome={id} t={t} />
             );
             const defaultTab: OutcomeTabKey = outcome.documents ? "documents" : "law";
             return (
@@ -275,7 +262,21 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
                         {outcome.tracker && <DeadlineTracker locale={locale} />}
                         <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
                         <SourceLine locale={locale} t={t} />
-                        {hasAnswers && outcome.goodNews && <BeliefSurvey outcome={id} t={t} />}
+                        {hasAnswers && outcome.goodNews && (
+                          <BeliefSurvey
+                            outcome={id}
+                            t={{
+                              beliefQuestion: t.beliefQuestion,
+                              beliefNote: t.beliefNote,
+                              beliefYes: t.beliefYes,
+                              beliefNo: t.beliefNo,
+                              beliefUnsure: t.beliefUnsure,
+                              beliefReplyYes: t.beliefReplyYes,
+                              beliefReplyNo: t.beliefReplyNo,
+                              beliefReplyUnsure: t.beliefReplyUnsure,
+                            }}
+                          />
+                        )}
                       </>
                     ),
                   },
@@ -283,6 +284,8 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               />
             );
           })()}
+
+          <FeedbackWidget question={t.feedbackQuestion} yes={t.feedbackYes} no={t.feedbackNo} thanks={t.feedbackThanks} />
         </div>
       </main>
 
@@ -355,15 +358,11 @@ function BankGapAlert({ bankId, t }: { bankId?: string; t: VerdictText }) {
 function Verdict({
   id,
   answers,
-  bankId,
-  locale,
   outcome,
   t,
 }: {
   id: OutcomeId;
   answers: Answers;
-  bankId?: string;
-  locale: ReturnType<typeof parseLocale>;
   outcome: Outcome;
   t: VerdictText;
 }) {
@@ -395,29 +394,15 @@ function Verdict({
         )}
 
         {/* Nothing to print here -- there is no checklist or clause to carry
-            to a counter for a claim this product does not resolve. Print and
-            Counter-mode both exist for the sheet handed across a bank
-            counter, and out-of-scope is the one outcome that never produces
-            one. */}
+            to a counter for a claim this product does not resolve. Print
+            exists for the sheet handed across a bank counter, and
+            out-of-scope is the one outcome that never produces one. */}
         {id !== "out-of-scope" && (
           <div
             data-print="hide"
             className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
           >
             <PrintButton label={t.printButton} />
-            {Object.values(answers).some(Boolean) && id in COUNTER_SCRIPT && (
-              <Link
-                href={withLang(counterHref(outcome.path, answers, bankId), locale)}
-                className={`inline-flex items-center gap-2 rounded-pill border-2 px-6 py-3 text-[1.0625rem] font-bold transition-colors ${
-                  good
-                    ? "border-white/40 text-white hover:bg-white/10"
-                    : "border-indigo text-indigo-ink hover:bg-indigo/8"
-                }`}
-              >
-                {t.counterShorter}
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
-            )}
             <p className={`text-[0.9375rem] ${good ? "text-white/70" : "text-ink-soft"}`}>
               {t.printNote}
             </p>
@@ -429,23 +414,16 @@ function Verdict({
 }
 
 /**
- * The end of the core path -- answer, steps, checklist, then this. Same
- * Print/Counter-mode controls as the header (`Verdict`), repeated here on
- * purpose: the header pair fires before the reader has seen what to bring,
- * so it can't be the "you're done" moment. This one can.
+ * The end of the core path -- answer, steps, checklist, then this. Print
+ * also appears up in the header (`Verdict`), repeated here on purpose: the
+ * header one fires before the reader has seen what to bring, so it can't be
+ * the "you're done" moment. This one can. Export to email lives only here,
+ * not duplicated in the header band.
  */
 function DoneBand({
-  id,
-  answers,
-  bankId,
-  locale,
   outcome,
   t,
 }: {
-  id: OutcomeId;
-  answers: Answers;
-  bankId?: string;
-  locale: ReturnType<typeof parseLocale>;
   outcome: Outcome;
   t: VerdictText;
 }) {
@@ -455,15 +433,17 @@ function DoneBand({
       className="actionbox mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
     >
       <PrintButton label={t.printButton} />
-      {Object.values(answers).some(Boolean) && id in COUNTER_SCRIPT && (
-        <Link
-          href={withLang(counterHref(outcome.path, answers, bankId), locale)}
-          className="inline-flex items-center gap-2 rounded-pill border-2 border-indigo px-6 py-3 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-indigo/8"
-        >
-          {t.counterShorter}
-          <span aria-hidden="true">&rarr;</span>
-        </Link>
-      )}
+      <ExportEmailButton
+        subject={outcome.verdict}
+        labels={{
+          button: t.exportEmailButton,
+          placeholder: t.exportEmailPlaceholder,
+          send: t.exportEmailSend,
+          sending: t.exportEmailSending,
+          success: t.exportEmailSuccess,
+          error: t.exportEmailError,
+        }}
+      />
       <p className="text-[0.9375rem] text-ink-soft">{t.printNote}</p>
     </div>
   );
@@ -602,15 +582,9 @@ function Steps({ steps, t }: { steps: string[]; t: VerdictText }) {
 function TodayBox({
   outcome,
   t,
-  answers,
-  locale,
-  hasDocuments,
 }: {
   outcome: OutcomeId;
   t: VerdictText;
-  answers: Answers;
-  locale: Locale;
-  hasDocuments: boolean;
 }) {
   const action =
     outcome === "nominee" || outcome === "survivorship"
@@ -623,20 +597,10 @@ function TodayBox({
             ? t.todayAction.outOfScope
             : t.todayAction.default;
 
-  // "unknown-nominee" is the one outcome where the product could not resolve
-  // the claim route -- only what to find out next. The button sends the
-  // reader back into the wizard with the nominee answer cleared, so the
-  // question is asked again once they actually have the fact.
-  const info = outcome === "unknown-nominee";
-  const cta = info
-    ? { href: withLang(`/start${toQuery({ ...answers, nominee: undefined })}`, locale), label: t.knowAnswerNow, type: "information_required" as const }
-    : { href: `${hasDocuments ? "#documents" : "#evidence"}`, label: t.readyToProceed, type: "claim_route" as const };
-
   return (
     <section className="mt-8 rounded-xl border-2 border-saffron bg-[#FFF7E8] p-6">
       <h2 className="display-md font-serif font-bold text-indigo-ink">{t.todayHeading}</h2>
       <p className="body-fluid mt-2 leading-relaxed text-ink">{action}</p>
-      <NextStepButton href={cta.href} label={cta.label} outcomeType={cta.type} />
     </section>
   );
 }
@@ -1184,12 +1148,5 @@ function Section({
       {children}
     </section>
   );
-}
-
-function counterHref(path: string, answers: Answers, bankId?: string) {
-  const q = new URLSearchParams(toQuery(answers).replace(/^\?/, ""));
-  if (bankId) q.set("bank", bankId);
-  q.set("mode", "counter");
-  return `${path}?${q.toString()}`;
 }
 

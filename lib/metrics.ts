@@ -61,15 +61,23 @@ export const HONEST_EXIT_OUTCOMES = new Set([
 /**
  * Resolutions that CAN produce a next-step action.
  *
- * NextStepButton renders on verdict pages (outcome.tsx) and /needs-review,
- * nowhere else. A situation resolution has no such control, so it can never
- * fire next_step_intent; leaving those journeys in the denominator would score
- * a structural absence as a behavioural failure and drag the rate down every
- * time a situation branch works exactly as designed.
+ * DoneBand (Print, Export to email) renders on verdict pages (outcome.tsx)
+ * and /needs-review, nowhere else. A situation resolution has no such
+ * control, so it can never fire one of ACTION_EVENTS; leaving those journeys
+ * in the denominator would score a structural absence as a behavioural
+ * failure and drag the rate down every time a situation branch works exactly
+ * as designed.
  */
 const ELIGIBLE_FOR_ACTION = new Set(["verdict", "review", "unattributed"]);
 
-const ACTION_EVENTS = ["sheet_printed", "counter_mode_opened", "next_step_intent"];
+/**
+ * There is deliberately no "I'm ready to proceed" button counted here --
+ * whether someone acts at a bank counter happens outside this app and was
+ * never ours to claim or gate behind a click. Print and export-to-email are
+ * the two real, in-our-control signals that a reader produced a copy of
+ * their verdict to use elsewhere.
+ */
+const ACTION_EVENTS = ["sheet_printed", "exported_to_email"];
 
 /** A rate, or null when the denominator is empty. Never 0% for "no data". */
 export function rate(numerator: number, denominator: number): number | null {
