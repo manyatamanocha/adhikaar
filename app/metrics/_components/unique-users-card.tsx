@@ -9,6 +9,7 @@
 
 import { useEffect, useState } from "react";
 import { UsersIcon } from "../../recover/_components/icons";
+import { CountUp } from "./count-up";
 
 const RANGES = [
   { label: "3 days", days: 3 },
@@ -48,8 +49,8 @@ export function UniqueUsersCard() {
           <UsersIcon className="h-5 w-5" />
         </span>
         <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">Unique users</p>
-        <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">
-          {count === null ? "—" : count.toLocaleString("en-IN")}
+        <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none tabular-nums text-indigo-ink">
+          {count === null ? "—" : <CountUp value={count} />}
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Time range">
           {RANGES.map((r) => (

@@ -16,6 +16,7 @@
  */
 
 import { useState } from "react";
+import { CountUp } from "./count-up";
 
 type Stage = { label: string; value: number; note: string; icon: React.ReactNode };
 
@@ -30,25 +31,40 @@ export function JourneyBarChart({ stages, shades }: { stages: Stage[]; shades: s
   const first = stages[0]?.value ?? 0;
 
   return (
-    <ol className="mt-6 space-y-6">
+    <ol className="relative mt-6 space-y-6">
       {stages.map((s, i) => {
         const isActive = active === i;
         const shareOfFirst = first ? Math.round((s.value / first) * 1000) / 10 : null;
         const prev = i > 0 ? stages[i - 1].value : null;
         const rateFromPrev = prev ? Math.round((s.value / prev) * 1000) / 10 : null;
         return (
-          <li key={s.label} className="flex gap-3 sm:gap-5">
+          <li
+            key={s.label}
+            className="stage-in relative flex gap-3 sm:gap-5"
+            style={{ animationDelay: `${i * 140}ms` }}
+          >
+            {/* The connecting line between one stage's circle and the next --
+                a plain timeline, not a decorative flourish: it is what makes
+                four separate rows read as one flow. Skipped after the last
+                stage, since there's nothing below it to connect to. */}
+            {i < stages.length - 1 && (
+              <span
+                aria-hidden="true"
+                className="absolute left-[23px] top-12 h-[calc(100%-2.75rem+1.5rem)] w-0.5 sm:left-[27px]"
+                style={{ background: `linear-gradient(${shades[i]}, ${shades[i + 1]})` }}
+              />
+            )}
             <span
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full p-2.5 text-white"
+              className="relative z-10 flex h-12 w-12 shrink-0 items-center justify-center rounded-full p-2.5 text-white"
               aria-hidden="true"
-              style={{ background: shades[i] }}
+              style={{ background: shades[i], boxShadow: `0 0 0 6px ${shades[i]}26, 0 4px 10px ${shades[i]}40` }}
             >
               {s.icon}
             </span>
             <div className="min-w-0 flex-1">
               <div className="flex items-baseline justify-between gap-3">
                 <h3 className="text-lg font-bold">{s.label}</h3>
-                <span className="text-2xl font-bold tabular-nums">{s.value.toLocaleString("en-IN")}</span>
+                <span className="text-2xl font-bold tabular-nums"><CountUp value={s.value} /></span>
               </div>
               {/* The mark: <=24px thick, 4px rounded at the moving end, square
                   at the baseline, one shared scale (max) across every bar so
@@ -67,7 +83,7 @@ export function JourneyBarChart({ stages, shades }: { stages: Stage[]; shades: s
                 <span aria-hidden="true" className="block h-4 overflow-hidden rounded-[4px] bg-[#EFEEE9]">
                   <span
                     className={`bar-grow block h-full rounded-r-[4px] transition-[filter] ${isActive ? "brightness-110" : ""}`}
-                    style={{ width: funnelWidth(s.value, max), background: shades[i] }}
+                    style={{ width: funnelWidth(s.value, max), background: shades[i], animationDelay: `${i * 140 + 150}ms` }}
                   />
                 </span>
               </button>

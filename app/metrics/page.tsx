@@ -25,6 +25,7 @@ import { ArrowRightIcon, CheckIcon, CompassIcon, HouseIcon, PlayIcon } from "../
 import { ExcludeTrafficNotice } from "./_components/exclude-traffic-notice";
 import { UniqueUsersCard } from "./_components/unique-users-card";
 import { JourneyBarChart } from "./_components/journey-bar-chart";
+import { CountUp, AnimatedValue } from "./_components/count-up";
 
 export const metadata = {
   title: "Adhikaar — how the product is performing",
@@ -171,7 +172,7 @@ function MetricCard({
   icon,
 }: {
   label: string;
-  value: string;
+  value: React.ReactNode;
   note: string;
   accent?: "plain" | "saffron";
   /** The raw numerator/denominator a percentage was computed from. Omitted
@@ -208,7 +209,7 @@ function MetricCard({
           </span>
         )}
         <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">{label}</p>
-        <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">{value}</p>
+        <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none tabular-nums text-indigo-ink">{value}</p>
         {meterPct !== undefined && <Meter pct={meterPct} {...METER_TONES[accent]} />}
         {breakdown && breakdown.to > 0 && (
           <p className="mt-1 flex items-center gap-1.5 text-[0.9375rem] font-bold tabular-nums text-ink-soft">
@@ -286,7 +287,7 @@ function Guardrail({
   label: string;
   /** The thing this number is actually asking, shown when the ⓘ is open. */
   question: string;
-  value: string;
+  value: React.ReactNode;
   /** `value` again, as a 0-100 number, for the Meter under it. */
   meterPct: number | null;
   children: React.ReactNode;
@@ -469,12 +470,12 @@ export default async function MetricsPage() {
           ) : (
             <>
               <section aria-label="The main numbers" className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <MetricCard label="Journeys reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron" icon={<CheckIcon className="h-full w-full" />}
+                <MetricCard label="Journeys reached this week" value={<CountUp value={m.northStar.weeklyResolvedJourneys} />} accent="saffron" icon={<CheckIcon className="h-full w-full" />}
                   note="Journeys that reached a clear answer or next step in the last 7 days. This is our main measure of progress." />
-                <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)} meterPct={m.omtm.resolutionRate} icon={<CompassIcon className="h-full w-full" />}
+                <MetricCard label="Journey resolution rate" value={<AnimatedValue value={m.omtm.resolutionRate} decimals={1} suffix="%" />} meterPct={m.omtm.resolutionRate} icon={<CompassIcon className="h-full w-full" />}
                   breakdown={{ from: m.omtm.cohortResolved, to: m.omtm.cohortStarted }}
                   note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
-                <MetricCard label="Chose a next step" value={pct(m.funnel.nextStepActionRate)} meterPct={m.funnel.nextStepActionRate} icon={<ArrowRightIcon className="h-full w-full" />}
+                <MetricCard label="Chose a next step" value={<AnimatedValue value={m.funnel.nextStepActionRate} decimals={1} suffix="%" />} meterPct={m.funnel.nextStepActionRate} icon={<ArrowRightIcon className="h-full w-full" />}
                   breakdown={{ from: m.funnel.showingIntent, to: m.funnel.nextStepEligibleJourneys }}
                   note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " journeys with an available action used it."} />
                 <UniqueUsersCard />
@@ -555,13 +556,13 @@ export default async function MetricsPage() {
                 </section>
                 <h2 className="mt-8 text-xl font-bold">Checks on our guidance</h2>
                 <div className="mt-4 grid gap-4 lg:grid-cols-3">
-                  <Guardrail label="Cases needing a different route" question="What counts here?" value={pct(m.guardrails.honestExitRate)} meterPct={m.guardrails.honestExitRate}>
+                  <Guardrail label="Cases needing a different route" question="What counts here?" value={<AnimatedValue value={m.guardrails.honestExitRate} decimals={1} suffix="%" />} meterPct={m.guardrails.honestExitRate}>
                     {m.guardrails.honestExits} of {m.guardrails.journeysReachingOutcome} journeys reaching a verdict or a review page involved a dispute, an above-threshold claim, a court case, an unsupported asset, or an unresolved detail needing confirmation. Changes in this share need context.
                   </Guardrail>
-                  <Guardrail label="Answers from situation pages" question="Where did the answer come from?" value={pct(m.guardrails.situationResolutionShare)} meterPct={m.guardrails.situationResolutionShare}>
+                  <Guardrail label="Answers from situation pages" question="Where did the answer come from?" value={<AnimatedValue value={m.guardrails.situationResolutionShare} decimals={1} suffix="%" />} meterPct={m.guardrails.situationResolutionShare}>
                     The share of answers provided by situation pages instead of claim verdict pages. This helps us see which kind of help people used.
                   </Guardrail>
-                  <Guardrail label="Bank sources due for review" question="How recently were sources checked?" value={pct(m.guardrails.staleCitationShare)} meterPct={m.guardrails.staleCitationShare}>
+                  <Guardrail label="Bank sources due for review" question="How recently were sources checked?" value={<AnimatedValue value={m.guardrails.staleCitationShare} decimals={1} suffix="%" />} meterPct={m.guardrails.staleCitationShare}>
                     Of {m.guardrails.journeysCitingABank} journeys citing a bank policy, this share used a source last checked more than six months ago.
                   </Guardrail>
                 </div>
