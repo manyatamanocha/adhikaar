@@ -3,9 +3,9 @@
 ## Latest project checkpoint
 
 Before continuing Adhikaar, read the Obsidian note:
-`C:/Users/Manyata Manocha/Downloads/Obsidian sync projects/Scribble World/My Scribbles - Adhikaar/session log 2026-09-06 - full translation pass and landing-page fix.md`
+`C:/Users/Manyata Manocha/Downloads/Obsidian sync projects/Scribble World/My Scribbles - Adhikaar/session log 2026-09-09 - front-door simplification, PRD flow audit, court-question copy sync.md`
 
-That note supersedes the 5 Sep "landing cleanup and Saathi Groq checkpoint" note for translation state specifically (all verdict pages, the shared document checklist, and three standalone pages are now translated).
+That note's own §1 postscript says the front-door shape it describes was already one commit out of date by the time it was written — this project has multiple concurrent sessions most days; `git log --oneline -15` before assuming any session log's described shape is still current. Earlier notes (6–8 Sep) cover translation state and the Mixpanel-to-Supabase migration and are still accurate for those topics.
 
 The same vault folder's `HANDOFF.md` preserves earlier research and session history.
 
