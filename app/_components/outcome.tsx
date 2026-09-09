@@ -651,6 +651,11 @@ function Documents({
                   becoming link text. */}
               <Link
                 href={hrefFor(id)}
+                // Untoggled from Next's default scroll-to-top on navigation:
+                // this Link only ever changes the `have` query param on the
+                // same page, so jumping the reader to the top after every
+                // tick throws them out of the list they were working through.
+                scroll={false}
                 // Negative margin cancels the padding, so the row looks
                 // identical while the thumb gets a 44px target instead of 30.
                 // These readers are grieving, tired and often older, and this
