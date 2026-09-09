@@ -319,30 +319,34 @@ test("a known bank skips the bank-type question and infers commercial for the th
  * The claim never leaves the browser in a URL.
  *
  * This site's URL *is* the family's case -- /confirm-details?nominee=
- * survivorship&court=unknown and so on. Mixpanel attaches $current_url to
- * every event by default, and `track_pageview: false` does NOT stop that: it
- * only suppresses Mixpanel's own pageview events. An export on 6 Sep 2026
- * found 85 of 110 events carrying claim answers this way.
+ * survivorship&court=unknown and so on. The pre-7-Sep-2026 Mixpanel SDK
+ * attached $current_url to every event by default; an export on 6 Sep 2026
+ * found 85 of 110 events carrying claim answers this way, guarded at the
+ * time by a property_blacklist config line.
  *
- * Asserted against the source rather than a live init, because the failure
- * being guarded against is a config line being dropped, and the cost of it
- * regressing unnoticed is the promise printed on five screens of this site.
+ * Since the Mixpanel -> Supabase migration, track() is a plain fetch() whose
+ * body is built from exactly three things -- the event name, the caller's
+ * own properties, and a session id -- so there is no SDK left to auto-attach
+ * anything. The guard against the same leak recurring is now "nothing in
+ * this file ever reads the URL or referrer into an event payload" rather
+ * than a blacklist to keep in sync with an SDK's own defaults.
+ *
+ * Asserted against the source rather than a live fetch, because the failure
+ * being guarded against is a future edit quietly reaching for
+ * window.location or document.referrer, and the cost of it regressing
+ * unnoticed is the promise printed on five screens of this site.
  */
 test("analytics never transmits the URL, which carries the family's answers", () => {
   const src = fs.readFileSync(path.resolve(__dirname, "../lib/analytics.ts"), "utf8");
 
-  assert.match(src, /property_blacklist:\s*BLOCKED_PROPERTIES/,
-    "property_blacklist must be wired into mixpanel.init -- without it $current_url ships the whole claim");
-
-  for (const prop of ["$current_url", "$referrer", "$initial_referrer"]) {
-    assert.ok(src.includes(`"${prop}"`), `${prop} must stay in BLOCKED_PROPERTIES`);
+  for (const leak of ["location.href", "location.search", "document.referrer", "location.toString"]) {
+    assert.ok(!src.includes(leak), `${leak} must never be read into an event payload`);
   }
 
-  // The two flags that look like they cover this, but do not. Kept for their
-  // own sake; this asserts nobody removed the blacklist believing these are
-  // equivalent -- the exact reasoning error that caused the original bug.
-  assert.match(src, /track_pageview:\s*false/);
-  assert.match(src, /autocapture:\s*false/);
+  // track()'s POST body must be built from exactly these three fields --
+  // nothing ambient slipped in alongside them.
+  assert.match(src, /body:\s*JSON\.stringify\(\{\s*event,\s*properties,\s*session_id:/,
+    "track()'s request body must contain only event, properties, and session_id");
 });
 
 /**
