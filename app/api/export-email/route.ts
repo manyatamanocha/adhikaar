@@ -12,8 +12,17 @@
  * deploy limits), or a locally installed Chrome/Edge in dev, since
  * @sparticuz/chromium's binary does not run on Windows.
  *
- * No email address is ever stored: it goes straight to Resend for this one
+ * No email address is ever stored: it goes straight to Brevo for this one
  * send and is never written to Supabase or any table.
+ *
+ * Brevo, not Resend: Resend's shared/unverified sending address only
+ * delivers to the Resend account's own owner, so it cannot email an
+ * arbitrary reader -- the exact thing this feature needs. Brevo's free plan
+ * (300 emails/day, permanent, no card) supports Single Sender Verification:
+ * verify one email address you own (no domain/DNS required) and send to any
+ * recipient from it. Requires BREVO_API_KEY and BREVO_SENDER_EMAIL in
+ * .env.local / Vercel env vars -- see the setup note at the bottom of this
+ * file.
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -97,8 +106,9 @@ async function renderPdf(url: string): Promise<Buffer> {
 }
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
+  const apiKey = process.env.BREVO_API_KEY;
+  const senderEmail = process.env.BREVO_SENDER_EMAIL;
+  if (!apiKey || !senderEmail) {
     return NextResponse.json({ error: "Email export is not configured yet." }, { status: 503 });
   }
 
@@ -143,28 +153,47 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const res = await fetch("https://api.resend.com/emails", {
+    const res = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
+        accept: "application/json",
+        "api-key": apiKey,
+        "content-type": "application/json",
       },
       body: JSON.stringify({
-        from: "Adhikaar <onboarding@resend.dev>",
-        to,
+        sender: { name: "Adhikaar", email: senderEmail },
+        to: [{ email: to }],
         subject,
-        html: "<p>Your Adhikaar claim guide is attached as a PDF.</p>",
-        attachments: [
-          { filename: "adhikaar-claim-guide.pdf", content: pdf.toString("base64") },
+        htmlContent: "<p>Your Adhikaar claim guide is attached as a PDF.</p>",
+        attachment: [
+          { name: "adhikaar-claim-guide.pdf", content: pdf.toString("base64") },
         ],
       }),
     });
     if (!res.ok) {
+      // Logged, not returned -- the failure body can carry Brevo account
+      // detail (e.g. the sender's own address) that has no business being
+      // sent back to whoever is on the other end of this public route.
+      console.error("Brevo send error:", res.status, await res.text().catch(() => ""));
       return NextResponse.json({ error: "Could not send email." }, { status: 502 });
     }
-  } catch {
+  } catch (err) {
+    console.error("Brevo send error:", err);
     return NextResponse.json({ error: "Could not send email." }, { status: 502 });
   }
 
   return NextResponse.json({ ok: true });
 }
+
+/**
+ * ─── One-time setup (does what neither the client nor this route can) ───
+ *
+ * 1. Create a free Brevo account: https://www.brevo.com/ (no credit card).
+ * 2. Verify one sender email you already own: Senders, Domains & Dedicated
+ *    IPs → Senders → Add a sender → verify via the confirmation link Brevo
+ *    emails to that address. No domain or DNS record needed.
+ * 3. SMTP & API → API Keys → Generate a new API key.
+ * 4. Set both in .env.local (dev) and the Vercel project's env vars (prod):
+ *      BREVO_API_KEY=<the generated key>
+ *      BREVO_SENDER_EMAIL=<the address verified in step 2>
+ */
