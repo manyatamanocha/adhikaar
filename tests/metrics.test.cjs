@@ -237,6 +237,24 @@ test("Stale Citation Share reads the real bank table, and the RBI rules are curr
   assert.equal(guardrails.rulesStale, false);
 });
 
+test("uniqueVisitors dedupes by visitor_id, all-time, across every event type", () => {
+  const { funnel } = aggregate([
+    // Same visitor, two different journeys (e.g. two devices' distinct_id,
+    // or a reload) -- must still count once.
+    ev("landing_viewed", "a", { visitor_id: "v1" }),
+    ev("actionable_result_viewed", "b", { visitor_id: "v1" }),
+    // A second real visitor.
+    ev("outcome_reached", "c", { visitor_id: "v2" }),
+    // Outside the North Star's 7-day window -- unique visitors is
+    // deliberately NOT windowed, so this still counts.
+    ev("landing_viewed", "d", { visitor_id: "v3" }, T - 30 * 86400),
+    // No visitor_id at all (e.g. recorded before this field existed, or
+    // localStorage was blocked) -- must not be counted as a visitor.
+    ev("flow_started", "e"),
+  ], NOW);
+  assert.equal(funnel.uniqueVisitors, 3);
+});
+
 test("an empty window reports null everywhere rather than a confident zero", () => {
   const r = aggregate([], NOW);
   assert.equal(r.northStar.weeklyResolvedJourneys, 0);

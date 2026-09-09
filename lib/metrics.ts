@@ -61,12 +61,11 @@ export const HONEST_EXIT_OUTCOMES = new Set([
 /**
  * Resolutions that CAN produce a next-step action.
  *
- * DoneBand (Print, Export to email) renders on verdict pages (outcome.tsx)
- * and /needs-review, nowhere else. A situation resolution has no such
- * control, so it can never fire one of ACTION_EVENTS; leaving those journeys
- * in the denominator would score a structural absence as a behavioural
- * failure and drag the rate down every time a situation branch works exactly
- * as designed.
+ * Print and Export to email render on verdict pages (outcome.tsx), nowhere
+ * else. A situation resolution has no such control, so it can never fire
+ * one of ACTION_EVENTS; leaving those journeys in the denominator would
+ * score a structural absence as a behavioural failure and drag the rate
+ * down every time a situation branch works exactly as designed.
  */
 const ELIGIBLE_FOR_ACTION = new Set(["verdict", "review", "unattributed"]);
 
@@ -287,6 +286,20 @@ export function aggregate(real: MixpanelEvent[], nowMs: number = Date.now()) {
     arrivedVia[a] = (arrivedVia[a] ?? 0) + 1;
   }
 
+  // ── Unique visitors, ALL-TIME (added 9 Sep 2026) ──
+  //
+  // `distinct_id` (idFor) is per-JOURNEY -- a fresh one every reload -- so it
+  // answers "how many journeys", never "how many people". `visitor_id` is a
+  // separate, persistent-in-localStorage id every track() call attaches (see
+  // lib/analytics.ts); reading it here, across every event regardless of
+  // type, is the only thing this count needs. Not windowed to a week like
+  // the North Star: a rolling distinct-people count is closer to "how many
+  // families has this reached so far" than a weekly figure would be, and
+  // the NSM already owns the weekly cadence.
+  const uniqueVisitors = new Set(
+    real.map((e) => String(e.properties["visitor_id"] ?? "")).filter(Boolean),
+  ).size;
+
   return {
     northStar: { weeklyResolvedJourneys: weeklyResolved },
     omtm: {
@@ -297,6 +310,7 @@ export function aggregate(real: MixpanelEvent[], nowMs: number = Date.now()) {
     },
     funnel: {
       landingVisitors: landing,
+      uniqueVisitors,
       journeysStarted: startedIds.size,
       resolvedJourneys: resolvedIds.size,
       showingIntent: actedIds.size,

@@ -35,10 +35,19 @@
  *
  * `session_id` takes the place of Mixpanel's own anonymous distinct_id: a
  * fresh crypto.randomUUID() generated once per page load, held only in this
- * module's memory. Nothing is written to localStorage or a cookie, so a
- * reload mints a new one -- the identical non-persistence guarantee the old
- * disable_persistence/disable_cookie SDK flags provided, just with nothing
- * left to configure.
+ * module's memory. A reload mints a new one, which is exactly right for
+ * joining a single journey's own events together, but cannot answer "how
+ * many distinct people used this" -- the same person on two visits looks
+ * like two journeys.
+ *
+ * `visitor_id` (added 9 Sep 2026) exists only to answer that second
+ * question. It is a separate, persistent crypto.randomUUID() stored in
+ * localStorage, attached to every event's `properties`, and read only for a
+ * distinct-visitor COUNT in lib/metrics.ts -- never joined against a
+ * journey's answers, never sent anywhere but this app's own server. This is
+ * a real change to the product's privacy posture: `/privacy`'s analytics
+ * section is the disclosure of it, not this comment. Clearing the browser's
+ * site data resets it, same as the deadline tracker's date.
  */
 
 /**
@@ -124,9 +133,32 @@ function currentSessionId(): string {
   return sessionId;
 }
 
+const VISITOR_ID_KEY = "adhikaar.visitor_id";
+
+/**
+ * Read the persistent visitor id, minting and saving one on first use.
+ * Wrapped because a private window or blocked site data makes localStorage
+ * itself throw (same reasoning as deadline-tracker.tsx) -- returns null
+ * rather than crash tracking over an id that only ever mattered for one
+ * aggregate count.
+ */
+function visitorId(): string | null {
+  try {
+    const existing = localStorage.getItem(VISITOR_ID_KEY);
+    if (existing) return existing;
+    const fresh = crypto.randomUUID();
+    localStorage.setItem(VISITOR_ID_KEY, fresh);
+    return fresh;
+  } catch {
+    return null;
+  }
+}
+
 export function track(event: EventName, props: Record<string, string | number | boolean> = {}) {
   if (typeof window === "undefined" || isLocalDev()) return;
   try {
+    const vid = visitorId();
+    const properties = vid ? { ...props, visitor_id: vid } : props;
     // Not awaited: analytics must never be able to hold up or break a page
     // someone is reading at a bank counter. keepalive lets the request
     // survive if the browser navigates away immediately after this call --
@@ -136,7 +168,7 @@ export function track(event: EventName, props: Record<string, string | number | 
       method: "POST",
       headers: { "Content-Type": "application/json" },
       keepalive: true,
-      body: JSON.stringify({ event, properties: props, session_id: currentSessionId() }),
+      body: JSON.stringify({ event, properties, session_id: currentSessionId() }),
     }).catch(() => {
       // A blocked network, an ad blocker, a dead endpoint: all fine.
     });

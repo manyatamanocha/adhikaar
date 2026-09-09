@@ -48,6 +48,7 @@ type Metrics = {
   };
   funnel: {
     landingVisitors: number;
+    uniqueVisitors: number;
     journeysStarted: number;
     resolvedJourneys: number;
     showingIntent: number;
@@ -237,7 +238,7 @@ export default async function MetricsPage() {
     { label: "Visited the website", value: m.funnel.landingVisitors, note: "Opened the home page.", color: "bg-[#5967A8]" },
     { label: "Started a journey", value: m.funnel.journeysStarted, note: "Began looking for help.", color: "bg-[#7263A5]" },
     { label: "Reached an answer", value: m.funnel.resolvedJourneys, note: "Got a claim route or learned what to check next.", color: "bg-[#246F61]" },
-    { label: "Chose a next step", value: m.funnel.showingIntent, note: "Printed a guide, opened counter mode, or clicked to continue.", color: "bg-[#B84B28]" },
+    { label: "Chose a next step", value: m.funnel.showingIntent, note: "Printed a guide or emailed themselves a copy.", color: "bg-[#B84B28]" },
   ] : [];
   const scale = Math.max(1, ...stages.map(s => s.value));
   return (
@@ -252,7 +253,12 @@ export default async function MetricsPage() {
               Follow the journey from visiting Adhikaar to finding a next step.
               These numbers show how the website is being used. They do not tell us whether a bank paid a claim.
             </p>
-            {m && <p className="mt-5 inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>}
+            {m && (
+              <div className="mt-5 flex flex-wrap gap-3">
+                <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>
+                <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">{m.funnel.uniqueVisitors.toLocaleString("en-IN")} unique visitors, all time</p>
+              </div>
+            )}
           </header>
           {!m ? (
             <section className="mt-6 rounded-2xl border border-rule bg-white p-8">
