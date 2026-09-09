@@ -289,7 +289,6 @@ export type HomeDict = {
     askedCheckerBody: string;
     askedCheckerCta: string;
     whenRouteApplies: string;
-    doneBandNote: string;
     printButton: string;
     deadlineHeading: (days: number) => string;
     deadlineBefore: (paraFifteen: string, quote: string) => string;
@@ -377,7 +376,6 @@ export type HomeDict = {
     };
     documentsTitle: (n: number) => string;
     documentsNote: string;
-    documentsLede: string;
     seeFullChecklist: string;
     whereFrom: string;
     cost: string;
@@ -819,7 +817,6 @@ const en: HomeDict = {
     askedCheckerBody: "Tick what the branch actually demanded — a surety, a family tree, an affidavit, witnesses — and we will show you which of them the RBI prescribes for your situation and which it does not, with the paragraph number for each.",
     askedCheckerCta: "Check what you were asked for",
     whenRouteApplies: "When this route applies, a succession certificate is not required.",
-    doneBandNote: "Email a copy to yourself to keep for later. It carries the same rule and paragraph number.",
     printButton: "Print this page",
     deadlineHeading: (days) => `The bank has ${days} days`,
     deadlineBefore: (paraFifteen, quote) => `Para ${paraFifteen} gives the bank ${quote}. The clock starts when the bank holds a complete set — which is why the date that matters is the date on your acknowledgement, not the day you first walked in.`,
@@ -902,7 +899,6 @@ const en: HomeDict = {
     },
     documentsTitle: (n) => `The ${["zero", "one", "two", "three", "four", "five", "six", "seven"][n] ?? n} documents the RBI names`,
     documentsNote: "What to bring, what each one costs and how long it takes. Tick the ones you already have.",
-    documentsLede: "Cost and time below are realistic, not best-case. Nothing else on this list is a court document.",
     seeFullChecklist: "See the full checklist and tick what you have",
     whereFrom: "Where from",
     cost: "Cost",
@@ -1328,7 +1324,6 @@ const hi: HomeDict = {
     askedCheckerBody: "शाखा ने वाक़ई क्या-क्या माँगा टिक करें — ज़मानत, परिवार-वृक्ष, शपथ-पत्र, गवाह — और हम दिखाएँगे कि इनमें से RBI आपकी स्थिति के लिए क्या तय करता है और क्या नहीं, हर एक के पैराग्राफ नंबर सहित।",
     askedCheckerCta: "आपसे क्या माँगा गया, जाँचें",
     whenRouteApplies: "जहाँ यह रास्ता लागू होता है, वहाँ उत्तराधिकार प्रमाणपत्र ज़रूरी नहीं है।",
-    doneBandNote: "बाद में देखने के लिए अपने ईमेल पर एक प्रति भेजें। इसमें वही नियम और पैराग्राफ नंबर है।",
     printButton: "यह पन्ना छापें",
     deadlineHeading: (days) => `बैंक के पास ${days} दिन हैं`,
     deadlineBefore: (paraFifteen, quote) => `पैरा ${paraFifteen} बैंक को ${quote} देता है। घड़ी तभी शुरू होती है जब बैंक के पास पूरा सेट हो — इसीलिए ज़रूरी तारीख़ आपकी पावती की तारीख़ है, न कि जिस दिन आप पहली बार गए थे।`,
@@ -1411,7 +1406,6 @@ const hi: HomeDict = {
     },
     documentsTitle: (n) => `RBI द्वारा बताए गए ${["शून्य", "एक", "दो", "तीन", "चार", "पाँच", "छह", "सात"][n] ?? n} दस्तावेज़`,
     documentsNote: "क्या लाना है, हर एक की लागत क्या है और कितना समय लगता है। जो आपके पास पहले से हैं उन्हें टिक करें।",
-    documentsLede: "नीचे लागत और समय व्यावहारिक हैं, सबसे-अच्छी-स्थिति वाले नहीं। इस सूची में और कुछ भी अदालती दस्तावेज़ नहीं है।",
     seeFullChecklist: "पूरी सूची देखें और जो आपके पास है उसे टिक करें",
     whereFrom: "कहाँ से मिलेगा",
     cost: "लागत",
@@ -1837,7 +1831,6 @@ const kn: HomeDict = {
     askedCheckerBody: "ಶಾಖೆ ನಿಜವಾಗಿಯೂ ಏನು ಕೇಳಿತು ಎಂದು ಟಿಕ್ ಮಾಡಿ — ಜಾಮೀನು, ಕುಟುಂಬ ವೃಕ್ಷ, ಅಫಿಡವಿಟ್, ಸಾಕ್ಷಿಗಳು — ಮತ್ತು ಇವುಗಳಲ್ಲಿ RBI ನಿಮ್ಮ ಸ್ಥಿತಿಗೆ ಯಾವುದನ್ನು ನಿಗದಿಪಡಿಸುತ್ತದೆ ಮತ್ತು ಯಾವುದನ್ನು ಇಲ್ಲ ಎಂದು ನಾವು ತೋರಿಸುತ್ತೇವೆ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ.",
     askedCheckerCta: "ನಿಮ್ಮಿಂದ ಏನು ಕೇಳಲಾಗಿತ್ತು ಎಂದು ಪರಿಶೀಲಿಸಿ",
     whenRouteApplies: "ಈ ಮಾರ್ಗ ಅನ್ವಯಿಸುವಲ್ಲಿ, ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಅಗತ್ಯವಿಲ್ಲ.",
-    doneBandNote: "ನಂತರ ನೋಡಲು ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ಒಂದು ಪ್ರತಿ ಕಳುಹಿಸಿ. ಇದರಲ್ಲಿ ಅದೇ ನಿಯಮ ಮತ್ತು ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆ ಇದೆ.",
     printButton: "ಈ ಪುಟವನ್ನು ಮುದ್ರಿಸಿ",
     deadlineHeading: (days) => `ಬ್ಯಾಂಕಿಗೆ ${days} ದಿನಗಳಿವೆ`,
     deadlineBefore: (paraFifteen, quote) => `ಪ್ಯಾರಾ ${paraFifteen} ಬ್ಯಾಂಕಿಗೆ ${quote} ನೀಡುತ್ತದೆ. ಬ್ಯಾಂಕಿನ ಬಳಿ ಪೂರ್ಣ ಸೆಟ್ ಇದ್ದಾಗ ಮಾತ್ರ ಗಡಿಯಾರ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ — ಅದಕ್ಕಾಗಿಯೇ ಮುಖ್ಯವಾದ ದಿನಾಂಕ ನಿಮ್ಮ ಸ್ವೀಕೃತಿಯ ದಿನಾಂಕ, ನೀವು ಮೊದಲು ಹೋದ ದಿನವಲ್ಲ.`,
@@ -1920,7 +1913,6 @@ const kn: HomeDict = {
     },
     documentsTitle: (n) => `RBI ಹೆಸರಿಸುವ ${["ಸೊನ್ನೆ", "ಒಂದು", "ಎರಡು", "ಮೂರು", "ನಾಲ್ಕು", "ಐದು", "ಆರು", "ಏಳು"][n] ?? n} ದಾಖಲೆಗಳು`,
     documentsNote: "ಏನನ್ನು ತರಬೇಕು, ಪ್ರತಿಯೊಂದರ ವೆಚ್ಚ ಎಷ್ಟು ಮತ್ತು ಎಷ್ಟು ಸಮಯ ತೆಗೆದುಕೊಳ್ಳುತ್ತದೆ. ನಿಮ್ಮ ಬಳಿ ಈಗಾಗಲೇ ಇರುವುದನ್ನು ಟಿಕ್ ಮಾಡಿ.",
-    documentsLede: "ಕೆಳಗಿನ ವೆಚ್ಚ ಮತ್ತು ಸಮಯ ವಾಸ್ತವಿಕ, ಅತ್ಯುತ್ತಮ-ಸ್ಥಿತಿಯದ್ದಲ್ಲ. ಈ ಪಟ್ಟಿಯಲ್ಲಿ ಬೇರೆ ಯಾವುದೂ ನ್ಯಾಯಾಲಯದ ದಾಖಲೆಯಲ್ಲ.",
     seeFullChecklist: "ಪೂರ್ಣ ಪಟ್ಟಿಯನ್ನು ನೋಡಿ ಮತ್ತು ನಿಮ್ಮ ಬಳಿ ಇರುವುದನ್ನು ಟಿಕ್ ಮಾಡಿ",
     whereFrom: "ಎಲ್ಲಿಂದ ಸಿಗುತ್ತದೆ",
     cost: "ವೆಚ್ಚ",

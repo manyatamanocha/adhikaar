@@ -183,8 +183,6 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               below compete for attention. Everything in them is reference
               material for later (the checklist itself, the bank, the RBI's
               exact wording, an appeal), not part of deciding what to do. */}
-          <DoneBand outcome={outcome} t={t} />
-
           {/* TodayBox's own CTA points at #documents when this outcome has a
               checklist and #evidence when it doesn't (unknown-nominee is the
               one exception -- it points back into the wizard instead). Placed
@@ -429,35 +427,6 @@ function Verdict({
  * the "you're done" moment. This one can. Export to email lives only here,
  * not duplicated in the header band.
  */
-function DoneBand({
-  outcome,
-  t,
-}: {
-  outcome: Outcome;
-  t: VerdictText;
-}) {
-  return (
-    <div
-      data-print="hide"
-      className="actionbox mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
-    >
-      <PrintButton label={t.printButton} />
-      <ExportEmailButton
-        subject={outcome.verdict}
-        labels={{
-          button: t.exportEmailButton,
-          placeholder: t.exportEmailPlaceholder,
-          send: t.exportEmailSend,
-          sending: t.exportEmailSending,
-          success: t.exportEmailSuccess,
-          error: t.exportEmailError,
-        }}
-      />
-      <p className="text-[0.9375rem] text-ink-soft">{t.doneBandNote}</p>
-    </div>
-  );
-}
-
 /**
  * out-of-scope's entire body: two doors, nothing else. Same card language as
  * the situation picker (app/start/page.tsx's SituationGroup) rather than
@@ -638,7 +607,6 @@ function Documents({
       id="documents"
       title={t.documentsTitle(ids.length)}
       note={t.documentsNote}
-      lede={t.documentsLede}
     >
       <ul className="mt-5 divide-y divide-rule-faint border-y border-rule-faint">
         {ids.map((id) => {
