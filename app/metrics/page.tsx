@@ -256,7 +256,7 @@ export default async function MetricsPage() {
             {m && (
               <div className="mt-5 flex flex-wrap gap-3">
                 <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>
-                <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">{m.funnel.uniqueVisitors.toLocaleString("en-IN")} unique visitors, all time</p>
+                <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">{m.funnel.uniqueVisitors.toLocaleString("en-IN")} unique visitors in this reporting period</p>
               </div>
             )}
           </header>

@@ -50,6 +50,7 @@ export default async function AdminPage() {
         <Stat label="Weekly resolved" value={m.northStar.weeklyResolvedJourneys} />
         <Stat label="Resolution rate" value={m.omtm.resolutionRate === null ? "—" : `${m.omtm.resolutionRate}%`} />
         <Stat label="Honest-exit rate" value={m.guardrails.honestExitRate === null ? "—" : `${m.guardrails.honestExitRate}%`} />
+        <Stat label="Unique visitors (30d)" value={m.funnel.uniqueVisitors} />
         <Stat label="Events (30d)" value={events.length} />
       </section>
 

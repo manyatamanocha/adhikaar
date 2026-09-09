@@ -286,16 +286,20 @@ export function aggregate(real: MixpanelEvent[], nowMs: number = Date.now()) {
     arrivedVia[a] = (arrivedVia[a] ?? 0) + 1;
   }
 
-  // ── Unique visitors, ALL-TIME (added 9 Sep 2026) ──
+  // ── Unique visitors (added 9 Sep 2026) ──
   //
   // `distinct_id` (idFor) is per-JOURNEY -- a fresh one every reload -- so it
   // answers "how many journeys", never "how many people". `visitor_id` is a
   // separate, persistent-in-localStorage id every track() call attaches (see
   // lib/analytics.ts); reading it here, across every event regardless of
-  // type, is the only thing this count needs. Not windowed to a week like
-  // the North Star: a rolling distinct-people count is closer to "how many
-  // families has this reached so far" than a weekly figure would be, and
-  // the NSM already owns the weekly cadence.
+  // type, is the only thing this count needs.
+  //
+  // This function applies no window of its own -- it counts distinct ids in
+  // whatever `real` it is handed. /api/metrics only ever passes it the last
+  // 30 days (its own `from`/`to` query), so in practice this reads as
+  // "unique visitors in the reporting window", the same window `m.window`
+  // already reports -- not a true all-time count. A caller handed the
+  // events table's full history would get one; nothing here does today.
   const uniqueVisitors = new Set(
     real.map((e) => String(e.properties["visitor_id"] ?? "")).filter(Boolean),
   ).size;
