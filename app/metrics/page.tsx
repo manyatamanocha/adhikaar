@@ -114,39 +114,6 @@ function Meter({ pct, fill, track }: { pct: number | null; fill: string; track: 
   );
 }
 
-/**
- * Same ratio-against-a-limit job as Meter, drawn as a ring instead of a bar
- * -- a pure shape variant for visual variety across cards, not a different
- * metric type. Same same-hue-two-strengths rule as Meter: track is the
- * card's light tint, fill is its bold accent.
- */
-function Ring({ pct, fill, track }: { pct: number | null; fill: string; track: string }) {
-  if (pct === null) return null;
-  const size = 64;
-  const stroke = 6;
-  const r = (size - stroke) / 2;
-  const circumference = 2 * Math.PI * r;
-  const clamped = Math.min(100, Math.max(0, pct));
-  const offset = circumference * (1 - clamped / 100);
-  return (
-    <svg aria-hidden="true" width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="mt-3">
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={track} strokeWidth={stroke} />
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={r}
-        fill="none"
-        stroke={fill}
-        strokeWidth={stroke}
-        strokeLinecap="round"
-        strokeDasharray={circumference}
-        strokeDashoffset={offset}
-        transform={`rotate(-90 ${size / 2} ${size / 2})`}
-      />
-    </svg>
-  );
-}
-
 const METER_TONES = {
   plain: { fill: "#16233F", track: "#EFE7D8" },
   saffron: { fill: "#E2653B", track: "#F0B892" },
@@ -170,7 +137,6 @@ function MetricCard({
   accent = "plain",
   breakdown,
   meterPct,
-  ring,
   icon,
 }: {
   label: string;
@@ -201,10 +167,6 @@ function MetricCard({
    * users), not a rate -- a meter under a raw count has no limit to show
    * progress against. */
   meterPct?: number | null;
-  /** Draw meterPct as a ring instead of a bar -- shape variety only, same
-   * number, same rule (a ratio against a limit). Ignored when meterPct is
-   * omitted. */
-  ring?: boolean;
   /** A drawn icon from the site's own single-stroke set, never emoji. */
   icon?: React.ReactNode;
 }) {
@@ -233,9 +195,7 @@ function MetricCard({
         <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">{label}</p>
         {about && <p className="mt-1 text-[0.9375rem] leading-snug text-ink-soft">{about}</p>}
         <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">{value}</p>
-        {meterPct !== undefined && (
-          ring ? <Ring pct={meterPct} {...METER_TONES[accent]} /> : <Meter pct={meterPct} {...METER_TONES[accent]} />
-        )}
+        {meterPct !== undefined && <Meter pct={meterPct} {...METER_TONES[accent]} />}
         {breakdown && breakdown.to > 0 && (
           <p className="mt-1 flex items-center gap-1.5 text-[0.9375rem] font-bold tabular-nums text-ink-soft">
             <span>{breakdown.from.toLocaleString("en-IN")}</span>
@@ -497,7 +457,7 @@ export default async function MetricsPage() {
               <section aria-label="The main numbers" className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <MetricCard label="Journeys reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron" icon={<CheckIcon className="h-full w-full" />}
                   note="Journeys that reached a clear answer or next step in the last 7 days. This is our main measure of progress." />
-                <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)} meterPct={m.omtm.resolutionRate} ring icon={<CompassIcon className="h-full w-full" />}
+                <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)} meterPct={m.omtm.resolutionRate} icon={<CompassIcon className="h-full w-full" />}
                   breakdown={{ from: m.omtm.cohortResolved, to: m.omtm.cohortStarted }}
                   note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
                 <MetricCard label="Chose a next step" about="Whether people acted on their answer, not just read it." value={pct(m.funnel.nextStepActionRate)} accent="violet" meterPct={m.funnel.nextStepActionRate} icon={<ArrowRightIcon className="h-full w-full" />}
