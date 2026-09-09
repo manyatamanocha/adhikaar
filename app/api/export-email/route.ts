@@ -29,6 +29,7 @@ import { NextRequest, NextResponse } from "next/server";
 import puppeteer from "puppeteer-core";
 import chromium from "@sparticuz/chromium";
 import fs from "node:fs";
+import { createRateLimiter, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -36,26 +37,13 @@ export const maxDuration = 60;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 /**
- * Same in-memory sliding-window pattern as /api/saathi -- this route can
- * relay mail through our Resend account and spends real time on Chromium,
- * so an unlimited public POST would make it both a spam relay and a compute
- * sink. Resets on redeploy; good enough for this MVP's traffic.
+ * This route relays mail through our Brevo account and spends real time on
+ * Chromium, so an unlimited public POST would make it both a spam relay and
+ * a compute sink -- the two most expensive things a stranger could do with
+ * this app. See lib/rate-limit.ts for what an in-memory limiter is honestly
+ * worth: this is a deterrent, not a guarantee.
  */
-const RATE_LIMIT = 5;
-const RATE_WINDOW_MS = 60 * 60 * 1000;
-const hits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const timestamps = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  if (timestamps.length >= RATE_LIMIT) {
-    hits.set(ip, timestamps);
-    return true;
-  }
-  timestamps.push(now);
-  hits.set(ip, timestamps);
-  return false;
-}
+const isRateLimited = createRateLimiter(5, 60 * 60 * 1000);
 
 /**
  * Common install locations for a real browser on a dev machine. Overridable
@@ -112,8 +100,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Email export is not configured yet." }, { status: 503 });
   }
 
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
-  if (isRateLimited(ip)) {
+  if (isRateLimited(clientIp(req.headers))) {
     return NextResponse.json(
       { error: "Too many emails -- please wait a while and try again." },
       { status: 429 },

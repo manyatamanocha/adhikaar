@@ -40,6 +40,7 @@
 import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
 import { FAQS } from "@/lib/faq";
+import { createRateLimiter, clientIp } from "@/lib/rate-limit";
 
 export const runtime = "nodejs";
 
@@ -48,29 +49,12 @@ const MAX_HISTORY = 12;
 const MAX_MESSAGE_LENGTH = 1200;
 
 /**
- * Simple in-memory sliding-window rate limit, keyed by IP. This is a free
- * Groq key behind a public chat widget -- one heavy user (or a bot) could
- * exhaust the whole app's daily quota for everyone else, so a limit here
- * matters even though it's not a security boundary. In-memory means it
- * resets on redeploy and doesn't share state across serverless instances --
- * good enough for this MVP's traffic; move to a shared store (Redis/Upstash)
- * before relying on it under real load.
+ * A free Groq key sitting behind a public chat widget: one heavy user or a
+ * bot could exhaust the whole app's daily quota for everyone else, so a
+ * limit matters here even though it is not a security boundary. See
+ * lib/rate-limit.ts for what an in-memory limiter is honestly worth.
  */
-const RATE_LIMIT = 12;
-const RATE_WINDOW_MS = 5 * 60 * 1000;
-const hits = new Map<string, number[]>();
-
-function isRateLimited(ip: string): boolean {
-  const now = Date.now();
-  const timestamps = (hits.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS);
-  if (timestamps.length >= RATE_LIMIT) {
-    hits.set(ip, timestamps);
-    return true;
-  }
-  timestamps.push(now);
-  hits.set(ip, timestamps);
-  return false;
-}
+const isRateLimited = createRateLimiter(12, 5 * 60 * 1000);
 
 const KNOWLEDGE = FAQS.map((f) => {
   const link = f.link ? ` [Link: ${f.link.label} -> ${f.link.href}]` : "";
@@ -107,8 +91,7 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? "unknown";
-  if (isRateLimited(ip)) {
+  if (isRateLimited(clientIp(req.headers))) {
     return NextResponse.json(
       { error: "Too many messages -- please wait a few minutes and try again." },
       { status: 429 },
