@@ -67,7 +67,7 @@ function Navigation() {
     <header data-print="hide" className="bg-[#FAF5EC] text-[#16233F]" lang={locale}>
       <div className="mx-auto flex max-w-[1920px] flex-wrap items-center justify-between gap-4 px-5 pt-4 pb-7 sm:px-8 sm:pb-8 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:pb-9">
         <div aria-hidden="true" className="hidden lg:block" />
-        <Link href={withLang("/", locale)} className="flex min-w-0 flex-col items-center">
+        <Link href={withLang("/", locale)} className="flex min-w-0 -translate-x-3 flex-col items-center sm:-translate-x-4 lg:-translate-x-6">
           <span className="flex items-center gap-3">
             <AdhikaarMark className="h-[4.8rem] w-[4.8rem] shrink-0 sm:h-24 sm:w-24 lg:h-[7.2rem] lg:w-[7.2rem]" />
             <span className="font-serif text-[1.1875rem] font-bold leading-tight sm:text-[1.5625rem] lg:text-[1.875rem]">Adhikaar</span>
