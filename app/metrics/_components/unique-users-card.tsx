@@ -39,30 +39,35 @@ export function UniqueUsersCard() {
   }, [days]);
 
   return (
-    <article className="rounded-2xl border-2 border-rule bg-white p-5 shadow-[0_2px_10px_rgba(22,35,63,0.06)]">
-      <span aria-hidden="true" className="mb-3 flex h-10 w-10 items-center justify-center rounded-full" style={{ background: "#EFE7D8", color: "#16233F" }}>
-        <UsersIcon className="h-5 w-5" />
-      </span>
-      <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">Unique users</p>
-      <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">
-        {count === null ? "—" : count.toLocaleString("en-IN")}
-      </p>
-      <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Time range">
-        {RANGES.map((r) => (
-          <button
-            key={r.days}
-            type="button"
-            onClick={() => setDays(r.days)}
-            aria-pressed={days === r.days}
-            className={`cursor-pointer rounded-full border-2 px-2.5 py-1 text-[0.75rem] font-bold transition-colors ${
-              days === r.days
-                ? "border-indigo bg-indigo text-white"
-                : "border-rule text-ink-soft hover:border-indigo/50"
-            }`}
-          >
-            {r.label}
-          </button>
-        ))}
+    <article className="overflow-hidden rounded-2xl border-2 border-rule bg-white shadow-[0_2px_10px_rgba(22,35,63,0.06)]">
+      {/* Same top-edge identity stripe as MetricCard, in this card's own
+       * plain/indigo tone -- kept consistent across the whole top row. */}
+      <span aria-hidden="true" className="block h-[3px] bg-[#16233F]" />
+      <div className="p-5">
+        <span aria-hidden="true" className="mb-3 flex h-10 w-10 items-center justify-center rounded-full" style={{ background: "#EFE7D8", color: "#16233F" }}>
+          <UsersIcon className="h-5 w-5" />
+        </span>
+        <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">Unique users</p>
+        <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">
+          {count === null ? "—" : count.toLocaleString("en-IN")}
+        </p>
+        <div className="mt-3 flex flex-wrap gap-1.5" role="group" aria-label="Time range">
+          {RANGES.map((r) => (
+            <button
+              key={r.days}
+              type="button"
+              onClick={() => setDays(r.days)}
+              aria-pressed={days === r.days}
+              className={`cursor-pointer rounded-full border-2 px-2.5 py-1 text-[0.75rem] font-bold transition-colors ${
+                days === r.days
+                  ? "border-indigo bg-indigo text-white"
+                  : "border-rule text-ink-soft hover:border-indigo/50"
+              }`}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
       </div>
     </article>
   );
