@@ -144,6 +144,16 @@ export function HouseIcon({ className }: P) {
   );
 }
 
+export function UsersIcon({ className }: P) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <circle cx="9" cy="8.5" r="3" stroke="currentColor" strokeWidth="1.6" />
+      <path d="M3.5 19.5c0-3 2.5-5 5.5-5s5.5 2 5.5 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="M15.5 5.8c1.5.3 2.5 1.5 2.5 2.9 0 1.4-1 2.6-2.5 2.9M17.5 14.8c2 .4 3 1.9 3 4.2" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function ArrowRightIcon({ className }: P) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">

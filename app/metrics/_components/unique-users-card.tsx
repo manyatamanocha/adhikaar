@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useState } from "react";
+import { UsersIcon } from "../../recover/_components/icons";
 
 const RANGES = [
   { label: "3 days", days: 3 },
@@ -38,7 +39,10 @@ export function UniqueUsersCard() {
   }, [days]);
 
   return (
-    <article className="rounded-2xl border-2 border-rule bg-white p-5">
+    <article className="rounded-2xl border-2 border-rule bg-white p-5 shadow-[0_2px_10px_rgba(22,35,63,0.06)]">
+      <span aria-hidden="true" className="mb-3 flex h-10 w-10 items-center justify-center rounded-full" style={{ background: "#EFE7D8", color: "#16233F" }}>
+        <UsersIcon className="h-5 w-5" />
+      </span>
       <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">Unique users</p>
       <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">
         {count === null ? "—" : count.toLocaleString("en-IN")}

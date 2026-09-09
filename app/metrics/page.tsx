@@ -21,7 +21,7 @@
 import { Suspense } from "react";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
-import { ArrowRightIcon } from "../recover/_components/icons";
+import { ArrowRightIcon, CheckIcon, CompassIcon, HouseIcon, PlayIcon } from "../recover/_components/icons";
 import { ExcludeTrafficNotice } from "./_components/exclude-traffic-notice";
 import { UniqueUsersCard } from "./_components/unique-users-card";
 
@@ -119,6 +119,15 @@ const METER_TONES = {
   violet: { fill: "#7147C4", track: "#BDB4E2" },
 } as const;
 
+/** Icon-circle bg/fg per card accent -- a light step of the SAME hue the
+ * card's own border/meter already use, not a new color introduced just for
+ * the icon. */
+const ICON_TONES = {
+  plain: { bg: "#EFE7D8", fg: "#16233F" },
+  saffron: { bg: "#F7DDBB", fg: "#8A3D24" },
+  violet: { bg: "#E3DAF5", fg: "#5A34A0" },
+} as const;
+
 function MetricCard({
   label,
   about,
@@ -127,6 +136,7 @@ function MetricCard({
   accent = "plain",
   breakdown,
   meterPct,
+  icon,
 }: {
   label: string;
   /** One plain sentence naming the CONCEPT this card tracks, distinct from
@@ -156,14 +166,26 @@ function MetricCard({
    * users), not a rate -- a meter under a raw count has no limit to show
    * progress against. */
   meterPct?: number | null;
+  /** A drawn icon from the site's own single-stroke set, never emoji. */
+  icon?: React.ReactNode;
 }) {
   const accents = {
     plain: "border-rule bg-white",
     saffron: "border-[#E8B36D] bg-[#FFF7E8]",
     violet: "border-[#BDB4E2] bg-[#F5F2FC]",
   } as const;
+  const tone = ICON_TONES[accent];
   return (
-    <article className={"rounded-2xl border-2 p-5 " + accents[accent]}>
+    <article className={"rounded-2xl border-2 p-5 shadow-[0_2px_10px_rgba(22,35,63,0.06)] " + accents[accent]}>
+      {icon && (
+        <span
+          aria-hidden="true"
+          className="mb-3 flex h-10 w-10 items-center justify-center rounded-full"
+          style={{ background: tone.bg, color: tone.fg }}
+        >
+          <span className="h-5 w-5">{icon}</span>
+        </span>
+      )}
       <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">{label}</p>
       {about && <p className="mt-1 text-[0.9375rem] leading-snug text-ink-soft">{about}</p>}
       <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">{value}</p>
@@ -337,6 +359,87 @@ function sourceBreakdown(bySource: Record<string, number>): string {
 }
 
 /**
+ * Plain-language name for each of the 8 verdict outcomes, matching the
+ * product's own voice on the verdict pages themselves -- never the raw
+ * route id.
+ */
+const OUTCOME_LABELS: Record<string, string> = {
+  nominee: "Nominee registered",
+  survivorship: "Joint account, survivor",
+  "unknown-nominee": "Nominee status unclear",
+  "under-threshold": "No nominee, below threshold",
+  "over-threshold": "No nominee, above threshold",
+  dispute: "Heirs in dispute",
+  "already-in-court": "Already in court",
+  "out-of-scope": "Outside what we cover",
+};
+
+/**
+ * Fixed per-outcome colors -- assigned to the ENTITY, never to its rank, so
+ * an outcome keeps its color whether it is the biggest slice this week or
+ * the smallest. Only the five most central resolution paths get a
+ * dedicated slot; the three edge/situation-like outcomes always fold into
+ * "Other" regardless of volume, to stay inside the dataviz skill's soft
+ * cap on donut segments (part-to-whole reads at a glance only up to ~6).
+ * Validated with the dataviz palette validator (categorical, light mode,
+ * white surface): lightness band, chroma floor, CVD separation and
+ * normal-vision floor all pass.
+ */
+const OUTCOME_COLORS: Record<string, string> = {
+  nominee: "#E2653B",
+  survivorship: "#7147C4",
+  "under-threshold": "#2E8B69",
+  "over-threshold": "#B84E1E",
+  dispute: "#3B6FA8",
+};
+const OUTCOME_OTHER_COLOR = "#B8B2A0";
+
+/**
+ * Part-to-whole across a handful of real categories -- the dataviz skill's
+ * one legitimate use of a donut (part-to-whole at a glance, not fine
+ * comparison between close values). A CSS conic-gradient ring, not a
+ * decorative progress ring standing in for content: every segment is a
+ * real, named count, and the legend beside it -- which carries the exact
+ * numbers -- is the chart's own table-view twin, not a separate view.
+ */
+function Donut({ segments, total }: { segments: { label: string; value: number; color: string }[]; total: number }) {
+  const stops = segments.reduce<{ list: string[]; acc: number }>(
+    (state, s) => {
+      const start = (state.acc / total) * 360;
+      const acc = state.acc + s.value;
+      const end = (acc / total) * 360;
+      return { list: [...state.list, `${s.color} ${start}deg ${end}deg`], acc };
+    },
+    { list: [], acc: 0 },
+  ).list;
+  return (
+    <div className="flex flex-col items-center gap-6 sm:flex-row">
+      <div
+        aria-hidden="true"
+        className="relative h-44 w-44 shrink-0 rounded-full"
+        style={{ background: `conic-gradient(${stops.join(", ")})` }}
+      >
+        <div className="absolute inset-[18%] flex flex-col items-center justify-center rounded-full bg-white text-center">
+          <span className="font-serif text-[1.75rem] font-bold leading-none text-indigo-ink">{total.toLocaleString("en-IN")}</span>
+          <span className="mt-1 text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-ink-faint">answers</span>
+        </div>
+      </div>
+      <ul className="w-full space-y-2.5">
+        {segments.map((s) => (
+          <li key={s.label} className="flex items-center justify-between gap-3 text-[0.9375rem]">
+            <span className="flex items-center gap-2.5">
+              <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: s.color }} />
+              {s.label}
+            </span>
+            <strong className="tabular-nums text-indigo-ink">{s.value.toLocaleString("en-IN")} · {Math.round((s.value / total) * 100)}%</strong>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/**
  * Does this body have the shape this page renders?
  *
  * `res.ok` is not enough. A 200 carrying an OLDER shape is the realistic
@@ -376,20 +479,39 @@ export default async function MetricsPage() {
   const m = await getMetrics();
   const sourceNote = m ? sourceBreakdown(m.funnel.resolvedBySource) : "";
   const stages = m ? [
-    { label: "Visited the website", value: m.funnel.landingVisitors, note: "Opened the home page." },
-    { label: "Started a journey", value: m.funnel.journeysStarted, note: "Began looking for help." },
+    { label: "Visited the website", value: m.funnel.landingVisitors, note: "Opened the home page.", icon: <HouseIcon className="h-full w-full" /> },
+    { label: "Started a journey", value: m.funnel.journeysStarted, note: "Began looking for help.", icon: <PlayIcon className="h-full w-full" /> },
     {
       label: "Reached an answer",
       value: m.funnel.resolvedJourneys,
       note: "Got a claim route or learned what to check next."
         + (sourceNote ? ` ${sourceNote} — a journey that resolved more than one way counts in each.` : ""),
+      icon: <CheckIcon className="h-full w-full" />,
     },
     {
       label: "Chose a next step",
       value: m.funnel.showingIntent,
       note: `Printed a guide or emailed themselves a copy — only possible on ${m.funnel.nextStepEligibleJourneys} of the ${m.funnel.resolvedJourneys} answers above; situation pages have no such button. Shown above as a rate: ${pct(m.funnel.nextStepActionRate)}.`,
+      icon: <ArrowRightIcon className="h-full w-full" />,
     },
   ] : [];
+  /** One step darker per stage, same indigo family throughout -- the
+   * dataviz skill's ordinal-ramp allowance for funnel stages (a single
+   * ordered series), not a fresh hue per row. */
+  const FUNNEL_SHADES = ["#9BA5C7", "#6E7BAB", "#3D4A73", "#16233F"];
+  const outcomeEntries = m ? Object.entries(m.outcomes).filter(([, n]) => n > 0) : [];
+  const outcomeTotal = outcomeEntries.reduce((sum, [, n]) => sum + n, 0);
+  const namedOutcomeIds = Object.keys(OUTCOME_COLORS);
+  const otherOutcomeCount = outcomeEntries
+    .filter(([id]) => !(id in OUTCOME_COLORS))
+    .reduce((sum, [, n]) => sum + n, 0);
+  const outcomeSegments = [
+    ...outcomeEntries
+      .filter(([id]) => id in OUTCOME_COLORS)
+      .sort(([a], [b]) => namedOutcomeIds.indexOf(a) - namedOutcomeIds.indexOf(b))
+      .map(([id, n]) => ({ label: OUTCOME_LABELS[id] ?? id, value: n, color: OUTCOME_COLORS[id] })),
+    ...(otherOutcomeCount > 0 ? [{ label: "Other outcome", value: otherOutcomeCount, color: OUTCOME_OTHER_COLOR }] : []),
+  ];
   const scale = Math.max(1, ...stages.map(s => s.value));
   return (
     <>
@@ -421,12 +543,12 @@ export default async function MetricsPage() {
           ) : (
             <>
               <section aria-label="The main numbers" className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <MetricCard label="Journeys reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron"
+                <MetricCard label="Journeys reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron" icon={<CheckIcon className="h-full w-full" />}
                   note="Journeys that reached a clear answer or next step in the last 7 days. This is our main measure of progress." />
-                <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)} meterPct={m.omtm.resolutionRate}
+                <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)} meterPct={m.omtm.resolutionRate} icon={<CompassIcon className="h-full w-full" />}
                   breakdown={{ from: m.omtm.cohortResolved, to: m.omtm.cohortStarted }}
                   note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
-                <MetricCard label="Chose a next step" about="Whether people acted on their answer, not just read it." value={pct(m.funnel.nextStepActionRate)} accent="violet" meterPct={m.funnel.nextStepActionRate}
+                <MetricCard label="Chose a next step" about="Whether people acted on their answer, not just read it." value={pct(m.funnel.nextStepActionRate)} accent="violet" meterPct={m.funnel.nextStepActionRate} icon={<ArrowRightIcon className="h-full w-full" />}
                   breakdown={{ from: m.funnel.showingIntent, to: m.funnel.nextStepEligibleJourneys }}
                   note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " journeys with an available action used it."} />
                 <UniqueUsersCard />
@@ -442,10 +564,16 @@ export default async function MetricsPage() {
                 <ol className="mt-6 space-y-6">
                   {stages.map((s, i) => (
                     <li key={s.label} className="flex gap-3 sm:gap-5">
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F0EDE5] font-bold" aria-hidden="true">{i + 1}</span>
+                      <span
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full p-2.5 text-white"
+                        aria-hidden="true"
+                        style={{ background: FUNNEL_SHADES[i] }}
+                      >
+                        {s.icon}
+                      </span>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline justify-between gap-3"><h3 className="text-lg font-bold">{s.label}</h3><span className="text-2xl font-bold tabular-nums">{s.value.toLocaleString("en-IN")}</span></div>
-                        <div aria-hidden="true" className="mt-2.5 h-4 overflow-hidden rounded-[4px] bg-[#EFEEE9]"><div className="h-full rounded-r-[4px] bg-indigo" style={{ width: funnelWidth(s.value, scale) }} /></div>
+                        <div aria-hidden="true" className="mt-2.5 h-4 overflow-hidden rounded-[4px] bg-[#EFEEE9]"><div className="h-full rounded-r-[4px]" style={{ width: funnelWidth(s.value, scale), background: FUNNEL_SHADES[i] }} /></div>
                         <p className="mt-2 text-base leading-6 text-ink-soft">{s.note}</p>
                       </div>
                     </li>
@@ -478,6 +606,18 @@ export default async function MetricsPage() {
                   ))}
                 </div>
                 {Object.keys(m.funnel.startedByBranch).length === 0 && <p className="mt-4 rounded-2xl bg-white p-6 text-ink-soft">No starting situations have been recorded yet.</p>}
+              </section>
+
+              <section className="mt-8 rounded-3xl border border-rule bg-white p-6 sm:p-8">
+                <h2 className="font-serif text-3xl font-bold">What kind of answer did people get?</h2>
+                <p className="mt-2 text-base leading-7 text-ink-soft">Every resolved journey, by which of the 8 verdicts it reached.</p>
+                {outcomeTotal > 0 ? (
+                  <div className="mt-6">
+                    <Donut segments={outcomeSegments} total={outcomeTotal} />
+                  </div>
+                ) : (
+                  <p className="mt-4 rounded-2xl bg-[#F5F3EE] p-6 text-ink-soft">No verdicts have been reached yet.</p>
+                )}
               </section>
 
               <details className="mt-8 rounded-2xl border border-rule bg-white p-6">
