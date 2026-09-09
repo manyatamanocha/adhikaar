@@ -10,6 +10,7 @@ import { HomeI18nProvider, useHomeT } from "./home-i18n";
 import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
 import { ArrowRightIcon } from "./icons";
+import { UniqueVisitorsBadge } from "./unique-visitors-badge";
 
 /**
  * The homepage ("/") -- rebuilt again 5 Sep 2026 against a user-supplied
@@ -118,6 +119,7 @@ function Hero() {
                 the button above. */}
           </Reveal>
 
+          <UniqueVisitorsBadge />
         </div>
 
       </div>
