@@ -289,7 +289,6 @@ export type HomeDict = {
     askedCheckerBody: string;
     askedCheckerCta: string;
     whenRouteApplies: string;
-    printNote: string;
     doneBandNote: string;
     printButton: string;
     deadlineHeading: (days: number) => string;
@@ -820,7 +819,6 @@ const en: HomeDict = {
     askedCheckerBody: "Tick what the branch actually demanded — a surety, a family tree, an affidavit, witnesses — and we will show you which of them the RBI prescribes for your situation and which it does not, with the paragraph number for each.",
     askedCheckerCta: "Check what you were asked for",
     whenRouteApplies: "When this route applies, a succession certificate is not required.",
-    printNote: "Take the printed page to the branch. It carries the rule and its paragraph number.",
     doneBandNote: "Email a copy to yourself to keep for later. It carries the same rule and paragraph number.",
     printButton: "Print this page",
     deadlineHeading: (days) => `The bank has ${days} days`,
@@ -1330,7 +1328,6 @@ const hi: HomeDict = {
     askedCheckerBody: "शाखा ने वाक़ई क्या-क्या माँगा टिक करें — ज़मानत, परिवार-वृक्ष, शपथ-पत्र, गवाह — और हम दिखाएँगे कि इनमें से RBI आपकी स्थिति के लिए क्या तय करता है और क्या नहीं, हर एक के पैराग्राफ नंबर सहित।",
     askedCheckerCta: "आपसे क्या माँगा गया, जाँचें",
     whenRouteApplies: "जहाँ यह रास्ता लागू होता है, वहाँ उत्तराधिकार प्रमाणपत्र ज़रूरी नहीं है।",
-    printNote: "छपा हुआ पन्ना शाखा में ले जाएँ। इसमें नियम और उसका पैराग्राफ नंबर दोनों हैं।",
     doneBandNote: "बाद में देखने के लिए अपने ईमेल पर एक प्रति भेजें। इसमें वही नियम और पैराग्राफ नंबर है।",
     printButton: "यह पन्ना छापें",
     deadlineHeading: (days) => `बैंक के पास ${days} दिन हैं`,
@@ -1840,7 +1837,6 @@ const kn: HomeDict = {
     askedCheckerBody: "ಶಾಖೆ ನಿಜವಾಗಿಯೂ ಏನು ಕೇಳಿತು ಎಂದು ಟಿಕ್ ಮಾಡಿ — ಜಾಮೀನು, ಕುಟುಂಬ ವೃಕ್ಷ, ಅಫಿಡವಿಟ್, ಸಾಕ್ಷಿಗಳು — ಮತ್ತು ಇವುಗಳಲ್ಲಿ RBI ನಿಮ್ಮ ಸ್ಥಿತಿಗೆ ಯಾವುದನ್ನು ನಿಗದಿಪಡಿಸುತ್ತದೆ ಮತ್ತು ಯಾವುದನ್ನು ಇಲ್ಲ ಎಂದು ನಾವು ತೋರಿಸುತ್ತೇವೆ, ಪ್ರತಿಯೊಂದಕ್ಕೂ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯೊಂದಿಗೆ.",
     askedCheckerCta: "ನಿಮ್ಮಿಂದ ಏನು ಕೇಳಲಾಗಿತ್ತು ಎಂದು ಪರಿಶೀಲಿಸಿ",
     whenRouteApplies: "ಈ ಮಾರ್ಗ ಅನ್ವಯಿಸುವಲ್ಲಿ, ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಅಗತ್ಯವಿಲ್ಲ.",
-    printNote: "ಮುದ್ರಿತ ಪುಟವನ್ನು ಶಾಖೆಗೆ ತೆಗೆದುಕೊಂಡು ಹೋಗಿ. ಇದು ನಿಯಮ ಮತ್ತು ಅದರ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯನ್ನು ಹೊಂದಿದೆ.",
     doneBandNote: "ನಂತರ ನೋಡಲು ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ಒಂದು ಪ್ರತಿ ಕಳುಹಿಸಿ. ಇದರಲ್ಲಿ ಅದೇ ನಿಯಮ ಮತ್ತು ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆ ಇದೆ.",
     printButton: "ಈ ಪುಟವನ್ನು ಮುದ್ರಿಸಿ",
     deadlineHeading: (days) => `ಬ್ಯಾಂಕಿಗೆ ${days} ದಿನಗಳಿವೆ`,

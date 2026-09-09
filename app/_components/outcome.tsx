@@ -403,9 +403,18 @@ function Verdict({
             className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3"
           >
             <PrintButton label={t.printButton} />
-            <p className={`text-[0.9375rem] ${good ? "text-white/70" : "text-ink-soft"}`}>
-              {t.printNote}
-            </p>
+            <ExportEmailButton
+              subject={outcome.verdict}
+              inverted={good}
+              labels={{
+                button: t.exportEmailButton,
+                placeholder: t.exportEmailPlaceholder,
+                send: t.exportEmailSend,
+                sending: t.exportEmailSending,
+                success: t.exportEmailSuccess,
+                error: t.exportEmailError,
+              }}
+            />
           </div>
         )}
       </div>

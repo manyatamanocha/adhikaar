@@ -21,6 +21,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export function ExportEmailButton({
   subject,
   labels,
+  inverted = false,
 }: {
   subject: string;
   labels: {
@@ -31,6 +32,9 @@ export function ExportEmailButton({
     success: string;
     error: string;
   };
+  /** True on the dark indigo good-news verdict band, where the outline
+   * button needs light borders/text instead of the usual indigo ones. */
+  inverted?: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState("");
@@ -62,7 +66,11 @@ export function ExportEmailButton({
         type="button"
         data-print="hide"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-pill border-2 border-indigo px-6 py-3 text-[1.0625rem] font-bold text-indigo-ink transition-colors hover:bg-indigo/8"
+        className={`inline-flex items-center gap-2 rounded-pill border-2 px-6 py-3 text-[1.0625rem] font-bold transition-colors ${
+          inverted
+            ? "border-white/40 text-white hover:bg-white/10"
+            : "border-indigo text-indigo-ink hover:bg-indigo/8"
+        }`}
       >
         {labels.button}
         <span aria-hidden="true">&rarr;</span>
@@ -90,8 +98,12 @@ export function ExportEmailButton({
       >
         {status === "sending" ? labels.sending : labels.send}
       </button>
-      {status === "sent" && <p className="text-[0.9375rem] text-ink-soft">{labels.success}</p>}
-      {status === "error" && <p className="text-[0.9375rem] text-maroon">{labels.error}</p>}
+      {status === "sent" && (
+        <p className={`text-[0.9375rem] ${inverted ? "text-white/80" : "text-ink-soft"}`}>{labels.success}</p>
+      )}
+      {status === "error" && (
+        <p className={`text-[0.9375rem] ${inverted ? "text-[#FFD6CC]" : "text-maroon"}`}>{labels.error}</p>
+      )}
     </div>
   );
 }
