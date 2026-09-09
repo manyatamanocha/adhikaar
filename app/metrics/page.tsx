@@ -18,8 +18,10 @@
  * when the first is true.
  */
 
+import { Suspense } from "react";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
+import { ExcludeTrafficNotice } from "./_components/exclude-traffic-notice";
 import { UniqueUsersCard } from "./_components/unique-users-card";
 
 export const metadata = {
@@ -274,6 +276,9 @@ export default async function MetricsPage() {
                 <UniqueUsersCard />
               </section>
               <p className="mt-3 text-sm leading-6 text-ink-soft">A dash (—) means there is not enough data to calculate a percentage. We count journeys; one person can start more than one.</p>
+              <Suspense fallback={null}>
+                <ExcludeTrafficNotice />
+              </Suspense>
 
               <section className="mt-8 rounded-3xl border border-rule bg-white p-6 sm:p-8">
                 <h2 className="font-serif text-3xl font-bold">The journey, step by step</h2>

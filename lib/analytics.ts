@@ -48,6 +48,16 @@
  * a real change to the product's privacy posture: `/privacy`'s analytics
  * section is the disclosure of it, not this comment. Clearing the browser's
  * site data resets it, same as the deadline tracker's date.
+ *
+ * visitor_id still cannot tell the team's OWN testing apart from a real
+ * claimant -- a different browser, an incognito window or a cleared profile
+ * all mint a fresh id. `isExcludedTester()` (added 9 Sep 2026) is the same
+ * kind of gate as isLocalDev() below, opted into per browser via
+ * /metrics?exclude-me=1 (app/metrics/_components/exclude-traffic-notice.tsx)
+ * rather than detected automatically: once set, this browser sends NO events
+ * at all, so it stops inflating every number on /metrics, not only the
+ * unique-visitor tile. Prospective only -- it cannot retroactively uncount
+ * events already sent before the flag was set.
  */
 
 /**
@@ -154,8 +164,35 @@ function visitorId(): string | null {
   }
 }
 
+const EXCLUDE_KEY = "adhikaar.exclude_traffic";
+
+/** Whether this browser opted itself out of analytics via /metrics?exclude-me=1. */
+export function isExcludedTester(): boolean {
+  try {
+    return localStorage.getItem(EXCLUDE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
+export function excludeThisBrowser(): void {
+  try {
+    localStorage.setItem(EXCLUDE_KEY, "1");
+  } catch {
+    /* storage blocked; nothing to persist, same fallback as visitorId() */
+  }
+}
+
+export function includeThisBrowser(): void {
+  try {
+    localStorage.removeItem(EXCLUDE_KEY);
+  } catch {
+    /* storage blocked; nothing to clear */
+  }
+}
+
 export function track(event: EventName, props: Record<string, string | number | boolean> = {}) {
-  if (typeof window === "undefined" || isLocalDev()) return;
+  if (typeof window === "undefined" || isLocalDev() || isExcludedTester()) return;
   try {
     const vid = visitorId();
     const properties = vid ? { ...props, visitor_id: vid } : props;
