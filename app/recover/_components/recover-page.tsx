@@ -105,10 +105,10 @@ function Hero() {
           <Reveal delay={80} className="mt-8 flex flex-wrap items-center gap-4">
             <Link
               href={withLang("/start", locale)}
-              className="inline-flex items-center gap-1.5 rounded bg-[#E2653B] px-5 py-2.5 text-[0.75rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
+              className="inline-flex items-center gap-2 rounded bg-[#E2653B] px-8 py-4 text-[1.0625rem] font-bold text-white transition-colors hover:bg-[#C9532C]"
             >
               {t.hero.start}
-              <ArrowRightIcon className="h-3 w-3" />
+              <ArrowRightIcon className="h-4 w-4" />
             </Link>
             {/* A second, quieter door to /documents stood here from 6 Sep 2026
                 until 8 Sep, for readers who wanted only the list of papers.
