@@ -97,11 +97,16 @@ function MetricCard({
   value,
   note,
   accent = "plain",
+  breakdown,
 }: {
   label: string;
   value: string;
   note: string;
   accent?: "plain" | "saffron" | "violet";
+  /** The raw numerator/denominator a percentage was computed from. Omitted
+   * (not shown as "0 → 0") when there is no real denominator yet -- same
+   * "never fake a data point" rule pct() already follows. */
+  breakdown?: { from: number; to: number };
 }) {
   const accents = {
     plain: "border-rule bg-white",
@@ -112,6 +117,13 @@ function MetricCard({
     <article className={"rounded-2xl border-2 p-5 " + accents[accent]}>
       <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">{label}</p>
       <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">{value}</p>
+      {breakdown && breakdown.to > 0 && (
+        <p className="mt-1 flex items-center gap-1.5 text-[0.9375rem] font-bold tabular-nums text-ink-soft">
+          <span>{breakdown.from.toLocaleString("en-IN")}</span>
+          <span aria-hidden="true">→</span>
+          <span>{breakdown.to.toLocaleString("en-IN")}</span>
+        </p>
+      )}
       <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-soft">{note}</p>
     </article>
   );
@@ -270,8 +282,10 @@ export default async function MetricsPage() {
                 <MetricCard label="Journeys reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron"
                   note="Journeys that reached a clear answer or next step in the last 7 days. This is our main measure of progress." />
                 <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)}
+                  breakdown={{ from: m.omtm.cohortResolved, to: m.omtm.cohortStarted }}
                   note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
                 <MetricCard label="Chose a next step" value={pct(m.funnel.nextStepActionRate)} accent="violet"
+                  breakdown={{ from: m.funnel.showingIntent, to: m.funnel.nextStepEligibleJourneys }}
                   note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " journeys with an available action used it."} />
                 <UniqueUsersCard />
               </section>
