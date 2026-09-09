@@ -256,7 +256,19 @@ export default async function MetricsPage() {
             {m && (
               <div className="mt-5 flex flex-wrap gap-3">
                 <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>
-                <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">{m.funnel.uniqueVisitors.toLocaleString("en-IN")} unique visitors in this reporting period</p>
+                {/* isCurrentShape() below only checks that funnel/etc. exist as
+                    objects, not that every field inside them is present -- so
+                    a leaf field added here can still be undefined for exactly
+                    one build: this page fetches ITSELF at build time
+                    (VERCEL_PROJECT_PRODUCTION_URL), which during that build is
+                    still serving the previous deployment's /api/metrics
+                    response. Optional chaining + a fallback means a missing
+                    field degrades to omitting this line instead of crashing
+                    the whole page's static generation, the way it did on
+                    9 Sep 2026 when uniqueVisitors was added without this. */}
+                {typeof m.funnel.uniqueVisitors === "number" && (
+                  <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">{m.funnel.uniqueVisitors.toLocaleString("en-IN")} unique visitors in this reporting period</p>
+                )}
               </div>
             )}
           </header>
