@@ -27,7 +27,6 @@ import { BankSummary } from "../_components/bank-panel";
 import { SITUATIONS_T, type Situation } from "@/lib/i18n-situations";
 import {
   parseAnswers,
-  parseEntry,
   answerQuestion,
   previousAnswers,
   progressFor,
@@ -35,7 +34,6 @@ import {
   toQuery,
   QUESTION_ORDER,
   type Answers,
-  type Entry,
   type Option,
   type Question,
 } from "@/lib/wizard";
@@ -43,24 +41,6 @@ import {
 export const metadata = {
   title: "Adhikaar — your claim guide",
 };
-
-/**
- * `entry` rides along the same way, and for the same reason: it is not an
- * answer to any question, so toQuery() must not serialise it and
- * previousAnswers() must not be able to delete it.
- *
- * It has to survive all the way to the verdict page, not just to the end of
- * the wizard -- OutcomePage re-runs resolve() to reject hand-edited URLs, and
- * without `entry` there it would decide the court question was still owed and
- * bounce the reader back to a question this path never asks.
- */
-function withEntry(href: string, entry: Entry | undefined): string {
-  if (!entry) return href;
-  const [path, query] = href.split("?");
-  const q = new URLSearchParams(query ?? "");
-  q.set("entry", entry);
-  return `${path}?${q}`;
-}
 
 export default async function Start({
   searchParams,
@@ -71,8 +51,7 @@ export default async function Start({
   const locale = parseLocale(sp.lang);
   const t = HOME_T[locale].startPage;
   const answers = parseAnswers(sp);
-  const entry = parseEntry(sp.entry);
-  const link = (href: string) => withLang(withEntry(href, entry), locale);
+  const link = (href: string) => withLang(href, locale);
 
   // Over QUESTION_ORDER, which includes `bank` (Q2) since 7 Sep 2026 evening.
   // A URL carrying only ?bank=sbi therefore counts as fresh no longer: it is
@@ -95,7 +74,7 @@ export default async function Start({
     return <SituationPicker locale={locale} />;
   }
 
-  const step = resolve(answers, locale, entry);
+  const step = resolve(answers, locale);
   if (step.kind === "review") redirect(link("/needs-review" + toQuery(step.carry)));
 
   // A verdict is a page of its own, at its own URL. The wizard never renders one.
@@ -116,7 +95,7 @@ export default async function Start({
 
       <main className="flex-1 bg-mist">
         <div className="shell max-w-[760px] py-8 sm:py-12">
-          <Progress {...progressFor(answers, entry)} t={t} />
+          <Progress {...progressFor(answers)} t={t} />
           <p className="mt-3 text-[1rem] font-semibold text-ink-soft">{t.timeEstimate}</p>
 
           {/* Above the question, not under the options -- direct request,
@@ -250,10 +229,8 @@ function SituationPicker({ locale }: { locale: Locale }) {
 
   const primary: (Situation & { href: string })[] = [
     // The wizard's own door. `begin=1` rather than a bare /start, which would
-    // land back here. `entry=new` marks the reader as someone who has not
-    // been to a counter, which is what drops the court-order question -- see
-    // lib/wizard.ts's Entry.
-    { ...t.notStarted, href: "/start?begin=1&entry=new" },
+    // land back here.
+    { ...t.notStarted, href: "/start?begin=1" },
     { ...t.alreadyStarted, href: "/start/started" },
     // Goes straight to the search page, not a two-way fork -- an earlier
     // fork's content turned out to just restate Q1 rather than address the

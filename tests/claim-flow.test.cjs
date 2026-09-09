@@ -91,9 +91,6 @@ test("a contested family is asked about on the nominee path, not just the no-nom
   // With no nominee, a contest is /dispute's own case.
   assert.equal(w.resolve({ claiming: "deposit-account", bank: "other", nominee: "no", court: "no", heirs: "dispute" }).outcome, "dispute");
   assert.equal(w.resolve({ claiming: "deposit-account", bank: "other", nominee: "no", court: "no", heirs: "dispute", will: "yes" }).outcome, "dispute");
-  // The skipped-court entry does not skip this one: whether the family is
-  // fighting has nothing to do with whether anyone has been to a bank.
-  assert.equal(w.resolve({ claiming: "deposit-account", bank: "other", nominee: "yes" }, "en", "new").question.id, "heirs");
   // QUESTION_ORDER and the ask order must agree, or Back and the progress
   // counter read the wrong field -- see answeredPrefix.
   assert.ok(w.QUESTION_ORDER.indexOf("heirs") < w.QUESTION_ORDER.indexOf("will"));
@@ -105,46 +102,32 @@ test("a contested family is asked about on the nominee path, not just the no-nom
   );
 });
 /**
- * The "not been to the bank yet" entry drops the court QUESTION, never the
- * court GATE.
+ * The court question is asked on every path -- 9 Sep 2026, later pass.
  *
- * Direct decision, 7 Sep 2026: a reader who is not sure the money even exists
- * cannot answer whether a judge has restrained its payment. What must not
- * follow is a verdict that quietly assumes the answer -- para 8(ii) still bars
- * a bank from settling where it knows of a restraining order. So an ANSWERED
- * restriction has to keep stopping the flow on this entry exactly as it does
- * on every other, and the assumption has to reach the reader on the verdict
- * (outcome.tsx's CourtAssumption, rendered on `!answers.court`).
+ * A "have not been to the bank yet" entry used to skip this question outright
+ * and carry the assumption forward on the verdict instead, as a hard caveat
+ * (lib/wizard.ts's old Entry mechanism, outcome.tsx's old CourtAssumption).
+ * That box read as the product explaining its own routing rather than
+ * answering the reader, so the question is asked directly instead on every
+ * path, with no entry-based exception left to regress.
+ *
+ * A stray extra argument is asserted against directly (resolve() no longer
+ * declares a third parameter) so a future re-introduction of an entry-style
+ * skip cannot silently slip back in unnoticed.
  */
-test("the not-been-to-the-bank entry skips the court question but not the court gate", () => {
+test("the court question is asked on every path, with no entry-based exception", () => {
   const start = { claiming: "deposit-account", bank: "other", nominee: "yes", heirs: "agree" };
-  // Asked on every other entry...
   assert.equal(w.resolve(start).question.id, "court");
-  // ...and not on this one, which goes straight to the verdict. Entry has no
-  // bearing on the bank question -- every path asks bank regardless of how
-  // the reader arrived, and it is answered here already.
-  assert.equal(w.resolve(start, "en", "new").kind, "outcome");
-  assert.equal(w.resolve(start, "en", "new").outcome, "nominee");
-  // The gate survives: a restriction the reader volunteers still wins, and so
-  // does a heir dispute arriving from a scenario card.
-  assert.equal(w.resolve({ ...start, court: "yes" }, "en", "new").kind, "review");
-  assert.equal(w.resolve({ ...start, court: "unknown" }, "en", "new").kind, "review");
-  assert.equal(w.resolve({ ...start, heirs: "dispute" }, "en", "new").kind, "review");
-  // Out of scope still exits before anything else, entry or no entry -- and
-  // before the bank question too, since no bank's policy applies to a
+  // A stray legacy `entry` argument (an old bookmarked call shape) must not
+  // resurrect the skip.
+  assert.equal(w.resolve(start, "en", "new").question.id, "court");
+  assert.equal(w.resolve({ ...start, court: "no" }).kind, "outcome");
+  assert.equal(w.resolve({ ...start, court: "yes" }).kind, "review");
+  assert.equal(w.resolve({ ...start, court: "unknown" }).kind, "review");
+  // Out of scope still exits before anything else, including the court
+  // question and the bank question -- no bank's policy applies to a
   // non-deposit claim.
-  assert.equal(w.resolve({ claiming: "other" }, "en", "new").outcome, "out-of-scope");
-  // No-nominee still walks its own questions; only court is dropped.
-  assert.equal(w.resolve({ claiming: "deposit-account", bank: "other", nominee: "no" }, "en", "new").question.id, "heirs");
-  assert.equal(
-    w.resolve({ claiming: "deposit-account", bank: "other", nominee: "no", heirs: "agree", will: "no", bankType: "commercial", amount: "under" }, "en", "new").outcome,
-    "under-threshold",
-  );
-  // Only the literal string counts -- anything else is a normal journey.
-  assert.equal(w.parseEntry("new"), "new");
-  for (const junk of ["started", "", undefined, "1"]) assert.equal(w.parseEntry(junk), undefined);
-  // The progress bar must not keep counting a question this path never asks.
-  assert.ok(w.progressFor(start, "new").reachable < w.progressFor(start).reachable);
+  assert.equal(w.resolve({ claiming: "other" }).outcome, "out-of-scope");
 });
 test("missing facts are asked again, including old bookmarked results", () => {
   for (const key of Object.keys(base)) {

@@ -103,13 +103,13 @@ export default async function Where({
           </ul>
 
           <div className="mt-8 border-t border-rule-faint pt-5">
-            {/* entry=new, but claiming is NOT pre-filled here the way it is on
-                /start/find's "I know the bank" option. A reader searching for
-                an account they know nothing about may well surface something
-                that is not a bank deposit, so question 1 stays as the
-                out-of-scope gate. */}
+            {/* claiming is NOT pre-filled here the way it is on /start/find's
+                "I know the bank" option. A reader searching for an account
+                they know nothing about may well surface something that is
+                not a bank deposit, so question 1 stays as the out-of-scope
+                gate. */}
             <Link
-              href={withLang("/start?begin=1&entry=new", locale)}
+              href={withLang("/start?begin=1", locale)}
               className="inline-flex min-h-11 items-center rounded-lg bg-saffron px-5 py-2.5 text-[1rem] font-bold text-white"
             >
               {t.foundIt}

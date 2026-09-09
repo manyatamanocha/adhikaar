@@ -46,35 +46,6 @@ export type Option = { value: string; label: string; detail?: string; unsure?: b
 export type Question = { id: QuestionId; prompt: string; help: string; options: Option[] };
 
 /**
- * Which door the reader came in through.
- *
- * "new" is the two options under the opening screen's "You have not been to
- * the bank yet" -- "I have not started the claim", and "I don't know where to
- * begin" once it establishes the bank is known. Nobody on that path has been
- * to a counter, so the court-order question is not asked of them (direct
- * decision, 7 Sep 2026): a reader who is not sure the money exists cannot
- * answer whether a judge has restrained its payment, and being asked reads as
- * the product talking about somebody else's problem.
- *
- * 🔴 The gate is not dropped, only the question. Para 8(ii) still bars a bank
- * from settling where it knows of a restraining order, so every verdict
- * reached without that answer states the assumption on its face -- see
- * outcome.tsx's court-assumption box, which is a HARD caveat and therefore
- * never folds and always prints. A verdict that quietly assumed the answer
- * would be the one thing this product must never do.
- *
- * It rides in the query string alongside `lang` and `bank` rather than
- * becoming part of Answers: it is not a fact about the claim, it does not
- * belong to any question, and it must never be treated as one by
- * parseAnswers, previousAnswers or the progress counter.
- */
-export type Entry = "new";
-export function parseEntry(raw: string | string[] | undefined): Entry | undefined {
-  const v = Array.isArray(raw) ? raw[0] : raw;
-  return v === "new" ? "new" : undefined;
-}
-
-/**
  * Reordered 6 Sep 2026 night, per direct request after live-testing showed
  * real friction: every scenario-card entry ("There was a nominee", "no
  * nominee, or not sure") landed on the unrelated court-restriction question
@@ -117,13 +88,13 @@ export const TOTAL_QUESTIONS = QUESTION_ORDER.length;
  * nominee is known. The search is bounded by QUESTION_ORDER's length and each
  * question's option count, and every branch short-circuits at an outcome.
  */
-export function maxRemainingQuestions(a: Answers, entry?: Entry): number {
-  const step = resolve(a, "en", entry);
+export function maxRemainingQuestions(a: Answers): number {
+  const step = resolve(a, "en");
   if (step.kind !== "question") return 0;
   const id = step.question.id;
   let deepest = 0;
   for (const option of QUESTIONS[id].options) {
-    const branch = maxRemainingQuestions(answerQuestion(a, id, option.value), entry);
+    const branch = maxRemainingQuestions(answerQuestion(a, id, option.value));
     if (branch > deepest) deepest = branch;
   }
   return 1 + deepest;
@@ -376,7 +347,7 @@ export type Resolution =
   | { kind: "review"; carry: Answers }
   | { kind: "outcome"; outcome: OutcomeId; carry: Answers };
 
-export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resolution {
+export function resolve(a: Answers, locale: Locale = "en"): Resolution {
   const ask = (id: QuestionId): Resolution => ({ kind: "question", question: questionFor(id, a, locale) });
   const review = (): Resolution => ({ kind: "review", carry: a });
   const done = (outcome: OutcomeId): Resolution => ({ kind: "outcome", outcome, carry: a });
@@ -408,21 +379,21 @@ export function resolve(a: Answers, locale: Locale = "en", entry?: Entry): Resol
   // restriction can exist independently of a heir dispute and must never
   // be silently skipped. See QUESTION_ORDER's comment for why court can't
   // move any further down either.
-  // Not asked of a reader who has not been to the bank yet -- see Entry.
-  if (!a.court && entry !== "new") return ask("court");
+  // Asked on every path -- 9 Sep 2026, later pass. A "have not been to the
+  // bank yet" entry used to skip this question outright (a reader who is not
+  // sure the money exists cannot answer whether a judge has restrained its
+  // payment) and carried the assumption forward on the verdict instead, as a
+  // hard caveat. That box read as the product describing its own plumbing
+  // rather than answering the reader, so the question is asked directly
+  // instead: it costs one extra question on that entry path, in exchange for
+  // never having to state an assumption on a legal verdict.
+  if (!a.court) return ask("court");
   // A known dispute needs individual review, not a blanket statement that a
   // valid nominee must obtain succession documents. Kept ahead of the court
   // gate so a dispute that arrived pre-set from a scenario card wins even
   // before the court answer is in.
   if (a.heirs === "dispute" && a.nominee !== "no") return review();
-  // An ANSWERED restriction still stops everything, on every path. An
-  // unanswered one reaches here only on the "new" entry, where the question
-  // was deliberately never put -- so the condition travels with the verdict
-  // (outcome.tsx's court-assumption box) instead of blocking it. Written as
-  // `a.court && ...` rather than `!== "no"` for exactly that reason: undefined
-  // must not be read as a restriction, and must not be read as its absence
-  // either.
-  if (a.court && a.court !== "no") return review();
+  if (a.court !== "no") return review();
   // 🔴 Asked on EVERY path, including nominee and survivorship — closed 7 Sep
   // 2026. It used to be asked only after the nominee short-circuit had already
   // been passed, which meant a registered nominee whose family is contesting
@@ -551,15 +522,11 @@ export function answeredPrefix(a: Answers): QuestionId[] {
  * gap between `reachable` and `total` is now shown as questions spent, not
  * questions deleted.
  */
-export function progressFor(a: Answers, entry?: Entry): { current: number; reachable: number; total: number } {
+export function progressFor(a: Answers): { current: number; reachable: number; total: number } {
   const answered = answeredPrefix(a).length;
   return {
     current: answered + 1,
-    // `total` is the fixed seven-question scale on every path. On the "new"
-    // entry the court question is never asked, so it is one of the segments
-    // drawn hollow and counted as ruled out -- the same treatment a nominee
-    // answer already gives to will/heirs/bankType/amount.
-    reachable: answered + maxRemainingQuestions(a, entry),
+    reachable: answered + maxRemainingQuestions(a),
     total: TOTAL_QUESTIONS,
   };
 }
