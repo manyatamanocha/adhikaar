@@ -396,3 +396,30 @@ a {
     break-after: avoid;
   }
 }
+
+/**
+ * One authored motion moment for /metrics' bar charts (the funnel, the
+ * meters, the per-branch and per-question bars) -- a real grow-in, not a
+ * decorative loop. Pure CSS so server-rendered bars animate with no client
+ * component required; `transform: scaleX` rather than animating `width`
+ * keeps it off the layout thread. `both` holds the 0-scale start state
+ * before the animation starts and the 1-scale end state after, so there is
+ * no flash of the full-width bar before the animation takes over.
+ */
+@keyframes bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.bar-grow {
+  transform-origin: left;
+  animation: bar-grow 700ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bar-grow {
+    animation: none;
+  }
+}

@@ -109,7 +109,7 @@ function Meter({ pct, fill, track }: { pct: number | null; fill: string; track: 
   const width = Math.min(100, Math.max(0, pct));
   return (
     <div aria-hidden="true" className="mt-3 h-2 overflow-hidden rounded-full" style={{ background: track }}>
-      <div className="h-full rounded-full" style={{ width: `${width}%`, background: fill }} />
+      <div className="bar-grow h-full rounded-full" style={{ width: `${width}%`, background: fill }} />
     </div>
   );
 }
@@ -244,7 +244,7 @@ function BarList({ items }: { items: { key: string; label: string; value: number
           </div>
           <div aria-hidden="true" className="mt-1.5 h-3 overflow-hidden rounded-[4px] bg-[#EFEEE9]">
             <div
-              className="h-full rounded-r-[4px] bg-indigo"
+              className="bar-grow h-full rounded-r-[4px] bg-indigo"
               style={{ width: `${Math.max(0, Math.min(100, (i.value / max) * 100))}%` }}
             />
           </div>
@@ -513,7 +513,7 @@ export default async function MetricsPage() {
                           percentage that small; a confident full-width bar sitting
                           directly above the words "Not enough data yet" contradicted
                           it, which is the louder of the two signals. */}
-                      <div aria-hidden="true" className="mt-3 h-2 overflow-hidden rounded-full bg-[#EFEEE9]"><div className={`h-full rounded-full ${n < 5 ? "bg-[#C7CBD8]" : "bg-indigo"}`} style={{ width: funnelWidth(m.funnel.resolvedByBranch[key] ?? 0,n) }} /></div>
+                      <div aria-hidden="true" className="mt-3 h-2 overflow-hidden rounded-full bg-[#EFEEE9]"><div className={`bar-grow h-full rounded-full ${n < 5 ? "bg-[#C7CBD8]" : "bg-indigo"}`} style={{ width: funnelWidth(m.funnel.resolvedByBranch[key] ?? 0,n) }} /></div>
                       {/* A rate below this many journeys reads as more confident than it
                           is -- "100%" off n=2 is noise dressed as a stat, the same problem
                           the OMTM tile already guards against with its own null-until-ready

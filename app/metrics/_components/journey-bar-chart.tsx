@@ -66,28 +66,36 @@ export function JourneyBarChart({ stages, shades }: { stages: Stage[]; shades: s
               >
                 <span aria-hidden="true" className="block h-4 overflow-hidden rounded-[4px] bg-[#EFEEE9]">
                   <span
-                    className={`block h-full rounded-r-[4px] transition-[filter] ${isActive ? "brightness-110" : ""}`}
+                    className={`bar-grow block h-full rounded-r-[4px] transition-[filter] ${isActive ? "brightness-110" : ""}`}
                     style={{ width: funnelWidth(s.value, max), background: shades[i] }}
                   />
                 </span>
               </button>
-              <p className="mt-2 text-base leading-6 text-ink-soft">{s.note}</p>
-              {/* Enhancement, not a gate: both numbers here are derivable from
-                  the values already on the page, this just saves the mental
-                  math. Rendered in-flow rather than a floating tooltip, so it
-                  never has to fight viewport edges on a phone. */}
-              <p
+              {/* Collapsed by default so the chart reads at a glance -- label,
+                  number, bar -- and expands to the full explanation plus the
+                  two derived rates only on hover or keyboard focus.
+                  Enhancement, not a gate: everything here is derivable from
+                  the values already on the page, and the label/number/bar
+                  above never depend on this panel opening. Rendered in-flow
+                  rather than a floating tooltip, so it never fights a
+                  viewport edge on a phone. */}
+              <div
                 id={`journey-stage-${i}`}
-                className={`grid text-sm font-semibold text-indigo transition-[grid-template-rows,opacity,margin] duration-150 ${
-                  isActive ? "mt-1.5 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+                className={`grid transition-[grid-template-rows,opacity,margin] duration-150 ${
+                  isActive ? "mt-2 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                 }`}
               >
-                <span className="overflow-hidden">
-                  {shareOfFirst !== null && `${shareOfFirst}% of visitors got this far`}
-                  {shareOfFirst !== null && rateFromPrev !== null && " · "}
-                  {rateFromPrev !== null && `${rateFromPrev}% of the previous stage`}
-                </span>
-              </p>
+                <div className="overflow-hidden">
+                  <p className="text-base leading-6 text-ink-soft">{s.note}</p>
+                  {(shareOfFirst !== null || rateFromPrev !== null) && (
+                    <p className="mt-1.5 text-sm font-semibold text-indigo">
+                      {shareOfFirst !== null && `${shareOfFirst}% of visitors got this far`}
+                      {shareOfFirst !== null && rateFromPrev !== null && " · "}
+                      {rateFromPrev !== null && `${rateFromPrev}% of the previous stage`}
+                    </p>
+                  )}
+                </div>
+              </div>
             </div>
           </li>
         );
