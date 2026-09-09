@@ -211,6 +211,45 @@ const BRANCH_LABELS: Record<string, string> = {
   unattributed: "Before this was recorded",
 };
 
+/** Which kind of page produced the answer -- see resolvedBySource in lib/metrics.ts. */
+const SOURCE_LABELS: Record<string, string> = {
+  verdict: "a claim verdict page",
+  situation: "a situation page",
+  review: "a review page",
+  unattributed: "before this was tracked",
+};
+
+/**
+ * How a reader's first page view got here -- see arrivedVia() in
+ * app/_components/analytics.tsx. "internal" means the referrer was another
+ * Adhikaar page, not a team member: a real reader who bounced from /faq to
+ * the homepage before starting shows up here too.
+ */
+const ARRIVED_VIA_LABELS: Record<string, string> = {
+  direct: "Typed the address, used a bookmark, or came from search",
+  shared_link: "Opened a link someone had already answered questions on",
+  internal: "Arrived from another Adhikaar page",
+  other: "Referred from another website",
+  unknown: "Not recorded",
+};
+
+/**
+ * "Got a claim route or learned what to check next: 11 from a claim verdict
+ * page, 7 from a situation page, 2 from a review" -- names WHERE the 16 in
+ * "Reached an answer" came from, which is also why "Chose a next step"
+ * counts only 12: situation pages have no Print/Export control, so the 7
+ * routed there structurally can't appear in that stage no matter what a
+ * reader did.
+ */
+function sourceBreakdown(bySource: Record<string, number>): string {
+  const entries = Object.entries(bySource).filter(([, n]) => n > 0);
+  if (!entries.length) return "";
+  return entries
+    .sort(([, a], [, b]) => b - a)
+    .map(([source, n]) => `${n} from ${SOURCE_LABELS[source] ?? source}`)
+    .join(", ");
+}
+
 /**
  * Does this body have the shape this page renders?
  *
@@ -249,11 +288,23 @@ async function getMetrics(): Promise<Metrics | null> {
 
 export default async function MetricsPage() {
   const m = await getMetrics();
+  const sourceNote = m ? sourceBreakdown(m.funnel.resolvedBySource) : "";
   const stages = m ? [
     { label: "Visited the website", value: m.funnel.landingVisitors, note: "Opened the home page.", color: "bg-[#5967A8]" },
     { label: "Started a journey", value: m.funnel.journeysStarted, note: "Began looking for help.", color: "bg-[#7263A5]" },
-    { label: "Reached an answer", value: m.funnel.resolvedJourneys, note: "Got a claim route or learned what to check next.", color: "bg-[#246F61]" },
-    { label: "Chose a next step", value: m.funnel.showingIntent, note: "Printed a guide or emailed themselves a copy.", color: "bg-[#B84B28]" },
+    {
+      label: "Reached an answer",
+      value: m.funnel.resolvedJourneys,
+      note: "Got a claim route or learned what to check next."
+        + (sourceNote ? ` ${sourceNote} — a journey that resolved more than one way counts in each.` : ""),
+      color: "bg-[#246F61]",
+    },
+    {
+      label: "Chose a next step",
+      value: m.funnel.showingIntent,
+      note: `Printed a guide or emailed themselves a copy — only possible on ${m.funnel.nextStepEligibleJourneys} of the ${m.funnel.resolvedJourneys} answers above; situation pages have no such button.`,
+      color: "bg-[#B84B28]",
+    },
   ] : [];
   const scale = Math.max(1, ...stages.map(s => s.value));
   return (
@@ -268,7 +319,14 @@ export default async function MetricsPage() {
               Follow the journey from visiting Adhikaar to finding a next step.
               These numbers show how the website is being used. They do not tell us whether a bank paid a claim.
             </p>
-            {m && <p className="mt-5 inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>}
+            {m && (
+              <>
+                <p className="mt-5 inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>
+                <p className="mt-2 max-w-[60ch] text-sm text-white/70">
+                  One exception: &ldquo;Journeys reached this week&rdquo; below always uses the most recent 7 days, not this full period.
+                </p>
+              </>
+            )}
           </header>
           {!m ? (
             <section className="mt-6 rounded-2xl border border-rule bg-white p-8">
@@ -324,7 +382,14 @@ export default async function MetricsPage() {
                       <h3 className="text-lg font-bold">{BRANCH_LABELS[key] ?? "Other starting situation"}</h3>
                       <p className="mt-3 text-base text-ink-soft"><strong className="text-indigo-ink">{m.funnel.resolvedByBranch[key] ?? 0}</strong> of {n} journeys reached an answer.</p>
                       <div aria-hidden="true" className="mt-3 h-2 overflow-hidden rounded-full bg-[#EFEEE9]"><div className="h-full rounded-full bg-[#246F61]" style={{ width: funnelWidth(m.funnel.resolvedByBranch[key] ?? 0,n) }} /></div>
-                      <p className="mt-2 text-sm text-ink-soft">{pct(m.funnel.resolutionRateByBranch[key] ?? null)} reached an answer</p>
+                      {/* A rate below this many journeys reads as more confident than it
+                          is -- "100%" off n=2 is noise dressed as a stat, the same problem
+                          the OMTM tile already guards against with its own null-until-ready
+                          rule. The raw "X of Y" count above is left alone: it is honest about
+                          being small on its own, only the percentage needed the guard. */}
+                      <p className="mt-2 text-sm text-ink-soft">
+                        {n < 5 ? "Not enough data yet" : `${pct(m.funnel.resolutionRateByBranch[key] ?? null)} reached an answer`}
+                      </p>
                     </article>
                   ))}
                 </div>
@@ -333,6 +398,19 @@ export default async function MetricsPage() {
 
               <details className="mt-8 rounded-2xl border border-rule bg-white p-6">
                 <summary className="cursor-pointer py-2 text-xl font-bold">A closer look: questions, feedback and quality</summary>
+                <section className="mt-6">
+                  <h2 className="text-xl font-bold">How did people arrive?</h2>
+                  <p className="mt-2 leading-7 text-ink-soft">A link that already carried someone else&apos;s answers is the clearest sign this got passed along.</p>
+                  <ul className="mt-3 divide-y divide-rule">
+                    {Object.entries(m.arrivedVia).sort(([, a], [, b]) => b - a).map(([via, n]) => (
+                      <li key={via} className="flex items-center justify-between gap-4 py-3">
+                        <span>{ARRIVED_VIA_LABELS[via] ?? via}</span>
+                        <strong>{n.toLocaleString("en-IN")}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                  {!Object.keys(m.arrivedVia).length && <p className="mt-3 text-ink-soft">No arrivals recorded yet.</p>}
+                </section>
                 <section className="mt-6">
                   <h2 className="text-xl font-bold">Which questions were answered?</h2>
                   <p className="mt-2 leading-7 text-ink-soft">Some journeys finish early. Fewer answers at a later question do not always mean people gave up.</p>
@@ -345,6 +423,7 @@ export default async function MetricsPage() {
                   <h2 className="text-xl font-bold">How long did an answer take?</h2>
                   <p className="mt-2 text-2xl font-bold">{m.efficiency.medianTimeToResolutionSeconds === null ? "Not enough data yet" : Math.round(m.efficiency.medianTimeToResolutionSeconds) + " seconds"}</p>
                   <p className="mt-2 leading-7 text-ink-soft">The middle time across recorded journeys, from entering a situation to reaching an answer.</p>
+                  <p className="mt-2 text-sm leading-6 text-ink-faint">A number this low, this early, is more likely our own team clicking through while testing than someone actually reading. Treat it as provisional until there&apos;s enough traffic to be confident it reflects real readers.</p>
                 </section>
                 <section className="mt-6">
                   <h2 className="text-xl font-bold">What did people expect?</h2>
