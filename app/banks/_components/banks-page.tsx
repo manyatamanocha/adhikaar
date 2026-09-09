@@ -22,7 +22,7 @@ import { parseLocale, withLang } from "@/lib/i18n";
 import { HOME_T } from "@/lib/i18n-home";
 import { formatDate } from "../../_components/bank-panel";
 import { BANKS, isStale } from "@/lib/banks";
-import { LEARN_ARTICLES } from "@/lib/learn";
+import { learnArticles } from "@/lib/learn";
 import { NOTIFICATION } from "@/lib/rbi";
 
 export function BanksPage() {
@@ -237,7 +237,7 @@ export function BanksPage() {
 
                   <ul className="mt-4 flex flex-wrap gap-x-5 gap-y-2 border-t border-[#EFE7D8] pt-4 text-[1rem]">
                     {(() => {
-                      const article = LEARN_ARTICLES.find((a) =>
+                      const article = learnArticles(locale).find((a) =>
                         a.slug.startsWith(bank.id),
                       );
                       return article ? (

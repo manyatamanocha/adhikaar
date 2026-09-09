@@ -10,15 +10,19 @@
 import Link from "next/link";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
+import { LEARN_T } from "@/lib/i18n-learn";
+import { withLang, type Locale } from "@/lib/i18n";
 
 export function Article({
+  locale,
   eyebrow,
   title,
   dek,
   ctaHref,
-  ctaLabel = "Answer four short questions about your claim",
+  ctaLabel,
   children,
 }: {
+  locale: Locale;
   eyebrow: string;
   title: string;
   dek: string;
@@ -26,9 +30,10 @@ export function Article({
   ctaLabel?: string;
   children: React.ReactNode;
 }) {
+  const t = LEARN_T[locale];
   return (
     <>
-      <RecoverNav />
+      <RecoverNav locale={locale} />
 
       <main className="flex-1">
         <section className="bg-indigo">
@@ -48,18 +53,16 @@ export function Article({
 
           <div className="mt-12 rounded-xl border-2 border-indigo bg-mist-deep p-6">
             <h2 className="display-md font-serif font-bold text-indigo-ink">
-              Find out exactly what applies to your claim
+              {t.shellHeading}
             </h2>
             <p className="body-fluid mt-2 max-w-[60ch] leading-relaxed text-ink">
-              This page covers the general rule. Adhikaar asks a few short
-              questions and gives you the specific answer for your situation,
-              with the RBI&apos;s own wording to show the bank.
+              {t.shellBody}
             </p>
             <Link
-              href={ctaHref}
+              href={withLang(ctaHref, locale)}
               className="mt-4 inline-flex items-center gap-2 rounded-pill bg-indigo px-6 py-3 text-[1.0625rem] font-bold text-white transition-colors hover:bg-indigo-lift"
             >
-              {ctaLabel}
+              {ctaLabel ?? t.ctaDefault}
               <span aria-hidden="true">&rarr;</span>
             </Link>
           </div>
