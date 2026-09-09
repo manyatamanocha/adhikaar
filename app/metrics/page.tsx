@@ -139,9 +139,30 @@ const ICON_TONES = {
   saffron: { bg: "#F7DDBB", fg: "#8A3D24" },
 } as const;
 
+/**
+ * One number, with the sentence that makes it honest underneath it.
+ *
+ * ─── Why there is no separate "about" line ───
+ *
+ * These cards briefly carried a second caption above the number, meant to say
+ * what the metric asks rather than what it currently reads. Three of the four
+ * ended up either duplicating `note` or overstating the data: "How many
+ * families got real help this week" sat over the North Star and "Of everyone
+ * who started, how many got a real answer" over the resolution rate. Both
+ * claim outcomes this product cannot observe -- every journey counted so far
+ * is the team's own testing, and even with real traffic Adhikaar keeps no
+ * account and sees nothing past the tab closing (see lib/metrics.ts's header
+ * and the PRD's success-metric note in s8).
+ *
+ * The slot was removed on 9 Sep 2026 rather than reworded, because `note`
+ * below already explains each metric completely -- "19 of 23 journeys started
+ * in this reporting period reached an answer" needs no preamble. An empty
+ * explanatory slot invites a claim to fill it, and on this page the only
+ * claims available were ones the numbers could not support. If a card ever
+ * needs more words, put them in `note`, next to the figure they describe.
+ */
 function MetricCard({
   label,
-  about,
   value,
   note,
   accent = "plain",
@@ -150,21 +171,6 @@ function MetricCard({
   icon,
 }: {
   label: string;
-  /** One plain sentence naming the CONCEPT this card tracks, distinct from
-   * `note` below -- `note` reports what these specific numbers say, `about`
-   * says what the metric is even asking in the first place.
-   *
-   * Optional, and left off deliberately where no honest one-liner exists.
-   * Two were removed on 9 Sep 2026 for claiming outcomes this product
-   * cannot observe: "how many families got real help this week" over the
-   * North Star, and "how many got a real answer" over the resolution rate.
-   * Every journey counted so far is the team's own testing, and even with
-   * real traffic the product cannot see whether anyone was helped -- it
-   * keeps no account and sees nothing past the tab closing (see the header
-   * comment on lib/metrics.ts and PRD s8's success-metric note). A label
-   * that overstates what a number means is the same failure as an
-   * unverified bank row filled in with a guess. */
-  about?: string;
   value: string;
   note: string;
   accent?: "plain" | "saffron";
@@ -202,7 +208,6 @@ function MetricCard({
           </span>
         )}
         <p className="text-[0.75rem] font-bold uppercase tracking-[0.14em] text-ink-faint">{label}</p>
-        {about && <p className="mt-1 text-[0.9375rem] leading-snug text-ink-soft">{about}</p>}
         <p className="mt-2 font-serif text-[2.75rem] font-bold leading-none text-indigo-ink">{value}</p>
         {meterPct !== undefined && <Meter pct={meterPct} {...METER_TONES[accent]} />}
         {breakdown && breakdown.to > 0 && (
@@ -469,7 +474,7 @@ export default async function MetricsPage() {
                 <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)} meterPct={m.omtm.resolutionRate} icon={<CompassIcon className="h-full w-full" />}
                   breakdown={{ from: m.omtm.cohortResolved, to: m.omtm.cohortStarted }}
                   note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
-                <MetricCard label="Chose a next step" about="Whether people acted on their answer, not just read it." value={pct(m.funnel.nextStepActionRate)} meterPct={m.funnel.nextStepActionRate} icon={<ArrowRightIcon className="h-full w-full" />}
+                <MetricCard label="Chose a next step" value={pct(m.funnel.nextStepActionRate)} meterPct={m.funnel.nextStepActionRate} icon={<ArrowRightIcon className="h-full w-full" />}
                   breakdown={{ from: m.funnel.showingIntent, to: m.funnel.nextStepEligibleJourneys }}
                   note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " journeys with an available action used it."} />
                 <UniqueUsersCard />
