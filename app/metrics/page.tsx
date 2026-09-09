@@ -20,6 +20,7 @@
 
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
+import { UniqueUsersCard } from "./_components/unique-users-card";
 
 export const metadata = {
   title: "Adhikaar — how the product is performing",
@@ -253,24 +254,7 @@ export default async function MetricsPage() {
               Follow the journey from visiting Adhikaar to finding a next step.
               These numbers show how the website is being used. They do not tell us whether a bank paid a claim.
             </p>
-            {m && (
-              <div className="mt-5 flex flex-wrap gap-3">
-                <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>
-                {/* isCurrentShape() below only checks that funnel/etc. exist as
-                    objects, not that every field inside them is present -- so
-                    a leaf field added here can still be undefined for exactly
-                    one build: this page fetches ITSELF at build time
-                    (VERCEL_PROJECT_PRODUCTION_URL), which during that build is
-                    still serving the previous deployment's /api/metrics
-                    response. Optional chaining + a fallback means a missing
-                    field degrades to omitting this line instead of crashing
-                    the whole page's static generation, the way it did on
-                    9 Sep 2026 when uniqueVisitors was added without this. */}
-                {typeof m.funnel.uniqueVisitors === "number" && (
-                  <p className="inline-block rounded-full bg-white/10 px-4 py-2 text-sm">{m.funnel.uniqueVisitors.toLocaleString("en-IN")} unique visitors in this reporting period</p>
-                )}
-              </div>
-            )}
+            {m && <p className="mt-5 inline-block rounded-full bg-white/10 px-4 py-2 text-sm">Reporting period: {m.window.from} to {m.window.to}</p>}
           </header>
           {!m ? (
             <section className="mt-6 rounded-2xl border border-rule bg-white p-8">
@@ -280,13 +264,14 @@ export default async function MetricsPage() {
             </section>
           ) : (
             <>
-              <section aria-label="The main numbers" className="mt-6 grid gap-4 md:grid-cols-3">
-                <MetricCard label="Answers reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron"
+              <section aria-label="The main numbers" className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <MetricCard label="Journeys reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron"
                   note="Journeys that reached a clear answer or next step in the last 7 days. This is our main measure of progress." />
                 <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)}
                   note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
                 <MetricCard label="Chose a next step" value={pct(m.funnel.nextStepActionRate)} accent="violet"
                   note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " journeys with an available action used it."} />
+                <UniqueUsersCard />
               </section>
               <p className="mt-3 text-sm leading-6 text-ink-soft">A dash (—) means there is not enough data to calculate a percentage. We count journeys; one person can start more than one.</p>
 
