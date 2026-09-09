@@ -114,10 +114,21 @@ function Meter({ pct, fill, track }: { pct: number | null; fill: string; track: 
   );
 }
 
+/**
+ * Two accents, and only two, because this page charts ONE measure -- journeys
+ * -- at different stages. Navy carries every ordinary number; terracotta marks
+ * the North Star, the single figure the page exists to report.
+ *
+ * A third accent (violet) sat on "Chose a next step" until 9 Sep 2026. It is a
+ * category tint borrowed from /guide and /start, where it separates unrelated
+ * routes from each other. Here there are no categories to separate, so it only
+ * made one card look special for a reason no reader could name. Colour on a
+ * dashboard should answer "why is this one different?" -- if there is no
+ * answer, the colour is decoration.
+ */
 const METER_TONES = {
   plain: { fill: "#16233F", track: "#EFE7D8" },
   saffron: { fill: "#E2653B", track: "#F0B892" },
-  violet: { fill: "#7147C4", track: "#BDB4E2" },
 } as const;
 
 /** Icon-circle bg/fg per card accent -- a light step of the SAME hue the
@@ -126,7 +137,6 @@ const METER_TONES = {
 const ICON_TONES = {
   plain: { bg: "#EFE7D8", fg: "#16233F" },
   saffron: { bg: "#F7DDBB", fg: "#8A3D24" },
-  violet: { bg: "#E3DAF5", fg: "#5A34A0" },
 } as const;
 
 function MetricCard({
@@ -157,7 +167,7 @@ function MetricCard({
   about?: string;
   value: string;
   note: string;
-  accent?: "plain" | "saffron" | "violet";
+  accent?: "plain" | "saffron";
   /** The raw numerator/denominator a percentage was computed from. Omitted
    * (not shown as "0 → 0") when there is no real denominator yet -- same
    * "never fake a data point" rule pct() already follows. */
@@ -173,7 +183,6 @@ function MetricCard({
   const accents = {
     plain: "border-rule bg-white",
     saffron: "border-[#E8B36D] bg-[#FFF7E8]",
-    violet: "border-[#BDB4E2] bg-[#F5F2FC]",
   } as const;
   const tone = ICON_TONES[accent];
   return (
@@ -460,7 +469,7 @@ export default async function MetricsPage() {
                 <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)} meterPct={m.omtm.resolutionRate} icon={<CompassIcon className="h-full w-full" />}
                   breakdown={{ from: m.omtm.cohortResolved, to: m.omtm.cohortStarted }}
                   note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
-                <MetricCard label="Chose a next step" about="Whether people acted on their answer, not just read it." value={pct(m.funnel.nextStepActionRate)} accent="violet" meterPct={m.funnel.nextStepActionRate} icon={<ArrowRightIcon className="h-full w-full" />}
+                <MetricCard label="Chose a next step" about="Whether people acted on their answer, not just read it." value={pct(m.funnel.nextStepActionRate)} meterPct={m.funnel.nextStepActionRate} icon={<ArrowRightIcon className="h-full w-full" />}
                   breakdown={{ from: m.funnel.showingIntent, to: m.funnel.nextStepEligibleJourneys }}
                   note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " journeys with an available action used it."} />
                 <UniqueUsersCard />
@@ -488,7 +497,18 @@ export default async function MetricsPage() {
                     <article key={key} className="rounded-2xl border border-rule bg-white p-5">
                       <h3 className="text-lg font-bold">{BRANCH_LABELS[key] ?? "Other starting situation"}</h3>
                       <p className="mt-3 text-base text-ink-soft"><strong className="text-indigo-ink">{m.funnel.resolvedByBranch[key] ?? 0}</strong> of {n} journeys reached an answer.</p>
-                      <div aria-hidden="true" className="mt-3 h-2 overflow-hidden rounded-full bg-[#EFEEE9]"><div className="h-full rounded-full bg-[#246F61]" style={{ width: funnelWidth(m.funnel.resolvedByBranch[key] ?? 0,n) }} /></div>
+                      {/* Navy, not the green this used to be. Green is a status
+                          colour in this codebase -- /banks and the demand checker
+                          both use it for "allowed / as prescribed" -- and reusing
+                          it here painted a plain ratio as a pass mark. A bar
+                          showing "3 of 3" is not a verdict on anything.
+
+                          Below the n<5 cut-off the bar is drawn in the track's own
+                          tint instead. The caption already refuses to print a
+                          percentage that small; a confident full-width bar sitting
+                          directly above the words "Not enough data yet" contradicted
+                          it, which is the louder of the two signals. */}
+                      <div aria-hidden="true" className="mt-3 h-2 overflow-hidden rounded-full bg-[#EFEEE9]"><div className={`h-full rounded-full ${n < 5 ? "bg-[#C7CBD8]" : "bg-indigo"}`} style={{ width: funnelWidth(m.funnel.resolvedByBranch[key] ?? 0,n) }} /></div>
                       {/* A rate below this many journeys reads as more confident than it
                           is -- "100%" off n=2 is noise dressed as a stat, the same problem
                           the OMTM tile already guards against with its own null-until-ready
