@@ -61,7 +61,6 @@ function Navigation() {
     { href: "/start", label: t.nav.claimGuide },
     { href: "/banks", label: locale === "hi" ? "बैंक की नीतियाँ" : locale === "kn" ? "ಬ್ಯಾಂಕ್ ನೀತಿಗಳು" : "Bank policies" },
     { href: "/faq", label: t.nav.faq },
-    { href: "/metrics", label: locale === "hi" ? "हमारे आँकड़े" : locale === "kn" ? "ನಮ್ಮ ಅಂಕಿಅಂಶಗಳು" : "Our numbers" },
     { href: "/contact", label: t.nav.contact },
   ];
   return (
