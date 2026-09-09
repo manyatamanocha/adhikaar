@@ -24,6 +24,7 @@ import { RecoverFooter } from "../recover/_components/footer";
 import { ArrowRightIcon, CheckIcon, CompassIcon, HouseIcon, PlayIcon } from "../recover/_components/icons";
 import { ExcludeTrafficNotice } from "./_components/exclude-traffic-notice";
 import { UniqueUsersCard } from "./_components/unique-users-card";
+import { JourneyBarChart } from "./_components/journey-bar-chart";
 
 export const metadata = {
   title: "Adhikaar — how the product is performing",
@@ -359,87 +360,6 @@ function sourceBreakdown(bySource: Record<string, number>): string {
 }
 
 /**
- * Plain-language name for each of the 8 verdict outcomes, matching the
- * product's own voice on the verdict pages themselves -- never the raw
- * route id.
- */
-const OUTCOME_LABELS: Record<string, string> = {
-  nominee: "Nominee registered",
-  survivorship: "Joint account, survivor",
-  "unknown-nominee": "Nominee status unclear",
-  "under-threshold": "No nominee, below threshold",
-  "over-threshold": "No nominee, above threshold",
-  dispute: "Heirs in dispute",
-  "already-in-court": "Already in court",
-  "out-of-scope": "Outside what we cover",
-};
-
-/**
- * Fixed per-outcome colors -- assigned to the ENTITY, never to its rank, so
- * an outcome keeps its color whether it is the biggest slice this week or
- * the smallest. Only the five most central resolution paths get a
- * dedicated slot; the three edge/situation-like outcomes always fold into
- * "Other" regardless of volume, to stay inside the dataviz skill's soft
- * cap on donut segments (part-to-whole reads at a glance only up to ~6).
- * Validated with the dataviz palette validator (categorical, light mode,
- * white surface): lightness band, chroma floor, CVD separation and
- * normal-vision floor all pass.
- */
-const OUTCOME_COLORS: Record<string, string> = {
-  nominee: "#E2653B",
-  survivorship: "#7147C4",
-  "under-threshold": "#2E8B69",
-  "over-threshold": "#B84E1E",
-  dispute: "#3B6FA8",
-};
-const OUTCOME_OTHER_COLOR = "#B8B2A0";
-
-/**
- * Part-to-whole across a handful of real categories -- the dataviz skill's
- * one legitimate use of a donut (part-to-whole at a glance, not fine
- * comparison between close values). A CSS conic-gradient ring, not a
- * decorative progress ring standing in for content: every segment is a
- * real, named count, and the legend beside it -- which carries the exact
- * numbers -- is the chart's own table-view twin, not a separate view.
- */
-function Donut({ segments, total }: { segments: { label: string; value: number; color: string }[]; total: number }) {
-  const stops = segments.reduce<{ list: string[]; acc: number }>(
-    (state, s) => {
-      const start = (state.acc / total) * 360;
-      const acc = state.acc + s.value;
-      const end = (acc / total) * 360;
-      return { list: [...state.list, `${s.color} ${start}deg ${end}deg`], acc };
-    },
-    { list: [], acc: 0 },
-  ).list;
-  return (
-    <div className="flex flex-col items-center gap-6 sm:flex-row">
-      <div
-        aria-hidden="true"
-        className="relative h-44 w-44 shrink-0 rounded-full"
-        style={{ background: `conic-gradient(${stops.join(", ")})` }}
-      >
-        <div className="absolute inset-[18%] flex flex-col items-center justify-center rounded-full bg-white text-center">
-          <span className="font-serif text-[1.75rem] font-bold leading-none text-indigo-ink">{total.toLocaleString("en-IN")}</span>
-          <span className="mt-1 text-[0.6875rem] font-bold uppercase tracking-[0.1em] text-ink-faint">answers</span>
-        </div>
-      </div>
-      <ul className="w-full space-y-2.5">
-        {segments.map((s) => (
-          <li key={s.label} className="flex items-center justify-between gap-3 text-[0.9375rem]">
-            <span className="flex items-center gap-2.5">
-              <span aria-hidden="true" className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ background: s.color }} />
-              {s.label}
-            </span>
-            <strong className="tabular-nums text-indigo-ink">{s.value.toLocaleString("en-IN")} · {Math.round((s.value / total) * 100)}%</strong>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-/**
  * Does this body have the shape this page renders?
  *
  * `res.ok` is not enough. A 200 carrying an OLDER shape is the realistic
@@ -499,20 +419,6 @@ export default async function MetricsPage() {
    * dataviz skill's ordinal-ramp allowance for funnel stages (a single
    * ordered series), not a fresh hue per row. */
   const FUNNEL_SHADES = ["#9BA5C7", "#6E7BAB", "#3D4A73", "#16233F"];
-  const outcomeEntries = m ? Object.entries(m.outcomes).filter(([, n]) => n > 0) : [];
-  const outcomeTotal = outcomeEntries.reduce((sum, [, n]) => sum + n, 0);
-  const namedOutcomeIds = Object.keys(OUTCOME_COLORS);
-  const otherOutcomeCount = outcomeEntries
-    .filter(([id]) => !(id in OUTCOME_COLORS))
-    .reduce((sum, [, n]) => sum + n, 0);
-  const outcomeSegments = [
-    ...outcomeEntries
-      .filter(([id]) => id in OUTCOME_COLORS)
-      .sort(([a], [b]) => namedOutcomeIds.indexOf(a) - namedOutcomeIds.indexOf(b))
-      .map(([id, n]) => ({ label: OUTCOME_LABELS[id] ?? id, value: n, color: OUTCOME_COLORS[id] })),
-    ...(otherOutcomeCount > 0 ? [{ label: "Other outcome", value: otherOutcomeCount, color: OUTCOME_OTHER_COLOR }] : []),
-  ];
-  const scale = Math.max(1, ...stages.map(s => s.value));
   return (
     <>
       <RecoverNav />
@@ -560,25 +466,8 @@ export default async function MetricsPage() {
 
               <section className="mt-8 rounded-3xl border border-rule bg-white p-6 sm:p-8">
                 <h2 className="font-serif text-3xl font-bold">The journey, step by step</h2>
-                <p className="mt-2 text-base leading-7 text-ink-soft">Longer bars mean more activity at that step.</p>
-                <ol className="mt-6 space-y-6">
-                  {stages.map((s, i) => (
-                    <li key={s.label} className="flex gap-3 sm:gap-5">
-                      <span
-                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full p-2.5 text-white"
-                        aria-hidden="true"
-                        style={{ background: FUNNEL_SHADES[i] }}
-                      >
-                        {s.icon}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-baseline justify-between gap-3"><h3 className="text-lg font-bold">{s.label}</h3><span className="text-2xl font-bold tabular-nums">{s.value.toLocaleString("en-IN")}</span></div>
-                        <div aria-hidden="true" className="mt-2.5 h-4 overflow-hidden rounded-[4px] bg-[#EFEEE9]"><div className="h-full rounded-r-[4px]" style={{ width: funnelWidth(s.value, scale), background: FUNNEL_SHADES[i] }} /></div>
-                        <p className="mt-2 text-base leading-6 text-ink-soft">{s.note}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ol>
+                <p className="mt-2 text-base leading-7 text-ink-soft">Longer bars mean more activity at that step. Hover or tab to a bar for the conversion rate.</p>
+                <JourneyBarChart stages={stages} shades={FUNNEL_SHADES} />
                 <details className="mt-6 border-t border-rule pt-4">
                   <summary className="cursor-pointer py-2 font-semibold">How to read these numbers</summary>
                   <p className="mt-2 leading-7 text-ink-soft">Some journeys begin from a shared link, without visiting the home page. These totals are not all the same group moving through each step. The action percentage only includes journeys with an available action; opening an official search resource may not offer a printable guide.</p>
@@ -606,18 +495,6 @@ export default async function MetricsPage() {
                   ))}
                 </div>
                 {Object.keys(m.funnel.startedByBranch).length === 0 && <p className="mt-4 rounded-2xl bg-white p-6 text-ink-soft">No starting situations have been recorded yet.</p>}
-              </section>
-
-              <section className="mt-8 rounded-3xl border border-rule bg-white p-6 sm:p-8">
-                <h2 className="font-serif text-3xl font-bold">What kind of answer did people get?</h2>
-                <p className="mt-2 text-base leading-7 text-ink-soft">Every resolved journey, by which of the 8 verdicts it reached.</p>
-                {outcomeTotal > 0 ? (
-                  <div className="mt-6">
-                    <Donut segments={outcomeSegments} total={outcomeTotal} />
-                  </div>
-                ) : (
-                  <p className="mt-4 rounded-2xl bg-[#F5F3EE] p-6 text-ink-soft">No verdicts have been reached yet.</p>
-                )}
               </section>
 
               <details className="mt-8 rounded-2xl border border-rule bg-white p-6">
