@@ -34,7 +34,10 @@ export function JourneyBarChart({ stages, shades }: { stages: Stage[]; shades: s
     <ol className="relative mt-6 space-y-6">
       {stages.map((s, i) => {
         const isActive = active === i;
-        const shareOfFirst = first ? Math.round((s.value / first) * 1000) / 10 : null;
+        // Skipped for stage 0: "100% of visitors got this far" is true of
+        // the first stage by construction (it IS the 100% baseline every
+        // other stage is measured against), never a real finding.
+        const shareOfFirst = i > 0 && first ? Math.round((s.value / first) * 1000) / 10 : null;
         const prev = i > 0 ? stages[i - 1].value : null;
         const rateFromPrev = prev ? Math.round((s.value / prev) * 1000) / 10 : null;
         return (
