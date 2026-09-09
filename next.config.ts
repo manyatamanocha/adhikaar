@@ -6,6 +6,28 @@ const nextConfig: NextConfig = {
   // corrupt the binary, so both stay external -- Next.js requires this list
   // explicitly rather than inferring it from the packages themselves.
   serverExternalPackages: ["@sparticuz/chromium", "puppeteer-core"],
+
+  // ─── Why the line above is necessary but not sufficient ───
+  //
+  // serverExternalPackages stops Next bundling the package's JavaScript. It
+  // does NOT copy the package's non-JS files into the deployed function,
+  // and @sparticuz/chromium's entire payload is non-JS: bin/chromium.br is a
+  // 66MB brotli archive opened by a path COMPUTED AT RUNTIME. Output file
+  // tracing follows static imports, so nothing in the build can see that
+  // file referenced anywhere, and it was silently left out of the bundle.
+  //
+  // The symptom was /api/export-email returning 502 in about a second on
+  // production while working locally -- fast because there was no archive to
+  // extract, and fine locally because dev uses a real installed Chrome
+  // (localChromePath()) and never touches this package at all. Nothing in
+  // the build log warned about it.
+  //
+  // Keep the glob pointed at bin/: swiftshader, fonts and the AL2023 shared
+  // libraries live there too, and Chromium fails to start without them.
+  outputFileTracingIncludes: {
+    "/api/export-email": ["./node_modules/@sparticuz/chromium/bin/**"],
+  },
+
   async redirects() {
     return [
       { source: "/recover", destination: "/", permanent: true },
