@@ -109,8 +109,16 @@ function Meter({ pct, fill, track }: { pct: number | null; fill: string; track: 
   if (pct === null) return null;
   const width = Math.min(100, Math.max(0, pct));
   return (
-    <div aria-hidden="true" className="mt-3 h-2 overflow-hidden rounded-full" style={{ background: track }}>
-      <div className="bar-grow h-full rounded-full" style={{ width: `${width}%`, background: fill }} />
+    <div aria-hidden="true" className="mt-3 h-3.5 overflow-hidden rounded-full shadow-[inset_0_1px_2px_rgba(22,35,63,0.08)]" style={{ background: track }}>
+      <div
+        className="bar-grow relative h-full rounded-full shadow-[0_1px_3px_rgba(22,35,63,0.25)]"
+        style={{ width: `${width}%`, background: `linear-gradient(90deg, ${track}, ${fill})` }}
+      >
+        {/* A soft top highlight for depth -- the bar reads as a solid,
+         * rounded rod rather than a flat rectangle, without introducing a
+         * new color: white at low opacity over the same fill. */}
+        <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1/2 rounded-t-full bg-white/25" />
+      </div>
     </div>
   );
 }
