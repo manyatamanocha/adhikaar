@@ -342,12 +342,12 @@ export default async function MetricsPage() {
           ) : (
             <>
               <section aria-label="The main numbers" className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <MetricCard label="Journeys reached this week" value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron"
+                <MetricCard label="Journeys reached this week" about="How many families got real help this week." value={String(m.northStar.weeklyResolvedJourneys)} accent="saffron"
                   note="Journeys that reached a clear answer or next step in the last 7 days. This is our main measure of progress." />
-                <MetricCard label="Journey resolution rate" value={pct(m.omtm.resolutionRate)}
+                <MetricCard label="Journey resolution rate" about="Of everyone who started, how many got a real answer." value={pct(m.omtm.resolutionRate)}
                   breakdown={{ from: m.omtm.cohortResolved, to: m.omtm.cohortStarted }}
                   note={m.omtm.cohortResolved + " of " + m.omtm.cohortStarted + " journeys started in this reporting period reached an answer."} />
-                <MetricCard label="Chose a next step" value={pct(m.funnel.nextStepActionRate)} accent="violet"
+                <MetricCard label="Chose a next step" about="Whether people acted on their answer, not just read it." value={pct(m.funnel.nextStepActionRate)} accent="violet"
                   breakdown={{ from: m.funnel.showingIntent, to: m.funnel.nextStepEligibleJourneys }}
                   note={m.funnel.showingIntent + " of " + m.funnel.nextStepEligibleJourneys + " journeys with an available action used it."} />
                 <UniqueUsersCard />
