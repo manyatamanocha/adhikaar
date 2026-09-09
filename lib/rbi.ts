@@ -65,7 +65,7 @@ export const CLAUSES = {
 
   noSurety: {
     para: "10(a)",
-    label: "No third-party surety below the threshold",
+    label: "No third-party surety up to the threshold",
     text:
       "No bond of surety from a third-party shall be obtained in case of claims up to the threshold limit.",
     verbatim: true,
