@@ -80,6 +80,31 @@ async function renderPdf(url: string): Promise<Buffer> {
 
   try {
     const page = await browser.newPage();
+
+    // ─── Do not let the renderer forge journeys in our own analytics ───
+    //
+    // The page below is the real production site, so its client JavaScript
+    // runs -- track() included. lib/analytics.ts's only gates are
+    // server-side rendering, localhost, and an opted-out browser; a headless
+    // Chromium pointed at the production hostname passes all three. Without
+    // this block, every emailed PDF would fire a full verdict-page event set
+    // (landing_viewed, outcome_reached, actionable_result_viewed) against a
+    // freshly minted visitor_id -- inflating the North Star, the unique
+    // visitor count and the median time to resolution with a journey the
+    // product invented for itself, and doing it MORE as real usage grows.
+    //
+    // Blocked at the network layer rather than by setting analytics.ts's own
+    // exclude-tester flag: that flag's key is private to that module, so
+    // reaching for it would couple this route to another file's internals.
+    // Aborting the request cannot be undone by a change over there.
+    await page.setRequestInterception(true);
+    page.on("request", (req) => {
+      const handle = req.url().includes("/api/events") ? req.abort() : req.continue();
+      // Both return promises; a request that raced to completion rejects
+      // here, and an unhandled rejection would take down the function.
+      void Promise.resolve(handle).catch(() => {});
+    });
+
     await page.goto(url, { waitUntil: "networkidle0", timeout: 30_000 });
     await page.emulateMediaType("print");
     const pdf = await page.pdf({
