@@ -94,12 +94,12 @@ function Hero() {
           <p className="text-[0.6875rem] font-bold uppercase tracking-[0.12em] text-[#E2653B]">
             {t.hero.eyebrow}
           </p>
-          <h1 className="display-xl mt-3 font-serif font-bold tracking-[-0.01em]">
+          <h1 className="mt-3 font-serif font-bold tracking-[-0.01em] text-[clamp(2rem,4.4vw,3.6rem)] leading-[1.08]">
             {t.hero.headline}
           </h1>
-          <p className="lede-fluid mt-4 text-[#5B5344]">
+          <p className="mt-4 text-[#5B5344] text-[clamp(1rem,1.2vw,1.3rem)] leading-[1.5]">
             {t.hero.sub}
-            <span className="mt-1 block text-[clamp(0.88rem,0.968vw,1.1rem)] font-bold text-[#16233F]">{t.hero.subBold}</span>
+            <span className="mt-1 block text-[clamp(1.05rem,1.15vw,1.3rem)] font-bold text-[#16233F]">{t.hero.subBold}</span>
           </p>
 
           <Reveal delay={80} className="mt-8 flex flex-wrap items-center gap-4">
