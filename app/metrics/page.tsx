@@ -21,6 +21,7 @@
 import { Suspense } from "react";
 import { RecoverNav } from "../recover/_components/nav";
 import { RecoverFooter } from "../recover/_components/footer";
+import { ArrowRightIcon } from "../recover/_components/icons";
 import { ExcludeTrafficNotice } from "./_components/exclude-traffic-notice";
 import { UniqueUsersCard } from "./_components/unique-users-card";
 
@@ -290,20 +291,18 @@ export default async function MetricsPage() {
   const m = await getMetrics();
   const sourceNote = m ? sourceBreakdown(m.funnel.resolvedBySource) : "";
   const stages = m ? [
-    { label: "Visited the website", value: m.funnel.landingVisitors, note: "Opened the home page.", color: "bg-[#5967A8]" },
-    { label: "Started a journey", value: m.funnel.journeysStarted, note: "Began looking for help.", color: "bg-[#7263A5]" },
+    { label: "Visited the website", value: m.funnel.landingVisitors, note: "Opened the home page." },
+    { label: "Started a journey", value: m.funnel.journeysStarted, note: "Began looking for help." },
     {
       label: "Reached an answer",
       value: m.funnel.resolvedJourneys,
       note: "Got a claim route or learned what to check next."
         + (sourceNote ? ` ${sourceNote} — a journey that resolved more than one way counts in each.` : ""),
-      color: "bg-[#246F61]",
     },
     {
       label: "Chose a next step",
       value: m.funnel.showingIntent,
       note: `Printed a guide or emailed themselves a copy — only possible on ${m.funnel.nextStepEligibleJourneys} of the ${m.funnel.resolvedJourneys} answers above; situation pages have no such button.`,
-      color: "bg-[#B84B28]",
     },
   ] : [];
   const scale = Math.max(1, ...stages.map(s => s.value));
@@ -361,7 +360,7 @@ export default async function MetricsPage() {
                       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#F0EDE5] font-bold" aria-hidden="true">{i + 1}</span>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-baseline justify-between gap-3"><h3 className="text-lg font-bold">{s.label}</h3><span className="text-2xl font-bold tabular-nums">{s.value.toLocaleString("en-IN")}</span></div>
-                        <div aria-hidden="true" className="mt-2 h-3 overflow-hidden rounded-full bg-[#EFEEE9]"><div className={"h-full rounded-full " + s.color} style={{ width: funnelWidth(s.value, scale) }} /></div>
+                        <div aria-hidden="true" className="mt-2.5 h-4 overflow-hidden rounded-[4px] bg-[#EFEEE9]"><div className="h-full rounded-r-[4px] bg-indigo" style={{ width: funnelWidth(s.value, scale) }} /></div>
                         <p className="mt-2 text-base leading-6 text-ink-soft">{s.note}</p>
                       </div>
                     </li>
