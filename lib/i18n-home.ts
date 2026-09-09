@@ -290,6 +290,7 @@ export type HomeDict = {
     askedCheckerCta: string;
     whenRouteApplies: string;
     printNote: string;
+    doneBandNote: string;
     printButton: string;
     deadlineHeading: (days: number) => string;
     deadlineBefore: (paraFifteen: string, quote: string) => string;
@@ -820,6 +821,7 @@ const en: HomeDict = {
     askedCheckerCta: "Check what you were asked for",
     whenRouteApplies: "When this route applies, a succession certificate is not required.",
     printNote: "Take the printed page to the branch. It carries the rule and its paragraph number.",
+    doneBandNote: "Email a copy to yourself to keep for later. It carries the same rule and paragraph number.",
     printButton: "Print this page",
     deadlineHeading: (days) => `The bank has ${days} days`,
     deadlineBefore: (paraFifteen, quote) => `Para ${paraFifteen} gives the bank ${quote}. The clock starts when the bank holds a complete set — which is why the date that matters is the date on your acknowledgement, not the day you first walked in.`,
@@ -1329,6 +1331,7 @@ const hi: HomeDict = {
     askedCheckerCta: "आपसे क्या माँगा गया, जाँचें",
     whenRouteApplies: "जहाँ यह रास्ता लागू होता है, वहाँ उत्तराधिकार प्रमाणपत्र ज़रूरी नहीं है।",
     printNote: "छपा हुआ पन्ना शाखा में ले जाएँ। इसमें नियम और उसका पैराग्राफ नंबर दोनों हैं।",
+    doneBandNote: "बाद में देखने के लिए अपने ईमेल पर एक प्रति भेजें। इसमें वही नियम और पैराग्राफ नंबर है।",
     printButton: "यह पन्ना छापें",
     deadlineHeading: (days) => `बैंक के पास ${days} दिन हैं`,
     deadlineBefore: (paraFifteen, quote) => `पैरा ${paraFifteen} बैंक को ${quote} देता है। घड़ी तभी शुरू होती है जब बैंक के पास पूरा सेट हो — इसीलिए ज़रूरी तारीख़ आपकी पावती की तारीख़ है, न कि जिस दिन आप पहली बार गए थे।`,
@@ -1838,6 +1841,7 @@ const kn: HomeDict = {
     askedCheckerCta: "ನಿಮ್ಮಿಂದ ಏನು ಕೇಳಲಾಗಿತ್ತು ಎಂದು ಪರಿಶೀಲಿಸಿ",
     whenRouteApplies: "ಈ ಮಾರ್ಗ ಅನ್ವಯಿಸುವಲ್ಲಿ, ಉತ್ತರಾಧಿಕಾರ ಪ್ರಮಾಣಪತ್ರ ಅಗತ್ಯವಿಲ್ಲ.",
     printNote: "ಮುದ್ರಿತ ಪುಟವನ್ನು ಶಾಖೆಗೆ ತೆಗೆದುಕೊಂಡು ಹೋಗಿ. ಇದು ನಿಯಮ ಮತ್ತು ಅದರ ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆಯನ್ನು ಹೊಂದಿದೆ.",
+    doneBandNote: "ನಂತರ ನೋಡಲು ನಿಮ್ಮ ಇಮೇಲ್‌ಗೆ ಒಂದು ಪ್ರತಿ ಕಳುಹಿಸಿ. ಇದರಲ್ಲಿ ಅದೇ ನಿಯಮ ಮತ್ತು ಪ್ಯಾರಾಗ್ರಾಫ್ ಸಂಖ್ಯೆ ಇದೆ.",
     printButton: "ಈ ಪುಟವನ್ನು ಮುದ್ರಿಸಿ",
     deadlineHeading: (days) => `ಬ್ಯಾಂಕಿಗೆ ${days} ದಿನಗಳಿವೆ`,
     deadlineBefore: (paraFifteen, quote) => `ಪ್ಯಾರಾ ${paraFifteen} ಬ್ಯಾಂಕಿಗೆ ${quote} ನೀಡುತ್ತದೆ. ಬ್ಯಾಂಕಿನ ಬಳಿ ಪೂರ್ಣ ಸೆಟ್ ಇದ್ದಾಗ ಮಾತ್ರ ಗಡಿಯಾರ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ — ಅದಕ್ಕಾಗಿಯೇ ಮುಖ್ಯವಾದ ದಿನಾಂಕ ನಿಮ್ಮ ಸ್ವೀಕೃತಿಯ ದಿನಾಂಕ, ನೀವು ಮೊದಲು ಹೋದ ದಿನವಲ್ಲ.`,

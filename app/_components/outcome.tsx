@@ -444,7 +444,7 @@ function DoneBand({
           error: t.exportEmailError,
         }}
       />
-      <p className="text-[0.9375rem] text-ink-soft">{t.printNote}</p>
+      <p className="text-[0.9375rem] text-ink-soft">{t.doneBandNote}</p>
     </div>
   );
 }
