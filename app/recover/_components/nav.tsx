@@ -69,7 +69,7 @@ function Navigation() {
         <div aria-hidden="true" className="hidden lg:block" />
         <Link href={withLang("/", locale)} className="flex min-w-0 -translate-x-[11px] flex-col items-center sm:-translate-x-[6px] lg:-translate-x-[3px]">
           <span className="flex items-center gap-3">
-            <AdhikaarMark className="h-[4.8rem] w-[4.8rem] shrink-0 sm:h-24 sm:w-24 lg:h-[7.2rem] lg:w-[7.2rem]" />
+            <AdhikaarMark className="h-[4.8rem] w-[4.8rem] shrink-0 -translate-x-2 sm:h-24 sm:w-24 lg:h-[7.2rem] lg:w-[7.2rem]" />
             <span className="font-serif text-[1.425rem] font-bold leading-tight sm:text-[1.875rem] lg:text-[2.25rem]">Adhikaar</span>
           </span>
           <span className="mt-1.5 block max-w-[20rem] text-center text-[0.78125rem] text-[#6B6255] sm:max-w-[24rem] sm:text-[0.859375rem] lg:text-[0.9375rem]">
