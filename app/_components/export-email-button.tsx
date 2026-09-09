@@ -66,7 +66,7 @@ export function ExportEmailButton({
         type="button"
         data-print="hide"
         onClick={() => setOpen(true)}
-        className={`inline-flex items-center gap-2 rounded-pill border-2 px-6 py-3 text-[1.0625rem] font-bold transition-colors ${
+        className={`inline-flex cursor-pointer items-center gap-2 rounded-pill border-2 px-6 py-3 text-[1.0625rem] font-bold transition-colors ${
           inverted
             ? "border-white/40 text-white hover:bg-white/10"
             : "border-indigo text-indigo-ink hover:bg-indigo/8"
@@ -88,13 +88,13 @@ export function ExportEmailButton({
           if (status === "error") setStatus("idle");
         }}
         placeholder={labels.placeholder}
-        className="min-h-11 rounded-pill border-2 border-rule px-4 py-2 text-[0.9375rem]"
+        className="min-h-11 rounded-pill border-2 border-rule bg-white px-4 py-2 text-[0.9375rem] text-ink placeholder:text-ink-soft"
       />
       <button
         type="button"
         onClick={send}
         disabled={status === "sending"}
-        className="inline-flex items-center gap-2 rounded-pill bg-indigo px-5 py-2.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-indigo-lift disabled:opacity-60"
+        className="inline-flex cursor-pointer items-center gap-2 rounded-pill bg-indigo px-5 py-2.5 text-[0.9375rem] font-bold text-white transition-colors hover:bg-indigo-lift disabled:cursor-not-allowed disabled:opacity-60"
       >
         {status === "sending" ? labels.sending : labels.send}
       </button>
