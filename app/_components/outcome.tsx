@@ -137,6 +137,8 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
 
   // Ticking a document is the same navigation trick as picking a bank: one
   // parameter changed on the same page. No client state, and Back unticks.
+  const conditionsInMoreTab = id === "nominee";
+
   const haveHrefFor = (id: DocId) => {
     const q = new URLSearchParams(toQuery(answers).replace(/^\?/, ""));
     if (bankId) q.set("bank", bankId);
@@ -163,7 +165,14 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
               answer might not simply apply before reaching a step that
               assumes it does. */}
           <BankGapAlert bankId={bankId} t={t} />
-          <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
+          {/* The nominee route skips the "Conditions" block up here (12 Sep
+              2026): it read as noise between a clear good-news verdict and
+              the three steps. Its caveats are not dropped -- Sarbati Devi
+              must stay on every nominee page -- they move down into the
+              "More" tab with the other notes instead. */}
+          {!conditionsInMoreTab && (
+            <Caveats id="eligibility" caveats={outcome.caveats.filter(c => c.weight === "hard")} t={t} />
+          )}
           <Steps steps={outcome.steps} t={t} />
 
           {/* The core path ends here: answer, conditions, steps. Repeating
@@ -248,7 +257,7 @@ export function OutcomePage({ id, sp = {} }: { id: OutcomeId; sp?: Params }) {
                       <>
                         {hasAnswers && <AskedChecker answers={answers} locale={locale} t={t} />}
                         {outcome.tracker && <DeadlineTracker locale={locale} />}
-                        <Caveats caveats={outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
+                        <Caveats caveats={conditionsInMoreTab ? outcome.caveats : outcome.caveats.filter(c => c.weight !== "hard")} t={t} />
                         <SourceLine locale={locale} t={t} />
                         {hasAnswers && outcome.goodNews && (
                           <BeliefSurvey
